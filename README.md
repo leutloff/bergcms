@@ -16,7 +16,7 @@ Testsuite
 
 The testsuite is based on the Selenium IDE. Get the Firefox plugin Selenium IDE
 from [http://seleniumhq.org/download/](http://seleniumhq.org/download/).
-Installation is described at [http://seleniumhq.org/docs/02_selenium_ide.html}(http://seleniumhq.org/docs/02_selenium_ide.html).
+Installation is described at [http://seleniumhq.org/docs/02_selenium_ide.html](http://seleniumhq.org/docs/02_selenium_ide.html).
 The testsuites and test cases are located in the folder testsuite.
 Put the file www/cgi-bin/brg/testcase.pl only on testing instances.
 The CGI script will copy a database according the selected test case.
