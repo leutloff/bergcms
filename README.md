@@ -10,6 +10,8 @@ of several articles. These articles are preprocessed and then composited
 by LaTeX. The outcome is a PDF file that can be downloaded and then
 sent directly to the print shop.
 
+**At the time of this writing the code is still missing. It will be added file by file in the next weeks ...**
+
 
 Testsuite
 =========
@@ -43,5 +45,4 @@ Feedback
 
 Feedback is welcome. Patches and pull requests are even more welcome.
 
-At the time of this writing the code is still missing. It will be added file by file in the next weeks ...
 
