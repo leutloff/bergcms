@@ -10,7 +10,7 @@ of several articles. These articles are preprocessed and then composited
 by LaTeX. The outcome is a PDF file that can be downloaded and then
 sent directly to the print shop.
 
-**At the time of this writing the code is still missing. It will be added file by file in the next weeks ...**
+**At the time of this writing some code is still missing. It will be added file by file in the next weeks ...**
 
 
 Testsuite
@@ -38,6 +38,14 @@ License is [AGPL](https://www.gnu.org/licenses/agpl-3.0) for C++ Code and
 [Artistic](http://www.perlfoundation.org/artistic_license_2_0)/[GPL](https://www.gnu.org/licenses/gpl-3.0)
 for the Perl Code. Each file will state explicitly the license it belongs to.
 Copies of the Licenses are found in the LICENSES folder.
+
+
+Coding Guidelines
+=================
+
+- Indentation must use spaces only. Do not use tabs for this purpose.
+- Character encoding must be UTF-8 in every place.
+- Line ending should be Unix style (LF only).
 
 
 Feedback
