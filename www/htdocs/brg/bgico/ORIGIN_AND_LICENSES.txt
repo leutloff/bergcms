@@ -1,0 +1,58 @@
+Origins and License of the images and icons in this folder
+==========================================================
+
+The images and icons are separated by blank lines.
+After the name of the file the origin of the icon is mentioned.
+Afterwards the License is described.
+
+ark-22.png
+Created from 22x22/applications-system.png and 32x32/package-x-generic.png (scaled to 14px).
+Artwork is placed in the Public Domain the same way as the original artwork.
+
+ark-32.png
+Created from 32x32/applications-system.png and 32x32/package-x-generic.png (scaled to 16px).
+Artwork is placed in the Public Domain the same way as the original artwork.
+
+maker-22.png
+Created from 22x22/applications-system.png and images/berg-v1/berg.png (scaled to 14px).
+Artwork is placed in the Public Domain the same way as the original artwork.
+
+pdfreaders-f-32px.png
+http://www.pdfreaders.org/graphics.de.html
+Alle unten abgebildeten Grafiken können für jeden Zweck ohne jegliche Einschränkungen verwendet, modifiziert und/oder weiterverbreitet werden.
+
+pdfreaders-f-22px.png
+http://www.pdfreaders.org/graphics.de.html
+Alle unten abgebildeten Grafiken können für jeden Zweck ohne jegliche Einschränkungen verwendet, modifiziert und/oder weiterverbreitet werden.
+
+stock-tool-pencil-22.png
+http://git.gnome.org/browse/gimp-help-2/tree/images/C/toolbox/stock-tool-pencil-22.png
+License: GFDL-NIV-1.2
+
+stop.png
+http://commons.wikimedia.org/wiki/File:Stop_sign.png?uselang=en
+This file is ineligible for copyright and therefore in the public domain, because it consists entirely of information that is common property and contains no original authorship.
+
+
+The following are copied from the tango-icon-theme. Downloaded from
+http://ftp.de.debian.org/debian/pool/main/t/tango-icon-theme/tango-icon-theme_0.8.90-3_all.deb
+dpkg -x tango-icon-theme_0.8.90-3_all.deb tango-icon-theme
+The artwork is placed in the Public Domain.
+
+32x32 and 22x22:
+applications-system.png
+help-browser.png
+package-x-generic.png (only 32x32)
+process-stop.png
+system-search.png (and in 16x16)
+
+
+Copies/Symlinks:
+abort-22.png -> 22x22/process-stop.png
+abort-32.png -> 32x32/process-stop.png
+help-22.png -> 22x22/help-browser.png
+help-32.png -> 32x32/help-browser.png
+pencil-22.png -> stock-tool-pencil-22.png
+search-16.png -> 16x16/system-search.png
+search-22.png -> 22x22/system-search.png
+search-32.png -> 32x32/system-search.png
