@@ -33,6 +33,7 @@
 #endif // defined(_MSC_VER)
 
 // the following file is provided with the ctemplate tests
+// if not found, adapt CTEMPLATETESTS_INCLUDEDIR in shared_config.make
 #undef CTEMPLATE_DLL_DECL
 #include <tests/template_test_util.h>
 
