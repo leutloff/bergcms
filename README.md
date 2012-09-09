@@ -1,7 +1,7 @@
-Berg
-====
+Berg CMS
+========
 
-Berg is web based system for publishing a regular printed news letter,
+Berg Content Management System is a web based CMS for publishing a regular printed news letter,
 e.g. a bimonthly parish newsletter. It is suitable for small editorial
 committees.
 
@@ -10,7 +10,25 @@ of several articles. These articles are preprocessed and then composited
 by LaTeX. The outcome is a PDF file that can be downloaded and then
 sent directly to the print shop.
 
-**At the time of this writing some code is still missing. It will be added file by file in the next weeks ...**
+
+Building from Source
+====================
+
+- Clone or download the repository.
+- Execute the script update_and_build_submodules.sh to initialize, update and
+  build the submodules.
+- Download the Boost C++ Library from http://www.boost.org/users/download/
+  (start with version 1.48, when unsure);
+  Extract and build boost library in src/external.
+- Add your libicu to src/external/libicuNN. If used other than the mentioned
+  in shared_config.cmake, add your version, too. Supported out of the box
+  are at least libicu48, libicu44 and libicu38.
+- Launch CMake and point the source code the src directory and
+  build the project.
+- Run the script make_zip.sh to build and put all the required files in
+  a single ZIP file.
+- Install the content of the ZIP file on the Web Server. An outline of the
+  Apache configuration is shown in doc/etc_apache2.
 
 
 Testsuite

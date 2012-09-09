@@ -24,9 +24,10 @@ project (Berg CXX)
 
 # set these for release
 set(APPLICATION_VERSION_MAJOR "3")
-set(APPLICATION_VERSION_MINOR "0")
-set(APPLICATION_VERSION_PATCH "2")
+set(APPLICATION_VERSION_MINOR "1")
+set(APPLICATION_VERSION_PATCH "0")
 
+set(CMAKE_VERBOSE_MAKEFILE  TRUE)
 if(NOT DEFINED CMAKE_VERBOSE_MAKEFILE)
     set(CMAKE_VERBOSE_MAKEFILE  TRUE)# set to true to see the full compile and link commands
     message("setting CMAKE_VERBOSE_MAKEFILE to true.")
@@ -62,6 +63,6 @@ add_subdirectory(exp)# programs used to experiment with something, e.g. getting 
 #add information to create a ZIP package for transfering it to the web server.
 include("${PROJECT_SOURCE_DIR}/install_package.cmake")
 
-message("BUILDHOST is ${BUILDHOST}.")
-message("Use ICU version ${BERG_ICU_VERSION}.")
-message("BOOST_LIBRARYDIR is ${BOOST_LIBRARYDIR}.")
+message("Name of BUILDHOST is ${BUILDHOST}.")
+message("Using ICU version ${BERG_ICU_VERSION}.")
+message("Using the BOOST_LIBRARYDIR with the value of ${BOOST_LIBRARYDIR}.")
