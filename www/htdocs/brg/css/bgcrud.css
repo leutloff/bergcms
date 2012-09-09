@@ -1,0 +1,105 @@
+/*!
+ * Stylesheet for the perl based scripts: berg.pl, bgcrud.pl, bgup.pl.
+ *
+ * Copyright 2006-2011, Heiko Decker
+ * Copyright 2011-2012, Christian Leutloff
+ *
+ * This stylesheet is free software; you can redistribute it and/or modify it
+ * under the same terms as Perl itself, i.e., under the terms of the
+ * ``Artistic License'' or the ``GNU General Public License''.
+ *
+ * v2.02, 18.08.2012
+ */
+
+html {
+    background-color:  #abdacc;/*#a8d8ca; */
+    font-family: "Open Sans", Verdana, Arial, Helvetica, sans-serif;
+    font-size: 10pt
+}
+
+/*
+body,h1,h2,h3,h4,h5,td,th,p,a,input,span {
+ }
+ */
+body {
+    margin:5px;
+    padding:0px;
+}
+
+h1 {font-size:140%}
+h2 {font-size:130%}
+h3 {font-size:120%}
+h4 {font-size:110%}
+/*h5,th {font-size:100%}*/
+
+.menu {
+    font-size: 90%;
+}
+.submenu {
+    font-size: 80%;
+}
+
+h1,h2,h3,h4,h5 {
+    color: darkblue
+}
+
+th {
+    color: darkred;
+    background-color: khaki; /* moccasin */
+}
+tr {
+    background-color: beige;
+}
+
+a { text-decoration:none }
+a:link, a:visited { color:darkblue; }
+a:focus  { color:beige; background-color:darkblue; }
+a:hover  { color:red;   background-color:cyan;     }
+a:active { color:cyan;  background-color:red;      }
+
+input {
+    font-size:90%
+    font-weight: bold;
+    color: darkblue;
+}
+
+select  {
+    font-size: 120%;
+    color:red;
+    background-color:yellow; 
+}
+
+img {
+    border:0
+}
+
+table {
+    empty-cells: show;
+}
+
+th, td {
+    padding: 4px;
+}
+td {
+    vertical-align: top;
+}
+
+/* highlight matches from a search */
+.match {
+    background-color: yellow;
+    font-weight:bold;
+}
+
+/* Version string of Scripts */
+.version { font-size: 80%; color: gray; }
+
+/* Output more technically */
+.pex-dev { color: gray; background-color: Ivory; font-size: 80%; }
+/* Processing output */
+.pex-log { color: black; background-color: WhiteSmoke; margin:10px;}
+
+/* Mark a successful operation */
+.success { color: white; background-color: green; }
+/* Mark a failed operation */
+.failure { color: black; background-color: red; }
+
