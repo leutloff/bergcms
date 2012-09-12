@@ -57,13 +57,13 @@ else()
 endif()
 
 # add ctemplate library - header for tests
-if(EXISTS "${CTEMPLATE_INCLUDEDIR}/../../src")
+if(EXISTS "${CTEMPLATE_INCLUDEDIR}/../../src/tests")
     set(CTEMPLATETESTS_INCLUDEDIR "${CTEMPLATE_INCLUDEDIR}/../../src")
 elsif(EXISTS "${CTEMPLATE_INCLUDEDIR}/../src/tests")
-    set(CTEMPLATETESTS_INCLUDEDIR "${CTEMPLATE_INCLUDEDIR}/../src/tests")
+    set(CTEMPLATETESTS_INCLUDEDIR "${CTEMPLATE_INCLUDEDIR}/../src")
 else()
-    set(CTEMPLATETESTS_INCLUDEDIR "${CTEMPLATE_INCLUDEDIR}")
-    message("Include directory for Ctemplate TESTS not found (${CTEMPLATE_INCLUDEDIR}/../src/tests)! Default location: ${CTEMPLATETESTS_INCLUDEDIR}")
+    set(CTEMPLATETESTS_INCLUDEDIR "${CTEMPLATE_INCLUDEDIR}/../src")
+    #message("Include directory for Ctemplate TESTS not found (${CTEMPLATE_INCLUDEDIR}/../src/tests)! Default location: ${CTEMPLATETESTS_INCLUDEDIR}")
 endif()
 
 # add ctemplate library - compiled dynamic lib
