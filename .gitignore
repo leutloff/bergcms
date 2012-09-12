@@ -1,2 +1,20 @@
 config/site.php
 files/cache/*
+# TeX temp files
+*.aux
+*.log
+*.pdf
+*.toc
+*.out
+# Editor backup files
+*~
+*.bak
+*.backup
+backup
+# Build directories for CMake
+/build-*
+tmp
+Upload.txt
+/archive_originals
+*.zip
+qtcreator-build
