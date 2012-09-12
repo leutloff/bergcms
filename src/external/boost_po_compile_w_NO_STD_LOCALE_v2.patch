@@ -1,0 +1,88 @@
+Index: boost/program_options/detail/convert.hpp
+===================================================================
+--- boost/program_options/detail/convert.hpp	(Revision 77740)
++++ boost/program_options/detail/convert.hpp	(Arbeitskopie)
+@@ -8,7 +8,7 @@
+ 
+ #include <boost/program_options/config.hpp>
+ 
+-#if !defined(BOOST_NO_STD_WSTRING)
++#if !defined(BOOST_NO_STD_WSTRING) && !defined(BOOST_NO_STD_LOCALE)
+ 
+ #include <boost/detail/workaround.hpp>
+ 
+@@ -90,8 +90,26 @@
+ #include <vector>
+ #include <string>
+ namespace boost{
++
++#ifndef BOOST_NO_STD_WSTRING
++    BOOST_PROGRAM_OPTIONS_DECL std::string
++    to_utf8(const std::wstring& s);
++
++    BOOST_PROGRAM_OPTIONS_DECL std::wstring
++    from_utf8(const std::string& s);
++
++    BOOST_PROGRAM_OPTIONS_DECL std::string
++    to_local_8_bit(const std::wstring& s);
++
++    BOOST_PROGRAM_OPTIONS_DECL std::wstring
++    from_local_8_bit(const std::string& s);
++#endif
++
+    namespace program_options{
+         BOOST_PROGRAM_OPTIONS_DECL std::string to_internal(const std::string&);
++#ifndef BOOST_NO_STD_WSTRING
++        BOOST_PROGRAM_OPTIONS_DECL std::string to_internal(const std::wstring& s);
++#endif
+ 
+         template<class T>
+         std::vector<std::string> to_internal(const std::vector<T>& s)
+Index: libs/program_options/src/convert.cpp
+===================================================================
+--- libs/program_options/src/convert.cpp	(Revision 77740)
++++ libs/program_options/src/convert.cpp	(Arbeitskopie)
+@@ -84,7 +84,7 @@
+ 
+ namespace boost {
+ 
+-#ifndef BOOST_NO_STD_WSTRING
++#if !defined(BOOST_NO_STD_WSTRING) && !defined(BOOST_NO_STD_LOCALE)
+     BOOST_PROGRAM_OPTIONS_DECL std::wstring 
+     from_8_bit(const std::string& s, 
+                const std::codecvt<wchar_t, char, std::mbstate_t>& cvt)
+@@ -142,6 +142,33 @@
+     }
+ #endif
+ 
++#ifdef BOOST_NO_STD_LOCALE
++    // these methods are NOT converting character sets!
++    BOOST_PROGRAM_OPTIONS_DECL std::string
++    to_utf8(const std::wstring& s)
++    {
++        return std::string(s.begin(), s.end());
++    }
++
++    BOOST_PROGRAM_OPTIONS_DECL std::wstring
++    from_utf8(const std::string& s)
++    {
++        return std::wstring(s.begin(), s.end());
++    }
++
++    BOOST_PROGRAM_OPTIONS_DECL std::string
++    to_local_8_bit(const std::wstring& s)
++    {
++        return std::string(s.begin(), s.end());
++    }
++
++    BOOST_PROGRAM_OPTIONS_DECL std::wstring
++    from_local_8_bit(const std::string& s)
++    {
++        return std::wstring(s.begin(), s.end());
++    }
++#endif
++
+     namespace program_options
+     {
+         BOOST_PROGRAM_OPTIONS_DECL std::string to_internal(const std::string& s)
+

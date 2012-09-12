@@ -1,0 +1,20 @@
+Index: libs/program_options/src/convert.cpp
+===================================================================
+--- libs/program_options/src/convert.cpp	(Revision 76654)
++++ libs/program_options/src/convert.cpp	(Arbeitskopie)
+@@ -125,6 +125,7 @@
+         return to_8_bit(s, utf8_facet);
+     }
+ 
++#ifndef BOOST_NO_STD_LOCALE
+     BOOST_PROGRAM_OPTIONS_DECL std::wstring
+     from_local_8_bit(const std::string& s)
+     {
+@@ -141,6 +142,7 @@
+                         BOOST_USE_FACET(facet_type, locale()));                        
+     }
+ #endif
++#endif
+ 
+     namespace program_options
+     {
