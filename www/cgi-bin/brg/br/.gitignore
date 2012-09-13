@@ -1,0 +1,11 @@
+feginfo.csv
+feginfo.bup
+feginfo_*.csv
+*.tex
+*.out
+*.log
+log.txt
+
+*.idx
+*.ilg
+*.ind
