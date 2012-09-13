@@ -26,7 +26,7 @@ binmode(STDIN, ":encoding(utf8)");
 binmode(STDOUT, ":encoding(utf8)");
 
 #---> Global Variables
-my $VERSION="v2.08, 12.08.2012";
+my $VERSION="v2.09, 13.09.2012";
 my $TX0=time();#Startzeit (Sekunden)->11.6.2008->get_processing_time   ()->Verarbeitungszeit ermitteln >3s werden angezeigt!
 my $LASTfx;# letzte Feldposition (wird aus Tabellenkopf ermittelt) - zur html-Ausgabebugbehebung 17.3.2009
 my $nix='';#Dummy$
@@ -55,6 +55,7 @@ sub create_database();
 sub get_todo_fields();
 
 #----> function prototypes of the shared functions --------
+sub get_additional_title($);
 sub replace_umlauts($);
 sub replace_html_umlauts($);
 sub print_error_page($);
@@ -430,7 +431,7 @@ sub prepare_options
 	if (defined(param('AW')) && param('AW')=~/bbup/)
 	{
 		$optionLines = <<OPTLINES;
-AW=bbup#zur%C3%BCck zum Zeitungsgenerator#Zeitungsgenerator#?AW=berg&VFI=!bcdei&VPI=!qi !-!tzuletzt ge%C3%A4nderte Texte
+AW=bbup#zur%C3%BCck zum Zeitungsgenerator#Zeitungsgenerator#?AW=berg&VFI=!bcdei&VPI=!qi !-!tchanged
 OPTLINES
 	}
 	else
@@ -439,7 +440,7 @@ OPTLINES
 # AW=berg#4) Suche - nur in Kopfdaten#lokal#&VFI=!bcdei&VPI=!ebgx!tSuche - nur in Kopfdaten
 # AW=berg#8) Suche im gesamten Kontext#global#&VFI=*bcdei&VPI=!bcdeigx!tSuche im gesamten Kontext
 # AW=berg#9) Textsuche (m. Hervorhebung der Fundstellen!)#Text?#&VFI=!bcdfgh&VPI=!abgx!tSuche in allen Texten&FI=redaktion
-# orig:   AW=berg#0b) NUR aktive Texte#aktiv#&VFI=!bcde -\-\d{2,}&VPI=!ebgx!tNUR aktive Texte
+# orig:   AW=berg#0b) NUR aktive Texte#aktiv#&VFI=!bcde -\-\d{2,}&VPI=!ebgx!tactive
 # wanted: AW=berg#05) nur aktive Texte#aktiv#&VFI=!bcdei -\\-\\d{2,}&VPI=!ebgx!tnur aktive Texte
 # orig:   AW=berg#6) Einstellungen(Basisdaten und Dokumenteneinstellungen)#Einst.#&VFI=!bcd -(-\d{1,}|2:|1:|3:|9:)&VPI=!ebgx!tDokumenteneinstellungen
 # wanted: AW=berg#09) Einstellungen (Basisdaten und Dokumenteneinstellungen)#Einst.#&VFI=!bcdei -(-\\d{1,}|2:|1:|3:|9:)&VPI=!ebgx!tDokumenteneinstellungen
@@ -449,20 +450,20 @@ OPTLINES
 AW=berg#01) Aufgabenliste des Redaktionsteams#To-Do#?AW=berg&VFI=*gf dolist&VPI=!tToDo
 AW=berg#02) Bilder hochladen#Bilder#/cgi-bin/brg/bgul.pl?:PARAM:
 AW=berg#03) Alle Texte der Datenbank#Alles#?AW=berg&VFI=*bcdei&VPI=!qbcdi
-AW=berg#04) zuletzt ge%C3%A4nderte Texte#bearbeitet#?AW=berg&VFI=!bcdei&VPI=!qi !-!tzuletzt ge%C3%A4nderte Texte
-AW=berg#05) nur aktive Texte#aktiv#?AW=berg&VFI=!bcdei -\\t\\-\\d{1,3}\\t&VPI=!qbcdi !tnur aktive Texte
-AW=berg#06) Artikelliste#Artikel#?AW=berg&VFI=!bcdei ^(1|9): -\\s-\\d&VPI=!qbcdi !tArtikelliste
-AW=berg#07) Angebotsliste#Angebote#?AW=berg&VFI=!bcdei ^2: -\\s-\\d&VPI=!qbcdi !tAngebotsliste
-AW=berg#08) Hauskreisliste#HKs#?AW=berg&VFI=!bcdei ^3: -\\s-\\d&VPI=!qbcdi !tHauskreisliste
-AW=berg#09) Einstellungen (Basisdaten und Dokumenteneinstellungen)#Einst.#?AW=berg&VFI=!bcdei ^0:\\w&VPI=!qbcdi !tDokumenteneinstellungen
-AW=berg#10) Backup-Archiv#Backup#?AW=bbup&VFI=!bcdei&VPI=!bcdeigx!-!tBackup-Archiv
+AW=berg#04) zuletzt ge%C3%A4nderte Texte#bearbeitet#?AW=berg&VFI=!bcdei&VPI=!qi !-!tchanged
+AW=berg#05) nur aktive Texte#aktiv#?AW=berg&VFI=!bcdei -\\t\\-\\d{1,3}\\t&VPI=!qbcdi !tactive
+AW=berg#06) Artikelliste#Artikel#?AW=berg&VFI=!bcdei ^(1|9): -\\s-\\d&VPI=!qbcdi !tarticles
+AW=berg#07) Angebotsliste#Angebote#?AW=berg&VFI=!bcdei ^2: -\\s-\\d&VPI=!qbcdi !toffers
+AW=berg#08) Hauskreisliste#HKs#?AW=berg&VFI=!bcdei ^3: -\\s-\\d&VPI=!qbcdi !tgroups
+AW=berg#09) Einstellungen (Basisdaten und Dokumenteneinstellungen)#Einst.#?AW=berg&VFI=!bcdei ^0:\\w&VPI=!qbcdi !tconfig
+AW=berg#10) Backup-Archiv#Backup#?AW=bbup&VFI=!bcdei&VPI=!bcdeigx!-!tbackup
 OPTLINES
     }
     foreach (split(/\n/,$optionLines))
     {
     	chomp();
         @f=split(/#/,$_);
-        $sid{(defined($f[0])?$f[0]:'').(defined($f[1])?$f[1]:'').(defined($f[2])?$f[2]:'')}=$_;#SortID-Hash füllen - Optionsreihenfolge=Zwangssortieren ab 20.8.2007
+        $sid{(defined($f[0])?$f[0]:'').(defined($f[1])?$f[1]:'').(defined($f[2])?$f[2]:'')}=$_;#SortID-Hash füllen - Optionsreihenfolge=Zwangssortieren
     }
     my $optset = "<tr>";
     my $optcnt = 0;
@@ -471,7 +472,7 @@ OPTLINES
         #print $sid{$k}, "\n";
         @f=split(/#/,$sid{$k});
         $opx=defined($f[3]) ? $f[3] : "";
-        $opx=~s/:FI:/$filter/;#Filter durch akt. Variable ersetzen ! 4.7.2008
+        $opx=~s/:FI:/$filter/;#Filter durch akt. Variable ersetzen
         #eval $opx;
         if($opx=~/:PARAM:/)# z.B. xsc.cgi um Parameter ergänzen
         {
@@ -498,17 +499,37 @@ OPTLINES
     my $additionaltitle = '&nbsp;';
     if (pin_tst('!t'))
     {
-        ($nix, $additionaltitle) = split(/!t/i,$fpin);
-        $additionaltitle = ' => '.replace_umlauts($additionaltitle);
+        ($nix, my $viewname) = split(/!t/i,$fpin);
+        $additionaltitle = ' => '.get_additional_title($viewname);
     }
   	$optset .= Tr(th({'-colspan' => $optcnt}, $additionaltitle));
     
     return('<table class="suche" border="0">'.$optset.'</table>');       
 }
 
-sub remove_html_tags # entferne beliebigen HTML-Tag am Anfang des Referenz-$ ! 18.3.2005
+#----------------------------------------------------------------------------
+# Returns the sub title of the given view
+#----------------------------------------------------------------------------
+sub get_additional_title($)
+{
+    my ($viewname) = shift;
+    if    ("ToDo"      =~ /^$viewname$/i) { return "To-Do"; }
+    elsif ("changed"   =~ /^$viewname$/i) { return "zuletzt ge&auml;nderte Texte"; }
+    elsif ("active"    =~ /^$viewname$/i) { return "nur aktive Texte"; }
+    elsif ("articles"  =~ /^$viewname$/i) { return "Artikelliste"; }
+    elsif ("offers"    =~ /^$viewname$/i) { return "Angebotsliste"; }
+    elsif ("groups"    =~ /^$viewname$/i) { return "Hauskreisliste"; }
+    elsif ("config"    =~ /^$viewname$/i) { return "Dokumenteneinstellungen"; }
+    elsif ("backup"    =~ /^$viewname$/i) { return "Backup-Archiv"; }
+    return '&nbsp;';
+}
+
+#----------------------------------------------------------------------------
+# Removes any HTML tags from the beginning
+#----------------------------------------------------------------------------
+sub remove_html_tags
     {
-    my $p=shift;#ScalarReferens!
+    my $p=shift;#Scalar Reference
     $p=~s/^<.*?>//;
     return(uc($p));
     }
