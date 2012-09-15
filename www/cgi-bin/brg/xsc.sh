@@ -12,7 +12,7 @@
 # This script is not executed by /bin/sh, but from xsc.pl. The perl scripts
 # loads this file and executes it line by line.
 #############################################################################
-XSCVERSION="v1.05, 06.05.2012"
+XSCVERSION="v1.06, 15.09.2012"
 # Die folgenden Variablen werden durch xsc.pl ersetzt.
 # Die hier verwendeten Werte dienen nur zum Testen des Skripts.
 # Sie werden nicht von xsc.pl benutzt. 
@@ -29,9 +29,9 @@ perl pex.pl $BERGDBDIR/feginfo.csv $BERGOUTDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>
 mv $BERGLOGDIR/pe.log $BERGDLBDIR
 # rm feginfo.aux - wird für das Inhaltsverzeichnis benötigt.
 cp $BERGOUTDIR/feginfo.tex $BERGDLBDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
-cp $BERGDBDIR/*.sty  $BERGDBDIR/*.jpg $BERGOUTDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
+#cp -r $BERGDBDIR/*.sty $BERGDBDIR/data $BERGDBDIR/*.jpg $BERGOUTDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
 # LaTeX-Lauf der .pdf und auch .log erzeugt (pdflatex darf keine Ausgabe erzeugen!)
-cd $BERGOUTDIR && pdflatex -interaction=nonstopmode -file-line-error feginfo.tex  >/dev/null
+cd $BERGOUTDIR && TEXINPUTS=../br:../br/data:../br/bilder:../br/images:../br/icons:$TEXINPUTS pdflatex -interaction=nonstopmode -file-line-error feginfo.tex  >/dev/null
 #cd $BERGDBDIR && if [ -f feginfo.idx ]; xindy feginfo.idx; fi 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
 #echo "xindy calling .." >>$BERGLOGDIR/log.txt
 #cd $BERGDBDIR && xindy -L german-din feginfo.idx 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt

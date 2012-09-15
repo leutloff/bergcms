@@ -25,8 +25,8 @@ Building from Source
   are at least libicu48, libicu44 and libicu38.
 - Launch CMake and point the source code the src directory and
   build the project.
-- Run the script make_zip.sh to build and put all the required files in
-  a single ZIP file.
+- Run the script make_zip.sh. This will build all applications and put all
+  the required files in a single ZIP file.
 - Install the content of the ZIP file on the Web Server. An outline of the
   Apache configuration is shown in doc/etc_apache2.
 
