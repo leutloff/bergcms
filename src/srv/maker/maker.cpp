@@ -210,12 +210,16 @@ int HandleRequest(boost::cgi::request& req)
 #else
         bio::file_descriptor_sink tex_log(texLogfile.c_str());
 #endif
+        // set environment: "TEXINPUTS=../br:../br/data:../br/bilder:../br/images:../br/icons:$TEXINPUTS"),
+        bp::environment e = bp::environment(bp::derive_environment());
+        e.prepend_var("TEXINPUTS", "../br:../br/data:../br/bilder:../br/images:../br/icons:");
         bp::monitor c12 = bp::make_child(
                     bp::paths(exePdfLatex.c_str(), BERGOUTDIR.c_str())
                     , bp::arg("-interaction=nonstopmode")
                     , bp::arg("-file-line-error")
                     , bp::arg(outputdir)
                     , bp::arg(texFilenameOnly)
+                    , e
                     , bp::std_out_to(tex_log)
                     , bp::std_err_to(tex_log)
                     );

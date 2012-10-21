@@ -19,3 +19,8 @@ libicu??
 visual_leak_detector
 lib-*
 tango-icon-theme*
+cmake-process-build
+qtcreator-process-build
+boost-*
+ryppl-cmake
+build
