@@ -31,6 +31,7 @@ else()
         "${PROJECT_SOURCE_DIR}/lib"
         "${BOOST_LIBRARYDIR}"
         "${CTEMPLATE_LIBRARYDIR}"
+        "${ICU_LIBRARYDIR}"
         )
 endif()
 
