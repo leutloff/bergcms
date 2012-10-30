@@ -121,7 +121,7 @@ if(NOT MSVC)
         else()
             error("${PROJECT_SOURCE_DIR}/external/libicuNN found or version not tested/used.")
         endif()
-        set(ICU_LIBRARYDIR "${PROJECT_SOURCE_DIR}/external/libicu${BERG_ICU_VERSION}")
+        set(ICU_LIBRARYDIR "${PROJECT_SOURCE_DIR}/external/libicu${BERG_ICU_VERSION}/lib")
         #message("Use ICU version ${BERG_ICU_VERSION} from external/libicu${BERG_ICU_VERSION}.")
 
         install(PROGRAMS "${PROJECT_SOURCE_DIR}/external/libicu${BERG_ICU_VERSION}/lib/libicuuc.so.${BERG_ICU_VERSION}" DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
