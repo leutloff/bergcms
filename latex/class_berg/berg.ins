@@ -1,0 +1,81 @@
+% berg.ins
+%
+% Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+%
+% This file is part of the Berg CMS.
+%
+% This work may be distributed and/or modified under the conditions of
+% the LaTeX Project Public License, version 1.3c of the license.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3c or later is part of all distributions of LaTeX
+% version 2005/12/01 or later and of this work.
+%
+% This work has the LPPL maintenance status "maintained".
+%
+% The Current Maintainer and author of this work is Christian Leutloff.
+%
+
+\def\batchfile{berg.ins}
+\input docstrip.tex
+\let\ifbeta=\iffalse
+
+\ifToplevel{\ifx\generate\undefined
+    \Msg{************************************************************}
+    \Msg{*}
+    \Msg{* This installation requires docstrip version 2.3c or}
+    \Msg{* later, but an old version of docstrip has been input.}
+    \Msg{* You have to update docstrip and maybe LaTeX first!}
+    \Msg{*}
+    \Msg{************************************************************}
+    \errhelp{Install a new version of docstrip.}
+    \errmessage{Old docstrip in input path}
+    \batchmode
+    \csname @@end\endcsname
+  \fi
+}
+
+\ifToplevel{%
+  \keepsilent
+  \askforoverwritefalse
+%  \askforoverwritetrue
+%  \ifx\askonceonly\undefined\else\askonceonly\fi
+}
+
+\preamble
+
+Copyright 2012 by Christian Leutloff <leutloff@sundancer.oche.de>
+
+This file was generated from file(s) of the Berg CMS.
+
+It may be distributed under the conditions of the
+LaTeX Project Public License in the version distributed together
+with the Berg CMS, see file `lppl.txt'.
+
+\endpreamble
+
+\generate{\usepreamble\defaultpreamble
+  % the document class file
+  \file{berg.cls}{%
+    \from{berg.dtx}{cls}%
+  }%
+  % the reference of the document class file
+  \file{berg.drv}{%
+    \from{berg.dtx}{driver}%
+  }%
+}
+
+\ifToplevel{
+  \Msg{*}
+  \Msg{* Copy the generated Class file berg.cls to the berg path in cgi-bin, }
+  \Msg{* e.g. when the cgi-bin path of Berg CMS is /path/to/cgi-bin/brg }
+  \Msg{* use the following command: }
+  \Msg{* cp generated/berg.cls /path/to/cgi-bin/brg/br }
+  \Msg{*}
+  \Msg{* Reference documentation can be generated from generated/berg.drv.}
+  \Msg{*}
+}
+
+\endinput
+%
+% End of file 'berg.ins'
