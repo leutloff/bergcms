@@ -22,12 +22,19 @@ pdflatex berg.drv
 # removed copied files, again
 rm berg.dtx berg.ins
 
-echo "\n ***   Processing the samples ...   ***\n"
+echo -e "\n ***   Processing the samples ...   ***\n"
 
 #process samples
+echo -e "\n *   Sample Single Page\n"
 rm -f singlepage.*
 pdflatex ../examples/singlepage.tex
 
-
+echo -e "\n *   Sample Picture Credits\n"
+rm -f withpicturecredits.*
+pdflatex ../examples/withpicturecredits.tex
+makeindex  withpicturecredits.idx
+pdflatex ../examples/withpicturecredits.tex
+makeindex  withpicturecredits.idx
+pdflatex ../examples/withpicturecredits.tex
 
 popd

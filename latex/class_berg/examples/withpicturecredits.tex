@@ -1,0 +1,128 @@
+% withpicturecredits.tex
+% Using the Berg CMS document class including an index used for the picture credits.
+%
+% Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+%
+% This file is part of the Berg CMS.
+%
+% This work may be distributed and/or modified under the conditions of
+% the LaTeX Project Public License, version 1.3c of the license.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3c or later is part of all distributions of LaTeX
+% version 2005/12/01 or later and of this work.
+%
+% This work has the LPPL maintenance status "maintained".
+%
+% The Current Maintainer and author of this work is Christian Leutloff.
+%
+\documentclass{berg}
+
+\usepackage{lipsum}% for the dummy text
+
+\hypersetup{
+    pdftitle={Example with Picture Credits},
+    pdfauthor={Christian Leutloff},
+    pdfsubject={Part of the Samples - testing LaTeX style file of the Berg CMS},
+    pdfproducer={Christian Leutloff}
+}
+
+\begin{document}
+
+
+\large
+\begin{multicols}{2}
+%>zd#1.5#
+\normalbaselines\linespread{1.1}\selectfont
+\def\contentsname{\Large Inhalt\large\dotfill Nr/Jahr}\tableofcontents
+\clearpage
+
+\normalsize
+\normalbaselines\linespread{0.6}\selectfont
+
+%\hypertarget{bergpicturecreditslabel}{}
+%\section*{Bildnachweis}%
+%\setcounter{bergpicturecreditspage}{\thepage}%
+%\printindex
+
+
+
+\normalsize
+\normalbaselines\linespread{0.6}\selectfont
+\BergPrintPictureCredits
+
+
+\normalbaselines\linespread{0.88}\selectfont
+\section{Ein paar Bildreferencen}
+
+\subsection{Ein erster Teil}
+
+First Photographer
+\index{First Photographer}%
+
+\lipsum[1]
+
+Erster Fotograf
+\index{Erster Fotograf}%
+
+\lipsum[2]
+
+German Umlautsäöü
+\index{German Umlautsäöüß}%
+
+\lipsum[3]
+
+German UmlautsÄÖÜ
+\index{German UmlautsÄÖÜ}%
+
+\lipsum[4]
+
+Second Photographer
+\index{Second Photographer}%
+
+\lipsum[5]
+
+Zweiter Fotograf
+\index{Zweiter Fotograf}%
+
+\lipsum[6]
+
+\subsection{Nun geht es über in den zweiten Teil}
+
+\lipsum[6]
+
+Third Photographer
+\index{Third Photographer}%
+
+\lipsum[7]
+
+Dritter Fotograf
+\index{Dritter Fotograf}%
+
+\lipsum[8]
+
+Another Name
+\index{Another Name}%
+
+\lipsum[9]
+
+Anderer Name
+\index{Anderer Name}%
+
+\lipsum[10]
+
+
+
+\textit{\normalsize The Author}
+\bigskip
+
+
+
+{\normalsize
+Erzeugt mit \Berg\ \BergMajorVersion\ (\BergUrl).}
+
+\end{multicols}
+
+\BergAddPictureCreditsTocEntry
+
+\end{document}

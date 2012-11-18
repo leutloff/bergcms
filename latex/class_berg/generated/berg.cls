@@ -54,10 +54,21 @@
 \RequirePackage{amssymb}
 \RequirePackage{pifont}
 \RequirePackage[right]{eurosym}
+\RequirePackage[breaklinks,hidelinks]{hyperref}
+\urlstyle{same}%
 
 \providecommand\PeX{%
   P\kern-.2em\lower.7ex\hbox{e}\kern-.06em\raise .3ex\hbox{r}%
   \LaTeX}
+\providecommand\Berg{%
+  B\kern-.2em\raise.9ex\hbox{e}\kern-.06em\raise.3ex\hbox{r}\kern-.2em\hbox{g} CMS%
+}
+\providecommand\BergUrl{%
+  \url{https://github.com/leutloff/berg}%
+}
+\providecommand\BergMajorVersion{%
+  v3%
+}
 
 \setlength{\hoffset}{-15mm}%.......Korrektur des Druckbereichs horizontal
 \setlength{\voffset}{-30mm}% ......Korrektur des Druckbereichs vertikal
@@ -71,6 +82,8 @@
 \setcounter{secnumdepth}{-2}
 \setcounter{tocdepth}{2}
 \pagestyle{plain}
+\renewcommand{\familydefault}{\sfdefault}
+\normalfont
 \sectionfont{\LARGE\bfseries}
 \subsectionfont{\Large\bfseries}
 \subsubsectionfont{\large\bfseries}
@@ -78,12 +91,24 @@
 \setlength{\parindent}{0mm}
 \setlength{\parskip}{1.0ex plus 0.8ex minus 0.5ex}
 
-\newcounter{bildnachweisseite}%
+\newcounter{bergpicturecreditspage}%
 \renewenvironment{theindex}
-{\setlength\parindent{0pt}%
-\let\item\@idxitem }
-{ }
+{%
+    \setlength\parindent{0pt}%
+    \let\item\@idxitem
+}%
+{ }%
 \makeindex
+\providecommand\BergPrintPictureCredits{%
+    \hypertarget{bergpicturecreditslabel}{}
+    \section*{Bildnachweis}%
+    \setcounter{bergpicturecreditspage}{\thepage}%
+    %\renewcommand\indexspace{\par\vskip 10pt \plus 5pt \minus 3pt \relax}
+    \printindex
+}
+\providecommand\BergAddPictureCreditsTocEntry{%
+   \addtocontents{toc}{\protect\contentsline{section}{Bildnachweis}{\thebergpicturecreditspage}{bergpicturecreditslabel}}
+}
 
 \endinput
 %%

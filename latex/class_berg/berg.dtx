@@ -205,6 +205,15 @@
 \RequirePackage[right]{eurosym}
 %    \end{macrocode}
 %
+% Load the hyperref package and enable the typesetting of hyperlinks.
+% The hyperlinks can be followed in the resulting PDF.
+% Should be the last package that is loaded.
+%
+% Setting to use the same style for URLs, too (not with a mono-spaced font).
+%    \begin{macrocode}
+\RequirePackage[breaklinks,hidelinks]{hyperref}
+\urlstyle{same}%
+%    \end{macrocode}
 
 % \section{Custom Commands}
 %
@@ -215,7 +224,33 @@
   \LaTeX}
 %    \end{macrocode}
 %  \end{macro}
-
+%
+% Name of this CMS - Berg CMS
+%  \begin{macro}{\Berg}
+%    \begin{macrocode}
+\providecommand\Berg{%
+  B\kern-.2em\raise.9ex\hbox{e}\kern-.06em\raise.3ex\hbox{r}\kern-.2em\hbox{g} CMS%
+}
+%    \end{macrocode}
+%  \end{macro}
+%
+% Providing the URL to getting more information about the Berg CMS.
+%  \begin{macro}{\BergUrl}
+%    \begin{macrocode}
+\providecommand\BergUrl{%
+  \url{https://github.com/leutloff/berg}%
+}
+%    \end{macrocode}
+%  \end{macro}
+%
+% Providing the major revision of the Berg CMS. This version number is maintained in the \LaTeX-related files (berg.dtx).
+%  \begin{macro}{\BergMajorVersion}
+%    \begin{macrocode}
+\providecommand\BergMajorVersion{%
+  v3%
+}
+%    \end{macrocode}
+%  \end{macro}
 
 % \section{Customize the Layout}
 %
@@ -242,6 +277,14 @@
 \pagestyle{plain}
 %    \end{macrocode}
 %
+% \subsection{Font related aspects}
+%
+% Define the default font as sans serif.
+%    \begin{macrocode}
+\renewcommand{\familydefault}{\sfdefault}
+\normalfont
+%    \end{macrocode}
+%
 % Define the font sizes of the headings.
 %    \begin{macrocode}
 \sectionfont{\LARGE\bfseries}
@@ -263,14 +306,39 @@
 %
 % Used to generate the picture credits from information provided by |>Bild#...#author#...| information.
 %    \begin{macrocode}
-\newcounter{bildnachweisseite}%
+\newcounter{bergpicturecreditspage}%
 \renewenvironment{theindex}
-{\setlength\parindent{0pt}%
-\let\item\@idxitem }
-{ }
+{%
+    \setlength\parindent{0pt}%
+    \let\item\@idxitem
+}%
+{ }%
 \makeindex
 %    \end{macrocode}
 %
+% Prints the section with the picture credits.
+%  \begin{macro}{\BergPrintPictureCredits}
+%    \begin{macrocode}
+\providecommand\BergPrintPictureCredits{%
+    \hypertarget{bergpicturecreditslabel}{}
+    \section*{Bildnachweis}%
+    \setcounter{bergpicturecreditspage}{\thepage}%
+    %\renewcommand\indexspace{\par\vskip 10pt \plus 5pt \minus 3pt \relax}
+    \printindex
+}
+%    \end{macrocode}
+%  \end{macro}
+%
+% Add a new line to the table of contents for the picture credits.
+% The section containing the Picture Credits must set the counter |bergpicturecreditspage| to the actual page number
+% and provide a hypertarget named |bergpicturecreditslabel|.
+%  \begin{macro}{\BergAddPictureCreditsTocEntry}
+%    \begin{macrocode}
+\providecommand\BergAddPictureCreditsTocEntry{%
+   \addtocontents{toc}{\protect\contentsline{section}{Bildnachweis}{\thebergpicturecreditspage}{bergpicturecreditslabel}}
+}
+%    \end{macrocode}
+%  \end{macro}
 
 % \iffalse
 %</cls>
