@@ -29,6 +29,7 @@
 #        ->die Aufteilung in Kopf-, Haupt- und Fußtext soll der Übersicht bei der Eingabe im Webbrowser dienen->wird im Hash als ein Text zusammengefasst!
 #
 #############################################################################
+package BERG::PEX;
 
 use strict;
 use warnings;
@@ -38,9 +39,19 @@ use Fcntl qw/:flock/;              # LOCK_EX etc. definieren
 use PerlIO::encoding;              # Zeichenkodierung ändern können, z.B. beim Wegschreiben 
 use utf8;                          # UTF-8 Kodierung auch in regulären Ausdrücken berücksichtigen
 
+use vars qw(@EXPORT_OK @ISA $VERSION);
+
+$VERSION = '0.08';
+@EXPORT_OK = qw(replace_characters);
+@ISA = qw(Exporter);
+
 # Standardeingabe und Standardausgabe in UTF-8:
 binmode(STDIN, ":encoding(utf8)");
 binmode(STDOUT, ":encoding(utf8)");
+
+# run is called, when this script is used as standalone script.
+# Otherwise the methods are available from the package.
+__PACKAGE__->run( @ARGV ) unless caller();
 
 #---Start : Globale --------------------------------------------------
 my %BEF=();#TextMakro-Befehlshash 23.10.2010
@@ -86,6 +97,7 @@ my @SG= qw(\\tiny \\scriptsize \\footnotesize \\small \\normalsize \\large \\Lar
 my $ZD0=1;# StandardZeilendiche =1
 my $ZDM=1;# StandardMEMO-Zeilendiche =1 24.5.2007->bei >zd#0 wird ZD0=ZDM!
 my $ZDI=0.5;# StandardZeilendiche =0.5ex Items
+# TODO verschieben
 my %symbole=();#Symbolhash aus pifont
 $symbole{"karo"}=117;
 $symbole{"dreieck"}=115;
@@ -106,39 +118,41 @@ $symbole{"blume"}=96;
 $symbole{"telefon"}=37;
 
 my %idx=();#IndexHash - DB einscannen
-#---End   : Globale ---------------------------------------------------
-my $testflg=$ARGV[2];# generiert TeX-Dokument mit Kommentaren - decker 18.6.2004
-my $testok=0;
-my $inp = $ARGV[0];
-if (!$inp) { $inp="feginfo.csv"; }
-my $OUPTEX="";
-if ($ARGV[1])
-    {   
-    if ($ARGV[1] =~ /.tex$/) { $OUPTEX = $ARGV[1]; }
-    else { $OUPTEX = $ARGV[1].".tex"; }
-    }
-else
-    {
-    $OUPTEX=$inp;
-    $OUPTEX=~s/.csv/.tex/;
-    }
-die "Fehler: Input- ($inp) und Outputdatei ($OUPTEX) dürfen nicht gleich sein!" if ($OUPTEX eq $inp);      
-my @stack="";#BefehlsReturnStack
-#my $OUT=IO::File->new(">$OUPTEX");
-open(my $OUT, ">:encoding(utf8)", $OUPTEX) or die "Die Ausgabedatei $OUPTEX kann nicht geöffnet werden.";
-if(defined $OUT) {;} else {die "Fehler beim Oeffnen von $OUPTEX";}
+my $inp = "";# Filename for the input
+my $OUPTEX = "";# Filename for the output    
+my @stack = "";#BefehlsReturnStack
+my $OUT = undef;# Handle to the resulting output file 
 
-#-----Start (Main)-----------
+#-----Start (Main)-----------    
+sub run
+{
+    $inp = $ARGV[0];
+    if (!$inp) { $inp="feginfo.csv"; }
+    if ($ARGV[1])
+        {   
+        if ($ARGV[1] =~ /.tex$/) { $OUPTEX = $ARGV[1]; }
+        else { $OUPTEX = $ARGV[1].".tex"; }
+        }
+    else
+        {
+        $OUPTEX=$inp;
+        $OUPTEX=~s/.csv/.tex/;
+        }
+    die "Fehler: Input- ($inp) und Outputdatei ($OUPTEX) dürfen nicht gleich sein!" if ($OUPTEX eq $inp);      
+    #my $OUT=IO::File->new(">$OUPTEX");
+    open($OUT, ">:encoding(utf8)", $OUPTEX) or die "Die Ausgabedatei $OUPTEX kann nicht geöffnet werden.";
+    if(defined $OUT) {;} else {die "Fehler beim Oeffnen von $OUPTEX";}
 
-print_version();
-load_database();
-create_tex();
+    print_version();
+    load_database();
+    create_tex();
+}
 
 #-----------------------------------------------------
 sub print_version # Version in TeX-Datei und Standardausgabe
 #-----------------------------------------------------
 {
-    my $VERSION = "Programm: $0, v2.06/17.06.2012 (Perl $]) ---> Dokument: IN($inp) => OUT($OUPTEX) [ ".scalar localtime()." ]\n";
+    my $VERSION = "Programm: $0, v2.07/30.11.2012 (Perl $]) ---> Dokument: IN($inp) => OUT($OUPTEX) [ ".scalar localtime()." ]\n";
     print $OUT '%'." $VERSION";
     print "$VERSION";
 }
@@ -188,7 +202,9 @@ sub create_tex #...TeX-Dokument aus SortHash generieren!
         @TXZ=split(/<br>/,$text);# Textblock in Zeilenspeicher!
         $zz++;
         print "$zz\t$kap\t$tnr\t$titel\t$typ\t$#TXZ\n";
+        # todo: hier verweis auf den artikel ausgeben
         #plott_zeilen();
+        #TODO: TTKAP entfernen
         if($TTKAP && (($tnr==9 || $TTKAP ne $kap))) # falls Tagestabelle aktiv und Kapitelwechsel generell - jetzt abschließen 26.11.2008
             {
             $TTKAP=""; print $OUT '\end{tabular}'."\n";
@@ -278,7 +294,7 @@ sub create_tex #...TeX-Dokument aus SortHash generieren!
         }
     }
 
-
+#TODO entfernen:
 #-----------------------------------------------------
 sub create_infotab  #...Artikel-Kopftabelle generieren!
 #-----------------------------------------------------
@@ -591,6 +607,7 @@ sub evaluate_commands #...Metazeichenauswertung
     if($f[0] =~/INFOTAB/i) {$Iformat=$f[1];return;}# InfoTab-Tabellenformat ->ArtikelHeader
     if($f[0] =~/LISTE/i) {print_list();return;}
     if($f[0] =~/TABELLE/i) {print_table();return;}
+# TODO entfernen:
     if($f[0] =~/TAGTAB/i && $TABTXTFLG==0) {print_table_for_day_init($f[1]);return;}
     if($f[0] =~/BILDNACHWEIS/i) { print_picturecredits(); return; }
     if($f[0] =~/BILD/i) {print_image_jpg();return;}   
@@ -623,7 +640,7 @@ sub initialize #...Basisdaten initialisieren
     print "Ausgabe: $AUSGABE\t$Jahr\t\t$NUMMER\n$RENDE\n";
     }
 
-
+# TODO entfernen
 #-----------------------------------------------------
 sub print_table_for_day # eine Zeile der Tagesartikel-Gesamttabelle  ausgeben 26.11.2008
 #-----------------------------------------------------
@@ -649,6 +666,7 @@ sub print_table_for_day # eine Zeile der Tagesartikel-Gesamttabelle  ausgeben 26
     print $OUT ''.join('&',@tab).'\\\\ \hline'."\n";
     }
 
+# TODO entfernen
 #-----------------------------------------------------
 sub print_table_for_day_init # initialisieren der Tagesartikel-Gesamttabelle 26.11.2008
 #-----------------------------------------------------
@@ -844,8 +862,8 @@ sub replace_characters #...Suchen/ersetzen
     $s =~ s/\x{201A}|&#x201A;|\x{2018}|&#x2018;|\x{2019}|&#x2019;|&#x0029;/\'/g; #falls ' im Text -> Latex'Ersatz
     
     #...reservierte Latex-Spezialzeichen
-    my $cz=$s=~tr/&/&/;
-    if($cz<2){$s =~ s/\&/\\&/g;} #&  nur Einzel-& ersetzen/sonst Tabelle
+#    my $cz=$s=~tr/&/&/;
+#    if($cz<2){$s =~ s/\&/\\&/g;} #&  nur Einzel-& ersetzen/sonst Tabelle
     $s =~ s/\§/\\S/g; # Paragraphzeichen
     #...Telefon/Mailsymbole einbauen!
     $s =~ s/Tel.:|Tel:/\\ding\{37\}/ig; #falls Tel.?-> Telefonsymbolersatz
@@ -890,5 +908,6 @@ sub chompx #...loescht universal(Windows,Dos,Linx-Zeilenvorschub!) sonst: Proble
 #    <stdin>;
 #    }
 
+1;
 
-
+__END__
