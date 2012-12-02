@@ -41,8 +41,9 @@ use utf8;                          # UTF-8 Kodierung auch in regulären Ausdrüc
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = '0.08';
-@EXPORT_OK = qw(replace_characters);
+$VERSION = 'v2.07/02.12.2012';
+# exports are used for testing purposes
+@EXPORT_OK = qw(add_author add_italic replace_characters);
 @ISA = qw(Exporter);
 
 # Standardeingabe und Standardausgabe in UTF-8:
@@ -83,7 +84,6 @@ my $AUFLAGE=undef;#Auflagenhöhe
 my $Rende=undef;#Datum des Redaktionsschlusses
 my $RENDE=undef;#Text zum Redaktionsschluss
 #-----UeberschriftDef-- >UBS#A#E#
-my $UB1i="\\textit{"; #Latex-Italic      \\textsl, textit..
 my $UB1f="\\textbf{"; #Fett
 my $UB1u="\\textup{"; #Kapitälchen
 my $UB2="}";
@@ -152,8 +152,8 @@ sub run
 sub print_version # Version in TeX-Datei und Standardausgabe
 #-----------------------------------------------------
 {
-    my $VERSION = "Programm: $0, v2.07/30.11.2012 (Perl $]) ---> Dokument: IN($inp) => OUT($OUPTEX) [ ".scalar localtime()." ]\n";
-    print $OUT '%'." $VERSION";
+    my $msg = "Programm: $0, $VERSION (Perl $]) ---> Dokument: IN($inp) => OUT($OUPTEX) [ ".scalar localtime()." ]\n";
+    print $OUT '%'." $msg";
     print "$VERSION";
 }
 
@@ -557,7 +557,7 @@ sub evaluate_commands #...Metazeichenauswertung
     if($f[0] eq "u") {$u=add_caption($f[1]);print $OUT "$u\n";return;} #Ueberschrift
     if($f[0] eq "k") {$u=add_italic($f[1]);print $OUT "$u\n";return;} #add_italic
     if($f[0] eq "f") {$u=add_bold($f[1]);print $OUT "$u\n";return;} #add_bold
-    if($f[0] eq "i") {$u=add_small_caption($f[1]);print $OUT "$u\n";return;} #Autor
+    if($f[0] eq "i") {$u=add_author($f[1]);print $OUT "$u\n";return;} #Autor
     if($f[0] eq "1")
     {
         if ($f[1] =~/^-/) { print $OUT "% section ignoriert (wg. -): $f[1]\n";return; }
@@ -770,7 +770,6 @@ sub add_bold #...Zeile hervorheben
     my $s=shift;
     my $x=$SGO;
     if ($x<0) {$x=0;}
-    #v1.00: return("\n".$UB1f.$SG[$x]."\n".$s.$SG[$SGO]."\n".$UB2.$NL);
     return($UB1f.$s.$UB2);
     }
 #-----------------------------------------------------
@@ -780,17 +779,16 @@ sub add_italic #...Zeile in Kursiv
     my $s=shift;
     my $x=$SGO;
     if ($x<0) {$x=0;}
-    #v1.00: return("\n".$UB1i.$SG[$x]."\n".$s.$SG[$SGO]."\n".$UB2.$NL);
-    return($UB1i.$SG[$x]."\n".$s.$UB2);
+    return('\textit{'.$SG[$x]." ".$s.$UB2);
     }
 #-----------------------------------------------------
-sub add_small_caption #...Unterberschrift erzeugen(kleiner)
+sub add_author # Author of article
 #----------------------------------------------------
     {
     my $s=shift;
     my $x=$SGO-1;
     if ($x<0) {$x=0;}
-    return($UB1i.$SG[$x]." ".$s.$UB2."\n"."\\bigskip");
+    return('\textit{'.$SG[$x]." ".$s.$UB2."\n"."\\bigskip");
     }
 #-----------------------------------------------------
 sub add_caption #...Ueberschrift erzeugen
