@@ -1,0 +1,77 @@
+
+Import the Code Style project_berg_coding_style.xml and use Source->Format in Eclipse 
+to let the formatter format the source.
+
+
+Fixing unreadable tooltips in C++:
+Copied from comment #7 on https://bugs.launchpad.net/ubuntu/+source/light-themes/+bug/540332 
+
+Looks like there is no way to configure this in the preferences, however the following works for me to set the tooltip background in Eclipse CDT to the familiar yellow from Human:
+
+Modify or add the following lines in
+eclipse_workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.cdt.ui.prefs
+
+sourceHoverBackgroundColor=245,245,181
+sourceHoverBackgroundColor.SystemDefault=false
+
+
+To get english error messages when compiling change the environment variable LANG to an empty value.
+Window_>Preferences->C/C++->Build->Build Variables
+Check "Show system variables", select the variable LANG, edit, clear the value and klick on Apply/OK.
+Or (better?): export LANGUAGE=en (from LANGUAGE=de:en)
+
+
+
+Visual Studio to let the unit test executable find the boost DLL their location must be
+added to the PATH environment variable. Open the 
+Project Properties->Configuration Properties->Debugging
+In the field named Environment adde something like this
+PATH=C:\gemeindeinfo\src\external\boost_1_48_0\lib;%PATH%
+
+
+Compile for lenny
+
+libc6[-dev] (c m pthreads ld-linux-x86-64 dl)
+libgcc1 (gcc_s)
+libstdc++6[-4.6-dev] (stdc++)
+libicu44 (icuuc icui18n icudata)
+
+boost
+
+
+To compile for Release: set  CMAKE_BUILD_TYPE to RELEASE
+
+
+Add .htaccess:
+
+# .htaccess file to restrict access to the berg CGI scripts
+AuthType Basic
+AuthName "FeG Aachen - Redaktion"
+AuthUserFile /home/aachen/htaccess/brg_passwords
+Require valid-user 
+
+Create brg_passwords:
+htpasswd -c brg_passwords firstusername
+
+Add user/password
+htpasswd brg_passwords nextusername
+
+
+
+
+Using boost::locale:
+Add these ICU libs when linking (similar to pthread): -licuuc -licuio
+Link to boost_thread must be *after* boost_locale
+
+
+When running the first executables on a Lenny system, this excpetion was thrown:
+[cgi] Exception: locale::facet::_S_create_c_locale name not valid
+Here are some hints about the problem in the used old libstdc++:
+http://gcc.gnu.org/ml/libstdc++/2003-02/msg00345.html
+http://sources.redhat.com/bugzilla/show_bug.cgi?id=165
+
+Rebuild boost on lenny, but change in project-config.jam:
+using gcc; to 
+using gcc : 4.3 : g++ : compileflags="-DBOOST_NO_STD_LOCALE";
+
+
