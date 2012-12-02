@@ -4,8 +4,8 @@ use strict;
 use warnings;
 
 use utf8;
-use Test::More tests => 5;
-use BERG::PEX qw(add_italic add_author
+use Test::More tests => 7;
+use BERG::PEX qw(add_author add_bold add_caption add_italic 
                  replace_characters);
 
 #TODO: {
@@ -24,7 +24,14 @@ ok('\textit{\normalsize'." ".'italic}' eq $result);
  
 $result = add_author('add_author');
 #print '+'.$result.'+';
-ok('\textit{\small '.'add_author}'."\n".'\bigskip' eq $result, $result);
+ok('\textit{\small '.'add_author}'."\n".'\bigskip' eq $result);#, $result);
 
+$result = add_bold('add_bold');
+#print '+'.$result.'+';
+ok('\textbf{add_bold}' eq $result);
+
+$result = add_caption('add_caption');
+#print '+'.$result.'+'."\n";
+ok('\textbf{~\\\\'."\n".'add_caption}'."\n".'\vspace{.5\baselineskip plus 1ex minus 0.5ex}' eq $result);
 
 

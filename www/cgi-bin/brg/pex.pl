@@ -43,7 +43,8 @@ use vars qw(@EXPORT_OK @ISA $VERSION);
 
 $VERSION = 'v2.07/02.12.2012';
 # exports are used for testing purposes
-@EXPORT_OK = qw(add_author add_italic replace_characters);
+@EXPORT_OK = qw(add_author add_bold add_caption add_italic
+                replace_characters);
 @ISA = qw(Exporter);
 
 # Standardeingabe und Standardausgabe in UTF-8:
@@ -83,10 +84,6 @@ my $AUSGABE=undef;#Text mit $AUSGABEZEITRAUM und fortlaufender Nummerierung; Unt
 my $AUFLAGE=undef;#Auflagenhöhe
 my $Rende=undef;#Datum des Redaktionsschlusses
 my $RENDE=undef;#Text zum Redaktionsschluss
-#-----UeberschriftDef-- >UBS#A#E#
-my $UB1f="\\textbf{"; #Fett
-my $UB1u="\\textup{"; #Kapitälchen
-my $UB2="}";
 #-----WochentagDef s. INFOLISTE
 my @WTG= qw(nix Montag  Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag);
 #-----SchriftgroessenDef />sg#N#
@@ -561,17 +558,17 @@ sub evaluate_commands #...Metazeichenauswertung
     if($f[0] eq "1")
     {
         if ($f[1] =~/^-/) { print $OUT "% section ignoriert (wg. -): $f[1]\n";return; }
-        else { $u=add_hierachical_caption($f[1],$SGU+2);print_alignment("\\section{$u} ",$f[2]);return; }
+        else { $u=add_hierachical_caption($f[1]);print_alignment("\\section{$u} ",$f[2]);return; }
     }
     if($f[0] eq "2")
     {
         if ($f[1] =~/^-/) { print $OUT "% subsection ignoriert (wg. -): $f[1]\n";return; }
-        else { $u=add_hierachical_caption($f[1],$SGU+1);print_alignment("\\subsection{$u} ",$f[2]);return;}
+        else { $u=add_hierachical_caption($f[1]);print_alignment("\\subsection{$u} ",$f[2]);return;}
     }
     if($f[0] eq "3")
     {
         if ($f[1] =~/^-/) { print $OUT "% subsubsection ignoriert (wg. -): $f[1]\n";return; }
-        else { $u=add_hierachical_caption($f[1],$SGU);print_alignment("\\subsubsection{$u} ",$f[2]);return;}
+        else { $u=add_hierachical_caption($f[1]);print_alignment("\\subsubsection{$u} ",$f[2]);return;}
     }
     if($f[0] =~/BPFAD/i) {$Bpfad=$f[1]; return;} #Standardjpg-Bildverzeichnis
     #...AbschnittsEnde (LIFO-Stack)
@@ -622,7 +619,6 @@ sub evaluate_commands #...Metazeichenauswertung
     if($f[0] =~/AUSGABEZEITRAUM/i) {print $OUT "$AUSGABEZEITRAUM"; if (defined $f[1]) {print $OUT $f[1];} return;}
     if($f[0] =~/AUSGABE/i) {print $OUT "{\\Large $AUSGABE}";return;}
     if($f[0] =~/RENDE/i) {print $OUT "$RENDE";return;}
-    #if($f[0] =~/UEBER/i) {($UB1,$UB2)=split(/#/,$f[1]);};#berschriften Redef.
     }
 
 #-----------------------------------------------------
@@ -770,7 +766,7 @@ sub add_bold #...Zeile hervorheben
     my $s=shift;
     my $x=$SGO;
     if ($x<0) {$x=0;}
-    return($UB1f.$s.$UB2);
+    return('\textbf{'.$s.'}');
     }
 #-----------------------------------------------------
 sub add_italic #...Zeile in Kursiv
@@ -779,7 +775,7 @@ sub add_italic #...Zeile in Kursiv
     my $s=shift;
     my $x=$SGO;
     if ($x<0) {$x=0;}
-    return('\textit{'.$SG[$x]." ".$s.$UB2);
+    return('\textit{'.$SG[$x]." ".$s.'}');
     }
 #-----------------------------------------------------
 sub add_author # Author of article
@@ -788,29 +784,24 @@ sub add_author # Author of article
     my $s=shift;
     my $x=$SGO-1;
     if ($x<0) {$x=0;}
-    return('\textit{'.$SG[$x]." ".$s.$UB2."\n"."\\bigskip");
+    return('\textit{'.$SG[$x]." ".$s.'}'."\n"."\\bigskip");
     }
 #-----------------------------------------------------
 sub add_caption #...Ueberschrift erzeugen
 #----------------------------------------------------
     {
     my $s=shift;
-    $s=~ s/^ +//g;#führende Leerzeichen entfernen
-    #my $x=$SGU+0;
-    #if ($x>9) {$x=9;}
-    #return($UB1f."{$SG[$x]".'~\vspace{\baselineskip}\\ '.$s.'\vspace{0.2\baselineskip}}'.$UB2);
-    # only bold and some space:
-    return($UB1f.'~\\\\'.$s.'\vspace{.5\baselineskip plus 1ex minus 0.5ex}'.$UB2);# TODO \\ wieder entfernen, da nicht robust und nicht variable.
+    $s=~ s/^ +//g;#remove leading space
+    # set in bold letter and add some space:
+    return('\textbf{~\\\\'."\n".$s.'}'."\n".'\vspace{.5\baselineskip plus 1ex minus 0.5ex}');# TODO \\ wieder entfernen, da nicht robust und nicht variable.
     }
 
 #-----------------------------------------------------
 sub add_hierachical_caption #...Ueberschrift für Hierarchien
 #----------------------------------------------------
     {
-    my ($s,$sgx)=@_;
-    $s=~ s/^ +//g;#führende Leerzeichen entfernen
-    #if ($$sgx>9) {$$sgx=9;}
-    #return($UB1f."{".$SG[$sgx]." $s}".$UB2);# wenn hier die Schriftgröße verändert wird, wirkt sich das auch auf das Inhaltsverzeichnis aus. 
+    my $s=shift;
+    $s=~ s/^ +//g;#remove leading space
     return($s);
     }
 
