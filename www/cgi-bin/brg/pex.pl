@@ -29,7 +29,7 @@
 #        ->die Aufteilung in Kopf-, Haupt- und Fußtext soll der Übersicht bei der Eingabe im Webbrowser dienen->wird im Hash als ein Text zusammengefasst!
 #
 #############################################################################
-package BERG::PEX;
+#package BERG::PEX;
 
 use strict;
 use warnings;
@@ -41,11 +41,10 @@ use utf8;                          # UTF-8 Kodierung auch in regulären Ausdrüc
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.07/02.12.2012';
+$VERSION = 'v2.08/11.12.2012';
 # exports are used for testing purposes
-@EXPORT_OK = qw(add_author add_bold add_caption add_italic
-                replace_characters);
-@ISA = qw(Exporter);
+#@EXPORT_OK = qw(add_author add_bold add_caption add_italic replace_characters);
+#@ISA = qw(Exporter);
 
 # Standardeingabe und Standardausgabe in UTF-8:
 binmode(STDIN, ":encoding(utf8)");
@@ -53,7 +52,7 @@ binmode(STDOUT, ":encoding(utf8)");
 
 # run is called, when this script is used as standalone script.
 # Otherwise the methods are available from the package.
-__PACKAGE__->run( @ARGV ) unless caller();
+#__PACKAGE__->run( @ARGV ) unless caller();
 
 #---Start : Globale --------------------------------------------------
 my %BEF=();#TextMakro-Befehlshash 23.10.2010
@@ -64,7 +63,6 @@ my $TTAB="";#Tabellenplot-Speicher Inhalt wird nach Kapitelwechsel ausgegeben 26
 my $TABTXTFLG=2;#ArtikelTagFlag-> 2=komplett 1=NUR InfoKopftabelle(ohne Textanhang 0=ABSCHALTEN(komplett ausblenden->man.Übersichtstabellen einfügen möglich!26.11.2008
 my $BILDFLG=1;#1=Bildausgabe 0=Bildunterdrückung - oeko-Formatierung fuer erstellungsphase 10.6.2008
 my $NL="\\\\";#LatexNewline
-my $LIM="\x09";
 my $ITZ=0;#Latex\item-Zähler
 my $ITS="";# letztes Metazeichen - wird in testit() ggf. mit ausgegeben, Beispielwert ist \item
 my $KAPM="Kapitel";#Kapitelspeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
@@ -121,8 +119,8 @@ my @stack = "";#BefehlsReturnStack
 my $OUT = undef;# Handle to the resulting output file 
 
 #-----Start (Main)-----------    
-sub run
-{
+#sub run
+#{
     $inp = $ARGV[0];
     if (!$inp) { $inp="feginfo.csv"; }
     if ($ARGV[1])
@@ -143,7 +141,7 @@ sub run
     print_version();
     load_database();
     create_tex();
-}
+#}
 
 #-----------------------------------------------------
 sub print_version # Version in TeX-Datei und Standardausgabe
@@ -151,7 +149,7 @@ sub print_version # Version in TeX-Datei und Standardausgabe
 {
     my $msg = "Programm: $0, $VERSION (Perl $]) ---> Dokument: IN($inp) => OUT($OUPTEX) [ ".scalar localtime()." ]\n";
     print $OUT '%'." $msg";
-    print "$VERSION";
+    print "$msg";
 }
 
 #-----------------------------------------------------
@@ -159,6 +157,7 @@ sub load_database #...parsen der PEX-DB-Datei ->hash!
 #-----------------------------------------------------
     {
     my (@f,$k,$s,$PIN);
+    my $LIM="\x09";
     #$PIN=IO::File->new("<$inp");
     open($PIN, "<:encoding(utf8)", $inp);   
     if(defined $PIN) {;} else {die  "Fehler beim Öffnen von $inp!";}
@@ -192,6 +191,7 @@ sub create_tex #...TeX-Dokument aus SortHash generieren!
 #-----------------------------------------------------
     {
     my ($kap,$zz,$k,$tnr,$titel,$typ,$text,$top,$x,$ueber,$s);
+    my $LIM="\x09";
     print  "\nMoment bitte ...TeX-Dokument [$OUPTEX] wird erzeugt!...\n";
     foreach $k (sort keys %idx)
         {
@@ -220,12 +220,12 @@ sub create_tex #...TeX-Dokument aus SortHash generieren!
                     {
                     if ("Angebote" eq $ueber) 
                         {
-                        $top='>1#Regelm\"a{\ss}ige Angebote#x'; testit($top);#section generieren 
-                        $top='>2#\"Uberblick#x'; testit($top);#subsection generieren
+                        $top='>1#Regelm\"a{\ss}ige Angebote (alt)#x'; testit($top);#section generieren 
+                        $top='>2#\"Uberblick (alt)#x'; testit($top);#subsection generieren
                         }
                     else
                         {
-                        $top=">2#".$ueber."#x"; testit($top);#section generieren    
+                        $top=">2#".$ueber." (alt)#x"; testit($top);#section generieren    
                         } 
                     }
                  else
@@ -360,6 +360,7 @@ sub print_table #...Tabelle     bis >* erzeugen
         last if($s=~/\>\*/);
         @f=split(/#/,$s);
         $fx=$f[0];
+        if (!defined($fx)) { $fx=''; }# TODO: change this to avoid following unnecessary comparisons/processing
         if($fx=~s/^\-//g)# falls 1.Zeichen in 1.Spalte ="-" ->Hline unterbinden!
             {$f[0]=$fx;$fx="-";}#..Tricki!
         $s=""; foreach $e(@f){$s.="$e&";};chop($s);
@@ -580,6 +581,7 @@ sub evaluate_commands #...Metazeichenauswertung
             if ($t=~/itemize|enumerate|dinglist/){$ITZ--;}
             print $OUT $t."\n";
             }
+        if(!defined($ITZ)) {$ITS="";}
         if(!$ITZ) {$ITS="";}
         #print $s."=".$t;<STDIN>;
         return;
@@ -784,6 +786,7 @@ sub add_author # Author of article
     my $s=shift;
     my $x=$SGO-1;
     if ($x<0) {$x=0;}
+    if (!defined($s)) { $s=''; print "* Autor fehlt.\n"; }# TODO add line number or other context
     return('\textit{'.$SG[$x]." ".$s.'}'."\n"."\\bigskip");
     }
 #-----------------------------------------------------
@@ -793,7 +796,7 @@ sub add_caption #...Ueberschrift erzeugen
     my $s=shift;
     $s=~ s/^ +//g;#remove leading space
     # set in bold letter and add some space:
-    return('\textbf{~\\\\'."\n".$s.'}'."\n".'\vspace{.5\baselineskip plus 1ex minus 0.5ex}');# TODO \\ wieder entfernen, da nicht robust und nicht variable.
+    return('\textbf{~\\\\'."\n".$s.'}'."\n".'\vspace{.5\baselineskip plus 1ex minus 0.5ex}');# TODO \\ wieder entfernen, da nicht robust und nicht variabel.
     }
 
 #-----------------------------------------------------
