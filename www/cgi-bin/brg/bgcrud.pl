@@ -38,7 +38,7 @@ binmode(STDOUT, ":encoding(utf8)");
 
 
 #--- GlobalSet ---
-my $VERSION="v2.07, 12.08.2012";
+my $VERSION="v2.08, 11.12.2012";
 #my ($TODO1, $TODO2);# Platzhalter für ToDo-Marker ?t1/?t2 s.a. ?h
 #my $CHARSET;# Zeichensatzübergabe  ab 9.6.2009
 my $Neuflg;# falls  ? in Select-Listen wird Auswahlliste für Neueingabe unterdrückt!
@@ -205,7 +205,7 @@ sub create_form          # Formular aus Basis- und Quell-Tabellendaten generiere
     print '<form name="editArticle" action="'.$aktion.'" method=post'.">\n";
     print '<h3>'.$headline.'</h3>'.'<table>'."\n";
     #print "<th><b>$title</b></th><td>$LCrud $Ok $pmemo</td></tr>\n";
-    print "<tr><th><b>$headline</b></th></tr>\n";
+    #print "<tr><th><b>$headline</b></th></tr>\n";
     foreach $fx (sort keys %Formsort)
         {
         $feld=$Formsort{$fx};
