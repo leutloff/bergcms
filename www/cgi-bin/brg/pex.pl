@@ -616,7 +616,7 @@ sub evaluate_commands #...Metazeichenauswertung
         if($f[1]){print $OUT "\\def\\contentsname{{\\Large $f[1]}}\\tableofcontents\n\\clearpage";return;}
         else{print $OUT "\\def\\contentsname{\\Large Inhalt\\large\\dotfill $NUMMER/$Jahr}\\tableofcontents\n\\clearpage";return;}
         }
-    if($f[0] =~/AUFLAGE/i) {print $OUT "{\\large Auflage: $AUFLAGE}\n";return;}
+    if($f[0] =~/AUFLAGE/i) {print $OUT "Auflage: $AUFLAGE\n";return;}
     # AUSGABEZEITRAUM mus vor AUSGABE stehen, damit es zuerst passt
     if($f[0] =~/AUSGABEZEITRAUM/i) {print $OUT "$AUSGABEZEITRAUM"; if (defined $f[1]) {print $OUT $f[1];} return;}
     if($f[0] =~/AUSGABE/i) {print $OUT "{\\Large $AUSGABE}";return;}
