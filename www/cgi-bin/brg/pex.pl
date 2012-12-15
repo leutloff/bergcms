@@ -41,7 +41,7 @@ use utf8;                          # UTF-8 Kodierung auch in regulären Ausdrüc
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.08/11.12.2012';
+$VERSION = 'v2.08/15.12.2012';
 # exports are used for testing purposes
 #@EXPORT_OK = qw(add_author add_bold add_caption add_italic replace_characters);
 #@ISA = qw(Exporter);
@@ -616,7 +616,7 @@ sub evaluate_commands #...Metazeichenauswertung
         if($f[1]){print $OUT "\\def\\contentsname{{\\Large $f[1]}}\\tableofcontents\n\\clearpage";return;}
         else{print $OUT "\\def\\contentsname{\\Large Inhalt\\large\\dotfill $NUMMER/$Jahr}\\tableofcontents\n\\clearpage";return;}
         }
-    if($f[0] =~/AUFLAGE/i) {print $OUT "{\\large Auflage: $AUFLAGE}\n\n";return;}
+    if($f[0] =~/AUFLAGE/i) {print $OUT "{\\large Auflage: $AUFLAGE}\n";return;}
     # AUSGABEZEITRAUM mus vor AUSGABE stehen, damit es zuerst passt
     if($f[0] =~/AUSGABEZEITRAUM/i) {print $OUT "$AUSGABEZEITRAUM"; if (defined $f[1]) {print $OUT $f[1];} return;}
     if($f[0] =~/AUSGABE/i) {print $OUT "{\\Large $AUSGABE}";return;}
