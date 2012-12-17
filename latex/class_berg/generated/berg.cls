@@ -18,7 +18,7 @@
 
 %% \StopEventually{\PrintIndex\PrintChanges}
 \NeedsTeXFormat{LaTeX2e}[2009/09/24]
-\ProvidesClass{berg}[2012/11/05 v3.0a Berg CMS document class]
+\ProvidesClass{berg}[2012/12/17 v3.0a Berg CMS document class]
 \RequirePackage{ifthen}
 \RequirePackage[utf8x]{inputenx}
 \DeclareOption{draft}{\PassOptionsToClass{draft}{article}}
@@ -54,7 +54,8 @@
 \RequirePackage{amssymb}
 \RequirePackage{pifont}
 \RequirePackage[right]{eurosym}
-\RequirePackage[breaklinks,hidelinks]{hyperref}
+\RequirePackage{mdwlist}
+\RequirePackage[breaklinks]{hyperref}
 \urlstyle{same}%
 
 \providecommand\PeX{%
