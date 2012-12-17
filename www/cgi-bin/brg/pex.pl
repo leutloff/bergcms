@@ -29,7 +29,7 @@
 #        ->die Aufteilung in Kopf-, Haupt- und Fußtext soll der Übersicht bei der Eingabe im Webbrowser dienen->wird im Hash als ein Text zusammengefasst!
 #
 #############################################################################
-#package BERG::PEX;
+package BERG::PEX;
 
 use strict;
 use warnings;
@@ -41,10 +41,10 @@ use utf8;                          # UTF-8 Kodierung auch in regulären Ausdrüc
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.08/15.12.2012';
+$VERSION = 'v2.08/17.12.2012';
 # exports are used for testing purposes
-#@EXPORT_OK = qw(add_author add_bold add_caption add_italic replace_characters);
-#@ISA = qw(Exporter);
+@EXPORT_OK = qw(add_author add_bold add_caption add_italic replace_characters);
+@ISA = qw(Exporter);
 
 # Standardeingabe und Standardausgabe in UTF-8:
 binmode(STDIN, ":encoding(utf8)");
@@ -52,75 +52,86 @@ binmode(STDOUT, ":encoding(utf8)");
 
 # run is called, when this script is used as standalone script.
 # Otherwise the methods are available from the package.
-#__PACKAGE__->run( @ARGV ) unless caller();
+__PACKAGE__->run( @ARGV ) unless caller();
 
-#---Start : Globale --------------------------------------------------
-my %BEF=();#TextMakro-Befehlshash 23.10.2010
-my $SPM=1;#SpaltenMemo - damit Automatik bei TagGesamtTabellen(=1spaltig) und zurücksetzen funzt!27.11.2008
-my %TTKEY=();#TagTabellenSpalten-Hash init -> GesamtArtikelTabelle 26.11.2008
-my $TTKAP="";#Kapitelspeicher-> Tabellenplot nach Kapitelwechsel! 26.11.2008
-my $TTAB="";#Tabellenplot-Speicher Inhalt wird nach Kapitelwechsel ausgegeben 26.11.2008
-my $TABTXTFLG=2;#ArtikelTagFlag-> 2=komplett 1=NUR InfoKopftabelle(ohne Textanhang 0=ABSCHALTEN(komplett ausblenden->man.Übersichtstabellen einfügen möglich!26.11.2008
-my $BILDFLG=1;#1=Bildausgabe 0=Bildunterdrückung - oeko-Formatierung fuer erstellungsphase 10.6.2008
-my $NL="\\\\";#LatexNewline
-my $ITZ=0;#Latex\item-Zähler
-my $ITS="";# letztes Metazeichen - wird in testit() ggf. mit ausgegeben, Beispielwert ist \item
-my $KAPM="Kapitel";#Kapitelspeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
-my $TAGM=0;#WochentagsSpeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
-my @TXZ;#globaler Textzeilenspeicher
-my $Iformat="|p{10mm}||p{42mm}|";#InfoTabellenformat->Artikelheader (falls gewünscht ! - unterbinden: 1.Zeile = >*
-#my $Bpfad="bilder";#Bilder-Pfad -> *.jpg-Archiv
-my $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";#Bilder-Pfad -> *.jpg-Archiv
-my $Logopfad="/home/aachen/cgi-bin/brg/br/icons";#Bilder-Pfad -> *.jpg-Archiv
-my $SCALE=undef;#Skalierung festlegen, z.B. bei Tabellen
-my $SGOF=undef;#SchriftgroessenOffset
-my $Monat=undef;#Erscheinungsmonat
-my $Jahr=undef;#Erscheinungsjahr
-my $NUMMER=undef;#Fortlaufende Nummerierung der Gemeindeinformationen
-my $AUSGABEZEITRAUM=undef;#Text der Ausgabe mit Erscheinungsjahr/Erscheinungsmonat; wird im PDF Inhaltsverzeichnis verwendent 
-my $AUSGABE=undef;#Text mit $AUSGABEZEITRAUM und fortlaufender Nummerierung; Unterschrift der Titelseite
-my $AUFLAGE=undef;#Auflagenhöhe
-my $Rende=undef;#Datum des Redaktionsschlusses
-my $RENDE=undef;#Text zum Redaktionsschluss
-#-----WochentagDef s. INFOLISTE
-my @WTG= qw(nix Montag  Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag);
+#--- Define the Global Variables --------------------------------------------------
+our %BEF=();#TextMakro-Befehlshash 23.10.2010
+our $SPM=1;#SpaltenMemo - damit Automatik bei TagGesamtTabellen(=1spaltig) und zurücksetzen funzt!27.11.2008
+our %TTKEY=();#TagTabellenSpalten-Hash init -> GesamtArtikelTabelle 26.11.2008
+our $TTKAP="";#Kapitelspeicher-> Tabellenplot nach Kapitelwechsel! 26.11.2008
+our $TTAB="";#Tabellenplot-Speicher Inhalt wird nach Kapitelwechsel ausgegeben 26.11.2008
+our $TABTXTFLG=2;#ArtikelTagFlag-> 2=komplett 1=NUR InfoKopftabelle(ohne Textanhang 0=ABSCHALTEN(komplett ausblenden->man.Übersichtstabellen einfügen möglich!26.11.2008
+our $BILDFLG=1;#1=Bildausgabe 0=Bildunterdrückung - oeko-Formatierung fuer erstellungsphase 10.6.2008
+our $NL="\\\\";#LatexNewline
+our $ITZ=0;#Latex\item-Zähler
+our $ITS="";# letztes Metazeichen - wird in testit() ggf. mit ausgegeben, Beispielwert ist \item
+our $KAPM="Kapitel";#Kapitelspeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
+our $TAGM=0;#WochentagsSpeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
+our @TXZ=undef;#globaler Textzeilenspeicher
+our $Iformat="|p{10mm}||p{42mm}|";#InfoTabellenformat->Artikelheader (falls gewünscht ! - unterbinden: 1.Zeile = >*
+#our $Bpfad="bilder";#Bilder-Pfad -> *.jpg-Archiv
+our $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";#Bilder-Pfad -> *.jpg-Archiv
+our $Logopfad="/home/aachen/cgi-bin/brg/br/icons";#Bilder-Pfad -> *.jpg-Archiv
+our $SCALE=undef;#Skalierung festlegen, z.B. bei Tabellen
+our $SGOF=undef;#SchriftgroessenOffset
+our $Monat=undef;#Erscheinungsmonat
+our $Jahr=undef;#Erscheinungsjahr
+our $NUMMER=undef;#Fortlaufende Nummerierung der Gemeindeinformationen
+our $AUSGABEZEITRAUM=undef;#Text der Ausgabe mit Erscheinungsjahr/Erscheinungsmonat; wird im PDF Inhaltsverzeichnis verwendent
+our $AUSGABE=undef;#Text mit $AUSGABEZEITRAUM und fortlaufender Nummerierung; Unterschrift der Titelseite
+our $AUFLAGE=undef;#Auflagenhöhe
+our $Rende=undef;#Datum des Redaktionsschlusses
+our $RENDE=undef;#Text zum Redaktionsschluss
 #-----SchriftgroessenDef />sg#N#
-my $SGO=4;# Standardschriftgröße
-my $SGU=$SGO+0;# Standardschriftgröße der kleinsten Überschrift
-my @SG= qw(\\tiny \\scriptsize \\footnotesize \\small \\normalsize \\large \\Large \\LARGE \\huge \\Huge);
+our $SGO=4;# Standardschriftgröße
+our $SGU=$SGO+0;# Standardschriftgröße der kleinsten Überschrift
+our @SG;
 #-----Zeilenabstandsdichte />sg#N#
-my $ZD0=1;# StandardZeilendiche =1
-my $ZDM=1;# StandardMEMO-Zeilendiche =1 24.5.2007->bei >zd#0 wird ZD0=ZDM!
-my $ZDI=0.5;# StandardZeilendiche =0.5ex Items
-# TODO verschieben
-my %symbole=();#Symbolhash aus pifont
-$symbole{"karo"}=117;
-$symbole{"dreieck"}=115;
-$symbole{"kasten"}=111;
-$symbole{"kreis"}=109;
-$symbole{"finger"}=43;
-$symbole{"hand"}=44;
-$symbole{"kreuz"}=55;
-$symbole{"kreuzjesu"}=62;
-$symbole{"haken"}=51;
-$symbole{"schere"}=34;
-$symbole{"pfeil"}=212;
-$symbole{"stern"}=80;
-$symbole{"stift"}=46;
-$symbole{"herz"}=170;
-$symbole{"brief"}=41;
-$symbole{"blume"}=96;
-$symbole{"telefon"}=37;
+our $ZD0=1;# StandardZeilendiche =1
+our $ZDM=1;# StandardMEMO-Zeilendiche =1 24.5.2007->bei >zd#0 wird ZD0=ZDM!
+our $ZDI=0.5;# StandardZeilendiche =0.5ex Items
 
-my %idx=();#IndexHash - DB einscannen
-my $inp = "";# Filename for the input
-my $OUPTEX = "";# Filename for the output    
-my @stack = "";#BefehlsReturnStack
-my $OUT = undef;# Handle to the resulting output file 
+our %idx=();#IndexHash - DB einscannen
+our $inp = "";# Filename for the input
+our $OUPTEX = "";# Filename for the output
+our @stack = "";#BefehlsReturnStack
+our $OUT = undef;# Handle to the resulting output file
 
+#--- Initialize the Global Variables --------------------------------------------------
+INIT {
+    %BEF=();
+    $SPM=1;
+    %TTKEY=();
+    $TTKAP="";
+    $TTAB="";
+    $TABTXTFLG=2;
+    $BILDFLG=1;
+    $NL="\\\\";
+    $ITZ=0;
+    $ITS="";
+    $KAPM="Kapitel";
+    $TAGM=0;
+    $Iformat="|p{10mm}||p{42mm}|";
+    #$Bpfad="bilder";
+    $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";
+    $Logopfad="/home/aachen/cgi-bin/brg/br/icons";
+    $SGO=4;
+    $SGU=$SGO+0;
+    @SG= qw(\\tiny \\scriptsize \\footnotesize \\small \\normalsize \\large \\Large \\LARGE \\huge \\Huge);
+    $ZD0=1;
+    $ZDM=1;
+    $ZDI=0.5;
+
+    %idx=();
+    $inp = "";
+    $OUPTEX = "";
+    @stack = "";
+}
+
+# 
 #-----Start (Main)-----------    
-#sub run
-#{
+sub run
+{
     $inp = $ARGV[0];
     if (!$inp) { $inp="feginfo.csv"; }
     if ($ARGV[1])
@@ -141,7 +152,7 @@ my $OUT = undef;# Handle to the resulting output file
     print_version();
     load_database();
     create_tex();
-#}
+}
 
 #-----------------------------------------------------
 sub print_version # Version in TeX-Datei und Standardausgabe
@@ -192,6 +203,7 @@ sub create_tex #...TeX-Dokument aus SortHash generieren!
     {
     my ($kap,$zz,$k,$tnr,$titel,$typ,$text,$top,$x,$ueber,$s);
     my $LIM="\x09";
+    my @WTG= qw(nix Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag);#-----WochentagDef s. INFOLISTE TODO remove
     print  "\nMoment bitte ...TeX-Dokument [$OUPTEX] wird erzeugt!...\n";
     foreach $k (sort keys %idx)
         {
@@ -728,12 +740,33 @@ sub print_itemize #...FolgeZeilen durchpunktieren
     print $OUT "\\begin{itemize}\n";
     add_list_space();
     }
+
 #-----------------------------------------------------
 sub print_dinglist #...FolgeZeilen durchpunktieren mit Symbolen aus pifont
 #-----------------------------------------------------
     {
     my $s=shift;
     my $sym;
+
+    # TODO: make the following static!? and l18n
+    my %symbole=();#Symbolhash aus pifont
+    $symbole{"brief"}=41;
+    $symbole{"telefon"}=37;
+    $symbole{"blume"}=96;
+    $symbole{"karo"}=117;
+    $symbole{"dreieck"}=115;
+    $symbole{"kasten"}=111;
+    $symbole{"kreis"}=109;
+    $symbole{"finger"}=43;
+    $symbole{"hand"}=44;
+    $symbole{"kreuz"}=55;
+    $symbole{"kreuzjesu"}=62;
+    $symbole{"haken"}=51;
+    $symbole{"schere"}=34;
+    $symbole{"pfeil"}=212;
+    $symbole{"stern"}=80;
+    $symbole{"stift"}=46;
+    $symbole{"herz"}=170;
 
     $sym=$symbole{$s};
     if(!$sym){$sym=97;}#default = blume
