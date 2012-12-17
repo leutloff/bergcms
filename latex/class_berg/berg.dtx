@@ -71,11 +71,12 @@
 %   Right brace   \}     Tilde         \~}
 %
 % \changes{v3.0a}{2012/11/05}{Initial version that is provided as \texttt{.dtx} and using \texttt{docstrip}.}
+% \changes{v3.0b}{2012/12/17}{First Version used for Production. Added package to support fixed indentation lists. Reduced spacing for quote environment.}
 
 %
 % \title{Berg CMS -- Reference of the document class}
 % \author{Christian Leutloff}
-% \date{2012/11/05}
+% \date{2012/12/17}
 % \maketitle
 % \begin{abstract}
 % \noindent The \texttt{berg} class is used by the Berg CMS when generating the PDF files for printing.
@@ -103,7 +104,7 @@
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}[2009/09/24]
-\ProvidesClass{berg}[2012/12/17 v3.0a Berg CMS document class]
+\ProvidesClass{berg}[2012/12/17 v3.0b Berg CMS document class]
 %    \end{macrocode}
 %
 % \subsection{Load initial Packages}
@@ -307,8 +308,30 @@
 \setlength{\parskip}{1.0ex plus 0.8ex minus 0.5ex}
 %    \end{macrocode}
 %
-
-
+%
+% Reduce spacing of quote environment and set the content in italic characters.
+%
+% \iffalse
+% Original definition in article.cls
+%\newenvironment{quote}
+%               {\list{}{\rightmargin\leftmargin}%
+%                \item\relax}
+%               {\endlist}
+%
+% \fi
+%    \begin{macrocode}
+\renewenvironment{quote}{%
+  \list{}{%
+    \setlength{\leftmargin}{6mm}
+    \rightmargin\leftmargin
+  }
+  \itshape
+  \item\relax
+}
+{\endlist}
+%    \end{macrocode}
+%
+%
 % \subsection{Index related}
 %
 % Used to generate the picture credits from information provided by |>Bild#...#author#...| information.

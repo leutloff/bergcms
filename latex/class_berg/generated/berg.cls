@@ -18,7 +18,7 @@
 
 %% \StopEventually{\PrintIndex\PrintChanges}
 \NeedsTeXFormat{LaTeX2e}[2009/09/24]
-\ProvidesClass{berg}[2012/12/17 v3.0a Berg CMS document class]
+\ProvidesClass{berg}[2012/12/17 v3.0b Berg CMS document class]
 \RequirePackage{ifthen}
 \RequirePackage[utf8x]{inputenx}
 \DeclareOption{draft}{\PassOptionsToClass{draft}{article}}
@@ -91,7 +91,15 @@
 \setlength{\emergencystretch}{4em}
 \setlength{\parindent}{0mm}
 \setlength{\parskip}{1.0ex plus 0.8ex minus 0.5ex}
-
+\renewenvironment{quote}{%
+  \list{}{%
+    \setlength{\leftmargin}{6mm}
+    \rightmargin\leftmargin
+  }
+  \itshape
+  \item\relax
+}
+{\endlist}
 \newcounter{bergpicturecreditspage}%
 \renewenvironment{theindex}
 {%
