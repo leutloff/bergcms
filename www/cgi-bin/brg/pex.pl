@@ -169,7 +169,6 @@ sub load_database #...parsen der PEX-DB-Datei ->hash!
     {
     my (@f,$k,$s,$PIN);
     my $LIM="\x09";
-    #$PIN=IO::File->new("<$inp");
     open($PIN, "<:encoding(utf8)", $inp);   
     if(defined $PIN) {;} else {die  "Fehler beim Öffnen von $inp!";}
     flock($PIN, LOCK_SH) || die("\nFehler: Konnte die Datei $inp nicht zum Lesen sperren (load_database)!\n");
@@ -178,9 +177,7 @@ sub load_database #...parsen der PEX-DB-Datei ->hash!
         {
         chompx(\$_);#UniversalChomp-call by Reference
         @f=split(/$LIM/,$_);
-        #next if $f[0] eq $OUPTEX;# nur texte aus def. Bericht laden - 0 ist nun der AI (Artikelindex)
         next if ($f[2] !~ /^[0-9-+]*$/ || $f[2]<0);# Texte mit Nr.<0 oder keiner Zahl direkt ausblenden!
-        #$k=$f[0].$LIM.$f[1].$LIM.$f[2].$LIM.$f[3];# Key= Bericht+Kapitel+Nr+Titel - Ordnungshierachie!
         $k=$f[1].$LIM.$f[2].$LIM.$f[3];# Key=Kapitel+Nr+Titel - Ordnungshierachie!
         if (defined $f[7])
         {
@@ -212,7 +209,7 @@ sub create_tex #...TeX-Dokument aus SortHash generieren!
         $zz++;
         print "$zz\t$kap\t$tnr\t$titel\t$typ\t$#TXZ\n";
         # todo: hier verweis auf den artikel ausgeben
-        #plott_zeilen();
+        # print_article_content();
         #TODO: TTKAP entfernen
         if($TTKAP && (($tnr==9 || $TTKAP ne $kap))) # falls Tagestabelle aktiv und Kapitelwechsel generell - jetzt abschließen 26.11.2008
             {
@@ -540,7 +537,6 @@ sub evaluate_commands #...Metazeichenauswertung
     if($f[0] eq "tsx") {$TABTXTFLG=$f[1];return;} #Textanhang nach InfoKopftabelle EIN/AUSblenden 25.11.2008
     if($f[0] eq "bsx")#Bildschalter EIN(1) / AUS(0) - 0 -> Bilder werden durch Text ersetzt! 10.6.2008
     {
-        #$BILDFLG=$f[1];
         print $OUT "\n% Bildschalter bsx ist obsolete, da PeX prüft, ob Bild da ist oder nicht. Ansonsten Option draft im Kopf von Dokumentenvorlage verwenden.\n";
         print "* Bildschalter bsx ist obsolete, da PeX prüft, ob Bild da ist oder nicht. Ansonsten Option draft im Kopf von Dokumentenvorlage verwenden.\n";
         return; 
@@ -551,7 +547,6 @@ sub evaluate_commands #...Metazeichenauswertung
     if($f[0] eq "sdt") {print $OUT "\\setlength{\\tabcolsep}{$f[1]}\n"; return;} #ExtraSpaltenSpace bei Tabellen z.B. 2pt 27.11.2008
     if($f[0] eq "sg") #Schriftgroessen 0..9/ 4=Normal!
     {
-        #$f[1]=~s/,/./g;
         if ($f[1] =~ /^[0-9]$/ )
         {
             $SGO=$f[1]+$SGOF; print $OUT $SG[$SGO]."\n";
@@ -702,14 +697,6 @@ sub print_table_for_day_init # initialisieren der Tagesartikel-Gesamttabelle 26.
     print $OUT ''.$u.' \\\\ \hline \hline'."\n";
     }
 
-##-----------------------------------------------------
-#sub textmakro #...Fett, Kursiv u.v.m man definieren und mit '::?' mitten im Text einbinden (?=beliebiges Zeichen) 23.10.2010
-##-----------------------------------------------------
-#    {
-#    my @f=@_;
-#    $BEF{$f[1]}=$f[2];#TextMakro in hash stellen!
-#    }
-#
 #-----------------------------------------------------
 sub print_columns #...Spaltenanz setzen
 #-----------------------------------------------------
@@ -857,7 +844,6 @@ sub replace_characters #...Suchen/ersetzen
 # CP1250 -> Unicode: ftp://ftp.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WINDOWS/CP1250.TXT
     {
     my $s=shift;
-    #my $cz;#Counter f. Zeichen 16.10.2009
     #print $OUT "% - testit()=> $s\n";
     if($s =~ /^;/) #1.Zeichen ;=Kommentar->bergehen!
        {return("");}
@@ -887,8 +873,6 @@ sub replace_characters #...Suchen/ersetzen
     $s =~ s/\x{201A}|&#x201A;|\x{2018}|&#x2018;|\x{2019}|&#x2019;|&#x0029;/\'/g; #falls ' im Text -> Latex'Ersatz
     
     #...reservierte Latex-Spezialzeichen
-#    my $cz=$s=~tr/&/&/;
-#    if($cz<2){$s =~ s/\&/\\&/g;} #&  nur Einzel-& ersetzen/sonst Tabelle
     $s =~ s/\§/\\S/g; # Paragraphzeichen
     #...Telefon/Mailsymbole einbauen!
     $s =~ s/Tel.:|Tel:/\\ding\{37\}/ig; #falls Tel.?-> Telefonsymbolersatz
@@ -926,7 +910,7 @@ sub chompx #...loescht universal(Windows,Dos,Linx-Zeilenvorschub!) sonst: Proble
     $$s=~s/\x0a|\x0d//g;
     }
 
-#sub plott_zeilen
+#sub print_article_content
 #    {
 #    my($a,$z);
 #    foreach $a (@TXZ){$z++;print "$z\t$a\n";}
