@@ -180,7 +180,7 @@ sub load_database #...parsen der PEX-DB-Datei ->hash!
         chompx(\$_);#UniversalChomp-call by Reference
         @f=split(/$LIM/,$_);
         next if ($f[2] !~ /^[0-9-+]*$/ || $f[2]<0);# Texte mit Nr.<0 oder keiner Zahl direkt ausblenden!
-        $k=$f[1].$LIM.$f[2].$LIM.$f[3];# Key=Kapitel+Nr+Titel - Ordnungshierachie!
+        $k=$f[1].$LIM.$f[2].$LIM.$f[3].$LIM.$f[0];# Sort by Key=chapter+number+title+articleindex
         if (defined $f[7])
         {
             $s=$f[1].$LIM.$f[2].$LIM.$f[3].$LIM.$f[4].$LIM.$f[5]."<br>".$f[6]."<br>".$f[7]."<br>";
@@ -191,7 +191,7 @@ sub load_database #...parsen der PEX-DB-Datei ->hash!
         }
         $idx{$k}=$s;#->ab in den Sort-Hash
         }
-    flock($PIN, LOCK_UN) || print "\nFehler: Konnte die Datei $inp nicht zum Lesen sperren (load_database)!\n";
+    flock($PIN, LOCK_UN) || print "\nFehler: Konnte die Lesesperre der Datei $inp nicht entfernen (load_database)!\n";
     $PIN->close();
     }
 
@@ -208,8 +208,9 @@ sub create_tex #...TeX-Dokument aus SortHash generieren!
         {
         ($kap,$tnr,$titel,$typ,$text)=split(/$LIM/,$idx{$k});
         @TXZ=split(/<br>/,$text);# Textblock in Zeilenspeicher!
+        my ($nix,$nix,$nix,$ai)=split(/$LIM/,$k);
         $zz++;
-        print "$zz\t[AI:$tnr]\t$kap\t$titel\t$typ\t$#TXZ\n";
+        print "$zz\t[AI:$ai]\t$kap ($tnr)\t$titel\t$typ\t$#TXZ\n";
         # todo: hier verweis auf den artikel ausgeben
         # print_article_content();
         #TODO: TTKAP entfernen
