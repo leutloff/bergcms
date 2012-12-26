@@ -209,7 +209,7 @@ sub create_tex #...TeX-Dokument aus SortHash generieren!
         ($kap,$tnr,$titel,$typ,$text)=split(/$LIM/,$idx{$k});
         @TXZ=split(/<br>/,$text);# Textblock in Zeilenspeicher!
         $zz++;
-        print "$zz\t$kap\t$tnr\t$titel\t$typ\t$#TXZ\n";
+        print "$zz\t[AI:$tnr]\t$kap\t$titel\t$typ\t$#TXZ\n";
         # todo: hier verweis auf den artikel ausgeben
         # print_article_content();
         #TODO: TTKAP entfernen
