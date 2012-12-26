@@ -54,13 +54,15 @@ binmode(STDOUT, ":encoding(utf8)");
 # Otherwise the methods are available from the package.
 __PACKAGE__->run( @ARGV ) unless caller();
 
+#----> function prototypes --------------------------------
+sub report_warning($);
+
 #--- Define the Global Variables --------------------------------------------------
 our %BEF=();#TextMakro-Befehlshash 23.10.2010
 our $SPM=1;#SpaltenMemo - damit Automatik bei TagGesamtTabellen(=1spaltig) und zurücksetzen funzt!27.11.2008
-our %TTKEY=();#TagTabellenSpalten-Hash init -> GesamtArtikelTabelle 26.11.2008
-our $TTKAP="";#Kapitelspeicher-> Tabellenplot nach Kapitelwechsel! 26.11.2008
-our $TTAB="";#Tabellenplot-Speicher Inhalt wird nach Kapitelwechsel ausgegeben 26.11.2008
-our $TABTXTFLG=2;#ArtikelTagFlag-> 2=komplett 1=NUR InfoKopftabelle(ohne Textanhang 0=ABSCHALTEN(komplett ausblenden->man.Übersichtstabellen einfügen möglich!26.11.2008
+#our %TTKEY=();#TagTabellenSpalten-Hash init -> GesamtArtikelTabelle 26.11.2008
+#our $TTKAP="";#Kapitelspeicher-> Tabellenplot nach Kapitelwechsel! 26.11.2008
+#our $TABTXTFLG=2;#ArtikelTagFlag-> 2=komplett 1=NUR InfoKopftabelle(ohne Textanhang 0=ABSCHALTEN(komplett ausblenden->man.Übersichtstabellen einfügen möglich!26.11.2008
 our $BILDFLG=1;#1=Bildausgabe 0=Bildunterdrückung - oeko-Formatierung fuer erstellungsphase 10.6.2008
 our $NL="\\\\";#LatexNewline
 our $ITZ=0;#Latex\item-Zähler
@@ -101,10 +103,9 @@ our $OUT = undef;# Handle to the resulting output file
 INIT {
     %BEF=();
     $SPM=1;
-    %TTKEY=();
-    $TTKAP="";
-    $TTAB="";
-    $TABTXTFLG=2;
+    #%TTKEY=();
+    #$TTKAP="";
+    #$TABTXTFLG=2;
     $BILDFLG=1;
     $NL="\\\\";
     $ITZ=0;
@@ -113,6 +114,7 @@ INIT {
     $TAGM=0;
     $Iformat="|p{10mm}||p{42mm}|";
     #$Bpfad="bilder";
+    # TODO: remove path and use TEXINPUTS or use relative path
     $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";
     $Logopfad="/home/aachen/cgi-bin/brg/br/icons";
     $SGO=4;
@@ -200,7 +202,7 @@ sub create_tex #...TeX-Dokument aus SortHash generieren!
     {
     my ($kap,$zz,$k,$tnr,$titel,$typ,$text,$top,$x,$ueber,$s);
     my $LIM="\x09";
-    my @WTG= qw(nix Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag);#-----WochentagDef s. INFOLISTE TODO remove
+    #my @WTG= qw(nix Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag);#-----WochentagDef s. INFOLISTE TODO remove
     print  "\nMoment bitte ...TeX-Dokument [$OUPTEX] wird erzeugt!...\n";
     foreach $k (sort keys %idx)
         {
@@ -211,123 +213,127 @@ sub create_tex #...TeX-Dokument aus SortHash generieren!
         # todo: hier verweis auf den artikel ausgeben
         # print_article_content();
         #TODO: TTKAP entfernen
-        if($TTKAP && (($tnr==9 || $TTKAP ne $kap))) # falls Tagestabelle aktiv und Kapitelwechsel generell - jetzt abschließen 26.11.2008
-            {
-            $TTKAP=""; print $OUT '\end{tabular}'."\n";
-            print $OUT '\newpage'."\n";#Seitenvorschub am Ende
-            testit(">SPALTEN#".$SPM);
-            }
+#         if($TTKAP && (($tnr==9 || $TTKAP ne $kap))) # falls Tagestabelle aktiv und Kapitelwechsel generell - jetzt abschließen 26.11.2008
+#             {
+#             $TTKAP=""; print $OUT '\end{tabular}'."\n";
+#             print $OUT '\newpage'."\n";#Seitenvorschub am Ende
+#             testit(">SPALTEN#".$SPM);
+#             }
     
         if ($typ eq "A") # Artikel->Hierachie-Management.............Kapitel,Wochentag,Titel
             {
             if($KAPM ne $kap)# Kapitelwechsel?
                 {
                 $KAPM=$kap;
-                print $OUT "% Kapitelwechsel= $KAPM ($TTKAP) \n";
+#                print $OUT "% Kapitelwechsel= $KAPM ($TTKAP)\n";
+                print $OUT "% Neues Kapitel: $KAPM\n";
                 ($x,$ueber)=split(/\:/,$kap);
-                if (("Angebote" eq $ueber) || ("Hauskreise" eq $ueber)) 
-                    {
-                    if ("Angebote" eq $ueber) 
-                        {
-                        $top='>1#Regelm\"a{\ss}ige Angebote (alt)#x'; testit($top);#section generieren 
-                        $top='>2#\"Uberblick (alt)#x'; testit($top);#subsection generieren
-                        }
-                    else
-                        {
-                        $top=">2#".$ueber." (alt)#x"; testit($top);#section generieren    
-                        } 
-                    }
-                 else
+#                 if (("Angebote" eq $ueber) || ("Hauskreise" eq $ueber)) 
+#                     {
+#                     if ("Angebote" eq $ueber) 
+#                         {
+#                         $top='>1#Regelm\"a{\ss}ige Angebote (alt)#x'; testit($top);#section generieren 
+#                         $top='>2#\"Uberblick (alt)#x'; testit($top);#subsection generieren
+#                         }
+#                     else
+#                         {
+#                         $top=">2#".$ueber." (alt)#x"; testit($top);#section generieren    
+#                         } 
+#                     }
+#                  else
                     {
                     $top=">1#".$ueber."#x"; testit($top);#section generieren    
                     }
                 }
-            if($tnr==0||$tnr>7)#kein Wochentag
+#            if($tnr==0||$tnr>7)#kein Wochentag
                 {
-                #if($TABTXTFLG==0 && $tnr==9){next;} #Tagesartikel-Anhänge auch ausblenden 26.11.2008
                 if(length($titel)>=2){$top=">2#".$titel."#x"; testit($top);}#subsection generieren
                 }
-            else # Wochentag
-                {
-                if ($TAGM!=$tnr)#Tageswechsel->subsection generieren
-                    {
-                    $TAGM=$tnr;
-                    if($TABTXTFLG>0) # subsection generieren, falls Artikel/Tagherachie gewünscht 26.11.2008
-                        {
-                        $top=">2#".$WTG[$tnr]."#x"; testit($top);
-                        }
-                    }
-                if($TABTXTFLG>0 && length($titel)>=2) # sub-subsection generieren, falls Artikel/Tagherachie gewünscht 26.11.2008
-                        {
-                        $top=">3#".$titel."#x"; testit($top);#sub-subsection generieren
-                        }
-                }
+#             else # Wochentag
+#                 {
+#                 if ($TAGM!=$tnr)#Tageswechsel->subsection generieren
+#                     {
+#                     $TAGM=$tnr;
+#                     if($TABTXTFLG>0) # subsection generieren, falls Artikel/Tagherachie gewünscht 26.11.2008
+#                         {
+#                         $top=">2#".$WTG[$tnr]."#x"; testit($top);
+#                         }
+#                     }
+#                 if($TABTXTFLG>0 && length($titel)>=2) # sub-subsection generieren, falls Artikel/Tagherachie gewünscht 26.11.2008
+#                         {
+#                         $top=">3#".$titel."#x"; testit($top);#sub-subsection generieren
+#                         }
+#                 }
     
-            if ($TXZ[0]!~/^\>\*/) # falls KEIN führendes >* ---> InfoKopf erzeuegen
-                {
-                if($TABTXTFLG==0)   #ArtikelTag-Generierung NUR, falls erwünscht! 26.11.2008
-                    {
-                    if($TTKAP eq $KAPM){print_table_for_day($titel);next;} # falls aktuelle Tabelle erzeugt werden doll?
-                    else # sonst übergehen
-                        {
-                        if($tnr==9){create_infotab();}# falls TagesTabellenTag=9->Ausgeben 27.11.2008
-                        else
-                            {
-                            while($#TXZ>=0)
-                                {
-                                $s=shift(@TXZ);# leeren des Zeilenspeichers
-                                last if $s=~/^\>\*/;# falls >* folgt abbruch!
-                                }
-                            next;
-                            }
-                        }
-                    #
-                    }
-                else
-                    {
-                    create_infotab(); if($tnr!=9){next if($TABTXTFLG==1);}#Textanhang nach InfoKopftabelle EIN>1/AUS=1blenden 25.11.2008 next;
-                    }
-                }
-            else {shift(@TXZ);} # 1. Dummyzeile entfernen!
+#             if ($TXZ[0]!~/^\>\*/) # falls KEIN führendes >* ---> InfoKopf erzeuegen
+#                 {
+#                 if($TABTXTFLG==0)   #ArtikelTag-Generierung NUR, falls erwünscht! 26.11.2008
+#                     {
+#                     if($TTKAP eq $KAPM){print_table_for_day($titel);next;} # falls aktuelle Tabelle erzeugt werden doll?
+#                     else # sonst übergehen
+#                         {
+#                         if($tnr==9){create_infotab();}# falls TagesTabellenTag=9->Ausgeben 27.11.2008
+#                         else
+#                             {
+#                             while($#TXZ>=0)
+#                                 {
+#                                 $s=shift(@TXZ);# leeren des Zeilenspeichers
+#                                 last if $s=~/^\>\*/;# falls >* folgt abbruch!
+#                                 }
+#                             next;
+#                             }
+#                         }
+#                     #
+#                     }
+#                 else
+#                     {
+#                     create_infotab(); if($tnr!=9){next if($TABTXTFLG==1);}#Textanhang nach InfoKopftabelle EIN>1/AUS=1blenden 25.11.2008 next;
+#                     }
+#                 }
+#             else 
+#                 {
+                shift(@TXZ);# 1. Dummyzeile entfernen!
+#                }
             }
         # Resttextzeilen interpretieren/generieren
         while($#TXZ>=0)
             {
             $s=shift(@TXZ);
-            if($s=~/^>tt0/){last if($TABTXTFLG!=0);} #
-            else{testit($s);}
+            #if($s=~/^>tt0/){last if($TABTXTFLG!=0);} #
+            #else{testit($s);}
+            testit($s);
             }
         }
     }
 
-#TODO entfernen:
-#-----------------------------------------------------
-sub create_infotab  #...Artikel-Kopftabelle generieren!
-#-----------------------------------------------------
-    {
-    my ($hl,@f,$s,$format);
-    $format=$Iformat;
-    if($SCALE){$format=~ s/([0-9.]+)/sprintf("%1.1f",$1 * $SCALE) /ge; }# TabellenSpaltenSkalierung!
-    $hl="";
-    if($format=~/\|/)# Vertikallinien im TabFormat?->Horizontallinie
-          {
-          $hl="\\cline{1-2}\n";
-          }
-    print $OUT " \\begin{tabular}{$format}$hl";
-    while($#TXZ>=0)
-        {
-        $s=shift(@TXZ);# leeren des Zeilenspeichers
-        last if $s=~/^\>\*/;# falls >* folgt abbruch!
-        $s=~ s/Tel.:|Tel:/\\ding\{37\}/g; #falls Tel.?-> Telefonsymbolersatz
-        $s=~ s/e-mail:|email:|mail:/\\ding\{41\}/ig; #falls email.?-> Briefsymbolersatz
-        @f=split(/#/,$s);
-        my $fx=$f[0];
-        if($fx=~s/^\-//g)# falls 1.Zeichen in 1.Spalte ="-" ->Hline unterbinden
-              { print $OUT "$fx&$f[1]$NL\n";}
-        else {print $OUT "$fx&$f[1]$NL$hl\n";}
-        }
-    print $OUT "\\end{tabular} $NL [1.5ex]\n";
-    }
+# #TODO entfernen:
+# #-----------------------------------------------------
+# sub create_infotab  #...Artikel-Kopftabelle generieren!
+# #-----------------------------------------------------
+#     {
+#     my ($hl,@f,$s,$format);
+#     $format=$Iformat;
+#     if($SCALE){$format=~ s/([0-9.]+)/sprintf("%1.1f",$1 * $SCALE) /ge; }# TabellenSpaltenSkalierung!
+#     $hl="";
+#     if($format=~/\|/)# Vertikallinien im TabFormat?->Horizontallinie
+#           {
+#           $hl="\\cline{1-2}\n";
+#           }
+#     print $OUT " \\begin{tabular}{$format}$hl";
+#     while($#TXZ>=0)
+#         {
+#         $s=shift(@TXZ);# leeren des Zeilenspeichers
+#         last if $s=~/^\>\*/;# falls >* folgt abbruch!
+#         $s=~ s/Tel.:|Tel:/\\ding\{37\}/g; #falls Tel.?-> Telefonsymbolersatz
+#         $s=~ s/e-mail:|email:|mail:/\\ding\{41\}/ig; #falls email.?-> Briefsymbolersatz
+#         @f=split(/#/,$s);
+#         my $fx=$f[0];
+#         if($fx=~s/^\-//g)# falls 1.Zeichen in 1.Spalte ="-" ->Hline unterbinden
+#               { print $OUT "$fx&$f[1]$NL\n";}
+#         else {print $OUT "$fx&$f[1]$NL$hl\n";}
+#         }
+#     print $OUT "\\end{tabular} $NL [1.5ex]\n";
+#     }
 
 
 
@@ -377,7 +383,7 @@ sub print_table #...Tabelle     bis >* erzeugen
             { print $OUT "$s $NL \n";}
         else{print $OUT "$s $NL $lin\n";}
         }
-    print $OUT "\\end{tabular} \n";
+    print $OUT "\\end{tabular}\n";
     }
 
 
@@ -389,7 +395,7 @@ sub print_list  #...z.B.Terminliste bis >* erzeugen
     my($d,$t,$s);
     if (defined $fixedsize)
     {
-        print $OUT "\\hspace*{1.4cm}\\begin{minipage}{0.83\\linewidth}\%\n"; # diese minipage sollte gar nicht notwendig sein! warum wird diese print_list verschoben!?       
+        print $OUT "\\hspace*{1.4cm}\\begin{minipage}{0.83\\linewidth}\%\n"; # TODO diese minipage sollte gar nicht notwendig sein! warum wird diese print_list verschoben!?       
         print $OUT "\\begin{basedescript}{\\desclabelstyle{\\pushlabel}}\%\n";
         print $OUT "\\desclabelwidth{$fixedsize}\%\n";
         print $OUT "\\setlength{\\labelsep}{1ex}\%\n";
@@ -421,8 +427,7 @@ sub print_list  #...z.B.Terminliste bis >* erzeugen
     if (defined $fixedsize)
     {
         print $OUT "\\end{basedescript}\n";
-        print $OUT "\\end{minipage}\n";
-        
+        print $OUT "\\end{minipage}\n";        
     }
     else
     {
@@ -534,7 +539,12 @@ sub evaluate_commands #...Metazeichenauswertung
         if($f[1]>0){$ZD0=$f[1];}else{$ZD0=$ZDM;}
         print $OUT "\\normalbaselines\\linespread{$ZD0}\\selectfont\n";return;
         } #StandardZeilendiche 1=Normal! - falls 0->auf $ZDM setzen 24.5.2007
-    if($f[0] eq "tsx") {$TABTXTFLG=$f[1];return;} #Textanhang nach InfoKopftabelle EIN/AUSblenden 25.11.2008
+    if($f[0] eq "tsx")#Textanhang nach InfoKopftabelle EIN/AUSblenden 25.11.2008
+    {
+#        $TABTXTFLG=$f[1];
+        report_warning('Schalter tsx ist obsolete, da Textanhang nicht mehr unterstützt wird.');
+        return;
+    }
     if($f[0] eq "bsx")#Bildschalter EIN(1) / AUS(0) - 0 -> Bilder werden durch Text ersetzt! 10.6.2008
     {
         print $OUT "\n% Bildschalter bsx ist obsolete, da PeX prüft, ob Bild da ist oder nicht. Ansonsten Option draft im Kopf von Dokumentenvorlage verwenden.\n";
@@ -614,7 +624,8 @@ sub evaluate_commands #...Metazeichenauswertung
     if($f[0] =~/LISTE/i) {print_list();return;}
     if($f[0] =~/TABELLE/i) {print_table();return;}
 # TODO entfernen:
-    if($f[0] =~/TAGTAB/i && $TABTXTFLG==0) {print_table_for_day_init($f[1]);return;}
+#    if($f[0] =~/TAGTAB/i && $TABTXTFLG==0) {print_table_for_day_init($f[1]);return;}
+    if($f[0] =~/TAGTAB/i) { report_warning('>TAGTAB wird nicht mehr unterstützt.');return;}
     if($f[0] =~/BILDNACHWEIS/i) { print_picturecredits(); return; }
     if($f[0] =~/BILD/i) {print_image_jpg();return;}   
     if($f[0] =~/HBILD/i) {print_background_image_jpg();return;}
@@ -645,57 +656,57 @@ sub initialize #...Basisdaten initialisieren
     print "Ausgabe: $AUSGABE\t$Jahr\t\t$NUMMER\n$RENDE\n";
     }
 
-# TODO entfernen
-#-----------------------------------------------------
-sub print_table_for_day # eine Zeile der Tagesartikel-Gesamttabelle  ausgeben 26.11.2008
-#-----------------------------------------------------
-    {
-    my $titel=shift;
-    my (@f,$s,$k,$w,@tab,$l);
-    foreach $s (%TTKEY) { if (defined $TTKEY{$s}) {$tab[$TTKEY{$s}]=" ";}}#vorbelegen
-    $tab[0]=$titel;
-    while($#TXZ>=0)
-        {
-        $s=shift(@TXZ);# leeren des Zeilenspeichers
-        last if $s=~/^\>\*/;# falls >* folgt Abbruch!
-        $s=replace_characters($s);
-        @f=split(/#/,$s);# 2spaltige Kopftabelle Feld und Inhalt auslesen
-        if (defined $f[0])
-            {
-            $f[0]=~s/ |\-//g;#leerzeichen und - eleminieren!
-            if(!$f[0])# falls Feld leer letzem Feld zuordnen
-                {$f[0]=$l;} else {$l=$f[0];}
-            $tab[$TTKEY{$f[0]}].=" ".$f[1] if (defined($TTKEY{$f[0]}));
-            }
-        }
-    print $OUT ''.join('&',@tab).'\\\\ \hline'."\n";
-    }
+# # TODO entfernen
+# #-----------------------------------------------------
+# sub print_table_for_day # eine Zeile der Tagesartikel-Gesamttabelle  ausgeben 26.11.2008
+# #-----------------------------------------------------
+#     {
+#     my $titel=shift;
+#     my (@f,$s,$k,$w,@tab,$l);
+#     foreach $s (%TTKEY) { if (defined $TTKEY{$s}) {$tab[$TTKEY{$s}]=" ";}}#vorbelegen
+#     $tab[0]=$titel;
+#     while($#TXZ>=0)
+#         {
+#         $s=shift(@TXZ);# leeren des Zeilenspeichers
+#         last if $s=~/^\>\*/;# falls >* folgt Abbruch!
+#         $s=replace_characters($s);
+#         @f=split(/#/,$s);# 2spaltige Kopftabelle Feld und Inhalt auslesen
+#         if (defined $f[0])
+#             {
+#             $f[0]=~s/ |\-//g;#leerzeichen und - eleminieren!
+#             if(!$f[0])# falls Feld leer letzem Feld zuordnen
+#                 {$f[0]=$l;} else {$l=$f[0];}
+#             $tab[$TTKEY{$f[0]}].=" ".$f[1] if (defined($TTKEY{$f[0]}));
+#             }
+#         }
+#     print $OUT ''.join('&',@tab).'\\\\ \hline'."\n";
+#     }
 
-# TODO entfernen
-#-----------------------------------------------------
-sub print_table_for_day_init # initialisieren der Tagesartikel-Gesamttabelle 26.11.2008
-#-----------------------------------------------------
-    {
-    my $s=shift;
-    my @f=split(/,/,$s);
-    my $k=0;
-    my ($e,$sn,$br);
-    my $format='|';
-    my $u;
-    $TTKAP=$KAPM; # akt. Kapitel merken
-    # my $titel=shift(@f);
-    foreach $s (@f)
-        {
-        $s=~s/ //g;#leerzeiche raus
-        if($s){
-        ($sn,$br)=split(/=/,$s);#Spaltenname, Spaltenbreite filtern 27.11.2008
-        $TTKEY{$sn}=$k;
-        $k++;$format.='L{'.$br.'}|';$u.='\emph{'.$sn.'}&';} #Spaltenreihenfolge im Hash festlegen
-        }
-    print $OUT "\\begin{tabular}{$format}".'\hline'."\n";
-    chop($u);
-    print $OUT ''.$u.' \\\\ \hline \hline'."\n";
-    }
+# # TODO entfernen
+# #-----------------------------------------------------
+# sub print_table_for_day_init # initialisieren der Tagesartikel-Gesamttabelle 26.11.2008
+# #-----------------------------------------------------
+#     {
+#     my $s=shift;
+#     my @f=split(/,/,$s);
+#     my $k=0;
+#     my ($e,$sn,$br);
+#     my $format='|';
+#     my $u;
+#     $TTKAP=$KAPM; # akt. Kapitel merken
+#     # my $titel=shift(@f);
+#     foreach $s (@f)
+#         {
+#         $s=~s/ //g;#leerzeiche raus
+#         if($s){
+#         ($sn,$br)=split(/=/,$s);#Spaltenname, Spaltenbreite filtern 27.11.2008
+#         $TTKEY{$sn}=$k;
+#         $k++;$format.='L{'.$br.'}|';$u.='\emph{'.$sn.'}&';} #Spaltenreihenfolge im Hash festlegen
+#         }
+#     print $OUT "\\begin{tabular}{$format}".'\hline'."\n";
+#     chop($u);
+#     print $OUT ''.$u.' \\\\ \hline \hline'."\n";
+#     }
 
 #-----------------------------------------------------
 sub print_columns #...Spaltenanz setzen
@@ -916,6 +927,16 @@ sub chompx #...loescht universal(Windows,Dos,Linx-Zeilenvorschub!) sonst: Proble
 #    foreach $a (@TXZ){$z++;print "$z\t$a\n";}
 #    <stdin>;
 #    }
+
+#----------------------------------------------------------------
+# Reports a warning message to stdout and to the TeX file.
+#----------------------------------------------------------------
+sub report_warning()
+{
+    my $msg=shift;
+    print $OUT "\n% $msg\n";
+    print "* $msg\n";
+}
 
 1;
 
