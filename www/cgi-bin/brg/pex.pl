@@ -34,10 +34,11 @@ package BERG::PEX;
 use strict;
 use warnings;
 
-use IO::File;                      #FileHandel(OO-Generation!)
+use IO::File;                      # FileHandel(OO-Generation!)
 use Fcntl qw/:flock/;              # LOCK_EX etc. definieren
 use PerlIO::encoding;              # Zeichenkodierung ändern können, z.B. beim Wegschreiben 
 use utf8;                          # UTF-8 Kodierung auch in regulären Ausdrücken berücksichtigen
+use Cwd qw(abs_path);
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
@@ -56,8 +57,8 @@ __PACKAGE__->run(@ARGV) unless caller();
 
 #----> function prototypes --------------------------------
 sub run(@);
-sub print_version();
-sub load_database();
+sub print_version($*);
+sub load_database($);
 sub create_tex_file(%);
 sub initialize_issue_information($*);
 
@@ -65,14 +66,14 @@ sub chompx($);
 sub report_warning($);
 
 #--- Define the Global Variables --------------------------------------------------
-our $SPM=1;#SpaltenMemo - damit Automatik bei TagGesamtTabellen(=1spaltig) und zurücksetzen funzt!27.11.2008
+#our $SPM=1;#SpaltenMemo - damit Automatik bei TagGesamtTabellen(=1spaltig) und zurücksetzen funzt!27.11.2008
 #our %TTKEY=();#TagTabellenSpalten-Hash init -> GesamtArtikelTabelle 26.11.2008
 #our $TTKAP="";#Kapitelspeicher-> Tabellenplot nach Kapitelwechsel! 26.11.2008
 #our $TABTXTFLG=2;#ArtikelTagFlag-> 2=komplett 1=NUR InfoKopftabelle(ohne Textanhang 0=ABSCHALTEN(komplett ausblenden->man.Übersichtstabellen einfügen möglich!26.11.2008
 our $ITZ=0;#Latex\item-Zähler
 our $ITS="";# letztes Metazeichen - wird in testit() ggf. mit ausgegeben, Beispielwert ist \item
 our $KAPM="Kapitel";#Kapitelspeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
-our $TAGM=0;#WochentagsSpeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
+#our $TAGM=0;#WochentagsSpeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
 our @TXZ=undef;#globaler Textzeilenspeicher
 #our $Iformat="|p{10mm}||p{42mm}|";#InfoTabellenformat->Artikelheader (falls gewünscht ! - unterbinden: 1.Zeile = >*
 #our $Bpfad="bilder";#Bilder-Pfad -> *.jpg-Archiv
@@ -90,29 +91,20 @@ our $RENDE=undef;#Text zum Redaktionsschluss
 #-----SchriftgroessenDef />sg#N#
 our $SGO=4;# Standardschriftgröße
 our $SGU=$SGO+0;# Standardschriftgröße der kleinsten Überschrift
-our @SG;
+our @SG;# Names of LaTeX font sizes
 #-----Zeilenabstandsdichte />sg#N#
 our $ZD0=1;# StandardZeilendiche =1
 our $ZDM=1;# StandardMEMO-Zeilendiche =1 24.5.2007->bei >zd#0 wird ZD0=ZDM!
 our $ZDI=0.5;# StandardZeilendiche =0.5ex Items
 
-our $inp = "";# Filename for the input
-our $OUPTEX = "";# Filename for the output
-our @stack = "";#BefehlsReturnStack
+our @stack = "";# stack holding the colsing name of a list - triggered by >*
 our $OUT = undef;# Handle to the resulting output file
 
 #--- Initialize the Global Variables --------------------------------------------------
 INIT {
-    $SPM=1;
-    #%TTKEY=();
-    #$TTKAP="";
-    #$TABTXTFLG=2;
     $ITZ=0;
     $ITS="";
     $KAPM="Kapitel";
-    $TAGM=0;
-    #$Iformat="|p{10mm}||p{42mm}|";
-    #$Bpfad="bilder";
     # TODO: remove path and use TEXINPUTS or use relative path
     $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";
     $Logopfad="/home/aachen/cgi-bin/brg/br/icons";
@@ -123,50 +115,63 @@ INIT {
     $ZDM=1;
     $ZDI=0.5;
 
-    $inp = "";
-    $OUPTEX = "";
     @stack = "";
 }
 
-# 
-#-----Start (Main)-----------    
+#** @function
+#-----Start (Main)-----------
+#*    
 sub run(@)
 {
+    my $inp = "";# Filename for the input
+    my $OUPTEX = "";# Filename for the output
+    
     $inp = $ARGV[0];
     if (!$inp) { $inp="feginfo.csv"; }
+    $inp = abs_path($inp);
     if ($ARGV[1])
-        {   
+    {   
         if ($ARGV[1] =~ /.tex$/) { $OUPTEX = $ARGV[1]; }
         else { $OUPTEX = $ARGV[1].".tex"; }
-        }
+    }
     else
-        {
+    {
         $OUPTEX=$inp;
         $OUPTEX=~s/.csv/.tex/;
-        }
+    }
+    $OUPTEX = abs_path($OUPTEX);
     die "Fehler: Input- ($inp) und Outputdatei ($OUPTEX) dürfen nicht gleich sein!" if ($OUPTEX eq $inp);      
     #my $OUT=IO::File->new(">$OUPTEX");
     open($OUT, ">:encoding(utf8)", $OUPTEX) or die "Die Ausgabedatei $OUPTEX kann nicht geöffnet werden.";
     if(defined $OUT) {;} else {die "Fehler beim Oeffnen von $OUPTEX";}
 
-    print_version();
-    my %idx = load_database();
-    create_tex_file(\%idx);
+    print_version($inp, $OUPTEX);
+    my %idx = load_database($inp);
+    create_tex_file($OUPTEX, \%idx);
 }
 
-#-----------------------------------------------------
-sub print_version() # Version in TeX-Datei und Standardausgabe
-#-----------------------------------------------------
+#** @function
+# Prints the Version into the TeX file and on standard output.
+# @param $inputfilename the file used as input database.
+# @param $outputfilename the generated TeX file.
+#*
+sub print_version($*) 
 {
-    my $msg = "Programm: $0, $VERSION (Perl $]) ---> Dokument: IN($inp) => OUT($OUPTEX) [ ".scalar localtime()." ]\n";
+    my($inputfilename, $outputfilename) = @_;
+    my $msg = 'Programm: '.abs_path($0).", $VERSION (Perl $]), DB($inputfilename) => LaTeX($outputfilename) [".scalar localtime()."]\n";
     print $OUT '%'." $msg";
     print "$msg";
 }
 
-#-----------------------------------------------------
-sub load_database() #...parsen der PEX-DB-Datei ->hash!
-#-----------------------------------------------------
-    {
+#** @function
+# Loading and parsing the input database. Store the articles for further processing into an hast.
+# Articles with negative numbers are ignored.
+# @params $inp the file used as input database.
+# @retval hash with the content used for further processing.  
+#*
+sub load_database($)
+{
+ 	my($inp) = @_;
     my (@f,$k,$s,$PIN);
     my %idx = ();
     my $LIM="\x09";
@@ -175,7 +180,7 @@ sub load_database() #...parsen der PEX-DB-Datei ->hash!
     flock($PIN, LOCK_SH) || die("\nFehler: Konnte die Datei $inp nicht zum Lesen sperren (load_database)!\n");
     print "\nMoment bitte ...PeX-DB [$inp] wird gescannt!...\n";
     while (<$PIN>)
-        {
+    {
         chompx(\$_);#UniversalChomp-call by Reference
         @f=split(/$LIM/,$_);
         next if ($f[2] !~ /^[0-9-+]*$/ || $f[2]<0);# Texte mit Nr.<0 oder keiner Zahl direkt ausblenden!
@@ -189,11 +194,11 @@ sub load_database() #...parsen der PEX-DB-Datei ->hash!
             $s=$f[1].$LIM.$f[2].$LIM.$f[3].$LIM.$f[4].$LIM.$f[5]."<br>".$f[6]."<br> <br>";
         }
         $idx{$k}=$s;#->ab in den Sort-Hash
-        }
+    }
     flock($PIN, LOCK_UN) || print "\nFehler: Konnte die Lesesperre der Datei $inp nicht entfernen (load_database)!\n";
     $PIN->close();
     return %idx;
-    }
+}
 
 
 #** @function
@@ -202,6 +207,7 @@ sub load_database() #...parsen der PEX-DB-Datei ->hash!
 #*
 sub create_tex_file(%)
 {
+	my $OUPTEX = shift();
   	my %idx = %{shift()};
     my ($kap,$zz,$k,$tnr,$titel,$typ,$text,$top,$x,$ueber,$s);
     my $LIM="\x09";
@@ -714,7 +720,7 @@ sub initialize_issue_information($*)
 sub print_columns #...Spaltenanz setzen
 #-----------------------------------------------------
     {
-    $SPM=shift;
+    my $SPM=shift;
     push(@stack,"\\end{multicols}\n");
     print $OUT "\\begin{multicols}{$SPM}\n";
     }
