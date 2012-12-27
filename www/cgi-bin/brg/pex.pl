@@ -59,7 +59,6 @@ sub initialize_issue_information($*);
 sub report_warning($);
 
 #--- Define the Global Variables --------------------------------------------------
-our %BEF=();#TextMakro-Befehlshash 23.10.2010
 our $SPM=1;#SpaltenMemo - damit Automatik bei TagGesamtTabellen(=1spaltig) und zurücksetzen funzt!27.11.2008
 #our %TTKEY=();#TagTabellenSpalten-Hash init -> GesamtArtikelTabelle 26.11.2008
 #our $TTKAP="";#Kapitelspeicher-> Tabellenplot nach Kapitelwechsel! 26.11.2008
@@ -69,7 +68,7 @@ our $ITS="";# letztes Metazeichen - wird in testit() ggf. mit ausgegeben, Beispi
 our $KAPM="Kapitel";#Kapitelspeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
 our $TAGM=0;#WochentagsSpeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
 our @TXZ=undef;#globaler Textzeilenspeicher
-our $Iformat="|p{10mm}||p{42mm}|";#InfoTabellenformat->Artikelheader (falls gewünscht ! - unterbinden: 1.Zeile = >*
+#our $Iformat="|p{10mm}||p{42mm}|";#InfoTabellenformat->Artikelheader (falls gewünscht ! - unterbinden: 1.Zeile = >*
 #our $Bpfad="bilder";#Bilder-Pfad -> *.jpg-Archiv
 our $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";#Bilder-Pfad -> *.jpg-Archiv
 our $Logopfad="/home/aachen/cgi-bin/brg/br/icons";#Bilder-Pfad -> *.jpg-Archiv
@@ -99,7 +98,6 @@ our $OUT = undef;# Handle to the resulting output file
 
 #--- Initialize the Global Variables --------------------------------------------------
 INIT {
-    %BEF=();
     $SPM=1;
     #%TTKEY=();
     #$TTKAP="";
@@ -108,7 +106,7 @@ INIT {
     $ITS="";
     $KAPM="Kapitel";
     $TAGM=0;
-    $Iformat="|p{10mm}||p{42mm}|";
+    #$Iformat="|p{10mm}||p{42mm}|";
     #$Bpfad="bilder";
     # TODO: remove path and use TEXINPUTS or use relative path
     $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";
@@ -608,14 +606,11 @@ sub evaluate_commands #...Metazeichenauswertung
         initialize_issue_information($Monat,$ISSUEYEAR);
         return;
         }
-    #if($f[0] =~/BEF/i) {textmakro(@f);return;}
     if($f[0] =~/SPALTEN/i) {print_columns($f[1]);return;}
     if($f[0] =~/NUM/i){print_enumeration();return;}
     if($f[0] =~/PUN/i) {print_itemize();return;}
     if($f[0] =~/SYMBOL/i) {print_dinglist($f[1]);return;}
-    #if($f[0] =~/INDEX/i) {bindex();return;}
-    #if($f[0] =~/INFOLISTE/i) {infoliste();return;}
-    if($f[0] =~/INFOTAB/i) {$Iformat=$f[1];return;}# InfoTab-Tabellenformat ->ArtikelHeader
+    #if($f[0] =~/INFOTAB/i) {$Iformat=$f[1];return;}# InfoTab-Tabellenformat ->ArtikelHeader
     if($f[0] =~/LISTE/i) {print_list();return;}
     if($f[0] =~/TABELLE/i) {print_table();return;}
 # TODO entfernen:
@@ -856,14 +851,14 @@ sub replace_characters #...Suchen/ersetzen
     #print $OUT "% - testit()=> $s\n";
     if($s =~ /^;/) #1.Zeichen ;=Kommentar->bergehen!
        {return("");}
-    if($s !~ /^>/)
-        {  # suchen/ersetzen TextMakros 23.10.2010
-        while($s =~/(::.)/)
-            {
-            if($s=~s/(::.)>/$1\{/g){$s.='}';} #::.>  falls Befehl f. ganze restzeile gelten soll einbinden {}
-            $s=~s/(::.)/$BEF{$1}/g;
-            }
-        }
+#    if($s !~ /^>/)
+#        {  # suchen/ersetzen TextMakros 23.10.2010
+#        while($s =~/(::.)/)
+#            {
+#            if($s=~s/(::.)>/$1\{/g){$s.='}';} #::.>  falls Befehl f. ganze restzeile gelten soll einbinden {}
+#            $s=~s/(::.)/$BEF{$1}/g;
+#            }
+#        }
     if($s =~ /:logo:/) #enthaelt Zeile Logo(Grafik)-Einbindung?
         {$s=add_logo_image_jpg($s);}
     $s =~ s/(\d+ *)\%/$1\\\%/gi; #n%  richtig setzen
