@@ -208,7 +208,7 @@ sub create_tex #...TeX-Dokument aus SortHash generieren!
         {
         ($kap,$tnr,$titel,$typ,$text)=split(/$LIM/,$idx{$k});
         @TXZ=split(/<br>/,$text);# Textblock in Zeilenspeicher!
-        my ($nix,$nix,$nix,$ai)=split(/$LIM/,$k);
+        my ($nix0,$nix1,$nix2,$ai)=split(/$LIM/,$k);
         $zz++;
         print "$zz\t[AI:$ai]\t$kap ($tnr)\t$titel\t$typ\t$#TXZ\n";
         # todo: hier verweis auf den artikel ausgeben
