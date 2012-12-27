@@ -50,12 +50,18 @@ $VERSION = 'v2.09/27.12.2012';
 binmode(STDIN, ":encoding(utf8)");
 binmode(STDOUT, ":encoding(utf8)");
 
-# run is called, when this script is used as standalone script.
+# run() is called, when this script is used as standalone script.
 # Otherwise the methods are available from the package.
-__PACKAGE__->run( @ARGV ) unless caller();
+__PACKAGE__->run(@ARGV) unless caller();
 
 #----> function prototypes --------------------------------
+sub run(@);
+sub print_version();
+sub load_database();
+sub create_tex_file(%);
 sub initialize_issue_information($*);
+
+sub chompx($);
 sub report_warning($);
 
 #--- Define the Global Variables --------------------------------------------------
@@ -90,7 +96,6 @@ our $ZD0=1;# StandardZeilendiche =1
 our $ZDM=1;# StandardMEMO-Zeilendiche =1 24.5.2007->bei >zd#0 wird ZD0=ZDM!
 our $ZDI=0.5;# StandardZeilendiche =0.5ex Items
 
-our %idx=();#IndexHash - DB einscannen
 our $inp = "";# Filename for the input
 our $OUPTEX = "";# Filename for the output
 our @stack = "";#BefehlsReturnStack
@@ -118,7 +123,6 @@ INIT {
     $ZDM=1;
     $ZDI=0.5;
 
-    %idx=();
     $inp = "";
     $OUPTEX = "";
     @stack = "";
@@ -126,7 +130,7 @@ INIT {
 
 # 
 #-----Start (Main)-----------    
-sub run
+sub run(@)
 {
     $inp = $ARGV[0];
     if (!$inp) { $inp="feginfo.csv"; }
@@ -146,12 +150,12 @@ sub run
     if(defined $OUT) {;} else {die "Fehler beim Oeffnen von $OUPTEX";}
 
     print_version();
-    load_database();
-    create_tex();
+    my %idx = load_database();
+    create_tex_file(\%idx);
 }
 
 #-----------------------------------------------------
-sub print_version # Version in TeX-Datei und Standardausgabe
+sub print_version() # Version in TeX-Datei und Standardausgabe
 #-----------------------------------------------------
 {
     my $msg = "Programm: $0, $VERSION (Perl $]) ---> Dokument: IN($inp) => OUT($OUPTEX) [ ".scalar localtime()." ]\n";
@@ -160,10 +164,11 @@ sub print_version # Version in TeX-Datei und Standardausgabe
 }
 
 #-----------------------------------------------------
-sub load_database #...parsen der PEX-DB-Datei ->hash!
+sub load_database() #...parsen der PEX-DB-Datei ->hash!
 #-----------------------------------------------------
     {
     my (@f,$k,$s,$PIN);
+    my %idx = ();
     my $LIM="\x09";
     open($PIN, "<:encoding(utf8)", $inp);   
     if(defined $PIN) {;} else {die  "Fehler beim Öffnen von $inp!";}
@@ -187,13 +192,17 @@ sub load_database #...parsen der PEX-DB-Datei ->hash!
         }
     flock($PIN, LOCK_UN) || print "\nFehler: Konnte die Lesesperre der Datei $inp nicht entfernen (load_database)!\n";
     $PIN->close();
+    return %idx;
     }
 
 
-#-----------------------------------------------------
-sub create_tex #...TeX-Dokument aus SortHash generieren!
-#-----------------------------------------------------
-    {
+#** @function
+# Generates the TeX file from the given hash with the content.
+# @params idx with content to write into the TeX file.
+#*
+sub create_tex_file(%)
+{
+  	my %idx = %{shift()};
     my ($kap,$zz,$k,$tnr,$titel,$typ,$text,$top,$x,$ueber,$s);
     my $LIM="\x09";
     #my @WTG= qw(nix Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag);#-----WochentagDef s. INFOLISTE TODO remove
@@ -299,7 +308,7 @@ sub create_tex #...TeX-Dokument aus SortHash generieren!
             testit($s);
             }
         }
-    }
+}
 
 # #TODO entfernen:
 # #-----------------------------------------------------
@@ -908,7 +917,11 @@ sub dbquote #...Anfuehrungszeichen ersetzen(Latex), prüft auf " und „/“
     return $s;
     }
 
-sub chompx #...loescht universal(Windows,Dos,Linx-Zeilenvorschub!) sonst: Probleme bei TeX-Konvertierung!
+#** @function 
+# Removes any line feed and carriage return character.
+# This avoids problems with TeX later on.
+#*
+sub chompx($)
     {
     my $s=shift;
     $$s=~s/\x0a|\x0d//g;
@@ -921,9 +934,10 @@ sub chompx #...loescht universal(Windows,Dos,Linx-Zeilenvorschub!) sonst: Proble
 #    <stdin>;
 #    }
 
-#----------------------------------------------------------------
+#** @function 
 # Reports a warning message to stdout and to the TeX file.
-#----------------------------------------------------------------
+# @params msg Message that send to stdout and to the TeX file.
+#*
 sub report_warning($)
 {
     my $msg=shift;
