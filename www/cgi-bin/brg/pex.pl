@@ -41,7 +41,7 @@ use utf8;                          # UTF-8 Kodierung auch in regulären Ausdrüc
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.08/17.12.2012';
+$VERSION = 'v2.09/27.12.2012';
 # exports are used for testing purposes
 @EXPORT_OK = qw(add_author add_bold add_caption add_italic replace_characters);
 @ISA = qw(Exporter);
@@ -55,6 +55,7 @@ binmode(STDOUT, ":encoding(utf8)");
 __PACKAGE__->run( @ARGV ) unless caller();
 
 #----> function prototypes --------------------------------
+sub initialize_issue_information($*);
 sub report_warning($);
 
 #--- Define the Global Variables --------------------------------------------------
@@ -76,9 +77,8 @@ our $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";#Bilder-Pfad -> *.jpg-Archiv
 our $Logopfad="/home/aachen/cgi-bin/brg/br/icons";#Bilder-Pfad -> *.jpg-Archiv
 our $SCALE=undef;#Skalierung festlegen, z.B. bei Tabellen
 our $SGOF=undef;#SchriftgroessenOffset
-our $Monat=undef;#Erscheinungsmonat
-our $Jahr=undef;#Erscheinungsjahr
-our $NUMMER=undef;#Fortlaufende Nummerierung der Gemeindeinformationen
+our $ISSUENUMBER=undef;#Fortlaufende Nummerierung der Gemeindeinformationen
+our $ISSUEYEAR=undef;
 our $AUSGABEZEITRAUM=undef;#Text der Ausgabe mit Erscheinungsjahr/Erscheinungsmonat; wird im PDF Inhaltsverzeichnis verwendent
 our $AUSGABE=undef;#Text mit $AUSGABEZEITRAUM und fortlaufender Nummerierung; Unterschrift der Titelseite
 our $AUFLAGE=undef;#Auflagenhöhe
@@ -610,8 +610,9 @@ sub evaluate_commands #...Metazeichenauswertung
 
     if($f[0] =~/DATEN/i)
         {
-        ($nix,$Monat,$Jahr,$AUFLAGE,$Rende)=split(/#/,$s);#globale Daten
-        initialize();
+		my $Monat=undef;#Erscheinungsmonat
+        ($nix,$Monat,$ISSUEYEAR,$AUFLAGE,$Rende)=split(/#/,$s);#globale Daten
+        initialize_issue_information($Monat,$ISSUEYEAR);
         return;
         }
     #if($f[0] =~/BEF/i) {textmakro(@f);return;}
@@ -633,7 +634,7 @@ sub evaluate_commands #...Metazeichenauswertung
     if($f[0] =~/INHALT/i)
         { # falls 2. Parameter diesen als Inhaltsüberschrift verwenden 16.10.2009
         if($f[1]){print $OUT "\\def\\contentsname{{\\Large $f[1]}}\\tableofcontents\n\\clearpage";return;}
-        else{print $OUT "\\def\\contentsname{\\Large Inhalt\\large\\dotfill $NUMMER/$Jahr}\\tableofcontents\n\\clearpage";return;}
+        else{print $OUT "\\def\\contentsname{\\Large Inhalt\\large\\dotfill $ISSUENUMBER/$ISSUEYEAR}\\tableofcontents\n\\clearpage";return;}
         }
     if($f[0] =~/AUFLAGE/i) {print $OUT "Auflage: $AUFLAGE\n";return;}
     # AUSGABEZEITRAUM mus vor AUSGABE stehen, damit es zuerst passt
@@ -642,20 +643,23 @@ sub evaluate_commands #...Metazeichenauswertung
     if($f[0] =~/RENDE/i) {print $OUT "$RENDE";return;}
     }
 
-#-----------------------------------------------------
-sub initialize #...Basisdaten initialisieren
-#-----------------------------------------------------
-    {
-    my @m=qw(null Januar Februar März April Mai Juni Juli August September Oktober November Dezember);
+#** @function 
+# Initialize some values regarding the issue, e.g. the number of the issue.
+#*
+sub initialize_issue_information($*)
+{
+    my $Monat=shift;
+    my $Jahr=shift;    	
+    my @m=qw(null Januar Februar März April Mai Juni Juli August September Oktober November Dezember Januar);
     my $memo;
     my $nj=$Jahr+1;
-    $NUMMER=($Jahr-1972)*6+($Monat+1)/2-3;# AusgabenNummernberechnung
+    $ISSUENUMBER=($Jahr-1972)*6+($Monat+1)/2-3;# AusgabenNummernberechnung
     $AUSGABEZEITRAUM=$m[$Monat]."/".$m[$Monat+1]." $Jahr";
-    $AUSGABE=$AUSGABEZEITRAUM."\\hfill$NUMMER\n\n";
+    $AUSGABE=$AUSGABEZEITRAUM."\\hfill$ISSUENUMBER\n\n";
     $memo=$m[$Monat+1]." ".$Jahr;
     $RENDE='Redaktionsschluss für die nächste Ausgabe: \textbf{'."$Rende. $memo}$NL";
-    print "Ausgabe: $AUSGABE\t$Jahr\t\t$NUMMER\n$RENDE\n";
-    }
+    print "Ausgabe: $AUSGABE\t$Jahr\t\t$ISSUENUMBER\n$RENDE\n";
+}
 
 # # TODO entfernen
 # #-----------------------------------------------------
@@ -932,7 +936,7 @@ sub chompx #...loescht universal(Windows,Dos,Linx-Zeilenvorschub!) sonst: Proble
 #----------------------------------------------------------------
 # Reports a warning message to stdout and to the TeX file.
 #----------------------------------------------------------------
-sub report_warning()
+sub report_warning($)
 {
     my $msg=shift;
     print $OUT "\n% $msg\n";
