@@ -1,0 +1,114 @@
+%**************************************
+%*** Die aktuelle Ausgabe festlegen ***
+%**************************************
+ 
+%****************************************************************
+%*** DIN A4-Zeitungs-Basisvorlage (FeG-Info) - Stand: 10/2011 ***
+%*** Pakete und Grundeinstellungen                            ***
+%****************************************************************
+\documentclass[12pt,a4paper,twoside]{article}% Standard für endgültige Gemeindeinformation
+%\documentclass[12pt,a4paper,draft,twoside]{article}% mit Kennzeichnung von overfull hbox und Bilder als Rechteck
+%\usepackage{pxfonts} %Adobe Palatino - TypeI-Zeichensatz
+%\usepackage{german,calc} %{babel}%deutsche Umgebung mit Integerarithmetik
+\usepackage[ngerman]{babel}%u.a. korr. Trennung ab 2010 (neuer FeG-Server!)
+\usepackage{graphicx}%
+\usepackage{layout}%ermöglicht die Anzeige des SeitenLayouts via \layout*
+\usepackage{ucs}%utf8-zusatz
+\usepackage[utf8x]{inputenc}%utf8 - Zeichensatz.
+%\usepackage[latin1]{inputenc}%Zeichensatz+deutsche Umlaute
+%\usepackage[T1]{fontenc}%erweiterter Schriftzeichensatz
+\usepackage{amsmath}%Mathematik
+\usepackage{amssymb}%Mathematik
+\usepackage{calc}% Für Berechnungen bei LaTeX-Befehlen
+\usepackage{multicol}%Mehrspaltensatz
+%\usepackage{graphpap}
+\usepackage{sectsty}%Abschnittsüberschriften bequem verändern
+%\usepackage{fancyhdr}%Kopf/Fusszeilen-Layout
+\usepackage{array}%Erweiterung Tabellenumgebung
+\usepackage{mdwlist}% Listen mit einer konstanten Einrückung (basedescript)
+\usepackage{pifont}%Symbolfont : \ding{0..255} bzw. \begin dinglist{0..255}Erweiterung Tabellenumgebung
+\usepackage{wrapfig}%Text um Bilder und Tabellen fließen lassen
+\usepackage{makeidx}%Index, um Bildnachweis anzulegen
+\usepackage[right]{eurosym} %Eurosymbol \EUR{50,-} bzw \euro{}
+%
+\usepackage{tabularx}% ermöglicht mehr Anpassungen bei Tabellen, z.B. die folgende
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}% linksbündige Spalten mit Breitenangabe 
+% Navigation innerhalb des PDF (muss das letzte Paket sein): 
+%.aux darf nicht gelöscht werden, um das Paket nutzen zu können
+\usepackage{hyperref}
+\urlstyle{same}% use the same style for URLs, too (not with a mono-spaced font)
+\hypersetup{
+    %bookmarks=true,          % show bookmarks bar? - Warning: `bookmarks' has already been used,
+    unicode=false,            % non-Latin characters in Acrobat's bookmarks
+    pdftoolbar=true,          % show Acrobat's toolbar?
+    pdfmenubar=true,          % show Acrobat's menu?
+    pdffitwindow=false,       % window fit to page when opened
+    pdfstartview={FitH},      % fits the width of the page to the window
+    pdftitle={Gemeindeinformation}, % title
+    pdfauthor={FeG Aachen},   % author
+    pdfsubject={Ausgabe 
+Januar/Februar 2012},   % subject of the document
+    %pdfcreator={Creator},    % creator of the document
+    pdfproducer={FeG Aachen}, % producer of the document
+    %pdfkeywords={keyword1} {key2} {key3}, % list of keywords
+    pdfnewwindow=true,        % links in new window
+    colorlinks=true,          % false: boxed links; true: colored links
+    linkcolor=black,          % color of internal links
+    citecolor=black,          % color of links to bibliography
+    filecolor=black,          % color of file links
+    urlcolor=black            % color of external links
+}
+
+
+%*********************
+%\ldots\ Seitengestaltung 
+%*********************
+\setlength{\hoffset}{-15mm}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..Korrektur des Druckbereichs horizontal
+\setlength{\voffset}{-30mm}% \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ .Korrektur des Druckbereichs vertikal
+\setlength{\emergencystretch}{4em}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ .Randausgleich Blocksatz
+\setlength{\textwidth}{190mm}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ TextboxBreite(A4=210)
+\setlength{\textheight}{265mm}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..TextboxHöhe(A4=297)
+\setlength{\parindent}{0mm}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..Absatz-Einrückung 1.Zeile
+\setlength{\parskip}{1.0ex plus 0.8ex minus 0.5ex}%\ldots\ VarioAbsatzAbstände
+\setlength{\columnsep}{7mm}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..SpaltenZwischenraum
+\setlength{\columnseprule}{0.2pt}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..Spaltentrennlinie
+\setlength{\oddsidemargin}{0mm}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ .linker Rand ungerade(rechte) Seiten
+\setlength{\evensidemargin}{0mm}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ linker Rand gerade(linke) Seiten
+\setlength{\footskip}{8mm}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ Abstand: unterer Textbox - Seitenrand
+\setcounter{secnumdepth}{-2}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ .AschnittsNummerierungstiefe - Abschalten
+\setcounter{tocdepth}{2}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..Inhaltsverzeichnistiefe festlegen
+\pagestyle{plain}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ Seitenstil: Seitennummerierung zentral/unten
+\sectionfont{\LARGE\bfseries}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ .Größe der Abschnittsüberschriften 
+\subsectionfont{\Large\bfseries}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ Größe der Unterabschnittsüberschriften 
+\subsubsectionfont{\large\bfseries}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ Größe der Unterunterabschnittsüberschriften 
+\makeindex%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ .Index, um Bildnachweis anzulegen
+%------------------------------------
+\begin{document}
+%------------------------------------
+%\layout*%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ Seitenspiegel zu Testzwecken einblenden
+%***************************************
+%***PeX-Konfiguration - Stand:03/2011***
+%***************************************
+% 
+
+% Bildschalter bsx ist obsolete, da PeX prüft, ob Bild da ist oder nicht. Ansonsten Option draft im Kopf von Dokumentenvorlage verwenden.
+\renewcommand{\rmdefault}{\sfdefault}% serifenlose Standardschriftart definieren
+%\rmfamily %\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..SerifenSchrift(Roman-Typ)
+\sffamily  %\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ Serifenlose Schrift(Arial-Typ) setzen/auswählen
+%\family  %\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..Maschinen Schrift(Arial-Typ)
+\extrarowheight 3pt
+%>sdt#3pt#\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ExtraColSpace Tabellen
+% verschoben nach Ausgabe: >DATEN#07#2011#500#10#
+%***************************************
+%* Inhaltverzeichnis hier einbinden !  *
+%***************************************
+%>sg#2#
+\large
+\begin{multicols}{2}
+%>zd#1.5#
+\normalbaselines\linespread{1.1}\selectfont
+\def\contentsname{\Large Inhalt\large\dotfill 238/2012}\tableofcontents
+\clearpage\end{multicols}
+
+\normalbaselines\linespread{0.88}\selectfont
+ 
