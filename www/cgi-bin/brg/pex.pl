@@ -64,8 +64,6 @@ our $SPM=1;#SpaltenMemo - damit Automatik bei TagGesamtTabellen(=1spaltig) und z
 #our %TTKEY=();#TagTabellenSpalten-Hash init -> GesamtArtikelTabelle 26.11.2008
 #our $TTKAP="";#Kapitelspeicher-> Tabellenplot nach Kapitelwechsel! 26.11.2008
 #our $TABTXTFLG=2;#ArtikelTagFlag-> 2=komplett 1=NUR InfoKopftabelle(ohne Textanhang 0=ABSCHALTEN(komplett ausblenden->man.Übersichtstabellen einfügen möglich!26.11.2008
-our $BILDFLG=1;#1=Bildausgabe 0=Bildunterdrückung - oeko-Formatierung fuer erstellungsphase 10.6.2008
-our $NL="\\\\";#LatexNewline
 our $ITZ=0;#Latex\item-Zähler
 our $ITS="";# letztes Metazeichen - wird in testit() ggf. mit ausgegeben, Beispielwert ist \item
 our $KAPM="Kapitel";#Kapitelspeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
@@ -106,8 +104,6 @@ INIT {
     #%TTKEY=();
     #$TTKAP="";
     #$TABTXTFLG=2;
-    $BILDFLG=1;
-    $NL="\\\\";
     $ITZ=0;
     $ITS="";
     $KAPM="Kapitel";
@@ -330,10 +326,10 @@ sub create_tex #...TeX-Dokument aus SortHash generieren!
 #         @f=split(/#/,$s);
 #         my $fx=$f[0];
 #         if($fx=~s/^\-//g)# falls 1.Zeichen in 1.Spalte ="-" ->Hline unterbinden
-#               { print $OUT "$fx&$f[1]$NL\n";}
-#         else {print $OUT "$fx&$f[1]$NL$hl\n";}
+#               { print $OUT "$fx&$f[1]\\\\\n";}
+#         else {print $OUT "$fx&$f[1]\\\\$hl\n";}
 #         }
-#     print $OUT "\\end{tabular} $NL [1.5ex]\n";
+#     print $OUT "\\end{tabular} \\\\ [1.5ex]\n";
 #     }
 
 
@@ -365,7 +361,7 @@ sub print_table #...Tabelle     bis >* erzeugen
     @f=split(/#/,$s);
     $s="";
     foreach $e(@f){$s.="\\".$ueb."{$e}&";}
-    chop($s);print $OUT "$s $NL $lin $lin\n";
+    chop($s);print $OUT "$s \\\\ $lin $lin\n";
     #--- 3...n.Zeile=Tabellenzeilen(Inhalte)
     $s="?";
     while($s)
@@ -381,8 +377,8 @@ sub print_table #...Tabelle     bis >* erzeugen
             {$f[0]=$fx;$fx="-";}#..Tricki!
         $s=""; foreach $e(@f){$s.="$e&";};chop($s);
         if($fx=~s/^\-//g)# falls 1.Zeichen in 1.Spalte ="-" ->Hline unterbinden!
-            { print $OUT "$s $NL \n";}
-        else{print $OUT "$s $NL $lin\n";}
+            { print $OUT "$s \\\\ \n";}
+        else{print $OUT "$s \\\\ $lin\n";}
         }
     print $OUT "\\end{tabular}\n";
     }
@@ -450,7 +446,6 @@ sub print_image_jpg  #...Einfuegen JPG-Bildatei
     {
     my ($nix,$kom,$xf,$dn,$b,$photographer)=split(/#/,$_);
     my ($sx,$dx);
-    if($BILDFLG==0){print $OUT "\n{\\Large\\ding\{212\} BILD: $dn.jpg}\\\\\n";return;}# 212 ist ein dicker Rechtspfeil
     if(not -e "$Bpfad/$dn.jpg")
     {
         print $OUT "\n{\\Large\\ding\{212\} Bild \\textbf\{FEHLT\}: $Bpfad/$dn.jpg}\\\\\n";
@@ -468,7 +463,7 @@ sub print_image_jpg  #...Einfuegen JPG-Bildatei
     print $OUT "\\parbox[c]{\\linewidth}{\\center\n";
     print $OUT "\\includegraphics[".$b."]{"."$Bpfad/$dn.jpg}\n";
     if (defined $photographer) { print $OUT "\\index{$photographer}\%\n"; }
-    #original: if ($kom){print $OUT "\\centerline{\\emph{".$kom."}}$NL"."[3ex]\n";}
+    #original: if ($kom){print $OUT "\\centerline{\\emph{".$kom."}}\\\\"."[3ex]\n";}
     if ($kom){print $OUT "\\\\ \\textit{".$kom."}"."\n";}
     print $OUT "\\vspace{1.5ex plus 1ex minus 1ex}"."\n";
     print $OUT "}\n";
@@ -480,7 +475,6 @@ sub print_background_image_jpg  #...Einfuegen jpg-Hintergrund-Bildatei
     {
     my ($nix,$px,$py,$hx,$bx,$dn)=split(/#/,$_);
     my ($hy,$sx,$dx);
-    if($BILDFLG==0){print $OUT "\n{\\Large\\ding\{212\} BILD: $dn.jpg}\\\\\n";return;}
     if(not -e "$Bpfad/$dn.jpg"){print $OUT "\n{\\Large\\ding\{212\} Bild \\textbf\{FEHLT\}: $Bpfad/$dn.jpg}\\\\\n";return;}
     $hy=$hx-1;
     $py-=$hy;
@@ -495,7 +489,6 @@ sub add_logo_image_jpg  #...Einfuegen jpg- Logo/Icon-Bildatei
     my ($tx1,$nix,$dn,$hx,$tx2)=split(/:/,$s);
     #if(not defined $dn) { $dn = ""; }
     #if(not defined $tx2) { $tx2 = ""; }
-    if($BILDFLG==0){print $OUT "\n{\\Large\\ding\{212\} LOGO: $dn.jpg}\\\\\n";return($tx1." ".$tx2." ");}
     if(not -e "$Logopfad/$dn.jpg")
     {
         print $OUT "\n{\\Large\\ding\{212\} Logo \\textbf\{FEHLT\}: $Logopfad/$dn.jpg}\\\\\n";
@@ -657,7 +650,7 @@ sub initialize_issue_information($*)
     $AUSGABEZEITRAUM=$m[$Monat]."/".$m[$Monat+1]." $Jahr";
     $AUSGABE=$AUSGABEZEITRAUM."\\hfill$ISSUENUMBER\n\n";
     $memo=$m[$Monat+1]." ".$Jahr;
-    $RENDE='Redaktionsschluss für die nächste Ausgabe: \textbf{'."$Rende. $memo}$NL";
+    $RENDE='Redaktionsschluss für die nächste Ausgabe: \textbf{'."$Rende. $memo}\\\\";
     print "Ausgabe: $AUSGABE\t$Jahr\t\t$ISSUENUMBER\n$RENDE\n";
 }
 
