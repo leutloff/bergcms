@@ -72,7 +72,6 @@ our @TXZ=undef;#globaler Textzeilenspeicher
 our $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";#Bilder-Pfad -> *.jpg-Archiv
 our $Logopfad="/home/aachen/cgi-bin/brg/br/icons";#Bilder-Pfad -> *.jpg-Archiv
 our $SCALE=undef;#Skalierung festlegen, z.B. bei Tabellen
-our $SGOF=undef;#SchriftgroessenOffset
 our $ISSUENUMBER=undef;#Fortlaufende Nummerierung der Gemeindeinformationen
 our $ISSUEYEAR=undef;
 our $AUSGABEZEITRAUM=undef;#Text der Ausgabe mit Erscheinungsjahr/Erscheinungsmonat; wird im PDF Inhaltsverzeichnis verwendent
@@ -82,8 +81,7 @@ our $Rende=undef;#Datum des Redaktionsschlusses
 our $RENDE=undef;#Text zum Redaktionsschluss
 #-----SchriftgroessenDef />sg#N#
 our $SGO=4;# Standardschriftgröße
-our $SGU=$SGO+0;# Standardschriftgröße der kleinsten Überschrift
-our @SG;# Names of LaTeX font sizes
+our $SGOF=undef;#SchriftgroessenOffset
 #-----Zeilenabstandsdichte />sg#N#
 our $ZD0=1;# StandardZeilendiche =1
 our $ZDM=1;# StandardMEMO-Zeilendiche =1 24.5.2007->bei >zd#0 wird ZD0=ZDM!
@@ -102,8 +100,6 @@ INIT {
     $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";
     $Logopfad="/home/aachen/cgi-bin/brg/br/icons";
     $SGO=4;
-    $SGU=$SGO+0;
-    @SG= qw(\\tiny \\scriptsize \\footnotesize \\small \\normalsize \\large \\Large \\LARGE \\huge \\Huge);
     $ZD0=1;
     $ZDM=1;
     $ZDI=0.5;
@@ -221,7 +217,7 @@ sub create_tex_file(%)
   	
   	if(!defined $OUT) { die "Fehler: Die Ausgabedatei '$OUPTEX' wurde nicht geöffnet (create_tex_file)."; }
   	
-    my ($kap,$zz,$k,$tnr,$titel,$typ,$text,$top,$x,$ueber,$s);# TODO are all variables still used?
+    my ($kap,$zz,$k,$tnr,$titel,$typ,$text,$x,$ueber);
     my $lines = 0;
     my $LIM="\x09";
     #my @WTG= qw(nix Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag);#-----WochentagDef s. INFOLISTE TODO remove
@@ -252,7 +248,7 @@ sub create_tex_file(%)
                 $KAPM=$kap;
 #                print $OUT "% Kapitelwechsel= $KAPM ($TTKAP)\n";
                 print $OUT "% Neues Kapitel: $KAPM\n";
-                ($x,$ueber)=split(/\:/,$kap);
+                ($x,$ueber)=split(/\:/, $kap, 2);
 #                 if (("Angebote" eq $ueber) || ("Hauskreise" eq $ueber)) 
 #                     {
 #                     if ("Angebote" eq $ueber) 
@@ -266,13 +262,13 @@ sub create_tex_file(%)
 #                         } 
 #                     }
 #                  else
-                    {
-                    $top=">1#".$ueber."#x"; testit($top);#section generieren    
-                    }
+#                    {
+                   testit(">1#".$ueber."#x");#section generieren    
+#                    }
             }
 #            if($tnr==0||$tnr>7)#kein Wochentag
                 {
-                if(length($titel)>=2){$top=">2#".$titel."#x"; testit($top);}#subsection generieren
+                if(length($titel)>=2){ testit(">2#".$titel."#x"); }#subsection generieren
                 }
 #             else # Wochentag
 #                 {
@@ -321,6 +317,7 @@ sub create_tex_file(%)
 #                }
         }
         # Resttextzeilen interpretieren/generieren
+        my $s = '';
         while($#TXZ>=0)
         {
             $s=shift(@TXZ);
@@ -582,11 +579,12 @@ sub evaluate_commands
     {
         if ($f[1] =~ /^[0-9]$/ )
         {
-            $SGO=$f[1]+$SGOF; print $OUT $SG[$SGO]."\n";
+            $SGO=$f[1]+$SGOF; 
+            print $OUT get_fontsize($SGO)."\n";
         }
         else
         {
-            print $OUT "% sg ignoriert (Schriftgröße 0..9): $f[1]\n";
+            report_warning("sg ignoriert (Schriftgröße 0..9): $f[1]");
         }
         return; 
     }
@@ -857,34 +855,46 @@ sub print_alignment #...Zeile rechts,zentriert oder linksbuendig
     print $OUT "$s\n";
     }
 
+#** @function
+# Determines the name of the numeric font size.
+# @param font size 0..9 
+# @retvals the name of the numeric font size.
+sub get_fontsize
+{
+    my $x=shift;
+    if (!defined($x) || (0 > $x)) { $x=0; }
+    my @SG=qw(\\tiny \\scriptsize \\footnotesize \\small \\normalsize \\large \\Large \\LARGE \\huge \\Huge);
+    if ($#SG < $x) { $x = $#SG; }
+    return $SG[$x];    
+}
+
 #-----------------------------------------------------
 sub add_bold #...Zeile hervorheben
 #----------------------------------------------------
     {
     my $s=shift;
-    my $x=$SGO;
-    if ($x<0) {$x=0;}
-    return('\textbf{'.$s.'}');
+    return('\textbf{'.$s."\n".'}');
     }
 #-----------------------------------------------------
 sub add_italic #...Zeile in Kursiv
 #----------------------------------------------------
     {
     my $s=shift;
-    my $x=$SGO;
-    if ($x<0) {$x=0;}
-    return('\textit{'.$SG[$x]." ".$s.'}');
+    my $x=get_fontsize($SGO);
+    return('\textit{'.$x.' '.$s."\n".'}');
     }
-#-----------------------------------------------------
-sub add_author # Author of article
-#----------------------------------------------------
-    {
+    
+#** @function
+# Author of article. Implement command >i#.
+#*
+sub add_author
+{
     my $s=shift;
-    my $x=$SGO-1;
-    if ($x<0) {$x=0;}
-    if (!defined($s)) { $s=''; print "* Autor fehlt.\n"; }# TODO add line number or other context
-    return('\textit{'.$SG[$x]." ".$s.'}'."\n"."\\bigskip");
-    }
+    if (!defined($s)) { $s=''; report_warning('Autor fehlt.'); }# TODO add line number or other context
+    my $x=get_fontsize($SGO-1);
+    return('\textit{'.$x.' '.$s."\n".'}'."\n"."\\bigskip");
+}
+
 #-----------------------------------------------------
 sub add_caption #...Ueberschrift erzeugen
 #----------------------------------------------------
@@ -892,7 +902,7 @@ sub add_caption #...Ueberschrift erzeugen
     my $s=shift;
     $s=~ s/^ +//g;#remove leading space
     # set in bold letter and add some space:
-    return('\textbf{~\\\\'."\n".$s.'}'."\n".'\vspace{.5\baselineskip plus 1ex minus 0.5ex}');# TODO \\ wieder entfernen, da nicht robust und nicht variabel.
+    return('\textbf{~\\\\'."\n".$s."\n".'}'."\n".'\vspace{.5\baselineskip plus 1ex minus 0.5ex}');# TODO \\ wieder entfernen, da nicht robust und nicht variabel.
     }
 
 #-----------------------------------------------------
