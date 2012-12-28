@@ -90,7 +90,7 @@ Januar/Februar 2012},   % subject of the document
 %***PeX-Konfiguration - Stand:03/2011***
 %***************************************
 % 
-
+% Schalter tsx ist obsolete, da Textanhang nicht mehr unterstützt wird.
 % Bildschalter bsx ist obsolete, da PeX prüft, ob Bild da ist oder nicht. Ansonsten Option draft im Kopf von Dokumentenvorlage verwenden.
 \renewcommand{\rmdefault}{\sfdefault}% serifenlose Standardschriftart definieren
 %\rmfamily %\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..SerifenSchrift(Roman-Typ)
@@ -104,11 +104,11 @@ Januar/Februar 2012},   % subject of the document
 %***************************************
 %>sg#2#
 \large
-\begin{multicols}{2}
+\begin{multicols}{2}%
 %>zd#1.5#
 \normalbaselines\linespread{1.1}\selectfont
 \def\contentsname{\Large Inhalt\large\dotfill 238/2012}\tableofcontents
-\clearpage\end{multicols}
-
+\clearpage
 \normalbaselines\linespread{0.88}\selectfont
  
+\end{multicols}%

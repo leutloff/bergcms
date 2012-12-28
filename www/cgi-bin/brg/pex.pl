@@ -42,9 +42,11 @@ use Cwd qw(abs_path);
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.09/27.12.2012';
+$VERSION = 'v2.09/28.12.2012';
 # exports are used for testing purposes
-@EXPORT_OK = qw(add_author add_bold add_caption add_italic replace_characters);
+@EXPORT_OK = qw(add_author add_bold add_caption add_italic
+                get_tex_content
+                replace_characters);
 @ISA = qw(Exporter);
 
 # Standardeingabe und Standardausgabe in UTF-8:
@@ -54,16 +56,6 @@ binmode(STDOUT, ":encoding(utf8)");
 # run() is called, when this script is used as standalone script.
 # Otherwise the methods are available from the package.
 __PACKAGE__->run(@ARGV) unless caller();
-
-#----> function prototypes --------------------------------
-sub run(@);
-sub print_version($*);
-sub load_database($);
-sub create_tex_file(%);
-sub initialize_issue_information($*);
-
-sub chompx($);
-sub report_warning($);
 
 #--- Define the Global Variables --------------------------------------------------
 #our $SPM=1;#SpaltenMemo - damit Automatik bei TagGesamtTabellen(=1spaltig) und zurücksetzen funzt!27.11.2008
@@ -98,6 +90,7 @@ our $ZDM=1;# StandardMEMO-Zeilendiche =1 24.5.2007->bei >zd#0 wird ZD0=ZDM!
 our $ZDI=0.5;# StandardZeilendiche =0.5ex Items
 
 our @stack = "";# stack holding the colsing name of a list - triggered by >*
+our $ActualColumsNo = "1";# actual number of columns
 our $OUT = undef;# Handle to the resulting output file
 
 #--- Initialize the Global Variables --------------------------------------------------
@@ -116,12 +109,13 @@ INIT {
     $ZDI=0.5;
 
     @stack = "";
+    $ActualColumsNo = "1";
 }
 
 #** @function
 #-----Start (Main)-----------
 #*    
-sub run(@)
+sub run
 {
     my $inp = "";# Filename for the input
     my $OUPTEX = "";# Filename for the output
@@ -143,7 +137,6 @@ sub run(@)
     die "Fehler: Input- ($inp) und Outputdatei ($OUPTEX) dürfen nicht gleich sein!" if ($OUPTEX eq $inp);      
     #my $OUT=IO::File->new(">$OUPTEX");
     open($OUT, ">:encoding(utf8)", $OUPTEX) or die "Die Ausgabedatei $OUPTEX kann nicht geöffnet werden.";
-    if(defined $OUT) {;} else {die "Fehler beim Oeffnen von $OUPTEX";}
 
     print_version($inp, $OUPTEX);
     my %idx = load_database($inp);
@@ -171,14 +164,14 @@ sub print_version($*)
 #*
 sub load_database($)
 {
- 	my($inp) = @_;
+     my($inp) = @_;
     my (@f,$k,$s,$PIN);
     my %idx = ();
     my $LIM="\x09";
     open($PIN, "<:encoding(utf8)", $inp);   
     if(defined $PIN) {;} else {die  "Fehler beim Öffnen von $inp!";}
     flock($PIN, LOCK_SH) || die("\nFehler: Konnte die Datei $inp nicht zum Lesen sperren (load_database)!\n");
-    print "\nMoment bitte ...PeX-DB [$inp] wird gescannt!...\n";
+    print "\nDie Datenbank [$inp] wird eingelesen...\n";
     while (<$PIN>)
     {
         chompx(\$_);#UniversalChomp-call by Reference
@@ -195,11 +188,27 @@ sub load_database($)
         }
         $idx{$k}=$s;#->ab in den Sort-Hash
     }
-    flock($PIN, LOCK_UN) || print "\nFehler: Konnte die Lesesperre der Datei $inp nicht entfernen (load_database)!\n";
+    flock($PIN, LOCK_UN) || print "\nFehler: Konnte die Lesesperre der Datei $inp nicht entfernen (load_database).\n";
     $PIN->close();
     return %idx;
 }
 
+#** @function
+# Returns a string with the content of the TeX document. The output is generated 
+# from the given hash with the content. This is the same as when writing to file.
+# @params idx with the content to return as TeX document.
+# @retvals the TeX document that appears normally in the TeX file.
+#*
+sub get_tex_content(%)
+{
+    my %idx = %{shift()};
+    my $result = '';
+    open($OUT, ">:encoding(utf8)", \$result) or die 'Die Ausgabe in eine temporäre Variable konnte nicht geöffnet werden (get_tex_content).';
+    create_tex_file('Temporäre Variable', \%idx);
+    $OUT->close();
+    $OUT = undef;
+    return $result;
+}
 
 #** @function
 # Generates the TeX file from the given hash with the content.
@@ -207,19 +216,25 @@ sub load_database($)
 #*
 sub create_tex_file(%)
 {
-	my $OUPTEX = shift();
-  	my %idx = %{shift()};
-    my ($kap,$zz,$k,$tnr,$titel,$typ,$text,$top,$x,$ueber,$s);
+    my $OUPTEX = shift();
+    my %idx = %{shift()};
+  	
+  	if(!defined $OUT) { die "Fehler: Die Ausgabedatei '$OUPTEX' wurde nicht geöffnet (create_tex_file)."; }
+  	
+    my ($kap,$zz,$k,$tnr,$titel,$typ,$text,$top,$x,$ueber,$s);# TODO are all variables still used?
+    my $lines = 0;
     my $LIM="\x09";
     #my @WTG= qw(nix Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag);#-----WochentagDef s. INFOLISTE TODO remove
-    print  "\nMoment bitte ...TeX-Dokument [$OUPTEX] wird erzeugt!...\n";
+    print  "\nDas TeX-Dokument [$OUPTEX] wird erzeugt ...\n";
     foreach $k (sort keys %idx)
-        {
+    {
         ($kap,$tnr,$titel,$typ,$text)=split(/$LIM/,$idx{$k});
         @TXZ=split(/<br>/,$text);# Textblock in Zeilenspeicher!
         my ($nix0,$nix1,$nix2,$ai)=split(/$LIM/,$k);
         $zz++;
-        print "$zz\t[AI:$ai]\t$kap ($tnr)\t$titel\t$typ\t$#TXZ\n";
+        
+        $lines = 1 + $#TXZ;
+        print "$zz\t[AI:$ai]\t$kap ($tnr)\t$titel\t$typ\t$lines\n";
         # todo: hier verweis auf den artikel ausgeben
         # print_article_content();
         #TODO: TTKAP entfernen
@@ -231,9 +246,9 @@ sub create_tex_file(%)
 #             }
     
         if ($typ eq "A") # Artikel->Hierachie-Management.............Kapitel,Wochentag,Titel
-            {
+        {
             if($KAPM ne $kap)# Kapitelwechsel?
-                {
+            {
                 $KAPM=$kap;
 #                print $OUT "% Kapitelwechsel= $KAPM ($TTKAP)\n";
                 print $OUT "% Neues Kapitel: $KAPM\n";
@@ -254,7 +269,7 @@ sub create_tex_file(%)
                     {
                     $top=">1#".$ueber."#x"; testit($top);#section generieren    
                     }
-                }
+            }
 #            if($tnr==0||$tnr>7)#kein Wochentag
                 {
                 if(length($titel)>=2){$top=">2#".$titel."#x"; testit($top);}#subsection generieren
@@ -304,16 +319,17 @@ sub create_tex_file(%)
 #                 {
                 shift(@TXZ);# 1. Dummyzeile entfernen!
 #                }
-            }
+        }
         # Resttextzeilen interpretieren/generieren
         while($#TXZ>=0)
-            {
+        {
             $s=shift(@TXZ);
             #if($s=~/^>tt0/){last if($TABTXTFLG!=0);} #
             #else{testit($s);}
             testit($s);
-            }
         }
+    }
+    print_columns('1');# ensure \end{multicols} if necessary.    
 }
 
 # #TODO entfernen:
@@ -529,10 +545,11 @@ sub testit #...Existiert MetaZeicheneinleitung?
         }
     }
 
-#-----------------------------------------------------
-sub evaluate_commands #...Metazeichenauswertung
-#-----------------------------------------------------
-    {
+#** @function
+# Evaluate and execute the PeX commands. They are all starting with a greater sign ('>').
+#*
+sub evaluate_commands
+{
     my $s=shift;
     my (@f,$it,$t,$u,$nix);
     chompx(\$s);#UniversalChomp-call by Reference;
@@ -554,8 +571,7 @@ sub evaluate_commands #...Metazeichenauswertung
     }
     if($f[0] eq "bsx")#Bildschalter EIN(1) / AUS(0) - 0 -> Bilder werden durch Text ersetzt! 10.6.2008
     {
-        print $OUT "\n% Bildschalter bsx ist obsolete, da PeX prüft, ob Bild da ist oder nicht. Ansonsten Option draft im Kopf von Dokumentenvorlage verwenden.\n";
-        print "* Bildschalter bsx ist obsolete, da PeX prüft, ob Bild da ist oder nicht. Ansonsten Option draft im Kopf von Dokumentenvorlage verwenden.\n";
+        report_warning('Bildschalter bsx ist obsolete, da PeX prüft, ob Bild da ist oder nicht. Ansonsten Option draft im Kopf von Dokumentenvorlage verwenden.');
         return; 
     }
     if($f[0] eq "zdm") {$ZDM=$f[1]; $ZD0=$ZDM;return;} #StandardZeilendichte-Memo->wird bei zd#0 als Rücksetzwert genommen! 24.5.2007
@@ -598,7 +614,7 @@ sub evaluate_commands #...Metazeichenauswertung
     if($f[0] =~/BPFAD/i) {$Bpfad=$f[1]; return;} #Standardjpg-Bildverzeichnis
     #...AbschnittsEnde (LIFO-Stack)
     if($f[0] eq "*")#prüfen ob Nummerierungsblock aktiv?
-        {
+    {
         $t=pop(@stack);
         if (defined($t))
             {
@@ -609,19 +625,19 @@ sub evaluate_commands #...Metazeichenauswertung
         if(!$ITZ) {$ITS="";}
         #print $s."=".$t;<STDIN>;
         return;
-        }
+    }
     #...man. Seiten bzw. Spaltenwechsel
     if($f[0] eq "+") {print $OUT "\\newpage\n";return;}
     if($f[0] eq "!") {print $OUT "\\columnbreak\n";return;}
 
     if($f[0] =~/DATEN/i)
-        {
+    {
 		my $Monat=undef;#Erscheinungsmonat
         ($nix,$Monat,$ISSUEYEAR,$AUFLAGE,$Rende)=split(/#/,$s);#globale Daten
         initialize_issue_information($Monat,$ISSUEYEAR);
         return;
-        }
-    if($f[0] =~/SPALTEN/i) {print_columns($f[1]);return;}
+    }
+    if($f[0] =~/SPALTEN/i) { print_columns($f[1]); return; }
     if($f[0] =~/NUM/i){print_enumeration();return;}
     if($f[0] =~/PUN/i) {print_itemize();return;}
     if($f[0] =~/SYMBOL/i) {print_dinglist($f[1]);return;}
@@ -634,17 +650,18 @@ sub evaluate_commands #...Metazeichenauswertung
     if($f[0] =~/BILDNACHWEIS/i) { print_picturecredits(); return; }
     if($f[0] =~/BILD/i) {print_image_jpg();return;}   
     if($f[0] =~/HBILD/i) {print_background_image_jpg();return;}
-    if($f[0] =~/INHALT/i)
-        { # falls 2. Parameter diesen als Inhaltsüberschrift verwenden 16.10.2009
+    if($f[0] =~/INHALT/i) 
+    {  
+        # falls 2. Parameter diesen als Inhaltsüberschrift verwenden
         if($f[1]){print $OUT "\\def\\contentsname{{\\Large $f[1]}}\\tableofcontents\n\\clearpage";return;}
         else{print $OUT "\\def\\contentsname{\\Large Inhalt\\large\\dotfill $ISSUENUMBER/$ISSUEYEAR}\\tableofcontents\n\\clearpage";return;}
-        }
+    }
     if($f[0] =~/AUFLAGE/i) {print $OUT "Auflage: $AUFLAGE\n";return;}
     # AUSGABEZEITRAUM mus vor AUSGABE stehen, damit es zuerst passt
     if($f[0] =~/AUSGABEZEITRAUM/i) {print $OUT "$AUSGABEZEITRAUM"; if (defined $f[1]) {print $OUT $f[1];} return;}
     if($f[0] =~/AUSGABE/i) {print $OUT "{\\Large $AUSGABE}";return;}
     if($f[0] =~/RENDE/i) {print $OUT "$RENDE";return;}
-    }
+}
 
 #** @function 
 # Initialize some values regarding the issue, e.g. the number of the issue.
@@ -716,14 +733,37 @@ sub initialize_issue_information($*)
 #     print $OUT ''.$u.' \\\\ \hline \hline'."\n";
 #     }
 
-#-----------------------------------------------------
-sub print_columns #...Spaltenanz setzen
-#-----------------------------------------------------
+#** @function
+# Changing the number of columns. Output is only generated when the number is 
+# different from the actually used number of columns.
+# @params the number of desired columns.
+#*
+sub print_columns
+{
+    my $cols=shift;
+    chompx(\$cols);
+    $cols = trim($cols);
+    if (('1' eq $cols) || ('2' eq $cols) || ('3' eq $cols))
     {
-    my $SPM=shift;
-    push(@stack,"\\end{multicols}\n");
-    print $OUT "\\begin{multicols}{$SPM}\n";
+        if ($cols ne $ActualColumsNo)
+        {
+            if ('1' ne $ActualColumsNo) { print $OUT '\end{multicols}%'."\n"; }
+            if ('1' ne $cols) { print $OUT '\begin{multicols}{'.$cols.'}%'."\n"; }
+            $ActualColumsNo = $cols;
+        }
     }
+    else
+    {
+        if ('' eq $cols) 
+        {
+            report_warning('Nur 1, 2 oder 3 Spalten sind erlaubt. Die Anweisung wird ignoriert, da die Spaltenanzahl fehlt.');
+        }
+        else
+        {
+            report_warning('Nur 1, 2 oder 3 Spalten sind erlaubt. Die Angabe von '."'$cols'".' Spalten wird ignoriert.');
+        }
+    }
+}
 
 #-----------------------------------------------------
 sub print_enumeration#...FolgeZeilen durchnummerieren
@@ -927,11 +967,23 @@ sub dbquote #...Anfuehrungszeichen ersetzen(Latex), prüft auf " und „/“
 # Removes any line feed and carriage return character.
 # This avoids problems with TeX later on.
 #*
-sub chompx($)
-    {
+sub chompx
+{
     my $s=shift;
     $$s=~s/\x0a|\x0d//g;
-    }
+}
+
+#** @function 
+# Removes white space from the beginning and end of the given string.
+# @param string to trim
+# @retvals the input string without white space at the beginning or end. 
+#*
+sub trim 
+{
+    (my $s = $_[0]) =~ s/^\s+|\s+$//g;
+    return $s;        
+}
+
 
 #sub print_article_content
 #    {
@@ -944,10 +996,10 @@ sub chompx($)
 # Reports a warning message to stdout and to the TeX file.
 # @params msg Message that send to stdout and to the TeX file.
 #*
-sub report_warning($)
+sub report_warning
 {
     my $msg=shift;
-    print $OUT "\n% $msg\n";
+    print $OUT '% '.$msg."\n";
     print "* $msg\n";
 }
 

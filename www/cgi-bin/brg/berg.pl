@@ -50,7 +50,7 @@ my $rKopf = \$Kopf;
 my $rTab  = \$Tab;
 my ($treffer,$von);
 
-#----> function prototypes --------------------------------
+#----> function prototypes -------------------------------- TODO remove function prototypes
 sub create_database();
 sub get_todo_fields();
 

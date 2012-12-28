@@ -8,7 +8,7 @@ pushd $SOURCEDIR
 echo && echo "***   run funtion tests ...   ***"
 #perl -I$SOURCEDIR/.. pex.pl
 mkdir -p BERG
-cp $SOURCEDIR/../pex.pl BERG/PEX.pm
+ln -fs $SOURCEDIR/../pex.pl BERG/PEX.pm
 perl test_pex.pl
 
 

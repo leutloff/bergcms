@@ -84,7 +84,7 @@ my %Liste=();
 #my $TSTX;# testvariable
 my $REMOTEID=(defined($ENV{'REMOTE_ADDR'})?$ENV{'REMOTE_ADDR'}:'127.0.0.1').':'.(defined($ENV{'REMOTE_PORT'})?$ENV{'REMOTE_PORT'}:'-');# IP:Port des Aufrufers
 
-#----> function prototypes --------------------------------
+#----> function prototypes -------------------------------- TODO remove function prototypes
 sub get_view_link;
 sub get_clr_link;
 sub test_data(*);
