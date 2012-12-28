@@ -17,7 +17,7 @@ use warnings;
 use CGI qw/:standard :html4/;
 use CGI::Carp qw(fatalsToBrowser); # show fatal errors in the browser
 
-my $VERSION="v2.05, 04.08.2012";
+my $VERSION="v2.06, 28.12.2012";
 my $uploadpath='ul';# Zwischenspeicherung des Bildes unmittelbar nach dem Upload
 my $finalimagepath='br/bilder';# hier wird das Bild von pex erwartet
 my $maxsize=50000;#at maximum accepted image size (KByte)
@@ -93,54 +93,6 @@ sub uploading
         print p('Die Datei '.$uploadedfile.' konnte nicht abgelegt werden!');
     }
 }
-
-
-##----------------------------------------------------------------
-## umwandeln von jpg-Fotos-> jpg-KompaktFotos f.d. Zeitung
-##----------------------------------------------------------------
-#sub scale_uploaded_file
-#{
-#    my $bild=lc($filename.$ext);
-#    my $bef='/usr/bin/convert '.$uploadedfile.' -resize x600 '.$finalimagepath.'/'.$bild.' 2>&1';
-#    print p("Größenanpassung der hochgeladenen Datei mit dem Befehl:<br> $bef");
-#    print '<p><pre>';
-#    system($bef);
-#    if ($? == -1)
-#    {
-#        print p("Convert fehlgeschlagen: $!\n"), p("Ausgeführter Befehl: $bef");
-#    }
-#    elsif ($? & 127)
-#    {
-#        printf "<p>Convert died with signal %d, %s coredump.</p>\n",
-#                ($? & 127), ($? & 128) ? 'with' : 'without';
-#    }
-#    else
-#    {
-#        if ($?)
-#        {
-#            printf "<p>Convert fehlgeschlagen mit dem Rückgabewert %d.<p>\n", $? >> 8;
-#        }
-#        else
-#        {
-#            printf "<p>Convert erfolgreich ausgeführt mit dem Rückgabewert %d.<p>\n", $? >> 8;          
-#        }
-#    }
-#    print '</pre><p><p><pre>';
-#    system('convert -version');
-#    print '</pre><p><p><pre>';
-#    system('/usr/bin/convert -version');
-#    print '</pre><p><p><pre>';
-#    system('locate ImageMagick');
-#    print '</pre><p><p><pre>';
-#    system('gm -version ');
-#    print '</pre><p>';
-#    #unlink($uploadedfile);
-#    print h3('Das Bild '.$bild.':'), 
-#        p('<img src="/cgi-bin/brg/bgul_ng.pl?IMAGE='.$bild.'" width="300">'),
-#        p('wurde f&uuml;r die Info aufbereitet und kann jetzt eingebunden werden!');
-#    $bild=~s/\.jpg//i;
-#    print p(b('Befehl:')), p(pre('&gt;bild#Titel...#b#'.$bild.'#opt#Fotograf'));
-#}
 
 #----------------------------------------------------------------
 # scale the uploaded File
@@ -280,7 +232,7 @@ sub return_image
 #----------------------------------------------------------------------------
 # Print the version information (script and Perl).
 #----------------------------------------------------------------------------
-sub print_html_version()
+sub print_html_version
 {
     print "\n";
     print '<p class="version">Version: '.$VERSION." (Perl $])</p>\n";

@@ -38,21 +38,13 @@ binmode(STDOUT, ":encoding(utf8)");
 
 
 #--- GlobalSet ---
-my $VERSION="v2.08, 11.12.2012";
-#my ($TODO1, $TODO2);# Platzhalter für ToDo-Marker ?t1/?t2 s.a. ?h
-#my $CHARSET;# Zeichensatzübergabe  ab 9.6.2009
+my $VERSION="v2.09, 28.12.2012";
 my $Neuflg;# falls  ? in Select-Listen wird Auswahlliste für Neueingabe unterdrückt!
 my $Sftz=',';# Select-Listen-Feldtrenner
 my $SPATH=defined ($ENV{'SCRIPT_FILENAME'}) ? $ENV{'SCRIPT_FILENAME'} : $ENV{'PATH_TRANSLATED'}.$ENV{'SCRIPT_NAME'};#ScriptPfad - SCRIPT_FILENAME Ersatz bei Mini Java CgiHandler 0.2
 $SPATH=~s/bgcrud.pl//g;
 my $TIDP=$SPATH."tidx/";#Pfad für Transaktionsdateien (Puffer/Zwischenspeicher) muss angelegt werden!
-#foreach $s (sort keys %ENV){$TIDP.=$s."= $ENV{$s}\n";};print_error_page($TIDP);
-#my $Comx="";#Befehl nach CrUd-Aktion 5.7.2006-> ermöglicht Nach- bzw. Weiterbearbeiten von Daten
 my $FDaten;#POST-Formulardaten-Speicher!
-#my $htitle="CRUD-Modul(berg) ";#Titel -Überschrift -URL
-#my $title="   ";#Titel -Überschrift
-#my $home="/index.html";#HeimatVZ
-#my $view="/cgi-bin/brg/berg.pl";
 my $self=$ENV{'REQUEST_URI'} || (defined($ENV{'SCRIPT_NAME'}) ? $ENV{'SCRIPT_NAME'}.'?'.$ENV{'QUERY_STRING'} : undef) || $0;#eigene Adresse - REQUEST_URI wird bei dem Perl-Test-Web-Server nicht gesetzt
 my $refer=$ENV{'HTTP_REFERER'};#Aufruf-URL
 
@@ -62,40 +54,18 @@ my $lim = "\t";# fields in the Database are separated by a TAB
 #             a          b       c      d     e   f        g         h       i
 my $felder = "Artikel-ID,Kapitel,Nummer,Titel,Typ,Kopftext,Haupttext,Fußtext,TSID";
 
-#my ($idz, $id, $thema, $pin, $dbfile, $lim, $felder,$dbmaxz,$info);
 my $headline;
-#my ($LCrud,$Crud,$Aw,$Seek,$Flng,$Secl)=("","1R","",0,0,"r");#
 my ($LCrud,$Crud,$Aw)=("","1R","");#
 my $Secl = "u_ c_ d_<br>F:A<br>M:F(3,w)<br>M:G(10,w,virtual)<br>M:H(3,w)<br>S:C(?,-1=INAKTIV,1=Mo,2=Di,3=Mi,4=Do,5=Fr,6=Sa,7=So)<br>S:E(A=Artikel,F=Fixtext,K=Konfiguration)<br>F:I(?ts / ?id)";
 my %Formular=();
 my %Formsort=();
 #my ($tst,$x,$l);
 my $Satz;# enthält die Daten aus dem Formular
-#my ($DATUM,$UZ,$UZk,$WTX,$HISTORY);# Datum(tt.mm.jjjj), Uhrzeit(hh:mm(:ss)) und Wochentag(Mo-So) + HistoryMarke (?h)->wird in datum() gesetzt 19.4.2007 , 17.6.2009
-#my $plim="_:";#Trenner für PMEMO
-#my $pmemo = hidden(
-#        '-name' => 'PMEMO'
-#        );#--- FormularSet ---
 my $ai = hidden(
         '-name' => 'AI'
         );#--- FormularSet ---
 my %Liste=();
-#my $viewclr="";
-#my $TSTX;# testvariable
 my $REMOTEID=(defined($ENV{'REMOTE_ADDR'})?$ENV{'REMOTE_ADDR'}:'127.0.0.1').':'.(defined($ENV{'REMOTE_PORT'})?$ENV{'REMOTE_PORT'}:'-');# IP:Port des Aufrufers
-
-#----> function prototypes -------------------------------- TODO remove function prototypes
-sub get_view_link;
-sub get_clr_link;
-sub test_data(*);
-sub next_id(*);
-sub make_db_backup(*);
-
-#----> function prototypes of the shared functions --------
-sub replace_umlauts($);
-sub replace_html_umlauts($);
-sub print_error_page($);
-sub print_html_version();
 
 
 if (defined param('AW'))
@@ -313,10 +283,8 @@ sub    get_form #Daten werden aus Formular(self) in den FormularHash(POST) gelad
             $wert=join('<br>',@fa);
             }
         else {$wert=decode utf8=>param($feld);}
-        #$Formular{$feld}=$wert;
         $wert=~s/\xa/\<br\>/g;#LF in <br> wandeln! 14.5.2007
         $wert=~s/$lim/ \&bull; /g;#FeldTrennzzeichen innerhalb von Felder verhindern - ersetzen durch HTML-PUNKT -30.7.2010
-        #$Formular{$feld}=~s/$lim//s;#Feldtrenner aus Einzelfeld entfernen!
         $wert=check_value($wert);
         $Formular{$feld}=$wert;
         $Satz.=$wert.$lim;
@@ -364,41 +332,12 @@ sub    check_value #Aliasse und Sonderzeichenumwandlung 15.9.2008
 ######################################################################
     {
     my $wert=shift;
-#    my ($datei,@f,$prfx,$m,$p,$patt,$key);
     #.......Sonderparameter ?t, ?id ->NUR falls Quelle NICHT 'berg' enthält
     if($dbfile=~/berg/i){;}else
         {
-        #my $Ts0=datum();#StartZeitStempel s.a. Feld-Default=?t
         my $Ts0=get_single_date();
-#        $wert=~s/\?t1/$TODO1/g;#)Init-Marker setzen (s.a.HistoryMarker) ab 9.7.2010
-#        $wert=~s/\?t2/$TODO2/g;#)Ready-Marker setzen (s.a.HistoryMarker) ab 9.7.2010
-#        $wert=~s/\?h/$HISTORY/g;#mask - HistoryMarker setzen TT.MM.JJJJ-hh:mm ab 17.6.2009
-#        $wert=~s/\?uz/$UZ/g;#mask - Uhrzeit hh:mm:ss
-#        $wert=~s/\?kuz/$UZk/g;#mask - Uhrzeit hh:mm = Kurzform
-#        $wert=~s/\?date/$DATUM/g;#mask - Datum tt:mm:jjjj
-#        $wert=~s/\?wt/$WTX/g;#mask - Wochentag So..Sa
         $wert=~s/\?ts/$Ts0/g;#mask - TimeStamp
         $wert=~s/\?id/$REMOTEID/g;#mask
-
-#        #....spezielle Ersetzungen
-##        if($wert=~/\?un=/) # UPLOAD DateiName 14.10.2008
-##            {
-##            ($datei,$wert)=set_href($wert,"un=");
-##            $view='../cgi-bin/upl.pl?SW=std&ZFILE='.$datei;#redirect umlenken auf UPLOAD! 14.10.2008
-##            redirect($view);
-##            }
-#        if ($wert=~/\?ma=/) # Kürzel für Mailadresse
-#            {
-#            ($datei,$wert)=set_href($wert,"ma=");
-#            }
-#        if ($wert=~/\?ia=/) # Kürzel für Internetadresse
-#            {
-#            ($datei,$wert)=set_href($wert,"ia=");
-#            }
-#        if ($wert=~/\?im=/) # Kürzel für ImageGrafikEinbindung 17.3.2010
-#            {
-#            ($datei,$wert)=set_href($wert,"im=");
-#            }
         }
     return $wert;
     }
@@ -414,12 +353,10 @@ sub get_db_info  #
     my $memo = '';
     if ($auswahl=~/berg/)
     {
-        #$memo = 'berg#Gemeindezeitungs-Generator#DokumentenErstellungsSysteme#-#Feg#br/feginfo.csv#\x9#Bericht,Kapitel,Nummer,Titel,Typ,Kopftext,Haupttext,Fußtext,TSID#150#u_ c_ d_<br>F:A<br>M:F(3,w)<br>M:G(10,w,virtual)<br>M:H(3,w)<br>S:C(?,-1=INAKTIV,1=Mo,2=Di,3=Mi,4=Do,5=Fr,6=Sa,7=So)<br>S:E(A=Artikel,F=Fixtext,K=Konfiguration)<br>F:I(?ts / ?id)<br>Cx:/srv/www/cgi-bin/bg/br/infoDL 1>>/dev/null 2>>/dev/null<br>"'
         $memo = 'Gemeindezeitungs-Generator#br/feginfo.csv';
     }
     elsif ($auswahl=~/bbup/)
     {
-        #$memo = 'bbup#Backup:GemeindezeitungsDB#DokumentenErstellungsSysteme#-#Feg#br/feginfo.bup#\x9#Bericht,Kapitel,Nummer,Titel,Typ,Kopftext,Haupttext,Fußtext,TSID#150#u_ c_ d_<br>F:A<br>M:F(3,w)<br>M:G(10,w,virtual)<br>M:H(3,w)<br>S:C(?,-1=INAKTIV,1=Mo,2=Di,3=Mi,4=Do,5=Fr,6=Sa,7=So)<br>S:E(A=Artikel,F=Fixtext,K=Konfiguration)<br>F:I(?ts / ?id)<br>Cx:/srv/www/cgi-bin/bg/br/infoDL 1>>/dev/null 2>>/dev/null<br>';
         $memo = 'Backup:Gemeindezeitungs-Backup-Datenbank#br/feginfo.bup';
     }
     else
@@ -427,13 +364,7 @@ sub get_db_info  #
         print_error_page("Index-Zugriff"."<<<$auswahl>>>"." verweigert bzw. NICHT möglich!");
     }
     my ($id);
-    #($idz, $id, $thema, $nix, $nix, $dbfile, $lim, $felder,$dbmaxz,$Secl)=split(/#/, $memo);
     ($headline, $dbfile)=split(/#/, $memo);
-    #if($Secl=~/C:/){($Comx,$Comx)=split(/C:/,$Secl);$Comx=~s/<br>//g;}
-    #$thema=~s/\?\?.+\?\?//g;# ??GRAFIK?? aus Thema entfernen!
-#    $info=$id." <".$headline.">";
-#    if (!$lim) {$lim='#';}
-#    if ($lim eq '\x9') {$lim="\t";}
     $LCrud=crud_ctrl();
     $headline="Bearbeiten: $headline";
     #print_error_page("SUB: get_db_info=$_ $Secl");
@@ -493,6 +424,41 @@ sub get_data_merge#Daten werden nach dem Merge in den Formular-Hash geladen!
         $Formular{$fn}=shift(@mergeResult);
         }
     }
+
+######################################################################
+sub next_id(*) # hole die nächste ID->nur Sinnvoll bei nummerischen IDs im 1.FELD!->max+1
+######################################################################
+    {
+    my $nidx=qualify_to_ref(shift, caller);        
+    my @f;
+    my $nid=10;# let the first numbers free
+    seek($nidx, 0, SEEK_SET);
+    while(<$nidx>)
+        {
+        chomp;
+        @f=split(/$lim/,$_);
+        if ($f[0]>$nid){$nid=$f[0];}
+        }
+    return($nid+1);
+    }
+
+######################################################################
+# DB Backup erzeugen
+######################################################################
+sub make_db_backup(*)    
+    {
+    my $unmodified=qualify_to_ref(shift, caller);
+    my ($ss,$mm,$hh,$d,$m,$y)=(gmtime())[0..5];
+    $y+=1900;
+    $m++;
+    #my $timestr='20110403211';
+    my $timestr=sprintf("%04d%02d%02d%02d%d0",$y,$m,$d,$hh,$mm/10);
+    my $backupname = $SPATH.'gi_backup/feginfo_'.$timestr.'.csv.gz';
+    return if (-r $backupname);# wenn die Datei schon existiert, nicht nochmal anlegen        
+    seek($unmodified, 0, SEEK_SET);
+    gzip $unmodified => $backupname or die print_error_page("Fehler: Konnte komprimiertes Backup der Datenbank nicht erstellen (make_db_backup - ".$GzipError.")!");;
+    }
+
 
 ######################################################################
 sub put_data                # Datenauswahlsatz ->ändern,neu,löschen!
@@ -583,40 +549,6 @@ sub put_data                # Datenauswahlsatz ->ändern,neu,löschen!
     put_msatz_backup($cmd, $dbfile, $dataset);# Backup erst nach Freigabe des Locks, um ein Deadlock zu vermeiden. Beim Backup muß die DB auch gelockt werden.
 	#befx(); #Nachverarbeitung wird zur Zeit nicht genutzt, aber die Weiterleitung auf berg.pl erfolgt dort auch.
 	print redirect(get_view_link());
-    }
-
-######################################################################
-sub next_id(*) # hole die nächste ID->nur Sinnvoll bei nummerischen IDs im 1.FELD!->max+1
-######################################################################
-    {
-    my $nidx=qualify_to_ref(shift, caller);        
-    my @f;
-    my $nid=10;# let the first numbers free
-    seek($nidx, 0, SEEK_SET);
-    while(<$nidx>)
-        {
-        chomp;
-        @f=split(/$lim/,$_);
-        if ($f[0]>$nid){$nid=$f[0];}
-        }
-    return($nid+1);
-    }
-
-######################################################################
-# DB Backup erzeugen
-######################################################################
-sub make_db_backup(*)    
-    {
-    my $unmodified=qualify_to_ref(shift, caller);
-    my ($ss,$mm,$hh,$d,$m,$y)=(gmtime())[0..5];
-    $y+=1900;
-    $m++;
-    #my $timestr='20110403211';
-    my $timestr=sprintf("%04d%02d%02d%02d%d0",$y,$m,$d,$hh,$mm/10);
-    my $backupname = $SPATH.'gi_backup/feginfo_'.$timestr.'.csv.gz';
-    return if (-r $backupname);# wenn die Datei schon existiert, nicht nochmal anlegen        
-    seek($unmodified, 0, SEEK_SET);
-    gzip $unmodified => $backupname or die print_error_page("Fehler: Konnte komprimiertes Backup der Datenbank nicht erstellen (make_db_backup - ".$GzipError.")!");;
     }
 
 #######################################################################
@@ -739,8 +671,6 @@ sub get_select# Generiere Auswahl-(Selection)Feld 17.4.2007.
     my ($v,$n,$s,$o,$e,@mfn,$lflg,$sflg);
     if ($sel=~/ neu!/){return($sel);}# neueingaben erlauben falls (neu)=Listenelement 26.5.2009
     if ($le[0] eq "?" && $liste!~$sel){return($sel);}# Falls ? und Element nicht in Liste ->freie Wertzuweisung erlauben 5.6.2009
-    #if (!$sel || $sel eq " " || $liste=~/$sel/){;}     # Falls leer oder Listenelement enthalten ->select... 26.5.2009
-    #else    {return($sel);}# sonst ->KEIN Auswahlfeld!
     if($le[0]eq "?") {shift(@le);$lflg=1;}
     if($le[0]eq "sort!") {shift(@le);$sflg=1;}
     if($le[0]eq "*") # mehrfachselektion? 28.3.2008
@@ -848,7 +778,6 @@ sub get_field_list    # generiere UniqueFeldInhaltsliste s.a. 1SpaltenModus in b
     my %fh;#FeldInhaltHash
     my $file = "<" . $dbfile;
     my (@f,$s,$k);
-    #$s=$fwert.$Sftz;
     if($Neuflg){$s.=$Neuflg.$Sftz;}#neueingaben gewünscht? 26.5.2009
     open(INPF, "<:encoding(utf8)", "$file") || print_error_page("Konnte $dbfile nicht öffnen!");
     while(<INPF>)
@@ -876,7 +805,7 @@ sub get_field_list    # generiere UniqueFeldInhaltsliste s.a. 1SpaltenModus in b
 # Replace german Umlauts with their HTML entity.
 # replace_umlauts and replace_html_umlauts must match!
 #----------------------------------------------------------------------------
-sub replace_umlauts($)
+sub replace_umlauts
 {
     my ($value) = shift;
     if (!defined($value)) { return; }
@@ -894,7 +823,7 @@ sub replace_umlauts($)
 # Replace HTML entities with their german Umlauts equivalent in UTF-8.
 # replace_umlauts and replace_html_umlauts must match!
 #----------------------------------------------------------------------------
-sub replace_html_umlauts($)
+sub replace_html_umlauts
 {
     my ($value) = shift;
     # HTML Kodierung wird nach UTF-8 gewandelt:
@@ -911,7 +840,7 @@ sub replace_html_umlauts($)
 #----------------------------------------------------------------------------
 # Print a HTML page with an error message.
 #----------------------------------------------------------------------------
-sub print_error_page($)
+sub print_error_page
 {
     my ($msg) = shift;
     my $gfx = '<img src="/brg/bgico/stop.png" width="75" height="75" alt="Stopp">';
@@ -938,7 +867,7 @@ sub print_error_page($)
 #----------------------------------------------------------------------------
 # Print the version information (script and Perl).
 #----------------------------------------------------------------------------
-sub print_html_version()
+sub print_html_version
 {
     print "\n";
     print '<p class="version">Version: '.$VERSION." (Perl $])</p>\n";

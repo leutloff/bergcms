@@ -26,7 +26,7 @@ binmode(STDIN, ":encoding(utf8)");
 binmode(STDOUT, ":encoding(utf8)");
 
 #---> Global Variables
-my $VERSION="v2.09, 13.09.2012";
+my $VERSION="v2.10, 28.12.2012";
 my $TX0=time();#Startzeit (Sekunden)->11.6.2008->get_processing_time   ()->Verarbeitungszeit ermitteln >3s werden angezeigt!
 my $LASTfx;# letzte Feldposition (wird aus Tabellenkopf ermittelt) - zur html-Ausgabebugbehebung 17.3.2009
 my $nix='';#Dummy$
@@ -49,17 +49,6 @@ my ($Kopf, $Tab);
 my $rKopf = \$Kopf;
 my $rTab  = \$Tab;
 my ($treffer,$von);
-
-#----> function prototypes -------------------------------- TODO remove function prototypes
-sub create_database();
-sub get_todo_fields();
-
-#----> function prototypes of the shared functions --------
-sub get_additional_title($);
-sub replace_umlauts($);
-sub replace_html_umlauts($);
-sub print_error_page($);
-sub print_html_version();
 
 #----> Übergabe-Parameter (HauptDatenSatz)---------------------------
 get_db_info(defined(param('AW'))?param('AW'):'berg'); #Listeneintrag (Auswahlliste) merken
@@ -510,7 +499,7 @@ OPTLINES
 #----------------------------------------------------------------------------
 # Returns the sub title of the given view
 #----------------------------------------------------------------------------
-sub get_additional_title($)
+sub get_additional_title
 {
     my ($viewname) = shift;
     if    ("ToDo"      =~ /^$viewname$/i) { return "To-Do"; }
@@ -607,7 +596,7 @@ sub correct_database
 #----------------------------------------------------------------
 # Create a new and empty database with TODO only
 #----------------------------------------------------------------
-sub create_database()
+sub create_database
 {
     open(COIDX, ">:encoding(utf8)", "$dbfile") || print_error_page("Konnte $dbfile nicht öffnen! (Interner Fehler: ".$!.")");
     #          Artikel-ID,Kapitel,Nummer,Titel,Typ,Kopftext,Haupttext,Fußtext,TSID";   
@@ -618,7 +607,7 @@ sub create_database()
 #----------------------------------------------------------------
 # Content of TODO entry - except number
 #----------------------------------------------------------------
-sub get_todo_fields()
+sub get_todo_fields
 {
 	return '0:Prolog (Vorlauf)'.$lim.'-01'.$lim.'Redaktion - ToDoList'.$lim.'F'
         .$lim.'Database created on '.get_single_date()
@@ -648,7 +637,7 @@ sub get_single_date
 # Replace german Umlauts with their HTML entity.
 # replace_umlauts and replace_html_umlauts must match!
 #----------------------------------------------------------------------------
-sub replace_umlauts($)
+sub replace_umlauts
 {
     my ($value) = shift;
     if (!defined($value)) { return; }
@@ -666,7 +655,7 @@ sub replace_umlauts($)
 # Replace HTML entities with their german Umlauts equivalent in UTF-8.
 # replace_umlauts and replace_html_umlauts must match!
 #----------------------------------------------------------------------------
-sub replace_html_umlauts($)
+sub replace_html_umlauts
 {
     my ($value) = shift;
     # HTML Kodierung wird nach UTF-8 gewandelt:
@@ -683,7 +672,7 @@ sub replace_html_umlauts($)
 #----------------------------------------------------------------------------
 # Print a HTML page with an error message.
 #----------------------------------------------------------------------------
-sub print_error_page($)
+sub print_error_page
 {
     my ($msg) = shift;
     my $gfx = '<img src="/brg/bgico/stop.png" width="75" height="75" alt="Stopp">';
@@ -710,7 +699,7 @@ sub print_error_page($)
 #----------------------------------------------------------------------------
 # Print the version information (script and Perl).
 #----------------------------------------------------------------------------
-sub print_html_version()
+sub print_html_version
 {
     print "\n";
     print '<p class="version">Version: '.$VERSION." (Perl $])</p>\n";

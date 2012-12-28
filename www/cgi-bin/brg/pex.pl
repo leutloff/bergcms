@@ -142,7 +142,7 @@ sub run
 # @param $inputfilename the file used as input database.
 # @param $outputfilename the generated TeX file.
 #*
-sub print_version($*) 
+sub print_version
 {
     my($inputfilename, $outputfilename) = @_;
     my $msg = 'Programm: '.abs_path($0).", $VERSION (Perl $]), DB($inputfilename) => LaTeX($outputfilename) [".scalar localtime()."]\n";
@@ -156,7 +156,7 @@ sub print_version($*)
 # @params $inp the file used as input database.
 # @retval hash with the content used for further processing.  
 #*
-sub load_database($)
+sub load_database
 {
      my($inp) = @_;
     my (@f,$k,$s,$PIN);
@@ -193,7 +193,7 @@ sub load_database($)
 # @params idx with the content to return as TeX document.
 # @retvals the TeX document that appears normally in the TeX file.
 #*
-sub get_tex_content(%)
+sub get_tex_content
 {
     my %idx = %{shift()};
     my $result = '';
@@ -208,7 +208,7 @@ sub get_tex_content(%)
 # Generates the TeX file from the given hash with the content.
 # @params idx with content to write into the TeX file.
 #*
-sub create_tex_file(%)
+sub create_tex_file
 {
     my $OUPTEX = shift();
     my %idx = %{shift()}; 	
@@ -598,7 +598,7 @@ sub evaluate_commands
 #** @function 
 # Initialize some values regarding the issue, e.g. the number of the issue.
 #*
-sub initialize_issue_information($*)
+sub initialize_issue_information
 {
     my $Monat=shift;
     my $Jahr=shift;    	
