@@ -72,11 +72,11 @@
 %
 % \changes{v3.0a}{2012/11/05}{Initial version that is provided as \texttt{.dtx} and using \texttt{docstrip}.}
 % \changes{v3.0b}{2012/12/17}{First Version used for Production. Added package to support fixed indentation lists. Reduced spacing for quote environment.}
-
+% \changes{v3.0c}{2012/12/28}{Added remaining item from standard definition: set extrarowheight to 3pt.}
 %
 % \title{Berg CMS -- Reference of the document class}
 % \author{Christian Leutloff}
-% \date{2012/12/17}
+% \date{2012/12/28}
 % \maketitle
 % \begin{abstract}
 % \noindent The \texttt{berg} class is used by the Berg CMS when generating the PDF files for printing.
@@ -104,7 +104,7 @@
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}[2009/09/24]
-\ProvidesClass{berg}[2012/12/17 v3.0b Berg CMS document class]
+\ProvidesClass{berg}[2012/12/28 v3.0c Berg CMS document class]
 %    \end{macrocode}
 %
 % \subsection{Load initial Packages}
@@ -274,6 +274,14 @@
 \setlength{\oddsidemargin}{0mm}%...linker Rand ungerade(rechte) Seiten
 \setlength{\evensidemargin}{0mm}%..linker Rand gerade(linke) Seiten
 \setlength{\footskip}{8mm}%........Abstand: unterer Textbox - Seitenrand
+%    \end{macrocode}
+%
+% \subsection{Table Layout}
+%
+% Add some space to the normal height of every row of the table.
+% This length is provided by the array package.
+%    \begin{macrocode}
+\setlength{\extrarowheight}{3pt}
 %    \end{macrocode}
 %
 % 

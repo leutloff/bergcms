@@ -15,10 +15,9 @@
 %% with the Berg CMS, see file `lppl.txt'.
 %% 
 %%% From: berg.dtx
-
 %% \StopEventually{\PrintIndex\PrintChanges}
 \NeedsTeXFormat{LaTeX2e}[2009/09/24]
-\ProvidesClass{berg}[2012/12/17 v3.0b Berg CMS document class]
+\ProvidesClass{berg}[2012/12/28 v3.0c Berg CMS document class]
 \RequirePackage{ifthen}
 \RequirePackage[utf8x]{inputenx}
 \DeclareOption{draft}{\PassOptionsToClass{draft}{article}}
@@ -80,6 +79,7 @@
 \setlength{\oddsidemargin}{0mm}%...linker Rand ungerade(rechte) Seiten
 \setlength{\evensidemargin}{0mm}%..linker Rand gerade(linke) Seiten
 \setlength{\footskip}{8mm}%........Abstand: unterer Textbox - Seitenrand
+\setlength{\extrarowheight}{3pt}
 \setcounter{secnumdepth}{-2}
 \setcounter{tocdepth}{2}
 \pagestyle{plain}

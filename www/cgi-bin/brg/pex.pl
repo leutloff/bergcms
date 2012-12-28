@@ -61,7 +61,7 @@ __PACKAGE__->run(@ARGV) unless caller();
 #our $SPM=1;#SpaltenMemo - damit Automatik bei TagGesamtTabellen(=1spaltig) und zurücksetzen funzt!27.11.2008
 #our %TTKEY=();#TagTabellenSpalten-Hash init -> GesamtArtikelTabelle 26.11.2008
 #our $TTKAP="";#Kapitelspeicher-> Tabellenplot nach Kapitelwechsel! 26.11.2008
-#our $TABTXTFLG=2;#ArtikelTagFlag-> 2=komplett 1=NUR InfoKopftabelle(ohne Textanhang 0=ABSCHALTEN(komplett ausblenden->man.Übersichtstabellen einfügen möglich!26.11.2008
+#our $TABTXTFLG=1;#ArtikelTagFlag-> 2=komplett 1=NUR InfoKopftabelle(ohne Textanhang 0=ABSCHALTEN(komplett ausblenden->man.Übersichtstabellen einfügen möglich!26.11.2008
 our $ITZ=0;#Latex\item-Zähler
 our $ITS="";# letztes Metazeichen - wird in testit() ggf. mit ausgegeben, Beispielwert ist \item
 #our $TAGM=0;#WochentagsSpeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
@@ -70,7 +70,7 @@ our @TXZ=undef;#globaler Textzeilenspeicher
 #our $Bpfad="bilder";#Bilder-Pfad -> *.jpg-Archiv
 our $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";#Bilder-Pfad -> *.jpg-Archiv
 our $Logopfad="/home/aachen/cgi-bin/brg/br/icons";#Bilder-Pfad -> *.jpg-Archiv
-our $SCALE=undef;#Skalierung festlegen, z.B. bei Tabellen
+our $SCALE=1.57;#Skalierung festlegen, z.B. bei Tabellen
 our $ISSUENUMBER=undef;#Fortlaufende Nummerierung der Gemeindeinformationen
 our $ISSUEYEAR=undef;
 our $AUSGABEZEITRAUM=undef;#Text der Ausgabe mit Erscheinungsjahr/Erscheinungsmonat; wird im PDF Inhaltsverzeichnis verwendent
@@ -80,13 +80,12 @@ our $Rende=undef;#Datum des Redaktionsschlusses
 our $RENDE=undef;#Text zum Redaktionsschluss
 #-----SchriftgroessenDef />sg#N#
 our $SGO=4;# Standardschriftgröße
-our $SGOF=undef;#SchriftgroessenOffset
+our $SGOF=1;#SchriftgroessenOffset
 #-----Zeilenabstandsdichte />sg#N#
-our $ZD0=1;# StandardZeilendiche =1
-our $ZDM=1;# StandardMEMO-Zeilendiche =1 24.5.2007->bei >zd#0 wird ZD0=ZDM!
-our $ZDI=0.5;# StandardZeilendiche =0.5ex Items
+our $ZDM=1.0;# Standard-Zeilendichte, d.h. bei >zd#0 wird ZDM verwendet.
+our $ZDI=0.2;# StandardZeilendichte =0.5ex Items
 
-our @stack = "";# stack holding the colsing name of a list - triggered by >*
+our @stack = "";# stack holding the closing name of a list - triggered by >*
 our $ActualColumsNo = "1";# actual number of columns
 our $OUT = undef;# Handle to the resulting output file
 
@@ -97,10 +96,11 @@ INIT {
     # TODO: remove path and use TEXINPUTS or use relative path
     $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";
     $Logopfad="/home/aachen/cgi-bin/brg/br/icons";
+    $SCALE=1.57;
     $SGO=4;
-    $ZD0=1;
-    $ZDM=1;
-    $ZDI=0.5;
+    $SGOF=1;
+    $ZDM=1.0;
+    $ZDI=0.2;
 
     @stack = "";
     $ActualColumsNo = "1";
@@ -490,25 +490,26 @@ sub evaluate_commands
     #...Abschnittsberschriften+Def.
     if($f[0] eq "fg") {print $OUT "\\fontsize{".$f[1]."pt}{".$f[2]."pt}\\selectfont\n";return;} #FontGroesse!
     if($f[0] eq "zd")
-        {
+    {
+        #StandardZeilendiche 1=Normal! - falls 0->auf $ZDM setzen
+        my $ZD0;
         if($f[1]>0){$ZD0=$f[1];}else{$ZD0=$ZDM;}
         print $OUT "\\normalbaselines\\linespread{$ZD0}\\selectfont\n";return;
-        } #StandardZeilendiche 1=Normal! - falls 0->auf $ZDM setzen 24.5.2007
-    if($f[0] eq "tsx")#Textanhang nach InfoKopftabelle EIN/AUSblenden 25.11.2008
+    }
+    if($f[0] eq "tsx")
     {
-#        $TABTXTFLG=$f[1];
         report_warning('Schalter tsx ist obsolete, da Textanhang nicht mehr unterstützt wird.');
         return;
     }
-    if($f[0] eq "bsx")#Bildschalter EIN(1) / AUS(0) - 0 -> Bilder werden durch Text ersetzt! 10.6.2008
+    if($f[0] eq "bsx")
     {
         report_warning('Bildschalter bsx ist obsolete, da PeX prüft, ob Bild da ist oder nicht. Ansonsten Option draft im Kopf von Dokumentenvorlage verwenden.');
         return; 
     }
-    if($f[0] eq "zdm") {$ZDM=$f[1]; $ZD0=$ZDM;return;} #StandardZeilendichte-Memo->wird bei zd#0 als Rücksetzwert genommen! 24.5.2007
+    if($f[0] eq "zdm") {$ZDM=$f[1]; return;} #StandardZeilendichte-Memo->wird bei zd#0 als Rücksetzwert genommen!
     if($f[0] eq "zdi") {$ZDI=$f[1]; return;} #StandardZeilendicheItems 0.5(ex)=Normal!
     if($f[0] eq "zdt") {print $OUT "\\extrarowheight $f[1]\n"; return;} #ExtraZeilenSpace bei Tabellen 2pt
-    if($f[0] eq "sdt") {print $OUT "\\setlength{\\tabcolsep}{$f[1]}\n"; return;} #ExtraSpaltenSpace bei Tabellen z.B. 2pt 27.11.2008
+    if($f[0] eq "sdt") {print $OUT "\\setlength{\\tabcolsep}{$f[1]}\n"; return;} #ExtraSpaltenSpace bei Tabellen z.B. 2pt
     if($f[0] eq "sg") #Schriftgroessen 0..9/ 4=Normal!
     {
         if ($f[1] =~ /^[0-9]$/ )
@@ -615,7 +616,7 @@ sub initialize_issue_information
 
 # # TODO entfernen
 # #-----------------------------------------------------
-# sub print_table_for_day # eine Zeile der Tagesartikel-Gesamttabelle  ausgeben 26.11.2008
+# sub print_table_for_day # eine Zeile der Tagesartikel-Gesamttabelle  ausgeben
 # #-----------------------------------------------------
 #     {
 #     my $titel=shift;
@@ -641,7 +642,7 @@ sub initialize_issue_information
 
 # # TODO entfernen
 # #-----------------------------------------------------
-# sub print_table_for_day_init # initialisieren der Tagesartikel-Gesamttabelle 26.11.2008
+# sub print_table_for_day_init # initialisieren der Tagesartikel-Gesamttabelle
 # #-----------------------------------------------------
 #     {
 #     my $s=shift;
