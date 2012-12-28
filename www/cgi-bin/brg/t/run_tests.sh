@@ -10,7 +10,7 @@ echo && echo "***   run funtion tests ...   ***"
 mkdir -p BERG
 ln -fs $SOURCEDIR/../pex.pl BERG/PEX.pm
 perl test_pex.pl
-
+perl test_pex_columns.pl
 
 echo && echo "***   run tests on input database...   ***"
 INPUTFILE=$SOURCEDIR/../../../../src/test/input/single_article.csv

@@ -637,7 +637,7 @@ sub evaluate_commands
         initialize_issue_information($Monat,$ISSUEYEAR);
         return;
     }
-    if($f[0] =~/SPALTEN/i) { print_columns($f[1]); return; }
+    if($f[0] =~/SPALTEN/i) { print_columns($f[1], join('#', @f[2..$#f])); return; }
     if($f[0] =~/NUM/i){print_enumeration();return;}
     if($f[0] =~/PUN/i) {print_itemize();return;}
     if($f[0] =~/SYMBOL/i) {print_dinglist($f[1]);return;}
@@ -737,18 +737,35 @@ sub initialize_issue_information($*)
 # Changing the number of columns. Output is only generated when the number is 
 # different from the actually used number of columns.
 # @params the number of desired columns.
+# @params further parameter output as comment
 #*
 sub print_columns
 {
-    my $cols=shift;
-    chompx(\$cols);
+    my ($colums, $pexcomment) = @_;
+    if (!defined($colums) || ('' eq $colums)) 
+    {
+        report_warning('Nur 1, 2 oder 3 Spalten sind erlaubt. Die Anweisung wird ignoriert, da die Spaltenanzahl fehlt (print_columns 1).');
+        return;
+    }
+    chompx(\$colums);
+    #my $comment=undef;
+    my ($cols, $percentcomment) = split(/\\\%|\%/, $colums, 2);
     $cols = trim($cols);
     if (('1' eq $cols) || ('2' eq $cols) || ('3' eq $cols))
     {
         if ($cols ne $ActualColumsNo)
         {
-            if ('1' ne $ActualColumsNo) { print $OUT '\end{multicols}%'."\n"; }
-            if ('1' ne $cols) { print $OUT '\begin{multicols}{'.$cols.'}%'."\n"; }
+            if (!defined($pexcomment)) { $pexcomment = ''; } 
+            if (!defined($percentcomment)) { $percentcomment = ''; }
+            if (('' ne $pexcomment) && ('' ne $percentcomment)) { $pexcomment = '#'.$pexcomment; }
+            if ('1' ne $ActualColumsNo) 
+            {
+                print $OUT '\end{multicols}%'.$percentcomment.$pexcomment."\n"; 
+            }
+            if ('1' ne $cols) 
+            { 
+                print $OUT '\begin{multicols}{'.$cols.'}%'.$percentcomment.$pexcomment."\n"; 
+            }
             $ActualColumsNo = $cols;
         }
     }
@@ -756,11 +773,11 @@ sub print_columns
     {
         if ('' eq $cols) 
         {
-            report_warning('Nur 1, 2 oder 3 Spalten sind erlaubt. Die Anweisung wird ignoriert, da die Spaltenanzahl fehlt.');
+            report_warning('Nur 1, 2 oder 3 Spalten sind erlaubt. Die Anweisung wird ignoriert, da die Spaltenanzahl fehlt (print_columns 2).');
         }
         else
         {
-            report_warning('Nur 1, 2 oder 3 Spalten sind erlaubt. Die Angabe von '."'$cols'".' Spalten wird ignoriert.');
+            report_warning('Nur 1, 2 oder 3 Spalten sind erlaubt. Die Angabe von '."'$cols'".' Spalten wird ignoriert (print_columns).');
         }
     }
 }
