@@ -64,7 +64,6 @@ __PACKAGE__->run(@ARGV) unless caller();
 #our $TABTXTFLG=2;#ArtikelTagFlag-> 2=komplett 1=NUR InfoKopftabelle(ohne Textanhang 0=ABSCHALTEN(komplett ausblenden->man.Übersichtstabellen einfügen möglich!26.11.2008
 our $ITZ=0;#Latex\item-Zähler
 our $ITS="";# letztes Metazeichen - wird in testit() ggf. mit ausgegeben, Beispielwert ist \item
-our $KAPM="Kapitel";#Kapitelspeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
 #our $TAGM=0;#WochentagsSpeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
 our @TXZ=undef;#globaler Textzeilenspeicher
 #our $Iformat="|p{10mm}||p{42mm}|";#InfoTabellenformat->Artikelheader (falls gewünscht ! - unterbinden: 1.Zeile = >*
@@ -95,7 +94,6 @@ our $OUT = undef;# Handle to the resulting output file
 INIT {
     $ITZ=0;
     $ITS="";
-    $KAPM="Kapitel";
     # TODO: remove path and use TEXINPUTS or use relative path
     $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";
     $Logopfad="/home/aachen/cgi-bin/brg/br/icons";
@@ -213,13 +211,15 @@ sub get_tex_content(%)
 sub create_tex_file(%)
 {
     my $OUPTEX = shift();
-    my %idx = %{shift()};
-  	
+    my %idx = %{shift()}; 	
   	if(!defined $OUT) { die "Fehler: Die Ausgabedatei '$OUPTEX' wurde nicht geöffnet (create_tex_file)."; }
   	
-    my ($kap,$zz,$k,$tnr,$titel,$typ,$text,$x,$ueber);
-    my $lines = 0;
+    my ($k,$kap,$tnr,$titel,$typ,$text);
     my $LIM="\x09";
+    my $KAPM = $LIM;# initialize with an invalid value # "Kapitel";#Kapitelspeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
+    $ActualColumsNo = 1;
+    my $zz = 0;
+    my $lines = 0;
     #my @WTG= qw(nix Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag);#-----WochentagDef s. INFOLISTE TODO remove
     print  "\nDas TeX-Dokument [$OUPTEX] wird erzeugt ...\n";
     foreach $k (sort keys %idx)
@@ -231,98 +231,32 @@ sub create_tex_file(%)
         
         $lines = 1 + $#TXZ;
         print "$zz\t[AI:$ai]\t$kap ($tnr)\t$titel\t$typ\t$lines\n";
-        # todo: hier verweis auf den artikel ausgeben
+        # todo: hier verweis auf den artikel ausgeben - besser in maker link ergänzen
         # print_article_content();
-        #TODO: TTKAP entfernen
-#         if($TTKAP && (($tnr==9 || $TTKAP ne $kap))) # falls Tagestabelle aktiv und Kapitelwechsel generell - jetzt abschließen 26.11.2008
-#             {
-#             $TTKAP=""; print $OUT '\end{tabular}'."\n";
-#             print $OUT '\newpage'."\n";#Seitenvorschub am Ende
-#             testit(">SPALTEN#".$SPM);
-#             }
-    
-        if ($typ eq "A") # Artikel->Hierachie-Management.............Kapitel,Wochentag,Titel
+
+        #if ($typ eq "A") # Artikel->Hierachie-Management.............Kapitel,Wochentag,Titel    
+        if ($typ =~ /[AF][123]?/)
         {
-            if($KAPM ne $kap)# Kapitelwechsel?
+            if (length($typ) > 1)
+            {
+                print_columns(substr($typ, 1, 1));
+            }
+            if($KAPM ne $kap)# start new chapter?
             {
                 $KAPM=$kap;
-#                print $OUT "% Kapitelwechsel= $KAPM ($TTKAP)\n";
                 print $OUT "% Neues Kapitel: $KAPM\n";
-                ($x,$ueber)=split(/\:/, $kap, 2);
-#                 if (("Angebote" eq $ueber) || ("Hauskreise" eq $ueber)) 
-#                     {
-#                     if ("Angebote" eq $ueber) 
-#                         {
-#                         $top='>1#Regelm\"a{\ss}ige Angebote (alt)#x'; testit($top);#section generieren 
-#                         $top='>2#\"Uberblick (alt)#x'; testit($top);#subsection generieren
-#                         }
-#                     else
-#                         {
-#                         $top=">2#".$ueber." (alt)#x"; testit($top);#section generieren    
-#                         } 
-#                     }
-#                  else
-#                    {
-                   testit(">1#".$ueber."#x");#section generieren    
-#                    }
+                my ($x,$ueber)=split(/\:/, $kap, 2);
+                if (!defined($ueber)) { $ueber = $x; }
+                testit(">1#".$ueber."#x");#section generieren
             }
-#            if($tnr==0||$tnr>7)#kein Wochentag
-                {
-                if(length($titel)>=2){ testit(">2#".$titel."#x"); }#subsection generieren
-                }
-#             else # Wochentag
-#                 {
-#                 if ($TAGM!=$tnr)#Tageswechsel->subsection generieren
-#                     {
-#                     $TAGM=$tnr;
-#                     if($TABTXTFLG>0) # subsection generieren, falls Artikel/Tagherachie gewünscht 26.11.2008
-#                         {
-#                         $top=">2#".$WTG[$tnr]."#x"; testit($top);
-#                         }
-#                     }
-#                 if($TABTXTFLG>0 && length($titel)>=2) # sub-subsection generieren, falls Artikel/Tagherachie gewünscht 26.11.2008
-#                         {
-#                         $top=">3#".$titel."#x"; testit($top);#sub-subsection generieren
-#                         }
-#                 }
-    
-#             if ($TXZ[0]!~/^\>\*/) # falls KEIN führendes >* ---> InfoKopf erzeuegen
-#                 {
-#                 if($TABTXTFLG==0)   #ArtikelTag-Generierung NUR, falls erwünscht! 26.11.2008
-#                     {
-#                     if($TTKAP eq $KAPM){print_table_for_day($titel);next;} # falls aktuelle Tabelle erzeugt werden doll?
-#                     else # sonst übergehen
-#                         {
-#                         if($tnr==9){create_infotab();}# falls TagesTabellenTag=9->Ausgeben 27.11.2008
-#                         else
-#                             {
-#                             while($#TXZ>=0)
-#                                 {
-#                                 $s=shift(@TXZ);# leeren des Zeilenspeichers
-#                                 last if $s=~/^\>\*/;# falls >* folgt abbruch!
-#                                 }
-#                             next;
-#                             }
-#                         }
-#                     #
-#                     }
-#                 else
-#                     {
-#                     create_infotab(); if($tnr!=9){next if($TABTXTFLG==1);}#Textanhang nach InfoKopftabelle EIN>1/AUS=1blenden 25.11.2008 next;
-#                     }
-#                 }
-#             else 
-#                 {
-                shift(@TXZ);# 1. Dummyzeile entfernen!
-#                }
+            if(length($titel)>=2){ testit(">2#".$titel."#x"); }#subsection generieren
+#           shift(@TXZ);# 1. Dummyzeile entfernen!
         }
         # Resttextzeilen interpretieren/generieren
         my $s = '';
-        while($#TXZ>=0)
+        while(0 <= $#TXZ)
         {
             $s=shift(@TXZ);
-            #if($s=~/^>tt0/){last if($TABTXTFLG!=0);} #
-            #else{testit($s);}
             testit($s);
         }
     }
@@ -597,17 +531,17 @@ sub evaluate_commands
     if($f[0] eq "1")
     {
         if ($f[1] =~/^-/) { print $OUT "% section ignoriert (wg. -): $f[1]\n";return; }
-        else { $u=add_hierachical_caption($f[1]);print_alignment("\\section{$u} ",$f[2]);return; }
+        else { $u=add_hierachical_caption($f[1]);print_alignment("\\section{$u}", $f[2]);return; }
     }
     if($f[0] eq "2")
     {
         if ($f[1] =~/^-/) { print $OUT "% subsection ignoriert (wg. -): $f[1]\n";return; }
-        else { $u=add_hierachical_caption($f[1]);print_alignment("\\subsection{$u} ",$f[2]);return;}
+        else { $u=add_hierachical_caption($f[1]);print_alignment("\\subsection{$u}", $f[2]);return;}
     }
     if($f[0] eq "3")
     {
         if ($f[1] =~/^-/) { print $OUT "% subsubsection ignoriert (wg. -): $f[1]\n";return; }
-        else { $u=add_hierachical_caption($f[1]);print_alignment("\\subsubsection{$u} ",$f[2]);return;}
+        else { $u=add_hierachical_caption($f[1]);print_alignment("\\subsubsection{$u}",$f[2]);return;}
     }
     if($f[0] =~/BPFAD/i) {$Bpfad=$f[1]; return;} #Standardjpg-Bildverzeichnis
     #...AbschnittsEnde (LIFO-Stack)
@@ -744,9 +678,9 @@ sub print_columns
     {
         report_warning('Nur 1, 2 oder 3 Spalten sind erlaubt. Die Anweisung wird ignoriert, da die Spaltenanzahl fehlt (print_columns 1).');
         return;
-    }
+    }   
     chompx(\$colums);
-    #my $comment=undef;
+    #TODO rmove print $OUT '%print_columns: '.$colums."\n";
     my ($cols, $percentcomment) = split(/\\\%|\%/, $colums, 2);
     $cols = trim($cols);
     if (('1' eq $cols) || ('2' eq $cols) || ('3' eq $cols))
