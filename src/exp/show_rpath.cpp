@@ -7,6 +7,9 @@
 #include <cstring>
 #include <iostream>
 #include <algorithm>
+#include <sys/types.h>
+#include <unistd.h>
+
 using namespace std;
 
 const std::string GetRPath();
@@ -123,7 +126,7 @@ void LoadLib(std::string const& headline, std::string const& libName)
 
 void CallMaker()
 {
-   int ret = execl("./maker", "./maker");
+   int ret = execl("./maker", "./maker", NULL);
    cout << "ret: " << ret << endl;
    cout << "errno: " << errno << " - errmsg: " << strerror(errno) << endl;
 }
