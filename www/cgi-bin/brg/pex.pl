@@ -42,7 +42,7 @@ use Cwd qw(abs_path);
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.09/28.12.2012';
+$VERSION = 'v2.09/31.12.2012';
 # exports are used for testing purposes
 @EXPORT_OK = qw(add_author add_bold add_caption add_italic
                 get_tex_content
@@ -230,7 +230,8 @@ sub create_tex_file
         $zz++;
         
         $lines = 1 + $#TXZ;
-        print "$zz\t[AI:$ai]\t$kap ($tnr)\t$titel\t$typ\t$lines\n";
+        #print "$zz\t[AI:$ai]\t$kap ($tnr)\t$titel\t$typ\t$lines\n";
+        printf('%4d [AI:%4s] %22s (%3s) %-40s %-2s %3s Z.'."\n", $zz, $ai, $kap, $tnr, $titel, $typ, $lines);        
         # todo: hier verweis auf den artikel ausgeben - besser in maker link ergänzen
         # print_article_content();
 
