@@ -22,15 +22,19 @@
 #include "BoostFlags.h"
 
 #include <boost/algorithm/string.hpp>
+#include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
-#include <vector>
+#include <boost/tokenizer.hpp>
+#include <algorithm>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 using namespace berg;
 namespace tpl = ctemplate;
 
 const std::string Article::ITEM_SEPARATOR = "\t";
+const size_t      Article::INCREMENT_LINECOUNT_FOR_DISPLAY = 3;
 
 Article::Article(std::string wholeArticle)
 {
@@ -93,8 +97,34 @@ void Article::FillDictionaryBody(ctemplate::TemplateDictionary & dict) const
     dict.SetValue("ARTICLE_PRIORITY", boost::lexical_cast<string>(priority));
     dict.SetValue("ARTICLE_TITLE", title);
     dict.SetValue("ARTICLE_TYPE", type);
+
     dict.SetValue("ARTICLE_HEADER", header);
+    unsigned lines = CountDisplayedLines(header) + INCREMENT_LINECOUNT_FOR_DISPLAY;
+    dict.SetValue("ARTICLE_HEADER_LINES", boost::lexical_cast<string>(lines));
+
     dict.SetValue("ARTICLE_BODY", body);
+    lines = CountDisplayedLines(body) + INCREMENT_LINECOUNT_FOR_DISPLAY;
+    dict.SetValue("ARTICLE_BODY_LINES", boost::lexical_cast<string>(lines));
+
     dict.SetValue("ARTICLE_FOOTER", footer);
+    lines = CountDisplayedLines(footer) + INCREMENT_LINECOUNT_FOR_DISPLAY;
+    dict.SetValue("ARTICLE_FOOTER_LINES", boost::lexical_cast<string>(lines));
+
     dict.SetValue("ARTICLE_LASTCHANGED", lastChanged);
+}
+
+size_t Article::CountDisplayedLines(std::string const& articlePart)
+{
+    unsigned cnt = 1;
+    // count wrapped lines
+    typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
+    boost::char_separator<char> sep("\n");
+    tokenizer tokens(articlePart, sep);
+    BOOST_FOREACH (string const& paragraph, tokens)
+    {
+        cnt += paragraph.length() / 100; // this assumes 100 chars per displayed line
+    }
+    // count line breaks itself
+    cnt += std::count(articlePart.begin(), articlePart.end(), '\n');
+    return cnt;
 }

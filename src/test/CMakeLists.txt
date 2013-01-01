@@ -54,7 +54,7 @@ else()
         )
 endif()
 
-set(UNITTEST_SRC TestStorage.cpp TestHelper.cpp)
+set(UNITTEST_SRC TestArticle.cpp TestStorage.cpp TestHelper.cpp)
 
 add_executable(teststorage ${UNITTEST_SRC})
 target_link_libraries(teststorage berg_storage ${Boost_LIBRARIES} ${CMAKE_REQUIRED_LIBRARIES} ${CTEMPLATE_LIBRARY} ${SYSTEM_SPECIFIC_LIBRARIES})

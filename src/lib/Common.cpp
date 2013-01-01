@@ -35,7 +35,7 @@ void Common::FillDictionaryCommon(ctemplate::TemplateDictionary & dict)
     dict.SetValue("SYSTEM_TITLE_SHORT", "Redaktion AC");
     dict.SetValue("SYSTEM_TITLE_SHORT_ASCII", "Redaktion AC"); // for use in <title>
     dict.SetValue("BERG_LANG", "de");
-    dict.SetValue("BERG_VERSION", "Berg " + GetBergVersion()); //Berg v3.0.0a");
+    dict.SetValue("BERG_VERSION", "Berg CMS " + GetBergVersion()); //Berg v3.0.0a");
     dict.SetValue("BERG_COPYRIGHT", "2012 Christian Leutloff");
     dict.SetValue("BERG_AUTHOR", "Christian Leutloff");
 
@@ -44,7 +44,7 @@ void Common::FillDictionaryCommon(ctemplate::TemplateDictionary & dict)
 
 void Common::FillDictionaryHead(ctemplate::TemplateDictionary & dict)
 {
-    dict.SetValue("HEAD_TITLE", "Berg");
+    dict.SetValue("HEAD_TITLE", "Berg CMS");
     //dict.SetValue("ACTIVE_ARCHIVE", " active"); // this is the class attribute to indicate the we are in the archive section
 }
 
@@ -150,11 +150,11 @@ int Common::SendResponse(boost::cgi::request& req, std::string const& output)
 
 string Common::GetBergVersion()
 {
-    return "v3.0.2a";
+    return "v3.0.3a";
 }
 
 std::string Common::GetBergLastChangedDate()
 {
-    return "18.08.2012";
+    return "31.12.2012";
 }
 

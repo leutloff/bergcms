@@ -90,13 +90,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <div class="ym-wbox">
             <h3>Artikel der Gemeindeinformation {{ARCHIVE_ISSUE}} ({{ARCHIVE_NUMBER}})</h3>
             <table class="ym-grid">
+                <th>
+                    <td>AI</td>
+                    <td>Kapitel</a></td>
+                    <td>Titel</a></td>
+                    <td>Prio</a></td>
+                    <td>Typ</a></td>
+                </th>
                 {{#ARTICLE_LIST}}
                 <tr>
                     {{! ARTICLE_ID, ARTICLE_CHAPTER, ARTICLE_PRIORITY, ARTICLE_TITLE, ARTICLE_TYPE,
                         ARTICLE_HEADER, ARTICLE_BODY, ARTICLE_FOOTER, ARTICLE_LASTCHANGED }}
                     <td><a href="{{ARTICLE_REFERENCE}}" class="ym-button ym-next">{{ARTICLE_ID}}</a></td>
                     <td><a href="{{ARTICLE_REFERENCE}}">{{ARTICLE_CHAPTER}}</a></td>
-                    <td><a href="{{ARTICLE_REFERENCE}}" class="ym-button ym-next">{{ARTICLE_TITLE}}</a></td>
+                    <td><a href="{{ARTICLE_REFERENCE}}">{{ARTICLE_TITLE}}</a></td>
                     <td><a href="{{ARTICLE_REFERENCE}}">{{ARTICLE_PRIORITY}}</a></td>
                     <td><a href="{{ARTICLE_REFERENCE}}">{{ARTICLE_TYPE}}</a></td>
                 </tr>

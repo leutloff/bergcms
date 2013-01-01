@@ -140,6 +140,4 @@ BOOST_AUTO_TEST_CASE(test_get_issue_from_number)
     BOOST_CHECK_EQUAL("März/April 2010", issue); //"3", "2010"));
     Helper::GetIssueFromNumber(issue, "237");
     BOOST_CHECK_EQUAL("November/Dezember 2011", issue);
-
 }
-

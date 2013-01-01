@@ -49,6 +49,7 @@ private:
     std::string lastChanged;
 
     static const std::string ITEM_SEPARATOR;
+    static const size_t      INCREMENT_LINECOUNT_FOR_DISPLAY;
 
 public:
     /// Parses the given article and stores the artifacts in the attributes.
@@ -83,6 +84,14 @@ public:
      * In this case this is the whole article.
      */
     void FillDictionaryBody(ctemplate::TemplateDictionary & dict) const;
+
+    /**
+      * Returns the expected number of lines when displayed in the Browser.
+      * @param articlePart one of header, body or footer of the article.
+      * @returns number of lines
+      */
+    static size_t CountDisplayedLines(std::string const& articlePart);
+
 
 
     std::string getBody() const

@@ -96,39 +96,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         ARTICLE_HEADER, ARTICLE_BODY, ARTICLE_FOOTER, ARTICLE_LASTCHANGED }}
                 <tr>
                     <td>ID</td>
-                    <td><textarea>{{ARTICLE_ID}}</textarea></td>
+                    <td>{{ARTICLE_ID}}</td>
                 </tr>
                 <tr>
                     <td>Kapitel</td>
-                    <td><textarea>{{ARTICLE_CHAPTER}}</textarea></td>
+                    <td>{{ARTICLE_CHAPTER}}</td>
                 </tr>
                 <tr>
                     <td>Titel</td>
-                    <td><textarea>{{ARTICLE_TITLE}}</textarea><td>
+                    <td>{{ARTICLE_TITLE}}<td>
                 </tr>
                 <tr>
                     <td>Priorität</td>
-                    <td><textarea>{{ARTICLE_PRIORITY}}</textarea><td>
+                    <td>{{ARTICLE_PRIORITY}}<td>
                 </tr>
                 <tr>
                     <td>Typ</td>
-                    <td><textarea>{{ARTICLE_TYPE}}</textarea><td>
+                    <td>{{ARTICLE_TYPE}}><td>
                 </tr>
                 <tr>
                     <td>Kopf</td>
-                    <td><textarea>{{ARTICLE_HEADER}}</textarea><td>
+                    <td><textarea cols="100" rows="{{ARTICLE_HEADER_LINES}}" name="Kopf">{{ARTICLE_HEADER}}</textarea><td>
                 </tr>
                 <tr>
-                    <td>Rumpf</td>
-                    <td><textarea>{{ARTICLE_BODY}}</textarea><td>
+                    <td>Haupttext</td>
+                    <td><textarea cols="100" rows="{{ARTICLE_BODY_LINES}}" name="Haupttext">{{ARTICLE_BODY}}</textarea><td>
                 </tr>
                 <tr>
                     <td>Fuss</td>
-                    <td><textarea>{{ARTICLE_FOOTER}}</textarea><td>
+                    <td><textarea cols="100" rows="{{ARTICLE_FOOTER_LINES}}" name="Fuss">{{ARTICLE_FOOTER}}</textarea><td>
                 </tr>
                 <tr>
                     <td>Zuletzt bearbeitet</td>
-                    <td><textarea>{{ARTICLE_LASTCHANGED}}</textarea><td>
+                    <td>{{ARTICLE_LASTCHANGED}}<td>
                 </tr>
             </table>
         </div>
