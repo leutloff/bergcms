@@ -28,20 +28,33 @@ Building from Source
 - Run the script make_zip.sh. This will build all applications and put all
   the required files in a single ZIP file.
 - Install the content of the ZIP file on the Web Server. An outline of the
-  Apache configuration is shown in doc/etc_apache2.
+  Apache configuration is shown in doc/etc_apache2. Use the script install_locally.sh
+  to perform this step together with some tweaks with regard the file permissions.
+  The used install path can be adapted to local differences by overriding
+  shell variables in a file named install_locally.cfg.
 
 
-Testsuite
-=========
+Testsuite and Unit Tests
+========================
 
-The testsuite is based on the Selenium IDE. Get the Firefox plugin Selenium IDE
+The testsuite for the user interface is based on the Selenium IDE.
+Get the Firefox plugin Selenium IDE
 from [http://seleniumhq.org/download/](http://seleniumhq.org/download/).
-Installation is described at [http://seleniumhq.org/docs/02_selenium_ide.html](http://seleniumhq.org/docs/02_selenium_ide.html).
+Installation is described at
+[http://seleniumhq.org/docs/02_selenium_ide.html](http://seleniumhq.org/docs/02_selenium_ide.html).
+
 The testsuites and test cases are located in the folder testsuite.
 Put the file www/cgi-bin/brg/testcase.pl only on testing instances.
 The CGI script will copy a database according the selected test case.
 This will destroy the existing database. The existence of the testcase.pl
 file allows the test cases to modify the database content.
+
+The different parts of the system use different unit tests. The Perl related
+unit tests are located in www/cgi-bin/brg/t. Use the script
+www/cgi-bin/brg/t/run_tests.sh to exucute all the Perl based tests.
+
+The unit tests for the C++-Code is located in src/test. Execute the project
+named test to execute the C++ test cases based on boost unit test.
 
 
 History and License
@@ -54,7 +67,12 @@ written in C++.
 
 License is [AGPL](https://www.gnu.org/licenses/agpl-3.0) for C++ Code and
 [Artistic](http://www.perlfoundation.org/artistic_license_2_0)/[GPL](https://www.gnu.org/licenses/gpl-3.0)
-for the Perl Code. Each file will state explicitly the license it belongs to.
+for the Perl Code.
+LaTeX related files are licensed using the [LaTeX Project Public License](http://www.latex-project.org/lppl/lppl-1-3c.html).
+Javascript Code can be used under the terms of the [MIT License](https://en.wikipedia.org/wiki/MIT_License).
+
+Each file will state explicitly the license it belongs to.
+If this is not the case this is considered a bug.
 Copies of the Licenses are found in the LICENSES folder.
 
 
@@ -64,6 +82,7 @@ Coding Guidelines
 - Indentation must use spaces only. Do not use tabs for this purpose.
 - Character encoding must be UTF-8 in every place.
 - Line ending should be Unix style (LF only).
+- Use tool based formatting where available.
 
 
 Feedback

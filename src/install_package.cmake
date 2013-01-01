@@ -80,10 +80,15 @@ install(PROGRAMS "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/pex.pl"
 install(FILES    "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/xsc.sh"
         DESTINATION "${BERG_INSTALL_CGIBIN}" RENAME "xsc")
 # sample database and LaTeX files
-#install(FILES    "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/feginfo.csv"
-#                 "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/feglogo.jpg"
+#install(FILES    "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/feglogo.jpg"
 install(FILES    "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/sectsty.sty"
                  "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/wrapfig.sty"
+                 "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/feginfo.csv"
+                 "${PROJECT_SOURCE_DIR}/../latex/class_berg/generated/berg.cls"
+                 "${PROJECT_SOURCE_DIR}/../images/berg-v1/berg.jpg"
         DESTINATION "${BERG_INSTALL_CGIBIN}/br")
+
+install(FILES    "${PROJECT_SOURCE_DIR}/../images/berg-v1/berg.jpg"
+        DESTINATION "${BERG_INSTALL_CGIBIN}/br/bilder")
 
 #install(CODE "MESSAGE(\"Sample install message.\")")

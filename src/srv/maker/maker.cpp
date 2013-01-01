@@ -2,7 +2,7 @@
  * @file maker.cpp
  * Extracts the actual articles and generates the PDF.
  * 
- * Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Initial workflow based on xsc v1.04, 23.10.2011.
- * But improved since then, e.g. added makeindx calls.
+ * But improved since then, e.g. added makeindex calls.
  */
 
 #include "Common.h"
@@ -126,6 +126,8 @@ int HandleRequest(boost::cgi::request& req)
         Add(log, oss, "<h1>");
         log << "Generator (maker " << Common::GetBergVersion() << " " << Common::GetBergLastChangedDate() << ")\n";
         Add(log, oss, "</h1>\n<p>");
+        pt::time_facet *facet = new pt::time_facet("%d.%m.%Y %H:%M:%S");
+        log.imbue(locale(log.getloc(), facet));
         log << "Start des Zeitungsgenerators maker (" << pt::second_clock::local_time() << ") im Verzeichnis " << fs::current_path() << "...\n";
 
 //        log << "pwd: " << fs::current_path(ec);
@@ -134,16 +136,16 @@ int HandleRequest(boost::cgi::request& req)
     }
 
     {
-        // # Die CSV-Datenbank nach FeGinfo.tex transformieren
+        // # Die CSV-Datenbank nach feginfo.tex transformieren
         Add(log, oss, "</p><h3>");
-        log << "Die CSV-Datenbank nach FeGinfo.tex transformieren\n";
+        log << "Die CSV-Datenbank nach feginfo.tex transformieren\n";
         Add(log, oss, "</h3><pre class=\"pex-dev\">");
         fs::remove(pexLogfile, ec);
         log << "Protokolldatei (" << pexLogfile.c_str() << ") " << (ec ? "gelöscht" : "nicht gelöscht") << ".\n";
         log << "Lese Artikel aus der Datenbank (" << inputDatabaseFile.c_str() << "),\n";
         log << "verwende dazu PeX (" << scriptPex.c_str() << ") ...\n";
 
-        // perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/FeGinfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
+        // perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
 #if defined(WIN32)
         bio::file_descriptor_sink pe_log(pexLogfile);
 #else
@@ -171,7 +173,7 @@ int HandleRequest(boost::cgi::request& req)
         CheckErrorCode(log, "mv", ec, errors);
         log << ".\n";
 
-        // cp $BERGDBDIR/FeGinfo.tex $BERGDLBDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
+        // cp $BERGDBDIR/feginfo.tex $BERGDLBDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
         log << "cp " << texFile.c_str() << " -&gt; " << BERGDLBDIR.c_str();
         fs::remove(BERGDLBDIR / texFile.filename(), ec); // ignore error code
         log << " (remove ec: " << ec.value() << "/" << ec.message() << ")";
@@ -192,7 +194,7 @@ int HandleRequest(boost::cgi::request& req)
         Add(log, oss, "</pre></p><h2>");
         log << "LaTeX-Lauf der .pdf und auch .log erzeugt\n";
         Add(log, oss, "</h2><p><pre class=\"pex-dev\">");
-        // cd $BERGDBDIR && pdflatex -interaction=nonstopmode -file-line-error FeGinfo.tex  >/dev/null
+        // cd $BERGDBDIR && pdflatex -interaction=nonstopmode -file-line-error feginfo.tex  >/dev/null
         log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
 
 #if defined(BOOST_WINDOWS_API)
@@ -216,8 +218,8 @@ int HandleRequest(boost::cgi::request& req)
                     , bp::arg("-interaction=nonstopmode")
                     , bp::arg("-file-line-error")
                     , bp::arg(outputdir)
-                    , bp::arg(texFilenameOnly)
-                    , bp::environment("TEXINPUTS", "../br//:/usr/share/texmf-texlive/tex/latex//:/usr/share/texmf-texlive/tex/generic//:/etc/texmf/tex//")
+                    , bp::arg(texFilenameOnly)                   
+                    , bp::environment("TEXINPUTS", "../br//:/usr/share/texmf-texlive/tex/latex//:/usr/share/texlive/texmf-dist/tex/latex//:/usr/share/texmf-texlive/tex/generic//:/usr/share/texlive/texmf-dist/tex/generic//:/etc/texmf/tex//")
                     , bp::std_out_to(tex_log)
                     , bp::std_err_to(tex_log)
                     );
@@ -233,11 +235,11 @@ int HandleRequest(boost::cgi::request& req)
         Add(log, oss, "</pre></p><h2>");
         log << "Bildverzeichnis erzeugen\n";
         Add(log, oss, "</h2><p><pre class=\"pex-dev\">");
-        //        #cd $BERGDBDIR && if [ -f FeGinfo.idx ]; xindy FeGinfo.idx; fi 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
+        //        #cd $BERGDBDIR && if [ -f feginfo.idx ]; xindy feginfo.idx; fi 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
         //        #echo "xindy calling .." >>$BERGLOGDIR/log.txt
-        //        #cd $BERGDBDIR && xindy -L german-din FeGinfo.idx 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
+        //        #cd $BERGDBDIR && xindy -L german-din feginfo.idx 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
         //        echo "makeindex calling .." >>$BERGLOGDIR/log.txt
-        //        cd $BERGDBDIR && makeindex FeGinfo.idx 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
+        //        cd $BERGDBDIR && makeindex feginfo.idx 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
         //        cd $BERGDBDIR && which ls 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
         //        cd $BERGDBDIR && which makeindex 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
         if (fs::exists(idxFile) && fs::exists(exeMakeindex))
@@ -280,7 +282,7 @@ int HandleRequest(boost::cgi::request& req)
         Add(log, oss, "</pre></p><h2>");
         log << "Dateien in den Downloadbereich kopieren\n";
         Add(log, oss, "</h2><p><pre class=\"pex-dev\">");
-        //        mv $BERGDBDIR/FeGinfo.log $BERGDBDIR/FeGinfo.pdf $BERGDLBDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt - kommt als letztes
+        //        mv $BERGDBDIR/feginfo.log $BERGDBDIR/feginfo.pdf $BERGDLBDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt - kommt als letztes
         //        cp $BERGDBDIR/feginfo.csv $BERGDLBDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
         log << "cp " << inputDatabaseFile.c_str() << " -&gt; " << BERGDLBDIR.c_str();
         fs::remove(BERGDLBDIR / inputDatabaseFile.filename(), ec);

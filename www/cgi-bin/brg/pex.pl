@@ -3,8 +3,8 @@
 # This program extracts the content from the CSV database and handles the 
 # commands starting with >. Output is a LaTeX file for final processing.
 #
-# (c) 2007, 2009, 2010, 2011 Heiko Decker
-# (c) 2011, 2012 Christian Leutloff
+# (c) 2007, 2009-2011 Heiko Decker
+# (c) 2011-2013 Christian Leutloff
 # 
 # This program is free software; you can redistribute it and/or modify it 
 # under the same terms as Perl itself, i.e., under the terms of the 
@@ -42,7 +42,7 @@ use Cwd qw(abs_path);
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.09/31.12.2012';
+$VERSION = 'v2.09/01.01.2013';
 # exports are used for testing purposes
 @EXPORT_OK = qw(add_author add_bold add_caption add_italic
                 get_tex_content
@@ -145,7 +145,10 @@ sub run
 sub print_version
 {
     my($inputfilename, $outputfilename) = @_;
-    my $msg = 'Programm: '.abs_path($0).", $VERSION (Perl $]), DB($inputfilename) => LaTeX($outputfilename) [".scalar localtime()."]\n";
+    my $msg = 'Programm: '.abs_path($0).", $VERSION (Perl $])\n";
+    print $OUT '%'." $msg";
+    print "$msg";
+    $msg = "DB ($inputfilename) => LaTeX ($outputfilename) [".scalar localtime()."]\n";
     print $OUT '%'." $msg";
     print "$msg";
 }
@@ -231,7 +234,7 @@ sub create_tex_file
         
         $lines = 1 + $#TXZ;
         #print "$zz\t[AI:$ai]\t$kap ($tnr)\t$titel\t$typ\t$lines\n";
-        printf('%4d [AI:%4s] %22s (%3s) %-40s %-2s %3s Z.'."\n", $zz, $ai, $kap, $tnr, $titel, $typ, $lines);        
+        printf('%4d [AI:%4s] %-22s (%3s) %-40s %-2s %3s Z.'."\n", $zz, $ai, $kap, $tnr, $titel, $typ, $lines);        
         # todo: hier verweis auf den artikel ausgeben - besser in maker link ergänzen
         # print_article_content();
 
