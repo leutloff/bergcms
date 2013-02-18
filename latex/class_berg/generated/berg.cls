@@ -17,7 +17,7 @@
 %%% From: berg.dtx
 %% \StopEventually{\PrintIndex\PrintChanges}
 \NeedsTeXFormat{LaTeX2e}[2009/09/24]
-\ProvidesClass{berg}[2012/12/28 v3.0c Berg CMS document class]
+\ProvidesClass{berg}[2013/01/18 v3.0d Berg CMS document class]
 \RequirePackage{ifthen}
 \RequirePackage[utf8x]{inputenx}
 \DeclareOption{draft}{\PassOptionsToClass{draft}{article}}
@@ -54,6 +54,7 @@
 \RequirePackage{pifont}
 \RequirePackage[right]{eurosym}
 \RequirePackage{mdwlist}
+\RequirePackage[hyphens]{url}
 \RequirePackage[breaklinks]{hyperref}
 \urlstyle{same}%
 
