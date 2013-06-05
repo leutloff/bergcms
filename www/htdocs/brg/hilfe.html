@@ -63,7 +63,14 @@
     <a href="/cgi-bin/brg/berg.pl" target="_top"><img src="/brg/bgico/berg-32.png" width="32" height="32" border="0"> Gemeindezeitungs-Generator</a>
     </p>
 
-    <p class="version">Version: v0.1, 29.07.2012</p>
+    <p class="version" id="berg-version">Version: v0.2, 05.06.2013</p>
 
     </body>
+    <script type="text/javascript" src="/brg/js/jquery-2.0.2.min.js"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            if (console) { console.log( "ready!" ); }
+            $("#berg-version").append(" (jQuery v" + $().jquery + ")");
+        });
+    </script>
 </html>
