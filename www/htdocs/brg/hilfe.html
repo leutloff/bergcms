@@ -59,63 +59,23 @@
     </p>
 
     <h3>Kurzreferenz</h3>
-    <p>
-    Kurzreferenz anzeigen oder verbergen: 
-    <a href="javascript:;" id="refall">Alles</a>,
-    <a href="javascript:;" id="refwords">Worte</a>,
-    <a href="javascript:;" id="refpara">Absätze</a>,
-    <a href="javascript:;" id="refregions">Bereiche</a>    
-    </p>
-    <p id="contentwords">\textbf{fett}
-    </p>
-    <p id="contentpara">\newline
-    </p>
-    <p id="contentregions">
-       &gt;spalten#2#zweispaltig<br />
-    </p>
-    
+    <div id="brg-short-reference"></div>
+        
     <p>
     Zurück zum
     <a href="/cgi-bin/brg/berg.pl" target="_top"><img src="/brg/bgico/berg-32.png" width="32" height="32" border="0"> Gemeindezeitungs-Generator</a>
     </p>
 
-    <p class="version" id="berg-version">Version: v0.2, 10.06.2013</p>
+    <p class="version" id="brg-version">Version: v0.2, 10.06.2013</p>
 
     </body>
     <script type="text/javascript" src="/brg/js/jquery-2.0.2.min.js"></script>
+    <script type="text/javascript" src="/brg/js/berg.js"></script>
     <script type="text/javascript">
-        $( document ).ready(function() {
-            if (console) { console.log( "ready!" ); }
-            $("#berg-version").append(" (jQuery v" + $().jquery + ")");
-            
-            $("#contentwords").hide();
-            $("#contentpara").hide();
-            $("#contentregions").hide();
-            $("#refall").click(function() {
-                if ($("#contentwords").is(":visible") ||
-                    $("#contentpara").is(":visible") ||
-                    $("#contentregions").is(":visible"))
-                {
-                    $("#contentwords").hide();
-                    $("#contentpara").hide();
-                    $("#contentregions").hide();
-                }
-                else    
-                {
-                    $("#contentwords").show();
-                    $("#contentpara").show();
-                    $("#contentregions").show();
-                }
-            });
-            $("#refwords").click(function() {
-                $("#contentwords").toggle();
-            });
-            $("#refpara").click(function() {
-                $("#contentpara").toggle();
-            });
-            $("#refregions").click(function() {
-                $("#contentregions").toggle();
-            });
+        $(document).ready(function() {
+            if (console) { console.log("document ready!"); }
+            brg.onLoadCommon();
+            brg.onLoadShortReference();
         });
     </script>
 </html>
