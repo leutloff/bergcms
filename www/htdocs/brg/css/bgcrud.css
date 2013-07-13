@@ -58,7 +58,7 @@ a:hover  { color:red;   background-color:cyan;     }
 a:active { color:cyan;  background-color:red;      }
 
 input {
-    font-size:90%
+    font-size: 90%;    
     font-weight: bold;
     color: darkblue;
 }
