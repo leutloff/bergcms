@@ -42,7 +42,7 @@ use Cwd qw(abs_path);
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.09/01.01.2013';
+$VERSION = 'v2.10/13.07.2013';
 # exports are used for testing purposes
 @EXPORT_OK = qw(add_author add_bold add_caption add_italic
                 get_tex_content
@@ -460,7 +460,7 @@ sub add_logo_image_jpg  #...Einfuegen jpg- Logo/Icon-Bildatei
         return($tx1." ".$tx2." ");
     }
     #return($tx1."\%\n\\includegraphics[height=".$hx."]{$Logopfad/$dn.jpg}\%\n".$tx2." ");
-    return($tx1."\\setlength\\intextsep{0pt}\\begin{wrapfigure}{L}{0pt}\%\n\\includegraphics[height=".$hx."]{$Logopfad/$dn.jpg}\%\n\\end{wrapfigure}\%\n".$tx2." ");
+    return($tx1."\\setlength\\intextsep{0pt}\\begin{wrapfigure}{l}{0pt}\%\n\\includegraphics[height=".$hx."]{$Logopfad/$dn.jpg}\%\n\\end{wrapfigure}\%\n".$tx2." ");
     # argh der folgende Text muss noch Bestandteil sein 8-( return($tx1."\\begin{figwindow}[1,1,\%\n\\includegraphics[height=".$hx."]{$Logopfad/$dn.jpg},}\%\n\\end{figwindow}\%\n".$tx2." ");
     }
 
