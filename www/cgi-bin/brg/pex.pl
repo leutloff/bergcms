@@ -264,7 +264,8 @@ sub create_tex_file
             testit($s);
         }
     }
-    print_columns('1');# ensure \end{multicols} if necessary.    
+    print_columns('1');# ensure \end{multicols} if necessary.
+    print_enddocument();
 }
 
 # #TODO entfernen:
@@ -685,7 +686,7 @@ sub print_columns
         return;
     }   
     chompx(\$colums);
-    #TODO rmove print $OUT '%print_columns: '.$colums."\n";
+    #TODO remove print $OUT '%print_columns: '.$colums."\n";
     my ($cols, $percentcomment) = split(/\\\%|\%/, $colums, 2);
     $cols = trim($cols);
     if (('1' eq $cols) || ('2' eq $cols) || ('3' eq $cols))
@@ -717,6 +718,14 @@ sub print_columns
             report_warning('Nur 1, 2 oder 3 Spalten sind erlaubt. Die Angabe von '."'$cols'".' Spalten wird ignoriert (print_columns).');
         }
     }
+}
+
+#** @function
+# Closes the LaTeX document.
+#*
+sub print_enddocument
+{
+    print $OUT '\end{document}%';
 }
 
 #-----------------------------------------------------
