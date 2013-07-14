@@ -64,13 +64,13 @@ const fs::path exePerl           = fs::path("/usr/bin/perl");
 
 BOOST_AUTO_TEST_CASE(test_calling_perl)
 {
-    const fs::path pexLogfile        = fs::path(fs::path(bt::GetOutputDir()) / "perlversion.log");
+    const fs::path perlVersionfile = fs::path(fs::path(bt::GetOutputDir()) / "perlversion.log");
 
     // perl -v
 #if defined(WIN32)
     bio::file_descriptor_sink pe_log(pexLogfile);
 #else
-    bio::file_descriptor_sink pe_log(pexLogfile.c_str());
+    bio::file_descriptor_sink pe_log(perlVersionfile.c_str());
 #endif
     bp::monitor c11 = bp::make_child(
                 bp::paths(exePerl.c_str())
@@ -80,6 +80,7 @@ BOOST_AUTO_TEST_CASE(test_calling_perl)
                 );
     int ret = c11.join(); // wait for perl completion
     cout << "Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+    bt::PrintFileToStream(perlVersionfile, cout);
 }
 
 

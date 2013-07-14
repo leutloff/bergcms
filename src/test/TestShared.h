@@ -21,6 +21,8 @@
 #define TEST_SHARED_H_
 
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
+#include <iostream>
 #include <string>
 
 namespace berg
@@ -101,6 +103,38 @@ namespace berg
                 return input;
             }
             return "";
+        }
+
+        /**
+         * @brief Read the file and print each line to the output stream
+         * @param file to read
+         * @param oss stream the content is written to
+         */
+        inline void PrintFileToStream(boost::filesystem::path const& file, std::ostream &oss)
+        {
+            if (boost::filesystem::exists(file))
+            {
+                boost::filesystem::ifstream ifs(file);
+                if (ifs.is_open())
+                {
+                    std::string line;
+                    int cnt = 0;
+                    while (ifs.good())
+                    {
+                        std::getline(ifs, line);
+                        ++cnt;
+                        oss << line << "\n";
+                    }
+                }
+                else
+                {
+                    oss << "Die Datei (" << file.c_str() << ") konnte nicht geöffnet werden!\n";
+                }
+            }
+            else
+            {
+                oss << "Datei (" << file.c_str() << ") nicht existiert und kann deswegen nicht ausgegeben werden!\n";
+            }
         }
 
     }
