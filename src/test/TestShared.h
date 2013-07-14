@@ -87,6 +87,26 @@ namespace berg
         }
 
         /**
+         * @brief determines the directory where the input, output and expected directories are located.
+         * Path used to execute the perl scripts.
+         * @return the main test directory
+         */
+        inline std::string GetTestDir()
+        {
+            std::string input = "../../src/test/";
+            if (boost::filesystem::exists(input))
+            {
+                return input;
+            }
+            input = "../src/test/";
+            if (boost::filesystem::exists(input))
+            {
+                return input;
+            }
+            return "";
+        }
+
+        /**
          * @brief determines the directory containing files used to validate the outcome of some steps.
          * @return the directory with expected output files
          */

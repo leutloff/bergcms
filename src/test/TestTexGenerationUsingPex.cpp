@@ -62,13 +62,13 @@ const fs::path exePerl           = fs::path("/usr/bin/perl");
 //log << "PeX return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
 //if (ret != 0) { ++errors; }
 
-BOOST_AUTO_TEST_CASE(test_calling_perl)
+BOOST_AUTO_TEST_CASE(test_calling_perl_version)
 {
     const fs::path perlVersionfile = fs::path(fs::path(bt::GetOutputDir()) / "perlversion.log");
 
     // perl -v
 #if defined(WIN32)
-    bio::file_descriptor_sink pe_log(pexLogfile);
+    bio::file_descriptor_sink pe_log(perlVersionfile);
 #else
     bio::file_descriptor_sink pe_log(perlVersionfile.c_str());
 #endif
@@ -80,7 +80,33 @@ BOOST_AUTO_TEST_CASE(test_calling_perl)
                 );
     int ret = c11.join(); // wait for perl completion
     cout << "Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+    BOOST_CHECK_EQUAL(0, ret);
     bt::PrintFileToStream(perlVersionfile, cout);
+}
+
+BOOST_AUTO_TEST_CASE(test_calling_simple_perl_script)
+{
+    const fs::path simplePerlScript       = fs::path(fs::path(bt::GetInputDir()) / "simpleperlscript.pl");
+    const fs::path simplePerlScriptOutput = fs::path(fs::path(bt::GetOutputDir()) / "simpleperlscript.log");
+
+    bt::PrintFileToStream(simplePerlScript.c_str(), cout);
+
+    // perl input/simpleperlscript.pl
+#if defined(WIN32)
+    bio::file_descriptor_sink pe_log(simplePerlScriptOutput);
+#else
+    bio::file_descriptor_sink pe_log(simplePerlScriptOutput.c_str());
+#endif
+    bp::monitor c11 = bp::make_child(
+                bp::paths(exePerl.c_str(), fs::path(bt::GetTestDir()))
+                , bp::arg(simplePerlScript.c_str())
+                , bp::std_out_to(pe_log)
+                , bp::std_err_to(pe_log)
+                );
+    int ret = c11.join(); // wait for perl completion
+    cout << "Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+    BOOST_CHECK_EQUAL(0, ret);
+    bt::PrintFileToStream(simplePerlScriptOutput, cout);
 }
 
 
