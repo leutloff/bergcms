@@ -34,16 +34,16 @@ Building from Source
   shell variables in a file named install_locally.cfg.
 
 
-Testsuite and Unit Tests
+Test Suite and Unit Tests
 ========================
 
-The testsuite for the user interface is based on the Selenium IDE.
-Get the Firefox plugin Selenium IDE
+The test suite for the user interface is based on the Selenium IDE.
+Get the Firefox plug-in Selenium IDE
 from [http://seleniumhq.org/download/](http://seleniumhq.org/download/).
 Installation is described at
 [http://seleniumhq.org/docs/02_selenium_ide.html](http://seleniumhq.org/docs/02_selenium_ide.html).
 
-The testsuites and test cases are located in the folder testsuite.
+The test suites and test cases are located in the folder test suite.
 Put the file www/cgi-bin/brg/testcase.pl only on testing instances.
 The CGI script will copy a database according the selected test case.
 This will destroy the existing database. The existence of the testcase.pl
@@ -53,12 +53,12 @@ Additional to the GUI test the different parts of the system are tested with
 different types of unit tests. You will find unit tests written in C++ and
 Perl. New unit tests should be written in C++ when feasible.
 
-The unit tests for the C++-Code is located in src/test. Execute the project
+The unit tests for the C++-Code are located in src/test. Execute the project
 named test to execute the C++ test cases. These test cases are based on
 boost unit test.
 
 The Perl related unit tests are located in www/cgi-bin/brg/t. Use the script
-www/cgi-bin/brg/t/run_tests.sh to exucute all the Perl based tests.
+www/cgi-bin/brg/t/run_tests.sh to execute all the Perl based tests.
 
 
 History and License
