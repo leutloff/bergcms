@@ -1,9 +1,9 @@
 Berg CMS
 ========
 
-Berg Content Management System is a web based CMS for publishing a regular printed news letter,
-e.g. a bimonthly parish newsletter. It is suitable for small editorial
-committees.
+Berg Content Management System is a web based CMS for publishing a regular
+printed news letter, e.g. a bimonthly parish newsletter. It is suitable
+for small editorial committees.
 
 The focus of the system is the next issue to publish. An issue consists
 of several articles. These articles are preprocessed and then composited
@@ -49,12 +49,13 @@ The CGI script will copy a database according the selected test case.
 This will destroy the existing database. The existence of the testcase.pl
 file allows the test cases to modify the database content.
 
+The unit tests for the C++-Code is located in src/test. Execute the project
+named test to execute the C++ test cases. These test cases are based on
+boost unit test.
+
 The different parts of the system use different unit tests. The Perl related
 unit tests are located in www/cgi-bin/brg/t. Use the script
 www/cgi-bin/brg/t/run_tests.sh to exucute all the Perl based tests.
-
-The unit tests for the C++-Code is located in src/test. Execute the project
-named test to execute the C++ test cases based on boost unit test.
 
 
 History and License
