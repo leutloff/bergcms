@@ -25,7 +25,7 @@ if(MSVC)
     add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
 endif()
 
-find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS date_time filesystem regex system thread unit_test_framework REQUIRED)
+find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS date_time filesystem iostreams regex system thread unit_test_framework REQUIRED)
 
 include_directories(
     ${CX_INC_DIR}
@@ -33,6 +33,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/lib
     ${Boost_INCLUDE_DIRS}
     ${BOOST_CGI_INCLUDEDIR}
+    ${BOOST_PROCESS_INCLUDEDIR}
     ${CTEMPLATE_INCLUDEDIR}
     ${CTEMPLATETESTS_INCLUDEDIR}
     ${VISUAL_LEAK_DETECTOR_INCLUDEDIR}
@@ -54,7 +55,8 @@ else()
         )
 endif()
 
-set(UNITTEST_SRC TestArticle.cpp TestStorage.cpp TestHelper.cpp)
+set(UNITTEST_SRC TestArticle.cpp TestStorage.cpp TestHelper.cpp
+                 TestTexGenerationUsingPex.cpp)
 
 add_executable(teststorage ${UNITTEST_SRC})
 target_link_libraries(teststorage berg_storage ${Boost_LIBRARIES} ${CMAKE_REQUIRED_LIBRARIES} ${CTEMPLATE_LIBRARY} ${SYSTEM_SPECIFIC_LIBRARIES})

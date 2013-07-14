@@ -24,6 +24,8 @@
 // vc is showing a memory leak when this file is included, see https://code.google.com/p/ctemplate/issues/detail?id=42 for the reasoning
 //#include <ctemplate/template_string.h> 
 
+#include "TestShared.h"
+
 #include <FileStorage.h>
 #include <Archive.h>
 
@@ -56,42 +58,13 @@ using boost::unit_test::test_suite;
 
 using namespace std;
 using namespace berg;
+namespace bt = berg::testonly;
 namespace fs = boost::filesystem;
 namespace tpl = ctemplate;
 
 static const string sample = "some_articles.csv";
 static const size_t ARCHIVE_FILES = 5;
 
-
-string GetInputDir()
-{
-    string input = "../../src/test/input/";
-    if (fs::exists(input))
-    {
-        return input;
-    }
-    input = "../src/test/input/";
-    if (fs::exists(input))
-    {
-        return input;
-    }
-    return "";
-}
-
-string GetArchiveDir()
-{
-    string input = "../../src/test/input/archive/";
-    if (fs::exists(input))
-    {
-        return input;
-    }
-    input = "../src/test/input/archive/";
-    if (fs::exists(input))
-    {
-        return input;
-    }
-    return "";
-}
 
 // test suite berg.storage
 
@@ -101,7 +74,7 @@ BOOST_AUTO_TEST_CASE(test_initial_storage)
     try
     {
         FileStorage storage;
-        storage.Load(GetInputDir() + sample);
+        storage.Load(bt::GetInputDir() + sample);
         Article const& article = storage.GetArticle(2);
         BOOST_CHECK_EQUAL("Dokumentenvorlage", article.getTitle());
     }
@@ -174,7 +147,7 @@ BOOST_AUTO_TEST_CASE(test_multiple_loads)
         for (int i = 0; 10 > i; ++i)
         {
             FileStorage storage;
-            storage.Load(GetInputDir() + sample);
+            storage.Load(bt::GetInputDir() + sample);
             Article const& article = storage.GetArticle(2);
             BOOST_CHECK_EQUAL("Dokumentenvorlage", article.getTitle());
         }
@@ -206,7 +179,7 @@ BOOST_AUTO_TEST_CASE(test_archive_load)
     try
     {
         Archive archive;
-        int count = archive.Load(GetArchiveDir());
+        int count = archive.Load(bt::GetArchiveDir());
         BOOST_CHECK_EQUAL(ARCHIVE_FILES, count);
         Archive::TArchiveFiles const& files = archive.GetDatabaseList();
         BOOST_CHECK_EQUAL(ARCHIVE_FILES, files.size());
@@ -286,7 +259,7 @@ BOOST_AUTO_TEST_CASE(test_archive_fill_template_dictionary)
         BOOST_CHECK_EQUAL("Archiv", peer.GetSectionValue("HEAD_TITLE"));
 
         Archive archive;
-        int count = archive.Load(GetArchiveDir());
+        int count = archive.Load(bt::GetArchiveDir());
         BOOST_CHECK_EQUAL(ARCHIVE_FILES, count);
         archive.FillDictionaryBody(dict);
 
@@ -351,7 +324,7 @@ BOOST_AUTO_TEST_CASE(test_article_list_fill_template_dictionary)
             tpl::TemplateDictionary dict("head");
             FileStorage storage;
             // archive with a single article
-            storage.Load(GetArchiveDir() + "gi003");
+            storage.Load(bt::GetArchiveDir() + "gi003");
             storage.FillDictionaryBody(dict);
 
             vector<const ctemplate::TemplateDictionary*> articleList;
@@ -370,7 +343,7 @@ BOOST_AUTO_TEST_CASE(test_article_list_fill_template_dictionary)
             tpl::TemplateDictionary dict("head");
             FileStorage storage;
             // archive with a single article
-            storage.Load(GetArchiveDir() + "gi1001");
+            storage.Load(bt::GetArchiveDir() + "gi1001");
             storage.FillDictionaryBody(dict);
 
             vector<const ctemplate::TemplateDictionary*> articleList;
@@ -435,7 +408,7 @@ BOOST_AUTO_TEST_CASE(test_single_article_fill_template_dictionary)
             tpl::TemplateDictionary dict("head");
             FileStorage storage;
             // archive with a single article
-            storage.Load(GetArchiveDir() + "gi003");
+            storage.Load(bt::GetArchiveDir() + "gi003");
             Article const& article = storage.GetArticle("1");
             article.FillDictionaryBody(dict);
 
@@ -455,7 +428,7 @@ BOOST_AUTO_TEST_CASE(test_single_article_fill_template_dictionary)
             tpl::TemplateDictionary dict("head");
             FileStorage storage;
             // archive with a single article
-            storage.Load(GetArchiveDir() + "gi1001");
+            storage.Load(bt::GetArchiveDir() + "gi1001");
             {
                 Article const& article = storage.GetArticle("1");
                 article.FillDictionaryBody(dict);
