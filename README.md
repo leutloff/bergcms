@@ -49,12 +49,15 @@ The CGI script will copy a database according the selected test case.
 This will destroy the existing database. The existence of the testcase.pl
 file allows the test cases to modify the database content.
 
+Additional to the GUI test the different parts of the system are tested with
+different types of unit tests. You will find unit tests written in C++ and
+Perl. New unit tests should be written in C++ when feasible.
+
 The unit tests for the C++-Code is located in src/test. Execute the project
 named test to execute the C++ test cases. These test cases are based on
 boost unit test.
 
-The different parts of the system use different unit tests. The Perl related
-unit tests are located in www/cgi-bin/brg/t. Use the script
+The Perl related unit tests are located in www/cgi-bin/brg/t. Use the script
 www/cgi-bin/brg/t/run_tests.sh to exucute all the Perl based tests.
 
 
