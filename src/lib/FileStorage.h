@@ -25,6 +25,7 @@
 #include "Filter.h"
 
 #define BOOST_SYSTEM_NO_DEPRECATED
+#include <boost/filesystem.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp> //no i/o just types
 #include <ctemplate/template_dictionary.h>
@@ -61,6 +62,11 @@ public:
     void SetFilter(boost::shared_ptr<IFilter> const& filterToUse) { filter = filterToUse; }
 
     void Load(std::string const& filename);
+    void Load(boost::filesystem::path const& filename)
+    {
+        Load(filename.string());
+    }
+
     void Save(std::string const& filename) const;
 
     Article const& GetArticle(unsigned no) const;

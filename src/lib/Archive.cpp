@@ -36,10 +36,9 @@ namespace tpl = ctemplate;
 
 static const std::string STANDARD_FILEXTENSION = ".csv";
 
-size_t Archive::Load(std::string const& archiveDir, boost::regex const& matchingRegex)
+size_t Archive::Load(boost::filesystem::path const& archivePath, boost::regex const& matchingRegex)
 {
     archiveFiles.clear();
-    fs::path archivePath(archiveDir);
     if (!fs::exists(archivePath))
     {
         throw("Der Pfad mit den Archiven " + archivePath.generic_string() + " existiert nicht!");

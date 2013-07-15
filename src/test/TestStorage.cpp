@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE(test_initial_storage)
     try
     {
         FileStorage storage;
-        storage.Load(bt::GetInputDir() + sample);
+        storage.Load(bt::GetInputDir() / sample);
         Article const& article = storage.GetArticle(2);
         BOOST_CHECK_EQUAL("Dokumentenvorlage", article.getTitle());
     }
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE(test_multiple_loads)
         for (int i = 0; 10 > i; ++i)
         {
             FileStorage storage;
-            storage.Load(bt::GetInputDir() + sample);
+            storage.Load(bt::GetInputDir() / sample);
             Article const& article = storage.GetArticle(2);
             BOOST_CHECK_EQUAL("Dokumentenvorlage", article.getTitle());
         }
@@ -324,7 +324,7 @@ BOOST_AUTO_TEST_CASE(test_article_list_fill_template_dictionary)
             tpl::TemplateDictionary dict("head");
             FileStorage storage;
             // archive with a single article
-            storage.Load(bt::GetArchiveDir() + "gi003");
+            storage.Load(bt::GetArchiveDir() / "gi003");
             storage.FillDictionaryBody(dict);
 
             vector<const ctemplate::TemplateDictionary*> articleList;
@@ -343,7 +343,7 @@ BOOST_AUTO_TEST_CASE(test_article_list_fill_template_dictionary)
             tpl::TemplateDictionary dict("head");
             FileStorage storage;
             // archive with a single article
-            storage.Load(bt::GetArchiveDir() + "gi1001");
+            storage.Load(bt::GetArchiveDir() / "gi1001");
             storage.FillDictionaryBody(dict);
 
             vector<const ctemplate::TemplateDictionary*> articleList;
@@ -408,7 +408,7 @@ BOOST_AUTO_TEST_CASE(test_single_article_fill_template_dictionary)
             tpl::TemplateDictionary dict("head");
             FileStorage storage;
             // archive with a single article
-            storage.Load(bt::GetArchiveDir() + "gi003");
+            storage.Load(bt::GetArchiveDir() / "gi003");
             Article const& article = storage.GetArticle("1");
             article.FillDictionaryBody(dict);
 
@@ -428,7 +428,7 @@ BOOST_AUTO_TEST_CASE(test_single_article_fill_template_dictionary)
             tpl::TemplateDictionary dict("head");
             FileStorage storage;
             // archive with a single article
-            storage.Load(bt::GetArchiveDir() + "gi1001");
+            storage.Load(bt::GetArchiveDir() / "gi1001");
             {
                 Article const& article = storage.GetArticle("1");
                 article.FillDictionaryBody(dict);

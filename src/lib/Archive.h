@@ -48,11 +48,16 @@ public:
     /**
      * Loads the file names in the given directory.
      *
-     * @param archiveDir directory to analyse.
+     * @param archiveDir directory to analyze.
      * @param matchingRegex only files matching the given Regex will be part of the Archive files.
      * @returns amount of found files.
      */
-    size_t Load(std::string const& archiveDir, boost::regex const& matchingRegex = boost::regex("gi\\d*"));
+    size_t Load(boost::filesystem::path const& archivePath, boost::regex const& matchingRegex = boost::regex("gi\\d*"));
+    size_t Load(std::string const& archiveDir, boost::regex const& matchingRegex = boost::regex("gi\\d*"))
+    {
+        boost::filesystem::path archivePath(archiveDir);
+        return Load(archivePath, matchingRegex);
+    }
 
     TArchiveFiles const& GetDatabaseList() const { return archiveFiles; }
 

@@ -33,57 +33,60 @@ namespace berg
          * @brief determines the directory used for input files for the test cases.
          * @return the directory with the input files
          */
-        inline std::string GetInputDir()
+        inline boost::filesystem::path GetInputDir()
         {
+            namespace fs = boost::filesystem;
             std::string input = "../../src/test/input/";
-            if (boost::filesystem::exists(input))
+            if (fs::exists(input))
             {
-                return input;
+                return fs::canonical(input);
             }
             input = "../src/test/input/";
-            if (boost::filesystem::exists(input))
+            if (fs::exists(input))
             {
-                return input;
+                return fs::canonical(input);
             }
-            return "";
+            return fs::path("");
         }
 
         /**
          * @brief determines the directory with archive files used for the test cases.
          * @return the directory with the archive files
          */
-        inline std::string GetArchiveDir()
+        inline boost::filesystem::path GetArchiveDir()
         {
+            namespace fs = boost::filesystem;
             std::string input = "../../src/test/input/archive/";
-            if (boost::filesystem::exists(input))
+            if (fs::exists(input))
             {
-                return input;
+                return fs::canonical(input);
             }
             input = "../src/test/input/archive/";
-            if (boost::filesystem::exists(input))
+            if (fs::exists(input))
             {
-                return input;
+                return fs::canonical(input);
             }
-            return "";
+            return fs::path("");
         }
 
         /**
          * @brief determines the directory used to write files within the test cases.
          * @return the directory to write files
          */
-        inline std::string GetOutputDir()
+        inline boost::filesystem::path GetOutputDir()
         {
+            namespace fs = boost::filesystem;
             std::string input = "../../src/test/output/";
-            if (boost::filesystem::exists(input))
+            if (fs::exists(input))
             {
-                return input;
+                return fs::canonical(input);
             }
             input = "../src/test/output/";
-            if (boost::filesystem::exists(input))
+            if (fs::exists(input))
             {
-                return input;
+                return fs::canonical(input);
             }
-            return "";
+            return fs::path("");
         }
 
         /**
@@ -91,39 +94,62 @@ namespace berg
          * Path used to execute the perl scripts.
          * @return the main test directory
          */
-        inline std::string GetTestDir()
+        inline boost::filesystem::path GetTestDir()
         {
+            namespace fs = boost::filesystem;
             std::string input = "../../src/test/";
-            if (boost::filesystem::exists(input))
+            if (fs::exists(input))
             {
-                return input;
+                return fs::canonical(input);
             }
             input = "../src/test/";
-            if (boost::filesystem::exists(input))
+            if (fs::exists(input))
             {
-                return input;
+                return fs::canonical(input);
             }
-            return "";
+            return fs::path("");
         }
 
         /**
          * @brief determines the directory containing files used to validate the outcome of some steps.
          * @return the directory with expected output files
          */
-        inline std::string GetExpectedDir()
+        inline boost::filesystem::path GetExpectedDir()
         {
+            namespace fs = boost::filesystem;
             std::string input = "../../src/test/expected/";
-            if (boost::filesystem::exists(input))
+            if (fs::exists(input))
             {
-                return input;
+                return fs::canonical(input);
             }
             input = "../src/test/expected/";
-            if (boost::filesystem::exists(input))
+            if (fs::exists(input))
             {
-                return input;
+                return fs::canonical(input);
             }
-            return "";
+            return fs::path("");
         }
+
+        /**
+         * @brief determines the directory containing the perl files berg.pl, pex.pl, etc.
+         * @return the directory with perl files
+         */
+        inline boost::filesystem::path GetCgiBinDir()
+        {
+            namespace fs = boost::filesystem;
+            std::string input = "../../www/cgi-bin/brg/";
+            if (fs::exists(input))
+            {
+                return fs::canonical(input);
+            }
+            input = "../www/cgi-bin/brg/";
+            if (fs::exists(input))
+            {
+                return fs::canonical(input);
+            }
+            return fs::path("");
+        }
+
 
         /**
          * @brief Read the file and print each line to the output stream
