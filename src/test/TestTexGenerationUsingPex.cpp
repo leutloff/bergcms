@@ -38,29 +38,23 @@ namespace bt = berg::testonly;
 
 const fs::path exePerl           = fs::path("/usr/bin/perl");
 
-//// # Die CSV-Datenbank nach feginfo.tex transformieren
-//log << "Lese Artikel aus der Datenbank (" << inputDatabaseFile.c_str() << "),\n";
-//log << "verwende dazu PeX (" << scriptPex.c_str() << ") ...\n";
+/**
+ * @brief VerifyGeneratedFileContent loads the two given files and compares them.
+ * @param expectedFile this is the file used as a reference
+ * @param actualFile this is the file to validate
+ */
+void VerifyGeneratedFileContent(boost::filesystem::path const& expectedFile, boost::filesystem::path const& actualFile)
+{
+    std::vector<std::string> expected;
+    BOOST_CHECK_EQUAL(true, bt::LoadFile(expectedFile, expected));
+    std::vector<std::string> actual;
+    BOOST_CHECK_EQUAL(true, bt::LoadFile(actualFile, actual));
+    bt::RemoveIgnoreLine(expected, actual);
 
-//// perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
-//#if defined(WIN32)
-//bio::file_descriptor_sink pe_log(pexLogfile);
-//#else
-//bio::file_descriptor_sink pe_log(pexLogfile.c_str());
-//#endif
-//bp::monitor c11 = bp::make_child(
-//            bp::paths(exePerl.c_str(), BERGCGIDIR.c_str())
-//            , bp::arg(scriptPex.c_str())
-//            , bp::arg(inputDatabaseFile.c_str())
-//            , bp::arg(texFile.c_str())
-//            , bp::std_out_to(pe_log)
-//            , bp::std_err_to(pe_log)
-//            );
-//log << "Inhalt der Protokolldatei (" << pexLogfile.c_str() << "):\n";
-//int ret = c11.join(); // wait for PeX completion
-//AddFileToLog(pexLogfile, log, oss);
-//log << "PeX return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
-//if (ret != 0) { ++errors; }
+    BOOST_CHECK_EQUAL(expected.size(), actual.size());
+    BOOST_CHECK_EQUAL_COLLECTIONS(expected.begin(), expected.end(), actual.begin(), actual.end());
+}
+
 
 BOOST_AUTO_TEST_CASE(test_calling_perl_version)
 {
@@ -83,6 +77,7 @@ BOOST_AUTO_TEST_CASE(test_calling_perl_version)
     BOOST_CHECK_EQUAL(0, ret);
     bt::PrintFileToStream(perlVersionfile, cout);
 }
+
 
 BOOST_AUTO_TEST_CASE(test_calling_simple_perl_script)
 {
@@ -109,13 +104,15 @@ BOOST_AUTO_TEST_CASE(test_calling_simple_perl_script)
     bt::PrintFileToStream(simplePerlScriptOutput, cout);
 }
 
+// this processes an database with a single article that should be ignored.
 BOOST_AUTO_TEST_CASE(test_calling_pex)
 {
     // www/cgi-bin/brg/pex.pl
-    const fs::path pexScript         = fs::path(bt::GetCgiBinDir() / "pex.pl");
-    const fs::path perlScriptOutput  = fs::path(bt::GetOutputDir() / "callingpex.log");
-    const fs::path inputDatabaseFile = fs::path(bt::GetInputDir()  / "single_article.csv");
-    const fs::path texFile           = fs::path(bt::GetOutputDir() / "callingpex.tex");
+    const fs::path pexScript         = fs::path(bt::GetCgiBinDir()   / "pex.pl");
+    const fs::path perlScriptOutput  = fs::path(bt::GetOutputDir()   / "callingpex.log");
+    const fs::path inputDatabaseFile = fs::path(bt::GetInputDir()    / "single_article.csv");
+    const fs::path texFile           = fs::path(bt::GetOutputDir()   / "callingpex.tex");
+    const fs::path texFileExpected   = fs::path(bt::GetExpectedDir() / "callingpex.tex");
 
     // perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
     cout << exePerl.c_str() << " " << pexScript.c_str() << " " << inputDatabaseFile.c_str() << " " << texFile.c_str() << endl;
@@ -133,13 +130,14 @@ BOOST_AUTO_TEST_CASE(test_calling_pex)
                 , bp::std_err_to(pe_log)
                 );
     int ret = c11.join(); // wait for perl completion
-    cout << "Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+    //cout << "Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
-    // TODO verify TeX file content
-    cout << "***   Perl Log   ***" << endl;
-    bt::PrintFileToStream(perlScriptOutput, cout);
-    cout << "***   TeX File   ***" << endl;
-    bt::PrintFileToStream(texFile, cout);
+//    cout << "***   Perl Log   ***" << endl;
+//    bt::PrintFileToStream(perlScriptOutput, cout);
+//    cout << "***   TeX File   ***" << endl;
+//    bt::PrintFileToStream(texFile, cout);
+
+    VerifyGeneratedFileContent(texFileExpected, texFile);
 }
 
 

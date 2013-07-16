@@ -164,11 +164,11 @@ namespace berg
                 if (ifs.is_open())
                 {
                     std::string line;
-                    int cnt = 0;
+                    //int cnt = 0;
                     while (ifs.good())
                     {
                         std::getline(ifs, line);
-                        ++cnt;
+                        //++cnt;
                         oss << line << "\n";
                     }
                 }
@@ -182,6 +182,49 @@ namespace berg
                 oss << "Datei (" << file.c_str() << ") nicht existiert und kann deswegen nicht ausgegeben werden!\n";
             }
         }
+
+        /**
+         * @brief Read the file and add each line to the returned vector.
+         * @param file to read
+         * @return vector with file content
+         */
+       inline bool LoadFile(boost::filesystem::path const& file, std::vector<std::string> & fileContent)
+       {
+           fileContent.clear();
+           if (boost::filesystem::exists(file))
+           {
+               boost::filesystem::ifstream ifs(file);
+               if (ifs.is_open())
+               {
+                   std::string line;
+                   while (ifs.good())
+                   {
+                       std::getline(ifs, line);
+                       fileContent.push_back(line);
+                   }
+                   return true;
+               }
+           }
+           return false;
+       }
+
+       /**
+        * @brief RemoveIgnoreLine scans the first vector for elements containing <ignoreline> at the beginning.
+        *        Any found element is removed from both vectors.
+        * @param expected
+        * @param actual
+        */
+       inline void RemoveIgnoreLine(std::vector<std::string> & expected, std::vector<std::string> & actual)
+       {
+           size_t nMax = std::max(expected.size(), actual.size());
+           size_t i = 0;
+           while((nMax > i) && (std::string::npos != expected[i].find("<ignoreline>")))
+           {
+               ++i;
+           }
+           expected.erase(expected.begin(), expected.begin()+i);
+           actual.erase(actual.begin(), actual.begin()+i);
+       }
 
     }
 }
