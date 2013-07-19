@@ -1,12 +1,12 @@
 [submodule "src/external/ctemplate"]
 	path = src/external/ctemplate
-	url = git@github.com:leutloff/ctemplate.git
+	url = git://github.com/leutloff/ctemplate.git
 [submodule "src/external/boost-process"]
 	path = src/external/boost-process
-	url = git@github.com:leutloff/boost-process.git
+	url = git://github.com/leutloff/boost-process.git
 [submodule "src/external/boost-cgi"]
 	path = src/external/boost-cgi
-	url = git@github.com:leutloff/cgi.git
+	url = git://github.com/leutloff/cgi.git
 [submodule "tools/icalendar"]
 	path = tools/icalendar
 	url = git://github.com/collective/icalendar.git
