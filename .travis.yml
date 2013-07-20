@@ -6,12 +6,14 @@ before_install:
   - git submodule update --init --recursive
 before_script:
   - pushd src/external/ctemplate
-  - ./configure
+  - ./configure --prefix $TRAVIS_BUILD_DIR/src/external/ctemplate
   - make
-  - popd
-  - sudo apt-get install libboost-all-dev
   - make install
-  - mkdir build
-  - cd build
+  - popd
+  - sudo apt-get update
+  - sudo apt-get install libboost-all-dev
+  - ls -l /usr/lib/libboost*
+  - mkdir travis-build
+  - cd travis-build
   - cmake ../src
 script: make
