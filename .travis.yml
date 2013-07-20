@@ -13,7 +13,12 @@ before_script:
   - sudo apt-get update
   - sudo apt-get install libboost-all-dev
   - ls -l /usr/lib/libboost*
+  - find /usr/lib -name 'libicu*'
+  - mkdir -p $TRAVIS_BUILD_DIR/src/external/libicu48/lib
+  - cp /usr/lib/x86_64-linux-gnu/libicu*.so.48 $TRAVIS_BUILD_DIR/src/external/libicu48/lib
+  - ls -l $TRAVIS_BUILD_DIR/src/external/libicu48/lib
   - mkdir travis-build
   - cd travis-build
+  - cmake --version
   - cmake ../src
-script: make
+script: make && pushd test && ./teststorage && popd
