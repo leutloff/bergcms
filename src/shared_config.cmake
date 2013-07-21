@@ -144,7 +144,6 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 #    set(BERG_LINK_FLAGS "-Wl,-rpath=lib -Wl,-rpath=../brg/lib")
 endif()
 
-
 ##### Set RPATH to find the required dynamic libraries for local use and on web server after installation
 # use, i.e. don't skip the full RPATH for the build tree
 SET(CMAKE_SKIP_BUILD_RPATH FALSE)

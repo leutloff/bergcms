@@ -37,7 +37,8 @@ if(EXISTS "${PROJECT_SOURCE_DIR}/external/boost_1_48_0")
 else()
     # using distribution specific versions - feel free to add your distribution, too.
     # apt-get install libboost-all-dev
-    # Ubuntu 12.04 LTS precise (Travis CI) -> 1.48 - hmm oder doch 1.46!?
+    # Ubuntu 12.04 LTS precise (Travis CI) -> provides 1.46 which lacks the chrono lib
+    #     therefore boost 1.49 is installed from PPA https://launchpad.net/~ukplc-team
     # Ubuntu 13.04 raring (my Development system) -> 1.49
     # Debian wheezy (and jessie and sid 20130720) -> 1.49.0.1 
     if(EXISTS "/usr/lib/libboost_filesystem.so.1.53.0")
@@ -48,13 +49,11 @@ else()
         set(BERG_BOOST_VERSION 1.49.0)
     elseif(EXISTS "/usr/lib/libboost_filesystem.so.1.48.0")
         set(BERG_BOOST_VERSION 1.48.0)
-    elseif(EXISTS "/usr/lib/libboost_filesystem.so.1.46.0")
-        set(BERG_BOOST_VERSION 1.46.0)
     else()
+        # do not add a library below 1.48 because it will not work either.
         message("Specific version of the Boost Filesystem Library not found. Please add it to the list above in boost_config.cmake.")
         return()
     endif()
-    set(Boost_ADDITIONAL_VERSIONS   "1.46" "1.46.0" "1.48" "1.48.0" "1.49.0" "1.50.0" "1.53.0")
     set(BOOST_INCLUDEDIR "/usr/include")
     set(BOOST_LIBRARYDIR "/usr/lib")
 endif()

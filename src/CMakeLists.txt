@@ -25,22 +25,25 @@ project (Berg CXX)
 # set these for release
 set(APPLICATION_VERSION_MAJOR "3")
 set(APPLICATION_VERSION_MINOR "1")
-set(APPLICATION_VERSION_PATCH "0")
+set(APPLICATION_VERSION_PATCH "1")
 
-set(CMAKE_VERBOSE_MAKEFILE  TRUE)
-if(NOT DEFINED CMAKE_VERBOSE_MAKEFILE)
-    set(CMAKE_VERBOSE_MAKEFILE  TRUE)# set to true to see the full compile and link commands
-    message("setting CMAKE_VERBOSE_MAKEFILE to true.")
-endif()
+# use this command to enable verbose CMAKE processing
+# cmake -D CMAKE_VERBOSE_MAKEFILE=true -D CMAKE_BUILD_TYPE=Debug ../src
 #set(CMAKE_VERBOSE_MAKEFILE TRUE)
 message("CMAKE_VERBOSE_MAKEFILE is ${CMAKE_VERBOSE_MAKEFILE}.")
 
-if(NOT DEFINED CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+    set(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING "selects the configuration for the Makefile generator. Known values: None, Debug, Release, RelWithDebInfo, MinSizeRel, Distribution")
 endif()
-set(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING "selects the configuration for the Makefile generator. Known values: None, Debug, Release, RelWithDebInfo, MinSizeRel, Distribution")
 message("CMAKE_BUILD_TYPE is ${CMAKE_BUILD_TYPE}.")
 
+if(COMMAND cmake_policy)
+    # Included scripts do automatic cmake_policy PUSH and POP.
+    cmake_policy(SET CMP0011 NEW)
+    # link_directories() treats paths relative to the source dir
+    cmake_policy(SET CMP0015 NEW)
+endif()
 
 # provide a special link flag for lib foo?
 #SET_TARGET_PROPERTIES(foo PROPERTIES LINK_FLAGS -Wl,-specialFlag)

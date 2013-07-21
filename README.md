@@ -17,14 +17,27 @@ Building from Source
 - Clone or download the repository.
 - Execute the script update_and_build_submodules.sh to initialize, update and
   build the submodules.
-- Download the Boost C++ Library from http://www.boost.org/users/download/
-  (start with version 1.48, when unsure);
-  Extract and build boost library in src/external.
-- Add your libicu to src/external/libicuNN. If used other than the mentioned
+- Install the [Boost C++ library](http://boost.org). The easiest way is to 
+  install the version provided by the distribution, e.g. for an up-to-date Ubuntu
+  only the following command is necessary:
+    sudo apt-get install libboost-all-dev boo
+  For Ubuntu 12.04 LTS use the PPA https://launchpad.net/~ukplc-team and install
+  boost with these commands - an up-to-date version is located in .travis.yml:
+    sudo add-apt-repository ppa:ukplc-team/testing
+    sudo apt-get update
+    sudo apt-get install libboost1.49-dev libboost-chrono1.49-dev libboost-date-time1.49-dev libboost-filesystem1.49-dev libboost-iostreams1.49-dev libboost-locale1.49-dev libboost-program-options1.49-dev libboost-regex1.49-dev libboost-serialization1.49-dev libboost-signals1.49-dev libboost-system1.49-dev libboost-test1.49-dev libboost-thread1.49-dev libboost-timer1.49-dev 
+  The last way is to download the Boost C++ Library from 
+  [http://www.boost.org/users/download/](http://www.boost.org/users/download/)
+  (start with version 1.49, when unsure). Then extract and build boost library in 
+  src/external.
+- Copy your libicu to src/external/libicuNN. If used other than the mentioned
   in shared_config.cmake, add your version, too. Supported out of the box
   are at least libicu48, libicu44 and libicu38.
-- Launch CMake and point the source code the src directory and
-  build the project.
+- Launch CMake GUI and point the source code the src directory and
+  build the project. Alternatively the build can done using these commands:
+    mkdir build && pushd build && cmake -D CMAKE_BUILD_TYPE=Release ../src
+    make 
+    popd  
 - Run the script make_zip.sh. This will build all applications and put all
   the required files in a single ZIP file.
 - Install the content of the ZIP file on the Web Server. An outline of the
