@@ -14,6 +14,8 @@ sent directly to the print shop.
 Building from Source
 ====================
 
+[![Build Status](https://travis-ci.org/leutloff/berg.png)](https://travis-ci.org/leutloff/berg)
+
 - Clone or download the repository.
 - Execute the script update_and_build_submodules.sh to initialize, update and
   build the submodules.
