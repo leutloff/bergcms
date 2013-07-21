@@ -80,8 +80,11 @@ const std::string GetExePath()
 
 const std::string GetCwd()
 {
-    char path[1024];
-    getcwd(path, sizeof(path));
+    char path[2048];
+    if (NULL == getcwd(path, sizeof(path)))
+    {
+        return strerror(errno);
+    }
     return path;
 }
 
