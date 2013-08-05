@@ -42,7 +42,7 @@ use Cwd qw(abs_path);
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.10/13.07.2013';
+$VERSION = 'v2.10/05.08.2013';
 # exports are used for testing purposes
 @EXPORT_OK = qw(add_author add_bold add_caption add_italic
                 get_tex_content
@@ -235,28 +235,32 @@ sub create_tex_file
         $lines = 1 + $#TXZ;
         #print "$zz\t[AI:$ai]\t$kap ($tnr)\t$titel\t$typ\t$lines\n";
         printf('%4d [AI:%4s] %-22s (%3s) %-40s %-2s %3s Z.'."\n", $zz, $ai, $kap, $tnr, $titel, $typ, $lines);        
-        # todo: hier verweis auf den artikel ausgeben - besser in maker link ergänzen
         # print_article_content();
 
-        #if ($typ eq "A") # Artikel->Hierachie-Management.............Kapitel,Wochentag,Titel    
+        # Add references to this article in the generated TeX file:
+        print $OUT "% AI: $ai\n";
+        print $OUT sprintf('\message{[AI:%4s] %s}'."\n", $ai, replace_special_tex_characters($titel));
         if ($typ =~ /[AF][123]?/)
         {
             if (length($typ) > 1)
             {
                 print_columns(substr($typ, 1, 1));
             }
-            if($KAPM ne $kap)# start new chapter?
-            {
-                $KAPM=$kap;
-                print $OUT "% Neues Kapitel: $KAPM\n";
-                my ($x,$ueber)=split(/\:/, $kap, 2);
-                if (!defined($ueber)) { $ueber = $x; }
-                testit(">1#".$ueber."#x");#section generieren
-            }
-            if(length($titel)>=2){ testit(">2#".$titel."#x"); }#subsection generieren
+#             if($KAPM ne $kap)# start new chapter?
+#             {
+#                 $KAPM=$kap;
+#                 print $OUT "% Neues Kapitel: $KAPM\n";
+#                 #if ('A' eq substr($typ, 0, 1))# only articles are expected to print chapter headings
+#                 {
+#                     my ($x,$ueber)=split(/\:/, $kap, 2);
+#                     if (!defined($ueber)) { $ueber = $x; }
+#                     testit(">1#".$ueber."#x");# write the section
+#                 }
+#             }
+            if(length($titel)>=2){ testit(">2#".$titel."#x"); }# write the subsection
 #           shift(@TXZ);# 1. Dummyzeile entfernen!
         }
-        # Resttextzeilen interpretieren/generieren
+        # process the remaining lines
         my $s = '';
         while(0 <= $#TXZ)
         {
@@ -465,21 +469,23 @@ sub add_logo_image_jpg  #...Einfuegen jpg- Logo/Icon-Bildatei
     # argh der folgende Text muss noch Bestandteil sein 8-( return($tx1."\\begin{figwindow}[1,1,\%\n\\includegraphics[height=".$hx."]{$Logopfad/$dn.jpg},}\%\n\\end{figwindow}\%\n".$tx2." ");
     }
 
-#-----------------------------------------------------
-sub testit #...Existiert MetaZeicheneinleitung?
-#----------------------------------------------------
-    {
+#** @function
+# Replaces special characters and evaluates the commands.
+# Prints the results to STDOUT and to the TeX file.
+#*
+sub testit
+{
     my $s=shift;
     $s=replace_characters($s);
-    if($s =~ /^>/) #1.Zeichen MetaSteuerzeichen?
-        {
+    if($s =~ /^>/)# is command?
+    {
         evaluate_commands($s);
-        }
-    else
-        {
-        print $OUT $ITS.$s."\n";
-        }
     }
+    else
+    {
+        print $OUT $ITS.$s."\n";
+    }
+}
 
 #** @function
 # Evaluate and execute the PeX commands. They are all starting with a greater sign ('>').
@@ -725,7 +731,7 @@ sub print_columns
 #*
 sub print_enddocument
 {
-    print $OUT '\end{document}%';
+    print $OUT '\end{document}%'."\n";
 }
 
 #-----------------------------------------------------
@@ -876,7 +882,7 @@ sub replace_characters #...Suchen/ersetzen
 #----------------------------------------------------
 # CP1250: https://secure.wikimedia.org/wikipedia/de/wiki/Windows-1250
 # CP1250 -> Unicode: ftp://ftp.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WINDOWS/CP1250.TXT
-    {
+{
     my $s=shift;
     #print $OUT "% - testit()=> $s\n";
     if($s =~ /^;/) #1.Zeichen ;=Kommentar->bergehen!
@@ -923,7 +929,16 @@ sub replace_characters #...Suchen/ersetzen
     $s =~ s/\x{201E}|&#x201E;/\"`/g; # 0x84 0x201E #8222 #DOUBLE LOW-9 QUOTATION MARK - Anführungszeichen unten „
     
     return($s);
-    }
+}
+
+#** @function
+# Removes critical characters from the string. Used when printing informational text to the TeX file.
+sub replace_special_tex_characters
+{
+    my $s=shift;
+    $s=~ s/[\$#@~!&*()\[\]^\\%]+/ /g;
+    return($s);
+}
 
 #-----------------------------------------------------
 sub dbquote #...Anfuehrungszeichen ersetzen(Latex), prüft auf " und „/“
