@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(test_initial_storage)
         FileStorage storage;
         storage.Load(bt::GetInputDir() / sample);
         Article const& article = storage.GetArticle(2);
-        BOOST_CHECK_EQUAL("Dokumentenvorlage", article.getTitle());
+        BOOST_CHECK_EQUAL("-Dokumentenvorlage", article.getTitle());
     }
     catch (exception const& e)
     {
@@ -149,7 +149,7 @@ BOOST_AUTO_TEST_CASE(test_multiple_loads)
             FileStorage storage;
             storage.Load(bt::GetInputDir() / sample);
             Article const& article = storage.GetArticle(2);
-            BOOST_CHECK_EQUAL("Dokumentenvorlage", article.getTitle());
+            BOOST_CHECK_EQUAL("-Dokumentenvorlage", article.getTitle());
         }
     }
     catch (exception const& e)
