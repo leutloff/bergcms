@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(test_calling_perl_version)
                 , bp::std_err_to(pe_log)
                 );
     int ret = c11.join(); // wait for perl completion
-    cout << "Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+    //cout << "Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
     bt::PrintFileToStream(perlVersionfile, cout);
 }
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(test_calling_simple_perl_script)
     const fs::path simplePerlScript       = fs::path(fs::path(bt::GetInputDir()) / "simpleperlscript.pl");
     const fs::path simplePerlScriptOutput = fs::path(fs::path(bt::GetOutputDir()) / "simpleperlscript.log");
 
-    bt::PrintFileToStream(simplePerlScript.c_str(), cout);
+    //bt::PrintFileToStream(simplePerlScript.c_str(), cout);
 
     // perl input/simpleperlscript.pl
 #if defined(WIN32)
@@ -99,12 +99,12 @@ BOOST_AUTO_TEST_CASE(test_calling_simple_perl_script)
                 , bp::std_err_to(pe_log)
                 );
     int ret = c11.join(); // wait for perl completion
-    cout << "Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+    //cout << "Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
-    bt::PrintFileToStream(simplePerlScriptOutput, cout);
+    //bt::PrintFileToStream(simplePerlScriptOutput, cout);
 }
 
-// this processes an database with a single article that should be ignored.
+// this processes an database with a single article that should be ignored, because prio is -1.
 BOOST_AUTO_TEST_CASE(test_calling_pex)
 {
     // www/cgi-bin/brg/pex.pl
@@ -115,7 +115,42 @@ BOOST_AUTO_TEST_CASE(test_calling_pex)
     const fs::path texFileExpected   = fs::path(bt::GetExpectedDir() / "callingpex.tex");
 
     // perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
-    cout << exePerl.c_str() << " " << pexScript.c_str() << " " << inputDatabaseFile.c_str() << " " << texFile.c_str() << endl;
+    //cout << exePerl.c_str() << " " << pexScript.c_str() << " " << inputDatabaseFile.c_str() << " " << texFile.c_str() << endl;
+#if defined(WIN32)
+    bio::file_descriptor_sink pe_log(perlScriptOutput);
+#else
+    bio::file_descriptor_sink pe_log(perlScriptOutput.c_str());
+#endif
+    bp::monitor c11 = bp::make_child(
+                bp::paths(exePerl.c_str(), bt::GetOutputDir())
+                , bp::arg(pexScript.c_str())
+                , bp::arg(inputDatabaseFile.c_str())
+                , bp::arg(texFile.c_str())
+                , bp::std_out_to(pe_log)
+                , bp::std_err_to(pe_log)
+                );
+    int ret = c11.join(); // wait for perl completion
+    //cout << "Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+    BOOST_CHECK_EQUAL(0, ret);
+//    cout << "***   Perl Log   ***" << endl;
+//    bt::PrintFileToStream(perlScriptOutput, cout);
+//    cout << "***   TeX File   ***" << endl;
+//    bt::PrintFileToStream(texFile, cout);
+
+    VerifyGeneratedFileContent(texFileExpected, texFile);
+}
+
+BOOST_AUTO_TEST_CASE(test_calling_pex_some_articles)
+{
+    // www/cgi-bin/brg/pex.pl
+    const fs::path pexScript         = fs::path(bt::GetCgiBinDir()   / "pex.pl");
+    const fs::path perlScriptOutput  = fs::path(bt::GetOutputDir()   / "callingpexsomearticles.log");
+    const fs::path inputDatabaseFile = fs::path(bt::GetInputDir()    / "some_articles.csv");
+    const fs::path texFile           = fs::path(bt::GetOutputDir()   / "callingpexsomearticles.tex");
+    const fs::path texFileExpected   = fs::path(bt::GetExpectedDir() / "callingpexsomearticles.tex");
+
+    // perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
+    //cout << exePerl.c_str() << " " << pexScript.c_str() << " " << inputDatabaseFile.c_str() << " " << texFile.c_str() << endl;
 #if defined(WIN32)
     bio::file_descriptor_sink pe_log(perlScriptOutput);
 #else

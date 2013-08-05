@@ -1,0 +1,143 @@
+% <ignoreline> Programm: /home/leutloff/work/berg/www/cgi-bin/brg/pex.pl, v2.10/13.07.2013 (Perl 5.014002)
+% <ignoreline> DB (/home/leutloff/work/berg/src/test/input/some_articles.csv) => LaTeX (/home/leutloff/work/berg/src/test/output/callingpexsomearticles.tex) [Sat Jul 20 23:22:08 2013]
+% AI: 3
+\message{[AI:   3] -Ausgabe festlegen}
+ 
+ 
+% AI: 2
+\message{[AI:   2] -Dokumentenvorlage}
+% subsection ignoriert (wg. -): -Dokumentenvorlage
+ 
+% Finale Version:
+\documentclass{berg}
+%
+% Ohne Bilder, 
+% aber mit schwarzen Balken, die zu breite Bereiche kennzeichnen, die dann in anderes hineinragen 
+%\documentclass[draft]{berg}
+
+%
+\hypersetup{
+    %bookmarks=true,          % show bookmarks bar? - Warning: `bookmarks' has already been used,
+    unicode=false,            % non-Latin characters in Acrobat's bookmarks
+    pdftoolbar=true,          % show Acrobat's toolbar?
+    pdfmenubar=true,          % show Acrobat's menu?
+    pdffitwindow=false,       % window fit to page when opened
+    pdfstartview={FitH},      % fits the width of the page to the window
+    pdftitle={Berg CMS}, % title
+    pdfauthor={See History of feginfo.csv},   % author
+    pdfsubject={Ausgabe 
+Mai/Juni 2013},   % subject of the document
+    %pdfcreator={Creator},    % creator of the document
+    %pdfproducer={}, % producer of the document
+    %pdfkeywords={keyword1} {key2} {key3}, % list of keywords
+    pdfnewwindow=true,        % links in new window
+    colorlinks=true,          % false: boxed links; true: colored links
+    linkcolor=black,          % color of internal links
+    citecolor=black,          % color of links to bibliography
+    filecolor=black,          % color of file links
+    urlcolor=black            % color of external links
+}
+%
+\begin{document}
+%
+% AI: 13
+\message{[AI:  13] -Titelseite}
+% subsection ignoriert (wg. -): -Titelseite
+%------- Titelseite --------------DIN A4---------------------------
+\newlength{\boxwidth} \setlength{\boxwidth}{\textwidth}
+\addtolength{\boxwidth}{-2\fboxsep}
+\addtolength{\boxwidth}{-2\fboxrule}
+\newlength{\boxheight} \setlength{\boxheight}{0.94\textheight}
+\newlength{\indentheader} \setlength{\indentheader}{2.8mm}%
+\addtolength{\boxwidth}{-\indentheader}%
+\thispagestyle{empty}
+%BigBox-------- Titelseite ohne overfull hbox-------DIN A4-------
+\fbox{\hspace{\indentheader}\parbox[t][\boxheight]{\boxwidth}{%
+{\bfseries 
+%
+\begin{minipage}[b]{70mm}%
+\Huge 
+Example Organization\\[-8mm]
+\end{minipage}%
+%\hfill\includegraphics[scale=0.21]{berg.jpg}%
+\hspace{10mm}\vspace*{2mm}\\
+\Large
+\resizebox{175mm}{4.9mm}{using Berg CMS}
+}%
+\\%\vspace*{0.2ex}\\% Mindestabstand 0.5ex
+%------- Titelbild -----------------------
+\vspace*{5mm}% zusätzlicher Abstand
+
+%>BILD#titel#c#datei#b:170mm#Fotograf
+% oder Höhe: h:195mm
+\parbox[c]{\linewidth}{\center
+\includegraphics[width=100mm]{/home/aachen/cgi-bin/brg/br/bilder/berg.jpg}
+\index{Christian Leutloff}%
+\vspace{1.5ex plus 1ex minus 1ex}
+}
+
+%
+%------- Abschluss der Titelseite -------
+
+\vfill
+\vspace*{0.8ex}% Mindestabstand 0.8ex
+}} %parbox fbox
+
+\normalsize
+
+{\Large Mai/Juni 2013\hfill246
+
+}% Ende der Titelseite
+% AI: 6
+\message{[AI:   6] -Inhaltsverzeichnis}
+% subsection ignoriert (wg. -): -Inhaltsverzeichnis
+%***************************************
+%* Inhaltverzeichnis                   *
+%***************************************
+\large
+\begin{multicols}{2}%
+%>zd#1.5#
+\normalbaselines\linespread{1.1}\selectfont
+\def\contentsname{\Large Inhalt\large\dotfill 246/2013}\tableofcontents
+\clearpage
+\normalbaselines\linespread{1}\selectfont
+ 
+% AI: 11
+\message{[AI:  11] -Gottesdienste}
+% subsection ignoriert (wg. -): -Gottesdienste
+\section{Gottesdienste}
+%Datum  # Predigt  # Liturgie  # Besonderheit       # Musik       # Kollekte
+%14mm  # 15mm       # 17mm          # 26mm              # 16mm         # 18mm
+%14mm  # 14mm       # 16mm          # 26mm              # 20mm         # 16mm
+%15mm  # 14mm       # 17mm          # 23mm              # 16mm         # 19mm
+% war 17
+\begin{tabular}[b]{|L{23.5mm  }|L{ 22.0mm       }|L{ 26.7mm          }|L{ 33.0mm              }|L{ 28.3mm         }|L{ 29.8mm}|} \hline 
+\emph{Datum       }&\emph{ Predigt      }&\emph{ Liturgie     }&\emph{ Besonderheit           }&\emph{ Musik           }&\emph{ Kollekte} \\ \hline \hline
+06.01. 10:15&A. Name&A. Name& & &Purpose \\ \hline
+13.01. 10:15&A. Name &A. Name &Abendmahl&A. Name&Gemeinde \\ \hline
+\end{tabular}
+\newpage
+% AI: 16
+\message{[AI:  16] -GEMEINDELEBEN - Ueberschrift}
+% subsection ignoriert (wg. -): -GEMEINDELEBEN - Ueberschrift
+\section{Gemeindeleben}
+ 
+ 
+% AI: 15
+\message{[AI:  15] Forumsabend: Zu einem bestimmten Thema}
+\subsection{Forumsabend: Zu einem bestimmten Thema}
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+ 
+% AI: 14
+\message{[AI:  14] Arbeitssamstag}
+\subsection{Arbeitssamstag}
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+ 
+\end{multicols}%
+\end{document}%
