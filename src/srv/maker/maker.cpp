@@ -91,9 +91,9 @@ int HandleRequest(boost::cgi::request& req)
     const fs::path texLogfile        = fs::path(BERGLOGDIR / "pdflatex.log");
     const fs::path idxLogfile        = fs::path(BERGLOGDIR / "makeindex.log");
 
-    const fs::path inputDatabaseFile = fs::path(BERGDBDIR / "feginfo.csv");
+    const fs::path inputDatabaseFile = fs::path(BERGDBDIR  / "feginfo.csv");
     const fs::path texFile           = fs::path(BERGOUTDIR / "feginfo.tex");
-    const fs::path idxFile           = fs::path(BERGOUTDIR / "feginfo.idx");
+    const fs::path idxFile           = fs::path(             "feginfo.idx");
     const fs::path pdfFile           = fs::path(BERGOUTDIR / "feginfo.pdf");
 
     const fs::path exePerl           = fs::path("/usr/bin/perl");
@@ -101,7 +101,7 @@ int HandleRequest(boost::cgi::request& req)
     const fs::path exeMakeindex      = fs::path("/usr/bin/makeindex");
     const fs::path scriptPex         = fs::path(BERGCGIDIR / "pex.pl");
 
-    resp << "\n<p><pre class=\"pex-dev\">\n";
+    resp << "\n<p><pre class=\"berg-dev\">\n";
     //  mkdir -p $BERGLOGDIR;
     if (!fs::exists(BERGLOGDIR))
     {
@@ -138,8 +138,8 @@ int HandleRequest(boost::cgi::request& req)
     {
         // # Die CSV-Datenbank nach feginfo.tex transformieren
         Add(log, oss, "</p><h3>");
-        log << "Die CSV-Datenbank nach feginfo.tex transformieren\n";
-        Add(log, oss, "</h3><pre class=\"pex-dev\">");
+        log << "Artikel aus der Datenbank holen\n";
+        Add(log, oss, "</h3><pre class=\"berg-dev\">");
         fs::remove(pexLogfile, ec);
         log << "Protokolldatei (" << pexLogfile.c_str() << ") " << (ec ? "gelöscht" : "nicht gelöscht") << ".\n";
         log << "Lese Artikel aus der Datenbank (" << inputDatabaseFile.c_str() << "),\n";
@@ -192,8 +192,8 @@ int HandleRequest(boost::cgi::request& req)
     {
         // # LaTeX-Lauf der .pdf und auch .log erzeugt (pdflatex darf keine Ausgabe erzeugen!)
         Add(log, oss, "</pre></p><h2>");
-        log << "LaTeX-Lauf der .pdf und auch .log erzeugt\n";
-        Add(log, oss, "</h2><p><pre class=\"pex-dev\">");
+        log << "PDF-Datei erzeugen\n";
+        Add(log, oss, "</h2><p><pre class=\"berg-dev\">");
         // cd $BERGDBDIR && pdflatex -interaction=nonstopmode -file-line-error feginfo.tex  >/dev/null
         log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
 
@@ -233,8 +233,8 @@ int HandleRequest(boost::cgi::request& req)
     {
         // # Bildverzeichnis erzeugen
         Add(log, oss, "</pre></p><h2>");
-        log << "Bildverzeichnis erzeugen\n";
-        Add(log, oss, "</h2><p><pre class=\"pex-dev\">");
+        log << "Bildverzeichnis für den nächsten Durchlauf erzeugen\n";
+        Add(log, oss, "</h2><p><pre class=\"berg-dev\">");
         //        #cd $BERGDBDIR && if [ -f feginfo.idx ]; xindy feginfo.idx; fi 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
         //        #echo "xindy calling .." >>$BERGLOGDIR/log.txt
         //        #cd $BERGDBDIR && xindy -L german-din feginfo.idx 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
@@ -242,8 +242,9 @@ int HandleRequest(boost::cgi::request& req)
         //        cd $BERGDBDIR && makeindex feginfo.idx 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
         //        cd $BERGDBDIR && which ls 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
         //        cd $BERGDBDIR && which makeindex 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
-        if (fs::exists(idxFile) && fs::exists(exeMakeindex))
+        if (fs::exists(BERGOUTDIR / idxFile) && fs::exists(exeMakeindex))
         {
+            log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
             log << exeMakeindex.c_str() << " " << idxFile.c_str();
             log << "\n";
 
@@ -266,9 +267,9 @@ int HandleRequest(boost::cgi::request& req)
         }
         else
         {
-            if (!fs::exists(idxFile))
+            if (!fs::exists(BERGOUTDIR / idxFile))
             {
-                log << "Indexdatei (" << idxFile.c_str() << ") für das Bildverzeichnise existiert nicht. ";
+                log << "Indexdatei (" << idxFile.c_str() << ") für das Bildverzeichnis existiert nicht. ";
             }
             if (!fs::exists(exeMakeindex))
             {
@@ -281,7 +282,7 @@ int HandleRequest(boost::cgi::request& req)
     {
         Add(log, oss, "</pre></p><h2>");
         log << "Dateien in den Downloadbereich kopieren\n";
-        Add(log, oss, "</h2><p><pre class=\"pex-dev\">");
+        Add(log, oss, "</h2><p><pre class=\"berg-dev\">");
         //        mv $BERGDBDIR/feginfo.log $BERGDBDIR/feginfo.pdf $BERGDLBDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt - kommt als letztes
         //        cp $BERGDBDIR/feginfo.csv $BERGDLBDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
         log << "cp " << inputDatabaseFile.c_str() << " -&gt; " << BERGDLBDIR.c_str();
@@ -304,26 +305,23 @@ int HandleRequest(boost::cgi::request& req)
     //        cat $BERGLOGDIR/log.txt $BERGDLBDIR/pe.log >$BERGDLBDIR/log.txt
     bchrono::system_clock::time_point stop = bchrono::system_clock::now();
     log << "Zeitungsgenerator maker beendet (" << pt::second_clock::local_time() << ") ...\n";
-    log << "Bearbeitungszeit betrug " << boost::chrono::duration_cast<bchrono::milliseconds>(stop-start).count() << " ms.\n";
     log << "mv " << makerLogfile.c_str() << " -&gt; " << BERGDLBDIR.c_str();
     log.flush();
     log.close();
-    resp << oss.str() << "\n\n\n";
-
-    resp << "Bearbeitungszeit betrug " << boost::chrono::duration_cast<bchrono::milliseconds>(stop-start).count() << " ms.\n";
-
+    resp << oss.str();
     fs::rename(makerLogfile, BERGDLBDIR / makerLogfile.filename(), ec);
     CheckErrorCode(resp, "", ec, errors);
+    resp << "</pre></p>";
 
-    resp << "</pre></p>"
-         << "<h2>Bearbeitungsergebnis</h2>";
+    resp << "<h2>Bearbeitungsergebnis</h2>";
+    resp << "Bearbeitungszeit betrug " << boost::chrono::duration_cast<bchrono::milliseconds>(stop-start).count() << " ms.\n";
     if (errors == 0)
     {
-        resp << "<p class=\"success\">Keine Fehler.</p>";
+        resp << "<p class=\"berg-success\">Keine Fehler.</p>";
     }
     else
     {
-        resp << "<p class=\"failure\">" << errors << " Fehler! Hinweise zu den Ursachen sollten sich weiter oben finden lassen.</p>";
+        resp << "<p class=\"berg-failure\">" << errors << " Fehler! Hinweise zu den Ursachen sollten sich weiter oben finden lassen.</p>";
     }
     resp << "</body></html>";
 
@@ -338,7 +336,7 @@ void AddFileToLog(fs::path const& logFile, TeeStream &log, ostringstream &oss)
         fs::ifstream ifs(logFile);
         if (ifs.is_open())
         {
-            Add(log, oss, "</p><p><pre class=\"pex-log\">");
+            Add(log, oss, "</p><p><pre class=\"berg-log\">");
             string line;
             int cnt = 0;
             while (ifs.good())
@@ -409,9 +407,9 @@ void CheckErrorCode(TeeStream & log, std::string const& functionName, bs::error_
 void CheckErrorCode(std::string & errorString, std::string const& functionName, bs::error_code const& ec, uint & errors)
 {
     ostringstream oss;
+    if (0 < ec.value()) { ++errors; }
     oss << " (ec: " << ec.value() << "/" << ec.message() << ")";
     errorString = oss.str();
-    if (0 < ec.value()) { ++errors; }
 }
 
 
