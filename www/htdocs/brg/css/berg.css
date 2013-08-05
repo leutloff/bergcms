@@ -4,12 +4,12 @@
  * central stylesheet - based on YAML layout example "flexible-grids"
  *
  * @copyright       Copyright 2005-2012, Dirk Jesse
+ *                  Copyright 2013, Christian Leutloff
  * @license         CC-BY 2.0 (http://creativecommons.org/licenses/by/2.0/),
  *                  YAML-CDL (http://www.yaml.de/license.html)
  * @link            http://www.yaml.de
  * @package         yaml
- * @version         4.0
- * @lastmodified    $Date: 2012-01-22 12:01:24 +0100 (So, 22 Jan 2012) $
+ * @version         4.0 (of the original YAML layout example "flexible-grids")
  */
 
 /* Google Font API */
@@ -46,3 +46,23 @@
         font-family: "Open Sans", Verdana, Arial, Helvetica, sans-serif;
     }
 }
+
+/* Highlight matches from a search */
+.match, .berg-match {
+    background-color: yellow;
+    font-weight:bold;
+}
+
+/* Version string of scripts and programs */
+.version, .berg-version { font-size: 80%; color: gray; }
+
+/* Output is more technically */
+.pex-dev, .berg-dev { color: gray; background-color: Ivory; font-size: 80%; }
+/* Processing output */
+.pex-log, .berg-log { color: black; background-color: WhiteSmoke; margin:10px;}
+
+/* Mark a successful operation */
+.success, .berg-success { color: white; background-color: green; }
+/* Mark a failed operation */
+.failure, .berg-failure { color: black; background-color: red; }
+

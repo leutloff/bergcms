@@ -2,13 +2,13 @@
  * Stylesheet for the perl based scripts: berg.pl, bgcrud.pl, bgup.pl.
  *
  * Copyright 2006-2011, Heiko Decker
- * Copyright 2011-2012, Christian Leutloff
+ * Copyright 2011-2013, Christian Leutloff
  *
  * This stylesheet is free software; you can redistribute it and/or modify it
  * under the same terms as Perl itself, i.e., under the terms of the
  * ``Artistic License'' or the ``GNU General Public License''.
  *
- * v2.02, 18.08.2012
+ * v2.03, 05.08.2013
  */
 
 html {
@@ -84,22 +84,21 @@ td {
     vertical-align: top;
 }
 
-/* highlight matches from a search */
-.match {
+/* Highlight matches from a search */
+.match, .berg-match {
     background-color: yellow;
     font-weight:bold;
 }
 
-/* Version string of Scripts */
-.version { font-size: 80%; color: gray; }
+/* Version string of scripts and programs */
+.version, .berg-version { font-size: 80%; color: gray; }
 
-/* Output more technically */
-.pex-dev { color: gray; background-color: Ivory; font-size: 80%; }
+/* Output is more technically */
+.pex-dev, .berg-dev { color: gray; background-color: Ivory; font-size: 80%; }
 /* Processing output */
-.pex-log { color: black; background-color: WhiteSmoke; margin:10px;}
+.pex-log, .berg-log { color: black; background-color: WhiteSmoke; margin:10px;}
 
 /* Mark a successful operation */
-.success { color: white; background-color: green; }
+.success, .berg-success { color: white; background-color: green; }
 /* Mark a failed operation */
-.failure { color: black; background-color: red; }
-
+.failure, .berg-failure { color: black; background-color: red; }
