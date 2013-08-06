@@ -42,7 +42,7 @@ use Cwd qw(abs_path);
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.10/05.08.2013';
+$VERSION = 'v2.10/06.08.2013';
 # exports are used for testing purposes
 @EXPORT_OK = qw(add_author add_bold add_caption add_italic
                 get_tex_content
@@ -302,11 +302,11 @@ sub create_tex_file
 #     }
 
 
-
-#-----------------------------------------------------
-sub print_table #...Tabelle     bis >* erzeugen
-#-----------------------------------------------------
-    {
+#** @function
+# Prints the table. Reads the lines until >* is detected.
+#*
+sub print_table
+{
     my($nix,$pos,$rahmen,$ueb)=split(/#/,$_);
     my(@f,$e,$s,$ra,$lin,$fx);
     $ra="";$lin="";
@@ -316,13 +316,14 @@ sub print_table #...Tabelle     bis >* erzeugen
     $s=shift(@TXZ);
     @f=split(/#/,$s);
     foreach $e(@f)
+    {
+        if($SCALE)# falls Skalierung
         {
-        if($SCALE) # falls Skalierung
-            {
             $e=~ s/([0-9.]+)/sprintf("%1.1f",$1 * $SCALE) /ge;
-            }
-        print $OUT "L{$e}".$ra;
         }
+        print $OUT "L{$e}".$ra;
+    }
+
     print $OUT "} $lin \n";
 
     #--- 2.Zeile=Ueberschriften
@@ -334,23 +335,34 @@ sub print_table #...Tabelle     bis >* erzeugen
     #--- 3...n.Zeile=Tabellenzeilen(Inhalte)
     $s="?";
     while($s)
-        {
+    {
         $s=shift(@TXZ);
         $s =~ s/Tel.:|Tel:/\\ding\{37\}/g; #falls Tel.?-> Telefonsymbolersatz - TODO: Standardfunktion für Tel und Email nutzen!
         $s =~ s/e-mail:|email:|mail:/\\ding\{41\}/ig; #falls email.?-> Briefsymbolersatz
         last if($s=~/\>\*/);
+        # TODO einfügen, um Kommentare zu ignorieren, ala: next if ($s=~/^\%/); # plus whitespace ignorieren
         @f=split(/#/,$s);
         $fx=$f[0];
         if (!defined($fx)) { $fx=''; }# TODO: change this to avoid following unnecessary comparisons/processing
         if($fx=~s/^\-//g)# falls 1.Zeichen in 1.Spalte ="-" ->Hline unterbinden!
-            {$f[0]=$fx;$fx="-";}#..Tricki!
-        $s=""; foreach $e(@f){$s.="$e&";};chop($s);
-        if($fx=~s/^\-//g)# falls 1.Zeichen in 1.Spalte ="-" ->Hline unterbinden!
-            { print $OUT "$s \\\\ \n";}
-        else{print $OUT "$s \\\\ $lin\n";}
+        {
+            $f[0]=$fx;
+            $fx="-";#..Tricki!
         }
-    print $OUT "\\end{tabular}\n";
+        $s="";
+        foreach $e(@f){$s.="$e&";};
+        chop($s);
+        if($fx=~s/^\-//g)# falls 1.Zeichen in 1.Spalte ="-" ->Hline unterbinden!
+        {
+            print $OUT "$s \\\\ \n";
+        }
+        else
+        {
+            print $OUT "$s \\\\ $lin\n";
+        }
     }
+    print $OUT "\\end{tabular}\n";
+}
 
 
 #-----------------------------------------------------
@@ -375,21 +387,21 @@ sub print_list  #...z.B.Terminliste bis >* erzeugen
         add_list_space();
     }
     while($#TXZ>=0)# sind noch Elemente im Array?
-        {
+    {
         $s=shift(@TXZ);
         last if($s=~/\>\*/);
         # TODO einfügen, um Kommentare zu ignorieren, ala: next if ($s=~/^\%/); # plus whitespace ignorieren
         $s=replace_characters($s);
         ($d,$t)=split(/#/,$s);
         if (defined $t)
-            {
+        {
             print $OUT "\\item[$d] $t\n";
-            }
-        else
-            {
-            print $OUT "\\item[$d] \n" if (defined $d);                
-            }
         }
+        else
+        {
+            print $OUT "\\item[$d] \n" if (defined $d);                
+        }
+    }
     if (defined $fixedsize)
     {
         print $OUT "\\end{basedescript}\n";
@@ -412,7 +424,7 @@ sub print_picturecredits#...Einfuegen Bildnachweis
 #-----------------------------------------------------
 sub print_image_jpg  #...Einfuegen JPG-Bildatei
 #-----------------------------------------------------
-    {
+{
     my ($nix,$kom,$xf,$dn,$b,$photographer)=split(/#/,$_);
     my ($sx,$dx);
     if(not -e "$Bpfad/$dn.jpg")
@@ -436,24 +448,24 @@ sub print_image_jpg  #...Einfuegen JPG-Bildatei
     if ($kom){print $OUT "\\\\ \\textit{".$kom."}"."\n";}
     print $OUT "\\vspace{1.5ex plus 1ex minus 1ex}"."\n";
     print $OUT "}\n";
-    }
+}
 
 #-----------------------------------------------------
 sub print_background_image_jpg  #...Einfuegen jpg-Hintergrund-Bildatei
 #-----------------------------------------------------
-    {
+{
     my ($nix,$px,$py,$hx,$bx,$dn)=split(/#/,$_);
     my ($hy,$sx,$dx);
     if(not -e "$Bpfad/$dn.jpg"){print $OUT "\n{\\Large\\ding\{212\} Bild \\textbf\{FEHLT\}: $Bpfad/$dn.jpg}\\\\\n";return;}
     $hy=$hx-1;
     $py-=$hy;
     print $OUT "{\\unitlength=1mm \\begin{picture}(0,0) \\put($px,$py){\\includegraphics["."width=$bx"."mm,height=$hx"."mm]{$Bpfad/$dn.jpg}} \\end{picture}}\n";
-    }
+}
 
 #-----------------------------------------------------
 sub add_logo_image_jpg  #...Einfuegen jpg- Logo/Icon-Bildatei
 #-----------------------------------------------------
-    {
+{
     my $s=shift;
     my ($tx1,$nix,$dn,$hx,$tx2)=split(/:/,$s);
     #if(not defined $dn) { $dn = ""; }
@@ -467,7 +479,7 @@ sub add_logo_image_jpg  #...Einfuegen jpg- Logo/Icon-Bildatei
     #return($tx1."\%\n\\includegraphics[height=".$hx."]{$Logopfad/$dn.jpg}\%\n".$tx2." ");
     return($tx1."\\setlength\\intextsep{0pt}\\begin{wrapfigure}{l}{0pt}\%\n\\includegraphics[height=".$hx."]{$Logopfad/$dn.jpg}\%\n\\end{wrapfigure}\%\n".$tx2." ");
     # argh der folgende Text muss noch Bestandteil sein 8-( return($tx1."\\begin{figwindow}[1,1,\%\n\\includegraphics[height=".$hx."]{$Logopfad/$dn.jpg},}\%\n\\end{figwindow}\%\n".$tx2." ");
-    }
+}
 
 #** @function
 # Replaces special characters and evaluates the commands.
@@ -737,29 +749,29 @@ sub print_enddocument
 #-----------------------------------------------------
 sub print_enumeration#...FolgeZeilen durchnummerieren
 #-----------------------------------------------------
-    {
+{
     $ITZ++;
     $ITS="\\item ";
     push(@stack,"\\end{enumerate}\n");
     print $OUT "\\begin{enumerate}\n";
     add_list_space();
-    }
+}
 
 #-----------------------------------------------------
 sub print_itemize #...FolgeZeilen durchpunktieren
 #-----------------------------------------------------
-    {
+{
     $ITZ++;
     $ITS="\\item ";
     push(@stack,"\\end{itemize}\n");
     print $OUT "\\begin{itemize}\n";
     add_list_space();
-    }
+}
 
 #-----------------------------------------------------
 sub print_dinglist #...FolgeZeilen durchpunktieren mit Symbolen aus pifont
 #-----------------------------------------------------
-    {
+{
     my $s=shift;
     my $sym;
 
@@ -790,24 +802,24 @@ sub print_dinglist #...FolgeZeilen durchpunktieren mit Symbolen aus pifont
     push(@stack,"\\end{dinglist}\n");
     print $OUT "\\begin{dinglist}{$sym}\n";
     add_list_space();
-    }
+}
 
 #-----------------------------------------------------
 sub print_alignment #...Zeile rechts,zentriert oder linksbuendig
 #-----------------------------------------------------
-    {
+{
     my ($s,$p)=@_;
     if (defined $p)
-        {
+    {
         if ($p eq "l")
            {print $OUT "\\begin{raggedright}\n$s\n\\end{raggedright}\n";return;}
         if ($p eq "r")
            {print $OUT "\\begin{raggedleft}\n$s\n\\end{raggedleft}\n";return;}
         if ($p eq "z")
            {print $OUT "\\begin{centering}\n$s\n\\end{centering}\n";return;}
-        }
-    print $OUT "$s\n";
     }
+    print $OUT "$s\n";
+}
 
 #** @function
 # Determines the name of the numeric font size.
@@ -825,18 +837,18 @@ sub get_fontsize
 #-----------------------------------------------------
 sub add_bold #...Zeile hervorheben
 #----------------------------------------------------
-    {
+{
     my $s=shift;
     return('\textbf{'.$s."\n".'}');
-    }
+}
 #-----------------------------------------------------
 sub add_italic #...Zeile in Kursiv
 #----------------------------------------------------
-    {
+{
     my $s=shift;
     my $x=get_fontsize($SGO);
     return('\textit{'.$x.' '.$s."\n".'}');
-    }
+}
     
 #** @function
 # Author of article. Implement command >i#.
