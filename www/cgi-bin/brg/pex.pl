@@ -10,11 +10,14 @@
 # under the same terms as Perl itself, i.e., under the terms of the 
 # ``Artistic License'' or the ``GNU General Public License''.
 #
-# Aufruf  perl pex.pl <NAME> <Bericht>
-# Ergebnis : generiert aus TeX-Meta-DatenBank-Datei: NAME.csv
+# Aufruf  perl pex.pl <NAME> <Bericht> [Options]
+# Ergebnis : generiert aus Datenbank-Datei: NAME.csv
 #            eine LaTeX-Datei (Bericht.tex)
+# [Options] optional komma seperated list of arguments to customize the generation
+# List of supported Options:
+# - userelativepaths
 #
-# Hinweis: die TeX-Meta-DatenBank-Datei: NAME.CSV  kann via Internet gepflegt/Erweitert werden (DDMS->berg/bgcrud.pl)
+# Hinweis: die Datenbank-Datei: NAME.CSV kann via Internet gepflegt/Erweitert werden (berg.pl/bgcrud.pl)
 #
 # FORMAT NAME.PEX (Datenbank)
 #    FeldNr-> Feldertrenner=TAB(\t=\09x) -> Felder 1-3 bilden eine ORDNUNGSHIERACHIE!
@@ -42,7 +45,7 @@ use Cwd qw(abs_path);
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.10/06.08.2013';
+$VERSION = 'v2.10/07.08.2013';
 # exports are used for testing purposes
 @EXPORT_OK = qw(add_author add_bold add_caption add_italic
                 get_tex_content
@@ -96,6 +99,7 @@ INIT {
     # TODO: remove path and use TEXINPUTS or use relative path
     $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";
     $Logopfad="/home/aachen/cgi-bin/brg/br/icons";
+
     $SCALE=1.57;
     $SGO=4;
     $SGOF=1;
@@ -114,9 +118,12 @@ sub run
     my $inp = "";# Filename for the input
     my $OUPTEX = "";# Filename for the output
     
+    # determine the input file
     $inp = $ARGV[0];
     if (!$inp) { $inp="feginfo.csv"; }
     $inp = abs_path($inp);
+
+    # determine the output file
     if ($ARGV[1])
     {   
         if ($ARGV[1] =~ /.tex$/) { $OUPTEX = $ARGV[1]; }
@@ -127,11 +134,21 @@ sub run
         $OUPTEX=$inp;
         $OUPTEX=~s/.csv/.tex/;
     }
-    $OUPTEX = abs_path($OUPTEX);
+    $OUPTEX = abs_path($OUPTEX);   
     die "Fehler: Input- ($inp) und Outputdatei ($OUPTEX) dürfen nicht gleich sein!" if ($OUPTEX eq $inp);      
-    #my $OUT=IO::File->new(">$OUPTEX");
-    open($OUT, ">:encoding(utf8)", $OUPTEX) or die "Die Ausgabedatei $OUPTEX kann nicht geöffnet werden.";
 
+    # evaluate the optional list of options
+    if ($ARGV[2])
+    {
+        my $options = ','.lc($ARGV[2]).',';
+        if ($options =~ /,userelativepaths,/)
+        {
+            $Bpfad="br/bilder";
+            $Logopfad="br/icons";
+        }
+    }
+
+    open($OUT, ">:encoding(utf8)", $OUPTEX) or die "Die Ausgabedatei $OUPTEX kann nicht geöffnet werden.";
     print_version($inp, $OUPTEX);
     my %idx = load_database($inp);
     create_tex_file($OUPTEX, \%idx);
@@ -214,9 +231,9 @@ sub get_tex_content
 sub create_tex_file
 {
     my $OUPTEX = shift();
-    my %idx = %{shift()}; 	
-  	if(!defined $OUT) { die "Fehler: Die Ausgabedatei '$OUPTEX' wurde nicht geöffnet (create_tex_file)."; }
-  	
+    my %idx = %{shift()};
+    if(!defined $OUT) { die "Fehler: Die Ausgabedatei '$OUPTEX' wurde nicht geöffnet (create_tex_file)."; }
+
     my ($k,$kap,$tnr,$titel,$typ,$text);
     my $LIM="\x09";
     my $KAPM = $LIM;# initialize with an invalid value # "Kapitel";#Kapitelspeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
@@ -444,7 +461,6 @@ sub print_image_jpg  #...Einfuegen JPG-Bildatei
     print $OUT "\\parbox[c]{\\linewidth}{\\center\n";
     print $OUT "\\includegraphics[".$b."]{"."$Bpfad/$dn.jpg}\n";
     if (defined $photographer) { print $OUT "\\index{$photographer}\%\n"; }
-    #original: if ($kom){print $OUT "\\centerline{\\emph{".$kom."}}\\\\"."[3ex]\n";}
     if ($kom){print $OUT "\\\\ \\textit{".$kom."}"."\n";}
     print $OUT "\\vspace{1.5ex plus 1ex minus 1ex}"."\n";
     print $OUT "}\n";
@@ -588,7 +604,7 @@ sub evaluate_commands
 
     if($f[0] =~/DATEN/i)
     {
-		my $Monat=undef;#Erscheinungsmonat
+        my $Monat=undef;#Erscheinungsmonat
         ($nix,$Monat,$ISSUEYEAR,$AUFLAGE,$Rende)=split(/#/,$s);#globale Daten
         initialize_issue_information($Monat,$ISSUEYEAR);
         return;
@@ -625,7 +641,7 @@ sub evaluate_commands
 sub initialize_issue_information
 {
     my $Monat=shift;
-    my $Jahr=shift;    	
+    my $Jahr=shift;
     my @m=qw(null Januar Februar März April Mai Juni Juli August September Oktober November Dezember Januar);
     my $memo;
     my $nj=$Jahr+1;

@@ -150,17 +150,20 @@ BOOST_AUTO_TEST_CASE(test_calling_pex_some_articles)
     const fs::path texFileExpected   = fs::path(bt::GetExpectedDir() / "callingpexsomearticles.tex");
 
     // perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
-    //cout << exePerl.c_str() << " " << pexScript.c_str() << " " << inputDatabaseFile.c_str() << " " << texFile.c_str() << endl;
+    cout << "pwd: " << fs::current_path() << endl;
+    cout << "bt::GetCgiBinDir(): " << bt::GetCgiBinDir() << endl;
+    cout << exePerl.c_str() << " " << pexScript.c_str() << " " << inputDatabaseFile.c_str() << " " << texFile.c_str() << endl;
 #if defined(WIN32)
     bio::file_descriptor_sink pe_log(perlScriptOutput);
 #else
     bio::file_descriptor_sink pe_log(perlScriptOutput.c_str());
 #endif
     bp::monitor c11 = bp::make_child(
-                bp::paths(exePerl.c_str(), bt::GetOutputDir())
+                bp::paths(exePerl.c_str(), bt::GetCgiBinDir())
                 , bp::arg(pexScript.c_str())
                 , bp::arg(inputDatabaseFile.c_str())
                 , bp::arg(texFile.c_str())
+                , bp::arg("userelativepaths")
                 , bp::std_out_to(pe_log)
                 , bp::std_err_to(pe_log)
                 );
