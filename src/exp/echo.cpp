@@ -107,8 +107,8 @@ int main()
         if (!part.filename.empty()) resp << "Saved uploaded file to: " << part.path << "<br />";
     }
     resp << "<input type=submit value=submit />"
-         "<br />";
-    "</form><p />";
+            "<br />"
+            "</form><p />";
 
     format_map(resp, req, req.env, "Environment Variables");
     //format_map(resp, req, req.get, "GET Variables");
