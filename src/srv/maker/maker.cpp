@@ -219,7 +219,7 @@ int HandleRequest(boost::cgi::request& req)
                     , bp::arg("-file-line-error")
                     , bp::arg(outputdir)
                     , bp::arg(texFilenameOnly)                   
-                    , bp::environment("TEXINPUTS", "../br//:/usr/share/texmf-texlive/tex/latex//:/usr/share/texlive/texmf-dist/tex/latex//:/usr/share/texmf-texlive/tex/generic//:/usr/share/texlive/texmf-dist/tex/generic//:/etc/texmf/tex//")
+                    , bp::environment("TEXINPUTS", ".//:../br//:/usr/share/texmf-texlive/tex/latex//:/usr/share/texlive/texmf-dist/tex/latex//:/usr/share/texmf-texlive/tex/generic//:/usr/share/texlive/texmf-dist/tex/generic//:/etc/texmf/tex//")
                     , bp::std_out_to(tex_log)
                     , bp::std_err_to(tex_log)
                     );
