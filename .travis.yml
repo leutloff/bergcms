@@ -33,7 +33,7 @@ script: make && pushd test && ./teststorage && popd
 after_success:
 - make package berg_extract
 - ls -l Berg*.zip
-- wput Berg*.zip ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload
-- cd ..
-- wput README.md ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload
-- pushd travis-build/exp && wput echo exptemplate hello_world show_rpath simple_regex ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose; popd
+- wput Berg*.zip ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose
+#- cd ..
+#- wput README.md ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload
+#- pushd travis-build/exp && wput echo exptemplate hello_world show_rpath simple_regex ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose; popd
