@@ -1,5 +1,6 @@
 #!/bin/bash -e
 # Executes the git clone command in the Build VM using ssh.
+
 SOURCEDIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SSH=ssh
 BUILDHOST=remote-hostname
@@ -23,6 +24,10 @@ echo "Build on $BUILDHOST with git command $GITCLONE..."
 $SSH $BUILDHOST "mkdir -p $WORKDIR && cd $WORKDIR && $GITCLONE && ls -l $WORKDIR/berg"
 
 echo "done."
+echo "Check that the boost libraries are installed for development."
+echo "Use boost version 1.49 if unsure."
+echo "Steps to build boost version 1.49 packed for Debian Wheezy on a"
+echo "Debian Squeeze system is described in this script."
 
 exit 0;
 
@@ -39,14 +44,5 @@ $ dpkg-buildpackage -rfakeroot -b
 $ cd ..
 # dpkg -i libboost1.49-dev_1.49.0-3.2_amd64.deb libboost-system1.49.0_1.49.0-3.2_amd64.deb libboost-system1.49-dev_1.49.0-3.2_amd64.deb libboost-chrono1.49.0_1.49.0-3.2_amd64.deb libboost-chrono1.49-dev_1.49.0-3.2_amd64.deb libboost-date-time1.49.0_1.49.0-3.2_amd64.deb libboost-date-time1.49-dev_1.49.0-3.2_amd64.deb libboost-filesystem1.49.0_1.49.0-3.2_amd64.deb libboost-filesystem1.49-dev_1.49.0-3.2_amd64.deb libboost-iostreams1.49.0_1.49.0-3.2_amd64.deb libboost-iostreams1.49-dev_1.49.0-3.2_amd64.deb libboost-program-options1.49.0_1.49.0-3.2_amd64.deb libboost-program-options1.49-dev_1.49.0-3.2_amd64.deb libboost-regex1.49.0_1.49.0-3.2_amd64.deb libboost-regex1.49-dev_1.49.0-3.2_amd64.deb libboost-serialization1.49.0_1.49.0-3.2_amd64.deb libboost-serialization1.49-dev_1.49.0-3.2_amd64.deb libboost-test1.49.0_1.49.0-3.2_amd64.deb libboost-test1.49-dev_1.49.0-3.2_amd64.deb
 
-
-
-
-
-
-
-libboost-locale1.49.0_1.49.0-3.2_amd64.deb
-libboost-locale1.49-dev_1.49.0-3.2_amd64.deb
-
-libboost-thread1.49.0_1.49.0-3.2_amd64.deb
-libboost-thread1.49-dev_1.49.0-3.2_amd64.deb
+libboost-locale1.49.0_1.49.0-3.2_amd64.deb libboost-locale1.49-dev_1.49.0-3.2_amd64.deb
+libboost-thread1.49.0_1.49.0-3.2_amd64.deb libboost-thread1.49-dev_1.49.0-3.2_amd64.deb
