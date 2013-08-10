@@ -46,6 +46,11 @@ namespace berg
             {
                 return fs::canonical(input);
             }
+            input = "../berg/src/test/input/";
+            if (fs::exists(input))
+            {
+                return fs::canonical(input);
+            }
             return fs::path("");
         }
 
@@ -66,6 +71,11 @@ namespace berg
             {
                 return fs::canonical(input);
             }
+            input = "../berg/src/test/input/archive/";
+            if (fs::exists(input))
+            {
+                return fs::canonical(input);
+            }
             return fs::path("");
         }
 
@@ -82,6 +92,11 @@ namespace berg
                 return fs::canonical(input);
             }
             input = "../src/test/output/";
+            if (fs::exists(input))
+            {
+                return fs::canonical(input);
+            }
+            input = "../berg/src/test/output/";
             if (fs::exists(input))
             {
                 return fs::canonical(input);
@@ -107,6 +122,11 @@ namespace berg
             {
                 return fs::canonical(input);
             }
+            input = "../berg/src/test/";
+            if (fs::exists(input))
+            {
+                return fs::canonical(input);
+            }
             return fs::path("");
         }
 
@@ -127,6 +147,11 @@ namespace berg
             {
                 return fs::canonical(input);
             }
+            input = "../berg/src/test/expected/";
+            if (fs::exists(input))
+            {
+                return fs::canonical(input);
+            }
             return fs::path("");
         }
 
@@ -143,6 +168,11 @@ namespace berg
                 return fs::canonical(input);
             }
             input = "../www/cgi-bin/brg/";
+            if (fs::exists(input))
+            {
+                return fs::canonical(input);
+            }
+            input = "../berg/www/cgi-bin/brg/";
             if (fs::exists(input))
             {
                 return fs::canonical(input);
