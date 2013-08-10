@@ -1,6 +1,6 @@
 # Main CMake file
 #
-# Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -16,7 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Debian Lenny only provides 2.6
-cmake_minimum_required (VERSION 2.6)
+#cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 2.8)
 
 message("***   Entering the main CMakeLists.txt file  ***")
 
@@ -55,6 +56,8 @@ endif()
 set(CMAKE_CXX_FLAGS_DISTRIBUTION "-O3")
 set(CMAKE_C_FLAGS_DISTRIBUTION "-O3")
 
+# add standard boost library
+include("${PROJECT_SOURCE_DIR}/boost_config.cmake")
 
 # add all the subdirectories
 add_subdirectory(lib)# the libraries shared between all the projects
@@ -69,3 +72,5 @@ include("${PROJECT_SOURCE_DIR}/install_package.cmake")
 message("Name of BUILDHOST is ${BUILDHOST}.")
 message("Using ICU version ${BERG_ICU_VERSION}.")
 message("Using the BOOST_LIBRARYDIR with the value of ${BOOST_LIBRARYDIR}.")
+message("Using the Boost_LIBRARY_DIRS with the value of ${Boost_LIBRARY_DIRS}.")
+message("Using the Boost_INCLUDE_DIRS with the value of ${Boost_INCLUDE_DIRS}.")

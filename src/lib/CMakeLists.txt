@@ -1,6 +1,6 @@
 # Storage Library
 #
-# Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -25,7 +25,7 @@ if(MSVC)
     add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
 endif()
 
-find_package(Boost ${BERG_BOOST_VERSION})
+#find_package(Boost ${BERG_BOOST_VERSION})
 
 include_directories(
     ${CX_INC_DIR}
@@ -43,6 +43,6 @@ else()
 endif()
 target_link_libraries(berg_storage ${CMAKE_REQUIRED_LIBRARIES})
 
-set(CMAKE_REQUIRED_LIBRARIES "berg_storage;${CMAKE_REQUIRED_LIBRARIES}")
+#set(CMAKE_REQUIRED_LIBRARIES "berg_storage;${CMAKE_REQUIRED_LIBRARIES}")
 
 install(TARGETS berg_storage DESTINATION "${BERG_INSTALL_CGIBIN}/lib")

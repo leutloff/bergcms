@@ -2,7 +2,7 @@
 # This file holds all the shared configurations.
 # It will load all other configurations.
 #
-# Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -33,7 +33,7 @@ endif()
 #message("BUILDHOST is ${BUILDHOST}")
 
 # add standard boost library
-include("${PROJECT_SOURCE_DIR}/boost_config.cmake")
+#include("${PROJECT_SOURCE_DIR}/boost_config.cmake")
 
 # has not worked in the first try:
 #include("${PROJECT_SOURCE_DIR}/crosscompile_config.cmake")

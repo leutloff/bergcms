@@ -1,6 +1,6 @@
 # Build the tool to extract the articles from the CSV file.
 #
-# Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -25,7 +25,7 @@ if(MSVC)
     add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
 endif()
 
-find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS date_time filesystem regex program_options thread system REQUIRED)
+#find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS date_time filesystem regex program_options thread system REQUIRED)
 
 include_directories(
     ${CX_INC_DIR}

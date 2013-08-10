@@ -52,9 +52,10 @@ else()
     else()
         # do not add a library below 1.48 because it will not work either.
         message("Specific version of the Boost Filesystem Library not found. Please add it to the list above in boost_config.cmake.")
-        return()
+        set(BERG_BOOST_VERSION 1.49.0)
+        #return()
     endif()
-    set(BOOST_INCLUDEDIR "/usr/include")
+    #set(BOOST_INCLUDEDIR "/usr/include")
     set(BOOST_LIBRARYDIR "/usr/lib")
 endif()
 if(MSVC) 
@@ -79,9 +80,9 @@ if(MSVC)
     set(BOOST_ALL_DYN_LINK "${BOOST_ALL_DYN_LINK}" CACHE BOOL "boost enable dynamic linking")
     if(BOOST_ALL_DYN_LINK)
         add_definitions(-DBOOST_ALL_DYN_LINK) #setup boost auto-linking in msvc
-    else(BOOST_ALL_DYN_LINK)
+    else()
         unset(BOOST_REQUIRED_COMPONENTS) #empty components list for static link
-    endif(BOOST_ALL_DYN_LINK)
+    endif()
 endif(MSVC)
 
 if (WIN32)
@@ -99,4 +100,5 @@ install(PROGRAMS ${BOOST_LIBRARYDIR}/libboost_system.so.${BERG_BOOST_VERSION} DE
 install(PROGRAMS ${BOOST_LIBRARYDIR}/libboost_thread.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
 #install(PROGRAMS ${BOOST_LIBRARYDIR}/libboost_unit_test_framework.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
 
-
+#find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS regex filesystem system REQUIRED)
+find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS chrono date_time filesystem iostreams program_options regex signals system thread unit_test_framework REQUIRED)

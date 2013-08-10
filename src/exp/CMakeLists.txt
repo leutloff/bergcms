@@ -25,7 +25,7 @@ if(MSVC)
     add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
 endif()
 
-find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS regex filesystem system REQUIRED)
+#find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS regex filesystem system REQUIRED)
 
 include_directories(
     ${CX_INC_DIR}
