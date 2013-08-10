@@ -1,6 +1,6 @@
 #!/bin/bash -e
 SOURCEDIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if [ "X$1" eq "X" ]; then 
+if [ "X$1" == "X" ]; then 
     BUILDDIR=$SOURCEDIR/build-mk-$(hostname)
 else
     BUILDDIR=$1
