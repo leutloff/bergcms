@@ -15,11 +15,12 @@ if [ -r CMakeCache.txt ]; then
     rm -f CMakeCache.txt
 fi
 
-#cmake -DCMAKE_VERBOSE_MAKEFILE=FALSE -DCMAKE_BUILD_TYPE=Distribution -DBoost_DEBUG=FALSE $SOURCEDIR/src
-cmake -DCMAKE_VERBOSE_MAKEFILE=TRUE -DCMAKE_BUILD_TYPE=Distribution -DBoost_DEBUG=FALSE $SOURCEDIR/src
+cmake -DCMAKE_VERBOSE_MAKEFILE=FALSE -DCMAKE_BUILD_TYPE=Distribution -DBoost_DEBUG=FALSE $SOURCEDIR/src
+#cmake -DCMAKE_VERBOSE_MAKEFILE=TRUE -DCMAKE_BUILD_TYPE=Distribution -DBoost_DEBUG=FALSE $SOURCEDIR/src
 make
 pushd test && ./bergunittests && popd
-make package berg_extract
+#make package berg_extract
+make package
 
 popd
 

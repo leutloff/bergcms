@@ -43,3 +43,9 @@ $ cd boost1.49-1.49.0/
 $ dpkg-buildpackage -rfakeroot -b
 $ cd ..
 # dpkg -i libboost1.49-dev_1.49.0-3.2_amd64.deb libboost-system1.49.0_1.49.0-3.2_amd64.deb libboost-system1.49-dev_1.49.0-3.2_amd64.deb libboost-chrono1.49.0_1.49.0-3.2_amd64.deb libboost-chrono1.49-dev_1.49.0-3.2_amd64.deb libboost-date-time1.49.0_1.49.0-3.2_amd64.deb libboost-date-time1.49-dev_1.49.0-3.2_amd64.deb libboost-filesystem1.49.0_1.49.0-3.2_amd64.deb libboost-filesystem1.49-dev_1.49.0-3.2_amd64.deb libboost-iostreams1.49.0_1.49.0-3.2_amd64.deb libboost-iostreams1.49-dev_1.49.0-3.2_amd64.deb libboost-program-options1.49.0_1.49.0-3.2_amd64.deb libboost-program-options1.49-dev_1.49.0-3.2_amd64.deb libboost-regex1.49.0_1.49.0-3.2_amd64.deb libboost-regex1.49-dev_1.49.0-3.2_amd64.deb libboost-serialization1.49.0_1.49.0-3.2_amd64.deb libboost-serialization1.49-dev_1.49.0-3.2_amd64.deb libboost-signals1.49.0_1.49.0-3.2_amd64.deb libboost-signals1.49-dev_1.49.0-3.2_amd64.deb libboost-test1.49.0_1.49.0-3.2_amd64.deb libboost-test1.49-dev_1.49.0-3.2_amd64.deb libboost-locale1.49.0_1.49.0-3.2_amd64.deb libboost-locale1.49-dev_1.49.0-3.2_amd64.deb libboost-thread1.49.0_1.49.0-3.2_amd64.deb libboost-thread1.49-dev_1.49.0-3.2_amd64.deb 
+
+
+
+Updating CMake from backports, too (not required):
+# echo "deb http://backports.debian.org/debian-backports/ squeeze-backports main" >> /etc/apt/sources.list
+# apt-get -t squeeze-backports install cmake

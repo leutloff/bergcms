@@ -33,13 +33,14 @@ before_script:
 - cd travis-build
 - date +%H:%M:%S.%N
 - cmake --version
-#- cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=FALSE ../src
-- cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=TRUE ../src
+- cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=FALSE ../src
+#- cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=TRUE ../src
 - date +%H:%M:%S.%N
 script: make && pushd test && ./bergunittests && popd
 after_success:
 - date +%H:%M:%S.%N
-- make package berg_extract
+#- make package berg_extract
+- make package
 - ls -l Berg*.zip
 - date +%H:%M:%S.%N
 - wput Berg*.zip ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose
