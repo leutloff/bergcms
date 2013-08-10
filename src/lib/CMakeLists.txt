@@ -41,7 +41,7 @@ if (MSVC)
 else()
     add_library(berg_storage STATIC ${BERG_STORAGE_LIB_SRC})
 endif()
-target_link_libraries(berg_storage ${CMAKE_REQUIRED_LIBRARIES})
+#target_link_libraries(berg_storage ${CMAKE_REQUIRED_LIBRARIES})
 
 #set(CMAKE_REQUIRED_LIBRARIES "berg_storage;${CMAKE_REQUIRED_LIBRARIES}")
 

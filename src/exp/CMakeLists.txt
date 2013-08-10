@@ -1,6 +1,6 @@
 # Single file experiments.
 #
-# Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -62,21 +62,21 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 endif()
 
 add_executable (simple_regex simple_regex.cpp)
-target_link_libraries(simple_regex ${Boost_LIBRARIES} ${CMAKE_REQUIRED_LIBRARIES} ${SYSTEM_SPECIFIC_LIBRARIES})
+target_link_libraries(simple_regex ${Boost_LIBRARIES} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
 if(${BERG_LINK_FLAGS})
     set_target_properties(simple_regex PROPERTIES LINK_FLAGS ${BERG_LINK_FLAGS})
 endif()
 install(TARGETS simple_regex DESTINATION "${BERG_INSTALL_CGIBIN}")
 
 add_executable (echo echo.cpp)
-target_link_libraries(echo ${Boost_LIBRARIES} ${CMAKE_REQUIRED_LIBRARIES} ${SYSTEM_SPECIFIC_LIBRARIES})
+target_link_libraries(echo ${Boost_LIBRARIES} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
 if(${BERG_LINK_FLAGS})
     set_target_properties(echo PROPERTIES LINK_FLAGS ${BERG_LINK_FLAGS})
 endif()
 install(TARGETS echo DESTINATION "${BERG_INSTALL_CGIBIN}")
 
 add_executable (exptemplate exptemplate.cpp)
-target_link_libraries(exptemplate ${Boost_LIBRARIES} ${CMAKE_REQUIRED_LIBRARIES} ${CTEMPLATE_LIBRARY} ${SYSTEM_SPECIFIC_LIBRARIES})
+target_link_libraries(exptemplate ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
 if(${BERG_LINK_FLAGS})
     set_target_properties(exptemplate PROPERTIES LINK_FLAGS ${BERG_LINK_FLAGS})
 endif()

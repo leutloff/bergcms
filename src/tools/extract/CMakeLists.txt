@@ -57,9 +57,9 @@ add_executable (berg_extract ${EXTRACT_SRC})
 
 if (MSVC) 
     # MSVC does "automatically" link to the required libraries
-    target_link_libraries(berg_extract berg_storage ${CTEMPLATE_LIBRARY} ${CMAKE_REQUIRED_LIBRARIES})
+    target_link_libraries(berg_extract berg_storage ${CTEMPLATE_LIBRARY})
 else()
-    target_link_libraries(berg_extract berg_storage ${Boost_LIBRARIES} ${CMAKE_REQUIRED_LIBRARIES} ${CTEMPLATE_LIBRARY} ${SYSTEM_SPECIFIC_LIBRARIES})
+    target_link_libraries(berg_extract berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
 endif()
 
 add_dependencies(berg_extract berg_storage)

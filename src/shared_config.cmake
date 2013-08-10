@@ -143,7 +143,9 @@ endif()
 
 # enable gcc specific stuff
 if(CMAKE_COMPILER_IS_GNUCXX)
-    set(SYSTEM_SPECIFIC_LIBRARIES pthread rt)
+    # pthread is added automatically to boost_thread
+    # rt is required for Debian Squeeze, other systems are okay, too
+    set(BERG_SYSTEM_SPECIFIC_LIBRARIES rt)
 #    set_source_files_properties(${BERG_STORAGE_LIB_SRC} PROPERTIES COMPILE_FLAGS "-g")
 #    set(BERG_LINK_FLAGS "-Wl,-rpath=lib -Wl,-rpath=../brg/lib")
 endif()

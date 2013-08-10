@@ -101,4 +101,4 @@ install(PROGRAMS ${BOOST_LIBRARYDIR}/libboost_thread.so.${BERG_BOOST_VERSION} DE
 #install(PROGRAMS ${BOOST_LIBRARYDIR}/libboost_unit_test_framework.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
 
 #find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS regex filesystem system REQUIRED)
-find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS chrono date_time filesystem iostreams program_options regex signals system thread unit_test_framework REQUIRED)
+find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS chrono date_time filesystem iostreams program_options regex signals thread unit_test_framework system REQUIRED)

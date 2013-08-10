@@ -1,6 +1,6 @@
 # Testing the library using unit tests.
 #
-# Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -59,7 +59,7 @@ set(UNITTEST_SRC TestArticle.cpp TestStorage.cpp TestHelper.cpp
                  TestTexGenerationUsingPex.cpp)
 
 add_executable(bergunittests ${UNITTEST_SRC})
-target_link_libraries(bergunittests berg_storage ${Boost_LIBRARIES} ${CMAKE_REQUIRED_LIBRARIES} ${CTEMPLATE_LIBRARY} ${SYSTEM_SPECIFIC_LIBRARIES})
+target_link_libraries(bergunittests berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
 add_dependencies(bergunittests berg_storage)
 if(${BERG_LINK_FLAGS})
     set_target_properties(bergunittests PROPERTIES LINK_FLAGS ${BERG_LINK_FLAGS})

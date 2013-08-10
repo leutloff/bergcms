@@ -56,7 +56,7 @@ set(MAKER_SRC maker.cpp)
 
 add_executable(maker ${MAKER_SRC}) 
 
-target_link_libraries(maker berg_storage ${Boost_LIBRARIES} ${CMAKE_REQUIRED_LIBRARIES} ${CTEMPLATE_LIBRARY} ${SYSTEM_SPECIFIC_LIBRARIES})
+target_link_libraries(maker berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
 
 add_dependencies(maker berg_storage)
 
