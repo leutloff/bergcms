@@ -18,3 +18,5 @@ Upload.txt
 /archive_originals
 *.zip
 qtcreator-build
+remotehosts.cfg
+install_locally.cfg
