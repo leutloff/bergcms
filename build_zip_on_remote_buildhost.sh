@@ -27,7 +27,7 @@ echo "Build on $BUILDHOST in directoriues for src $BERGDIR and for results $BUIL
 #ssh debian-squeeze /home/leutloff/work/berg/make_zip.sh
 $SSH $BUILDHOST "cd $BERGDIR && git pull && git submodule update --init --recursive && pushd src/external/ctemplate && ./configure --prefix $BERGDIR/src/external/ctemplate && make && make install && popd && ./make_zip.sh $BUILDDIRONBUILDHOST"
 mkdir -p archive
-$SCP $BUILDHOST:$BERGDIR:$BUILDDIRONBUILDHOST archive/
+$SCP $BUILDHOST:$BUILDDIRONBUILDHOST/Berg*.zip archive/
 
 ls -t archive/Berg-*.zip
 
