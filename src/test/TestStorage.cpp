@@ -44,11 +44,8 @@
 #pragma warning(disable: 6326)
 #endif // defined(_MSC_VER)
 #define BOOST_TEST_DYN_LINK
-// the following definition must be defined once per test project
-#define BOOST_TEST_MAIN
 // include Boost.Test
 #include <boost/test/unit_test.hpp>
-using boost::unit_test::test_suite;
 
 #include <boost/filesystem.hpp>
 
@@ -66,7 +63,8 @@ static const string sample = "some_articles.csv";
 static const size_t ARCHIVE_FILES = 5;
 
 
-// test suite berg.storage
+// test suite storage
+BOOST_AUTO_TEST_SUITE(storage)
 
 BOOST_AUTO_TEST_CASE(test_initial_storage)
 {
@@ -526,7 +524,8 @@ BOOST_AUTO_TEST_CASE(test_single_article_fill_template_dictionary)
     }
 }
 
-
+BOOST_AUTO_TEST_SUITE_END()
 
 // "link" to implementation of the test utils, e.g. TemplateDictionaryPeer::GetSectionValue
 #include <tests/template_test_util.cc>
+

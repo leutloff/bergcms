@@ -30,6 +30,7 @@
 using namespace std;
 using namespace berg;
 
+BOOST_AUTO_TEST_SUITE(article)
 
 BOOST_AUTO_TEST_CASE(test_count_lines)
 {
@@ -138,3 +139,4 @@ BOOST_AUTO_TEST_CASE(test_count_lines)
     }
 }
 
+BOOST_AUTO_TEST_SUITE_END()

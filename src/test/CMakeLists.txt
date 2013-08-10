@@ -55,7 +55,8 @@ else()
         )
 endif()
 
-set(UNITTEST_SRC TestArticle.cpp TestStorage.cpp TestHelper.cpp
+set(UNITTEST_SRC TestMain.cpp
+                 TestArticle.cpp TestStorage.cpp TestHelper.cpp
                  TestTexGenerationUsingPex.cpp)
 
 add_executable(bergunittests ${UNITTEST_SRC})

@@ -27,6 +27,7 @@
 #include <boost/iostreams/tee.hpp>
 #include <boost/iostreams/stream.hpp>
 #include <boost/process/process.hpp>
+
 #include <boost/test/unit_test.hpp>
 
 using namespace std;
@@ -37,6 +38,8 @@ namespace bp = boost::process;
 namespace bt = berg::testonly;
 
 const fs::path exePerl           = fs::path("/usr/bin/perl");
+
+BOOST_AUTO_TEST_SUITE(pex)
 
 /**
  * @brief VerifyGeneratedFileContent loads the two given files and compares them.
@@ -54,7 +57,6 @@ void VerifyGeneratedFileContent(boost::filesystem::path const& expectedFile, boo
     BOOST_CHECK_EQUAL(expected.size(), actual.size());
     BOOST_CHECK_EQUAL_COLLECTIONS(expected.begin(), expected.end(), actual.begin(), actual.end());
 }
-
 
 BOOST_AUTO_TEST_CASE(test_calling_perl_version)
 {
@@ -150,9 +152,9 @@ BOOST_AUTO_TEST_CASE(test_calling_pex_some_articles)
     const fs::path texFileExpected   = fs::path(bt::GetExpectedDir() / "callingpexsomearticles.tex");
 
     // perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
-    cout << "pwd: " << fs::current_path() << endl;
-    cout << "bt::GetCgiBinDir(): " << bt::GetCgiBinDir() << endl;
-    cout << exePerl.c_str() << " " << pexScript.c_str() << " " << inputDatabaseFile.c_str() << " " << texFile.c_str() << endl;
+    //cout << "pwd: " << fs::current_path() << endl;
+    //cout << "bt::GetCgiBinDir(): " << bt::GetCgiBinDir() << endl;
+    //cout << exePerl.c_str() << " " << pexScript.c_str() << " " << inputDatabaseFile.c_str() << " " << texFile.c_str() << endl;
 #if defined(WIN32)
     bio::file_descriptor_sink pe_log(perlScriptOutput);
 #else
@@ -178,4 +180,4 @@ BOOST_AUTO_TEST_CASE(test_calling_pex_some_articles)
     VerifyGeneratedFileContent(texFileExpected, texFile);
 }
 
-
+BOOST_AUTO_TEST_SUITE_END()

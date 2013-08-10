@@ -34,6 +34,8 @@ using namespace std;
 using namespace berg;
 namespace fs = boost::filesystem;
 
+BOOST_AUTO_TEST_SUITE(helper)
+
 BOOST_AUTO_TEST_CASE(test_month_to_issue_number)
 {
     BOOST_REQUIRE(true);
@@ -141,3 +143,5 @@ BOOST_AUTO_TEST_CASE(test_get_issue_from_number)
     Helper::GetIssueFromNumber(issue, "237");
     BOOST_CHECK_EQUAL("November/Dezember 2011", issue);
 }
+
+BOOST_AUTO_TEST_SUITE_END()
