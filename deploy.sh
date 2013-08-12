@@ -23,11 +23,15 @@
 SOURCEDIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 DEPLOYHOST=remote-hostname
-DEPLOYDIR=/cgi-bin/brg
+HTDOCSDEPLOYDIR=/home/aachen/htdocs/brg/
+CGIBINDEPLOYDIR=/home/aachen/cgi-bin/brg/
 
 FTPPUT="ncftpput"
+FTPUSER=
+FTPPASS=
 LOGINCFG=~/.ssh/ftplogin.cred
 FTPLOGFILE=deploy.log
+DEPLOYTO=test
 
 # Override any variables above by placing them into a file named remotehosts.cfg.
 # This is especially useful for the BUILDHOST. Just copy the lines from above to the file
@@ -41,7 +45,15 @@ fi
 
 function print_usage {
     echo "Usage:"
-    echo "       deploy [-u user] [-p password] [-t test|prod] -c component"
+    echo "       deploy [-l ftplogin.cred] [-u user] [-p password] [-t test|prod] -c component"
+    echo ""
+    echo "Known components for deployment:"
+    echo " all     all known components"
+    echo " html    static HTML files"
+    echo " css     CSS files"
+    echo " js      Javasript files - libraries and specific"
+    echo " htdocs  static HTML, CSS and Javasript files"
+    echo " libs    boost and ctemplate libraries" 
     exit 1;
 }
 
@@ -51,9 +63,10 @@ while getopts ":hu:p:t:c:" opt; do
         u)
             FTPUSER=$OPTARG
             ;;
-
         p)
             FTPPASS=$OPTARG
+            ;;
+        l)  LOGINCFG==$OPTARG
             ;;
         t)
             if [ "test" == $OPTARG -o "prod" == $OPTARG ]; then
@@ -64,7 +77,8 @@ while getopts ":hu:p:t:c:" opt; do
             fi
             ;;
         c)
-            if [ "all" == $OPTARG -o "libs" == $OPTARG ]; then
+            if [ "all" == $OPTARG -o "libs" == $OPTARG -o \
+                 "html" == $OPTARG -o "css" == $OPTARG -o "js" == $OPTARG -o "htdocs" == $OPTARG  ]; then
                 COMPONENT=$OPTARG
             else
                 echo "Invalid component name: $OPTARG" >&2
@@ -78,23 +92,100 @@ while getopts ":hu:p:t:c:" opt; do
             echo "Invalid option: -$OPTARG" >&2
             print_usage
             ;;
-  esac
+    esac
 done
 if [ -z $COMPONENT ]; then
     echo "Missing component."
     print_usage
 fi
 
-echo "Deploy $COMPONENT on $DEPLOYHOST in $DEPLOYDIR..."
+if [ X"$DEPLOYTO" == X ]; then
+    DEPLOYTO=test
+fi
 
-exit 0;
+if [ X"$LOGINCFG" == X ]; then
+    if [ "$DEPLOYTO" == prod ]; then
+        LOGINCFG=ftplogin.cred
+    else
+        LOGINCFG=ftplogintest.cred
+    fi
+fi
+ 
+echo "Deploy $COMPONENT to $DEPLOYTO..."
 
-FTPLOG="-d $FTPLOGFILE"
+
+# FTP parameters
+if [ -n "$FTPLOGFILE" ]; then FTPLOG="-d $FTPLOGFILE"; fi
 USETMPFILE="-S .tmp"
+if [ -n "$LOGINCFG" ]; then FTPLOGINPARAM="-f $LOGINCFG"; 
+else
+    if [ -n "$FTPUSER" ]; then 
+        if [ -n "$FTPPASS" ]; then 
+            FTPLOGINPARAM="-u $FTPUSER";
+        else
+            FTPLOGINPARAM="-u $FTPUSER -p $FTPPASS";
+        fi
+    fi
+fi
+
+FTPPUTPARAM="$FTPLOG $FTPLOGINPARAM $USETMPFILE"
+
+
+function deploy_html {
+    echo "deploy_html ..."
+    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR htdocs/brg/*.html
+}
+function deploy_css {
+    echo "deploy_css ..."
+}
+function deploy_js {
+    echo "deploy_js ..."
+}
+
+function deploy_libs {
+    echo "deploy_libs ..."
+    $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR cgi-bin/brg/libs/*
+}
 
 # remove log file
 echo
 if test -w $FTPLOGFILE; then rm $FTPLOGFILE; fi
+            
+case "$COMPONENT" in
+    html)
+        deploy_html
+        ;;
+    css)
+        deploy_css
+        ;;
+    js)
+        deploy_js
+        ;;
+    htdocs)
+        deploy_html
+        deploy_css
+        deploy_js
+        ;;
+    all)
+        deploy_html
+        deploy_css
+        deploy_js
+        ;;
+    libs)
+        deploy_libs
+        ;;
+    *)
+        echo "Invalid component: $COMPONENT" >&2
+        print_usage
+        ;;
+esac
+
+            
+
+
+exit 0;
+
+
 
 # copy executables
 #
