@@ -17,9 +17,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# The server-side directory layout is reflected in the ZIP archive
-set(BERG_INSTALL_CGIBIN "cgi-bin/brg")
-set(BERG_INSTALL_HTDOCS "htdocs/brg")
+include("${PROJECT_SOURCE_DIR}/directory_layout.cmake")
 
 # determine the hostname of this build
 if(WIN32)

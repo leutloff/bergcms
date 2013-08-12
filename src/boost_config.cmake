@@ -89,6 +89,8 @@ if (WIN32)
     add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
 endif()
 
+# Add the boost libs to the install package.
+include("${PROJECT_SOURCE_DIR}/directory_layout.cmake")
 install(PROGRAMS ${BOOST_LIBRARYDIR}/libboost_chrono.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
 install(PROGRAMS ${BOOST_LIBRARYDIR}/libboost_date_time.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
 install(PROGRAMS ${BOOST_LIBRARYDIR}/libboost_filesystem.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")

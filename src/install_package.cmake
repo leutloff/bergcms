@@ -1,8 +1,9 @@
 # install_package.cmake
+#
 # This file holds the information to create a ZIP package.
 # This can the be used to transfer the whole application to the web server.
 #
-# Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -17,6 +18,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+include("${PROJECT_SOURCE_DIR}/directory_layout.cmake")
 include("${PROJECT_SOURCE_DIR}/shared_config.cmake")
 
 # CPack settings
@@ -44,6 +46,10 @@ set(CPACK_GENERATOR "ZIP")
 # TODO add build system (lsb_release -dcs ) and architecture (uname -m) instead of buildhostname
 set(CPACK_PACKAGE_NAME "${PROJECT_NAME}-${BUILDHOST}")
 include(CPack)
+
+# Add the deploy script
+install(PROGRAMS "${PROJECT_SOURCE_DIR}/../deploy.sh"
+        DESTINATION "/"  RENAME "deploy")
 
 # BERG_INSTALL_HTDOCS is htdocs/brg
 

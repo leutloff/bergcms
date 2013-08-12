@@ -17,6 +17,7 @@
 
 message("***   Entering lib/berg_storage   ***")
 
+include("${PROJECT_SOURCE_DIR}/directory_layout.cmake")
 include("${PROJECT_SOURCE_DIR}/shared_config.cmake")
 if(MSVC)
     add_definitions(${BERG_ADD_DEFINITIONS})
@@ -24,8 +25,6 @@ if(MSVC)
     add_definitions("-D_CRT_SECURE_NO_DEPRECATE")
     add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
 endif()
-
-#find_package(Boost ${BERG_BOOST_VERSION})
 
 include_directories(
     ${CX_INC_DIR}
