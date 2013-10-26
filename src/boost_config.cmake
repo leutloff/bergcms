@@ -39,24 +39,32 @@ else()
     # apt-get install libboost-all-dev
     # Ubuntu 12.04 LTS precise (Travis CI) -> provides 1.46 which lacks the chrono lib
     #     therefore boost 1.49 is installed from PPA https://launchpad.net/~ukplc-team
-    # Ubuntu 13.04 raring (my Development system) -> 1.49
-    # Debian wheezy (and jessie and sid 20130720) -> 1.49.0.1 
-    if(EXISTS "/usr/lib/libboost_filesystem.so.1.53.0")
+    # Ubuntu 13.04 raring -> 1.49
+    # Ubunut 13.10 saucy (my Development system) -> 1.53 in different place /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.53.0
+    # Debian wheezy (and jessie and sid 20130720) -> 1.49.0.1
+    if(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.53.0")
         set(BERG_BOOST_VERSION 1.53.0)
+        set(BOOST_LIBRARYDIR "/usr/lib/x86_64-linux-gnu")
+    elseif(EXISTS "/usr/lib/libboost_filesystem.so.1.53.0")
+        set(BERG_BOOST_VERSION 1.53.0)
+        set(BOOST_LIBRARYDIR "/usr/lib")
     elseif(EXISTS "/usr/lib/libboost_filesystem.so.1.50.0")
         set(BERG_BOOST_VERSION 1.50.0)
+        set(BOOST_LIBRARYDIR "/usr/lib")
     elseif(EXISTS "/usr/lib/libboost_filesystem.so.1.49.0")
         set(BERG_BOOST_VERSION 1.49.0)
+        set(BOOST_LIBRARYDIR "/usr/lib")
     elseif(EXISTS "/usr/lib/libboost_filesystem.so.1.48.0")
         set(BERG_BOOST_VERSION 1.48.0)
+        set(BOOST_LIBRARYDIR "/usr/lib")
     else()
         # do not add a library below 1.48 because it will not work either.
         message("Specific version of the Boost Filesystem Library not found. Please add it to the list above in boost_config.cmake.")
         set(BERG_BOOST_VERSION 1.49.0)
+        set(BOOST_LIBRARYDIR "/usr/lib")
         #return()
     endif()
     #set(BOOST_INCLUDEDIR "/usr/include")
-    set(BOOST_LIBRARYDIR "/usr/lib")
 endif()
 if(MSVC) 
     set(Boost_USE_MULTITHREADED     ON)# only multithreaded libs build for MSVC
