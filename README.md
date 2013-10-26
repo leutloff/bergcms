@@ -22,7 +22,7 @@ Building from Source
 - Install the [Boost C++ library](http://boost.org). The easiest way is to 
   install the version provided by the distribution, e.g. for an up-to-date Ubuntu
   only the following command is necessary:
-    sudo apt-get install libboost-all-dev boo
+    sudo apt-get install libboost-all-dev
   For Ubuntu 12.04 LTS use the PPA https://launchpad.net/~ukplc-team and install
   boost with these commands - an up-to-date version is located in .travis.yml:
     sudo add-apt-repository ppa:ukplc-team/testing
