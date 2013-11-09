@@ -29,7 +29,8 @@ CGIBINDEPLOYDIR=/home/aachen/cgi-bin/brg/
 FTPPUT="ncftpput"
 FTPUSER=
 FTPPASS=
-LOGINCFG=~/.ssh/ftplogin.cred
+#LOGINCFG=~/.ssh/ftplogin.cred
+LOGINCFG=
 FTPLOGFILE=deploy.log
 DEPLOYTO=test
 
@@ -43,9 +44,16 @@ else
     echo "$SOURCEDIR/remotehosts.cfg for local adaptations is not available and therefore not used."
 fi
 
+function print_version {
+    echo "Berg Deployment Script, v0.1, 2013-11-09"
+}
+
 function print_usage {
+    print_version   
+    echo ""
     echo "Usage:"
-    echo "       deploy [-l ftplogin.cred] [-u user] [-p password] [-t test|prod] -c component"
+    echo "       $0 [-h][-v]"
+    echo "       $0 [-l ftplogin.cred] [-u user] [-p password] [-t test|prod] -c component"
     echo ""
     echo "Known components for deployment:"
     echo " all     all known components"
@@ -53,12 +61,24 @@ function print_usage {
     echo " css     CSS files"
     echo " js      Javascript files - libraries and specific"
     echo " htdocs  static HTML, CSS and Javascript files"
-    echo " libs    boost and ctemplate libraries" 
+    echo " libs    boost and ctemplate libraries"
+    echo ""
+    echo "Options:"
+    echo "   -h prints this help text and exits"
+    echo "   -v prints the version and exits"
+    echo ""
+    echo "   -l use the login credentials from the file name,"
+    echo "      defaults to ~/.ssh/ftplogin.cred for the production server"
+    echo "      and to ~/.ssh/ftplogintest.cred for the production server"
+    echo "   -u provide the user name used to log into the FTP server"
+    echo "   -p provide the password used to log into the FTP server"
+    echo "   -t deploy to the test server or the production server"
+    echo ""
     exit 1;
 }
 
 
-while getopts ":hu:p:t:c:" opt; do
+while getopts ":c:hu:p:t:v" opt; do
     case $opt in
         u)
             FTPUSER=$OPTARG
@@ -85,8 +105,12 @@ while getopts ":hu:p:t:c:" opt; do
                 print_usage
             fi
             ;;
-        -h)
+        h)
             print_usage
+            ;;
+        v)
+            print_version
+            exit 1;
             ;;
         \?)
             echo "Invalid option: -$OPTARG" >&2
@@ -105,13 +129,13 @@ fi
 
 if [ X"$LOGINCFG" == X ]; then
     if [ "$DEPLOYTO" == prod ]; then
-        LOGINCFG=ftplogin.cred
+        LOGINCFG=~/.ssh/ftplogin.cred
     else
-        LOGINCFG=ftplogintest.cred
+        LOGINCFG=~/.ssh/ftplogintest.cred
     fi
 fi
  
-echo "Deploy $COMPONENT to $DEPLOYTO..."
+echo " *** Deploying component $COMPONENT to $DEPLOYTO..."
 
 
 # FTP parameters
@@ -128,23 +152,42 @@ else
     fi
 fi
 
-FTPPUTPARAM="$FTPLOG $FTPLOGINPARAM $USETMPFILE"
+# -m Attempt to make the remote destination directory before copying.
+FTPPUTPARAM="$FTPLOG $FTPLOGINPARAM $USETMPFILE -m"
 
+HTDOCSBRG=htdocs/brg
+if [ ! -d $HTDOCSBRG ]; then
+    # we are not in the archive but in the source directory!?
+    if [ -d www/htdocs/brg ]; then HTDOCSBRG=www/htdocs/brg; fi
+fi
 
 function deploy_html {
-    echo "deploy_html ..."
-    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR htdocs/brg/*.html
+    echo " * Deploy the static HTML pages and icons ..."
+    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR $HTDOCSBRG/*.html 
+    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/bgico $HTDOCSBRG/bgico/*.png
+    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/bgico/16x16 $HTDOCSBRG/bgico/16x16/*.png
+    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/bgico/22x22 $HTDOCSBRG/bgico/22x22/*.png
+    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/bgico/32x32 $HTDOCSBRG/bgico/32x32/*.png 
 }
 function deploy_css {
-    echo "deploy_css ..."
+    echo " * Deploy the CSS files incl. YAML ..."
+    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/css $HTDOCSBRG/css/*.css
+
+    # Ommitted $HTDOCSBRG/css/yaml/*.css, because there are no files.
+    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/css/yaml/core $HTDOCSBRG/css/yaml/core/*.css
+    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/css/yaml/core/js $HTDOCSBRG/css/yaml/core/js/*.js
+    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/css/yaml/forms $HTDOCSBRG/css/yaml/forms/*.css
+    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/css/yaml/navigation $HTDOCSBRG/css/yaml/navigation/*.css
+    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/css/yaml/print $HTDOCSBRG/css/yaml/print/*.css
+    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/css/yaml/screen $HTDOCSBRG/css/yaml/screen/*.css
 }
 function deploy_js {
-    echo "deploy_js ..."
+    echo " * Deploy the Javascript files ..."
+    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/js $HTDOCSBRG/js/*.js 
 }
-
 function deploy_libs {
-    echo "deploy_libs ..."
-    $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR cgi-bin/brg/libs/*
+    echo " * TODO deploy_libs ..."
+    #$FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR cgi-bin/brg/libs/*
 }
 
 # remove log file
@@ -167,10 +210,10 @@ case "$COMPONENT" in
         deploy_js
         ;;
     all)
-        deploy_html
         deploy_css
         deploy_js
         deploy_libs
+        deploy_html
         ;;
     libs)
         deploy_libs

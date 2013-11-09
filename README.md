@@ -20,18 +20,19 @@ Building from Source
 - Execute the script update_and_build_submodules.sh to initialize, update and
   build the submodules.
 - Install the [Boost C++ library](http://boost.org). The easiest way is to 
-  install the version provided by the distribution, e.g. for an up-to-date Ubuntu
-  only the following command is necessary:
+  install the version provided by the distribution, e.g. for an up-to-date
+  Ubuntu only the following command is necessary:
     sudo apt-get install libboost-all-dev
-  For Ubuntu 12.04 LTS use the PPA https://launchpad.net/~ukplc-team and install
-  boost with these commands - an up-to-date version is located in .travis.yml:
+  For Ubuntu 12.04 LTS use the PPA https://launchpad.net/~ukplc-team and
+  install boost with these commands - an up-to-date version is located in
+  .travis.yml:
     sudo add-apt-repository ppa:ukplc-team/testing
     sudo apt-get update
     sudo apt-get install libboost1.49-dev libboost-chrono1.49-dev libboost-date-time1.49-dev libboost-filesystem1.49-dev libboost-iostreams1.49-dev libboost-locale1.49-dev libboost-program-options1.49-dev libboost-regex1.49-dev libboost-serialization1.49-dev libboost-signals1.49-dev libboost-system1.49-dev libboost-test1.49-dev libboost-thread1.49-dev libboost-timer1.49-dev 
   The last way is to download the Boost C++ Library from 
   [http://www.boost.org/users/download/](http://www.boost.org/users/download/)
-  (start with version 1.49, when unsure). Then extract and build boost library in 
-  src/external.
+  (start with version 1.49, when unsure). Then extract and build boost library 
+  in src/external.
 - Copy your libicu to src/external/libicuNN. If used other than the mentioned
   in shared_config.cmake, add your version, too. Supported out of the box
   are at least libicu48, libicu44 and libicu38.
@@ -43,10 +44,39 @@ Building from Source
 - Run the script make_zip.sh. This will build all applications and put all
   the required files in a single ZIP file.
 - Install the content of the ZIP file on the Web Server. An outline of the
-  Apache configuration is shown in doc/etc_apache2. Use the script install_locally.sh
-  to perform this step together with some tweaks with regard the file permissions.
-  The used install path can be adapted to local differences by overriding
-  shell variables in a file named install_locally.cfg.
+  Apache configuration is shown in doc/etc_apache2. Use the script 
+  install_locally.sh to perform this step together with some tweaks with
+  regard the file permissions. The used install path can be adapted to
+  local differences by overriding shell variables in a file named
+  install_locally.cfg.
+
+
+Installation/Deployment
+=======================
+
+The installation means copying the content of the archive to the web server 
+executing the web applications. This can be done using different ways depending
+on the requirements of the web server. The archive is build during the build 
+process as described above.
+
+Part of the archive content is deployment script. The script deploy.sh copies 
+the surrounding files to a web server using ncftpput. So the version deployed 
+to web server depends on the path where the deploy.sh script is executed.
+
+The servers are configured in a file named remotehosts.cfg. The supported 
+parameters should be copied from the beginning of the deploy.sh script. Here are 
+some examples calling the deploy.sh script. 
+
+Showing the available options and components:
+    ./deploy.sh -h
+
+The script supports the deployment to two different servers. One is called test 
+and the other one is the production server. Deploying the static HTML files to 
+the test server can be done using this command:
+    ./deploy.sh -t test -c html
+
+Copying everything to the production server:
+    ./deploy.sh -t prod -c all
 
 
 Test Suite and Unit Tests
