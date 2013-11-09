@@ -1,10 +1,10 @@
 #!/bin/bash -e
 #
-# Deploy the sourrounding files of an extracted build archive to a testing host
-# and to the production host. It is possible to deploy the whole application or
+# Deploy the surrounding files of an extracted build archive to a testing host
+# or to the production host. It is possible to deploy the whole application or
 # only specific parts.
 #
-# Copyright 20132013 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2013 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -51,8 +51,8 @@ function print_usage {
     echo " all     all known components"
     echo " html    static HTML files"
     echo " css     CSS files"
-    echo " js      Javasript files - libraries and specific"
-    echo " htdocs  static HTML, CSS and Javasript files"
+    echo " js      Javascript files - libraries and specific"
+    echo " htdocs  static HTML, CSS and Javascript files"
     echo " libs    boost and ctemplate libraries" 
     exit 1;
 }
@@ -170,6 +170,7 @@ case "$COMPONENT" in
         deploy_html
         deploy_css
         deploy_js
+        deploy_libs
         ;;
     libs)
         deploy_libs
