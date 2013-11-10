@@ -49,7 +49,7 @@ include(CPack)
 
 # Add the deploy script
 install(PROGRAMS "${PROJECT_SOURCE_DIR}/../deploy.sh"
-        DESTINATION "/"  RENAME "deploy")
+        DESTINATION "/")
 
 # BERG_INSTALL_HTDOCS is htdocs/brg
 
@@ -84,7 +84,13 @@ install(PROGRAMS "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/pex.pl"
                  "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/xsc.pl"
         DESTINATION "${BERG_INSTALL_CGIBIN}")
 install(FILES    "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/xsc.sh"
-        DESTINATION "${BERG_INSTALL_CGIBIN}" RENAME "xsc")
+        DESTINATION "${BERG_INSTALL_CGIBIN}")
+# add perl5 Libraries
+install(FILES    "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/perl5/README.txt"
+        DESTINATION "${BERG_INSTALL_CGIBIN}/perl5")
+install(FILES    "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/perl5/Algorithm/Diff.pm"
+                 "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/perl5/Algorithm/Merge.pm"
+        DESTINATION "${BERG_INSTALL_CGIBIN}/perl5/Algorithm")
 # sample database and LaTeX files
 #install(FILES    "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/feglogo.jpg"
 install(FILES    "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/sectsty.sty"
