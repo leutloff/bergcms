@@ -23,8 +23,8 @@
 SOURCEDIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 DEPLOYHOST=remote-hostname
-HTDOCSDEPLOYDIR=/home/aachen/htdocs/brg/
-CGIBINDEPLOYDIR=/home/aachen/cgi-bin/brg/
+HTDOCSDEPLOYDIR=/home/aachen/htdocs/brg
+CGIBINDEPLOYDIR=/home/aachen/cgi-bin/brg
 
 FTPPUT="ncftpput"
 FTPUSER=
@@ -45,7 +45,7 @@ else
 fi
 
 function print_version {
-    echo "Berg Deployment Script, v0.1, 2013-11-09"
+    echo "Berg Deployment Script, v0.2, 2013-11-10"
 }
 
 function print_usage {
@@ -56,12 +56,24 @@ function print_usage {
     echo "       $0 [-l ftplogin.cred] [-u user] [-p password] [-t test|prod] -c component"
     echo ""
     echo "Known components for deployment:"
-    echo " all     all known components"
-    echo " html    static HTML files"
-    echo " css     CSS files"
-    echo " js      Javascript files - libraries and specific"
-    echo " htdocs  static HTML, CSS and Javascript files"
-    echo " libs    boost and ctemplate libraries"
+    echo " all       all known components except the testcases"
+    echo " html      static HTML files"
+    echo " css       CSS files"
+    echo " js        Javascript files - libraries and specific"
+    echo " htdocs    static HTML, CSS and Javascript files"
+    echo " perllibs  Perl libraries (Diff.pm/Merge.pm) "
+    echo " dynlibs   boost and ctemplate libraries"
+    echo " libs      all the libraries (C/C++ and Perl)"
+    echo " perl      Perl based parts of the web application"
+    echo " templates templates used by the web application"
+    echo " srv       C++ based parts of the web application"
+    echo " servers   the executable parts of the web application"
+    echo " latex     the text processing related files (LaTeX)"
+    echo ""
+    echo " testcases additional files used for test cases only!"
+    echo "           Use on test deployments only, because the initial database"
+    echo "           is deployed and thus removing any existing content."
+    echo "           This component can only be installed the test type."
     echo ""
     echo "Options:"
     echo "   -h prints this help text and exits"
@@ -97,8 +109,10 @@ while getopts ":c:hu:p:t:v" opt; do
             fi
             ;;
         c)
-            if [ "all" == $OPTARG -o "libs" == $OPTARG -o \
-                 "html" == $OPTARG -o "css" == $OPTARG -o "js" == $OPTARG -o "htdocs" == $OPTARG  ]; then
+            if [ "all" == $OPTARG -o "testcases" == $OPTARG -o "latex" == $OPTARG -o \
+                 "html" == $OPTARG -o "css" == $OPTARG -o "js" == $OPTARG -o "htdocs" == $OPTARG -o \
+                 "perllibs" == $OPTARG -o "dynlibs" == $OPTARG -o "libs" == $OPTARG -o \
+                 "perl" == $OPTARG -o "templates" == $OPTARG -o "srv" == $OPTARG -o "servers" == $OPTARG ]; then
                 COMPONENT=$OPTARG
             else
                 echo "Invalid component name: $OPTARG" >&2
@@ -155,22 +169,31 @@ fi
 # -m Attempt to make the remote destination directory before copying.
 FTPPUTPARAM="$FTPLOG $FTPLOGINPARAM $USETMPFILE -m"
 
+# setting the source dirs
 HTDOCSBRG=htdocs/brg
 if [ ! -d $HTDOCSBRG ]; then
     # we are not in the archive but in the source directory!?
     if [ -d www/htdocs/brg ]; then HTDOCSBRG=www/htdocs/brg; fi
 fi
+CGIBINBRG=cgi-bin/brg
+if [ ! -d $CGIBINBRG ]; then
+    # we are not in the archive but in the source directory!?
+    if [ -d www/cgi-bin/brg ]; then CGIBINBRG=www/cgi-bin/brg; fi
+fi
+
 
 function deploy_html {
-    echo " * Deploy the static HTML pages and icons ..."
+    echo " * Deploying the static HTML pages and icons ..."
     $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR $HTDOCSBRG/*.html 
     $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/bgico $HTDOCSBRG/bgico/*.png
     $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/bgico/16x16 $HTDOCSBRG/bgico/16x16/*.png
     $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/bgico/22x22 $HTDOCSBRG/bgico/22x22/*.png
     $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/bgico/32x32 $HTDOCSBRG/bgico/32x32/*.png 
+    # Download Area (Download-Bereich) still outside of the brg directory
+    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/../dlb $HTDOCSBRG/../dlb/README.txt
 }
 function deploy_css {
-    echo " * Deploy the CSS files incl. YAML ..."
+    echo " * Deploying the CSS files incl. YAML ..."
     $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/css $HTDOCSBRG/css/*.css
 
     # Ommitted $HTDOCSBRG/css/yaml/*.css, because there are no files.
@@ -182,19 +205,112 @@ function deploy_css {
     $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/css/yaml/screen $HTDOCSBRG/css/yaml/screen/*.css
 }
 function deploy_js {
-    echo " * Deploy the Javascript files ..."
+    echo " * Deploying the Javascript files ..."
     $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/js $HTDOCSBRG/js/*.js 
 }
-function deploy_libs {
-    echo " * TODO deploy_libs ..."
-    #$FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR cgi-bin/brg/libs/*
+function deploy_perl_libs {
+    echo " * Deploying the Perl library files ..."
+    $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/perl5 $CGIBINBRG/perl5/README.txt
+    $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/perl5/Algorithm $CGIBINBRG/perl5/Algorithm/*.pm
 }
+function deploy_perl {
+    echo " * Deploying the Perl files  ..."
+    # Files with executable bit (chmod 0755 rwxr-xr-x)
+    for srv in berg.pl bgcrud.pl bgul.pl pex.pl xsc.pl; do
+        #echo "$FTPPUT $FTPLOG -f $LOGINCFG $USETMPFILE -X \"chmod 0755 $DEPLOYDIR/$srv\" $DEPLOYDIR $SOURCEDIR/tmp/$BERG_DIR/cgi-bin/brg/$srv"
+        # ncftpput [options] remote-host remote-directory local-files.
+        # ncftpput -f login.cfg [options] remote-directory local-files...
+        $FTPPUT $FTPPUTPARAM -X "chmod 0755 $CGIBINDEPLOYDIR/$srv" $CGIBINDEPLOYDIR $CGIBINBRG/$srv
+    done
+    # Copy the other files (chmod 0644 rw-r--r--)
+    $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR $CGIBINBRG/xsc.sh
+    # Create some directories required for proper operation
+    $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/gi_backup $CGIBINBRG/gi_backup/README.txt
+    $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/log $CGIBINBRG/log/README.txt
+    $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/out $CGIBINBRG/out/README.txt
+    $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/tidx $CGIBINBRG/tidx/README.txt
+}
+function deploy_dyn_libs {
+    echo " * Deploying dynamic libraries (Boost and ctemplate) ..."
+    for libwithpath in `ls lib/libboost_{chrono,date_time,filesystem,iostreams,program_options,regex,signals,system,thread}.so.* lib/libctemplate.so.*`; do
+        lib=${libwithpath##*/}
+        $FTPPUT $FTPPUTPARAM -X "chmod 0755 $CGIBINDEPLOYDIR/lib/$lib" $CGIBINDEPLOYDIR/lib libwithpath
+    done
+}
+function deploy_latex {
+    echo " * Deploying the LaTeX related files ..."
+    $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/br $CGIBINBRG/br/sectsty.sty $CGIBINBRG/br/wrapfig.sty $CGIBINBRG/br/ucs.sty $CGIBINBRG/br/ucsencs.def $CGIBINBRG/br/utf8x.def  
+    $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/br/bilder $CGIBINBRG/br/bilder/berg.jpg
+    $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/br/data $CGIBINBRG/br/data/*.def $CGIBINBRG/br/data/*.dat
+    if [ -f latex/class_berg/generated/berg.cls ]; then
+        $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/br latex/class_berg/generated/berg.cls
+    else
+        $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/br $CGIBINBRG/br/berg.cls
+    fi
+}
+function deploy_templates {
+    echo " * Deploying the templates for C++ based parts of the web application ..."
+    $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/template $CGIBINBRG/template/*.tpl
+    $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/archive_content $CGIBINBRG/archive_content/README.txt
+}
+function deploy_srv {
+    echo " * Deploying the C++ based parts of the web application ..."
+    for srv in berg maker archive; do
+        $FTPPUT $FTPPUTPARAM -X "chmod 0755 $CGIBINDEPLOYDIR/$srv" $CGIBINDEPLOYDIR $CGIBINBRG/$srv
+    done
+}
+function deploy_testcases {
+    if [ "$DEPLOYTO" != test ]; then
+        echo ""
+        echo " * The component testcases is only supported for the type test."
+        echo "   Ignoring this component, because type is '$DEPLOYTO'."
+        echo ""
+    else
+        echo " * Deploying the testcases, initial database, favicon ..."
+        for srv in testcase.pl; do
+            $FTPPUT $FTPPUTPARAM -X "chmod 0755 $CGIBINDEPLOYDIR/$srv" $CGIBINDEPLOYDIR $CGIBINBRG/$srv
+        done
+        # Initial database
+        $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/br $CGIBINBRG/br/feginfo.csv 
+        # favicon
+        if [ -f www/htdocs/favicon.ico ]; then
+            $FTPPUT $FTPPUTPARAM htdocs www/htdocs/favicon.ico
+        else
+            $FTPPUT $FTPPUTPARAM htdocs htdocs/favicon.ico
+        fi
+    fi
+}
+
 
 # remove log file
 echo
 if test -w $FTPLOGFILE; then rm $FTPLOGFILE; fi
             
 case "$COMPONENT" in
+    all)
+        deploy_css
+        deploy_js
+        deploy_perl_libs
+        deploy_perl
+        deploy_dyn_libs
+        deploy_srv
+        deploy_latex
+        deploy_html
+        ;;
+    htdocs)
+        deploy_html
+        deploy_css
+        deploy_js
+        ;;
+    libs)
+        deploy_perl_libs
+        deploy_dyn_libs
+        ;;
+    servers)
+        deploy_templates
+        deploy_perl
+        deploy_srv
+        ;;
     html)
         deploy_html
         ;;
@@ -204,19 +320,26 @@ case "$COMPONENT" in
     js)
         deploy_js
         ;;
-    htdocs)
-        deploy_html
-        deploy_css
-        deploy_js
+    perllibs)
+        deploy_perl_libs
         ;;
-    all)
-        deploy_css
-        deploy_js
-        deploy_libs
-        deploy_html
+    dynlibs)
+        deploy_dyn_libs
         ;;
-    libs)
-        deploy_libs
+    perl)
+        deploy_perl
+        ;;
+    templates)
+        deploy_templates
+        ;;
+    srv)
+        deploy_srv
+        ;;
+    latex)
+        deploy_latex
+        ;;
+    testcases)
+        deploy_testcases
         ;;
     *)
         echo "Invalid component: $COMPONENT" >&2
