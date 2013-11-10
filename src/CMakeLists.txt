@@ -26,7 +26,7 @@ project (Berg CXX)
 # set these for release
 set(APPLICATION_VERSION_MAJOR "3")
 set(APPLICATION_VERSION_MINOR "1")
-set(APPLICATION_VERSION_PATCH "1")
+set(APPLICATION_VERSION_PATCH "2")
 
 # use this command to enable verbose CMAKE processing
 # cmake -D CMAKE_VERBOSE_MAKEFILE=true -D CMAKE_BUILD_TYPE=Debug ../src
