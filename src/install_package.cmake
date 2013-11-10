@@ -65,12 +65,20 @@ install(DIRECTORY "${PROJECT_SOURCE_DIR}/../www/htdocs/brg/bgico" DESTINATION "$
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/template" DESTINATION "${BERG_INSTALL_CGIBIN}"
         DIRECTORY_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
-# add empty archive directory (archive_content)
+# add empty archive directory (archive_content) and other required directories - the README.txt describes the purpose
 install(FILES "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/archive_content/README.txt" DESTINATION "${BERG_INSTALL_CGIBIN}/archive_content")
+install(FILES "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/gi_backup/README.txt" DESTINATION "${BERG_INSTALL_CGIBIN}/gi_backup")
+install(FILES "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/log/README.txt" DESTINATION "${BERG_INSTALL_CGIBIN}/log")
+install(FILES "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/out/README.txt" DESTINATION "${BERG_INSTALL_CGIBIN}/out")
+install(FILES "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/tidx/README.txt" DESTINATION "${BERG_INSTALL_CGIBIN}/tidx")
 
 # HTML favicon
 install(FILES    "${PROJECT_SOURCE_DIR}/../www/htdocs/favicon.ico"
         DESTINATION "${BERG_INSTALL_HTDOCS}")
+
+# Download Area (Download-Bereich) still outside of the brg directory
+install(FILES    "${PROJECT_SOURCE_DIR}/../www/htdocs/dlb/README.txt"
+        DESTINATION "${BERG_INSTALL_HTDOCS}/../dlb")
 
 # add static HTML pages
 install(FILES "${PROJECT_SOURCE_DIR}/../www/htdocs/brg/hilfe.html"
