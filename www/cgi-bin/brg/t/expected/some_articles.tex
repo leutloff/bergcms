@@ -1,42 +1,19 @@
-%**************************************
-%*** Die aktuelle Ausgabe festlegen ***
-%**************************************
+% AI: 3
+\message{[AI:   3] -Ausgabe festlegen}
  
-%****************************************************************
-%*** DIN A4-Zeitungs-Basisvorlage (FeG-Info) - Stand: 10/2011 ***
-%*** Pakete und Grundeinstellungen                            ***
-%****************************************************************
-\documentclass[12pt,a4paper,twoside]{article}% Standard für endgültige Gemeindeinformation
-%\documentclass[12pt,a4paper,draft,twoside]{article}% mit Kennzeichnung von overfull hbox und Bilder als Rechteck
-%\usepackage{pxfonts} %Adobe Palatino - TypeI-Zeichensatz
-%\usepackage{german,calc} %{babel}%deutsche Umgebung mit Integerarithmetik
-\usepackage[ngerman]{babel}%u.a. korr. Trennung ab 2010 (neuer FeG-Server!)
-\usepackage{graphicx}%
-\usepackage{layout}%ermöglicht die Anzeige des SeitenLayouts via \layout*
-\usepackage{ucs}%utf8-zusatz
-\usepackage[utf8x]{inputenc}%utf8 - Zeichensatz.
-%\usepackage[latin1]{inputenc}%Zeichensatz+deutsche Umlaute
-%\usepackage[T1]{fontenc}%erweiterter Schriftzeichensatz
-\usepackage{amsmath}%Mathematik
-\usepackage{amssymb}%Mathematik
-\usepackage{calc}% Für Berechnungen bei LaTeX-Befehlen
-\usepackage{multicol}%Mehrspaltensatz
-%\usepackage{graphpap}
-\usepackage{sectsty}%Abschnittsüberschriften bequem verändern
-%\usepackage{fancyhdr}%Kopf/Fusszeilen-Layout
-\usepackage{array}%Erweiterung Tabellenumgebung
-\usepackage{mdwlist}% Listen mit einer konstanten Einrückung (basedescript)
-\usepackage{pifont}%Symbolfont : \ding{0..255} bzw. \begin dinglist{0..255}Erweiterung Tabellenumgebung
-\usepackage{wrapfig}%Text um Bilder und Tabellen fließen lassen
-\usepackage{makeidx}%Index, um Bildnachweis anzulegen
-\usepackage[right]{eurosym} %Eurosymbol \EUR{50,-} bzw \euro{}
+ 
+% AI: 2
+\message{[AI:   2] -Dokumentenvorlage}
+% subsection ignoriert (wg. -): -Dokumentenvorlage
+ 
+% Finale Version:
+\documentclass{berg}
 %
-\usepackage{tabularx}% ermöglicht mehr Anpassungen bei Tabellen, z.B. die folgende
-\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}% linksbündige Spalten mit Breitenangabe 
-% Navigation innerhalb des PDF (muss das letzte Paket sein): 
-%.aux darf nicht gelöscht werden, um das Paket nutzen zu können
-\usepackage{hyperref}
-\urlstyle{same}% use the same style for URLs, too (not with a mono-spaced font)
+% Ohne Bilder, 
+% aber mit schwarzen Balken, die zu breite Bereiche kennzeichnen, die dann in anderes hineinragen 
+%\documentclass[draft]{berg}
+
+%
 \hypersetup{
     %bookmarks=true,          % show bookmarks bar? - Warning: `bookmarks' has already been used,
     unicode=false,            % non-Latin characters in Acrobat's bookmarks
@@ -44,12 +21,12 @@
     pdfmenubar=true,          % show Acrobat's menu?
     pdffitwindow=false,       % window fit to page when opened
     pdfstartview={FitH},      % fits the width of the page to the window
-    pdftitle={Gemeindeinformation}, % title
-    pdfauthor={FeG Aachen},   % author
+    pdftitle={Berg CMS}, % title
+    pdfauthor={See History of feginfo.csv},   % author
     pdfsubject={Ausgabe 
-Januar/Februar 2012},   % subject of the document
+Mai/Juni 2013},   % subject of the document
     %pdfcreator={Creator},    % creator of the document
-    pdfproducer={FeG Aachen}, % producer of the document
+    %pdfproducer={}, % producer of the document
     %pdfkeywords={keyword1} {key2} {key3}, % list of keywords
     pdfnewwindow=true,        % links in new window
     colorlinks=true,          % false: boxed links; true: colored links
@@ -58,57 +35,107 @@ Januar/Februar 2012},   % subject of the document
     filecolor=black,          % color of file links
     urlcolor=black            % color of external links
 }
-
-
-%*********************
-%\ldots\ Seitengestaltung 
-%*********************
-\setlength{\hoffset}{-15mm}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..Korrektur des Druckbereichs horizontal
-\setlength{\voffset}{-30mm}% \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ .Korrektur des Druckbereichs vertikal
-\setlength{\emergencystretch}{4em}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ .Randausgleich Blocksatz
-\setlength{\textwidth}{190mm}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ TextboxBreite(A4=210)
-\setlength{\textheight}{265mm}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..TextboxHöhe(A4=297)
-\setlength{\parindent}{0mm}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..Absatz-Einrückung 1.Zeile
-\setlength{\parskip}{1.0ex plus 0.8ex minus 0.5ex}%\ldots\ VarioAbsatzAbstände
-\setlength{\columnsep}{7mm}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..SpaltenZwischenraum
-\setlength{\columnseprule}{0.2pt}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..Spaltentrennlinie
-\setlength{\oddsidemargin}{0mm}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ .linker Rand ungerade(rechte) Seiten
-\setlength{\evensidemargin}{0mm}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ linker Rand gerade(linke) Seiten
-\setlength{\footskip}{8mm}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ Abstand: unterer Textbox - Seitenrand
-\setcounter{secnumdepth}{-2}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ .AschnittsNummerierungstiefe - Abschalten
-\setcounter{tocdepth}{2}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..Inhaltsverzeichnistiefe festlegen
-\pagestyle{plain}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ Seitenstil: Seitennummerierung zentral/unten
-\sectionfont{\LARGE\bfseries}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ .Größe der Abschnittsüberschriften 
-\subsectionfont{\Large\bfseries}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ Größe der Unterabschnittsüberschriften 
-\subsubsectionfont{\large\bfseries}%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ Größe der Unterunterabschnittsüberschriften 
-\makeindex%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ .Index, um Bildnachweis anzulegen
-%------------------------------------
+%
 \begin{document}
-%------------------------------------
-%\layout*%\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ Seitenspiegel zu Testzwecken einblenden
+%
+% AI: 13
+\message{[AI:  13] -Titelseite}
+% subsection ignoriert (wg. -): -Titelseite
+%------- Titelseite --------------DIN A4---------------------------
+\newlength{\boxwidth} \setlength{\boxwidth}{\textwidth}
+\addtolength{\boxwidth}{-2\fboxsep}
+\addtolength{\boxwidth}{-2\fboxrule}
+\newlength{\boxheight} \setlength{\boxheight}{0.94\textheight}
+\newlength{\indentheader} \setlength{\indentheader}{2.8mm}%
+\addtolength{\boxwidth}{-\indentheader}%
+\thispagestyle{empty}
+%BigBox-------- Titelseite ohne overfull hbox-------DIN A4-------
+\fbox{\hspace{\indentheader}\parbox[t][\boxheight]{\boxwidth}{%
+{\bfseries 
+%
+\begin{minipage}[b]{70mm}%
+\Huge 
+Example Organization\\[-8mm]
+\end{minipage}%
+%\hfill\includegraphics[scale=0.21]{berg.jpg}%
+\hspace{10mm}\vspace*{2mm}\\
+\Large
+\resizebox{175mm}{4.9mm}{using Berg CMS}
+}%
+\\%\vspace*{0.2ex}\\% Mindestabstand 0.5ex
+%------- Titelbild -----------------------
+\vspace*{5mm}% zusätzlicher Abstand
+
+%>BILD#titel#c#datei#b:170mm#Fotograf
+% oder Höhe: h:195mm
+\parbox[c]{\linewidth}{\center
+\includegraphics[width=100mm]{/home/aachen/cgi-bin/brg/br/bilder/berg.jpg}
+\index{Christian Leutloff}%
+\vspace{1.5ex plus 1ex minus 1ex}
+}
+
+%
+%------- Abschluss der Titelseite -------
+
+\vfill
+\vspace*{0.8ex}% Mindestabstand 0.8ex
+}} %parbox fbox
+
+\normalsize
+
+{\Large Mai/Juni 2013\hfill246
+
+}% Ende der Titelseite
+% AI: 6
+\message{[AI:   6] -Inhaltsverzeichnis}
+% subsection ignoriert (wg. -): -Inhaltsverzeichnis
 %***************************************
-%***PeX-Konfiguration - Stand:03/2011***
+%* Inhaltverzeichnis                   *
 %***************************************
-% 
-% Schalter tsx ist obsolete, da Textanhang nicht mehr unterstützt wird.
-% Bildschalter bsx ist obsolete, da PeX prüft, ob Bild da ist oder nicht. Ansonsten Option draft im Kopf von Dokumentenvorlage verwenden.
-\renewcommand{\rmdefault}{\sfdefault}% serifenlose Standardschriftart definieren
-%\rmfamily %\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..SerifenSchrift(Roman-Typ)
-\sffamily  %\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ Serifenlose Schrift(Arial-Typ) setzen/auswählen
-%\family  %\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ..Maschinen Schrift(Arial-Typ)
-\extrarowheight 3pt
-%>sdt#3pt#\ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ \ldots\ ExtraColSpace Tabellen
-% verschoben nach Ausgabe: >DATEN#07#2011#500#10#
-%***************************************
-%* Inhaltverzeichnis hier einbinden !  *
-%***************************************
-%>sg#2#
 \large
 \begin{multicols}{2}%
 %>zd#1.5#
 \normalbaselines\linespread{1.1}\selectfont
-\def\contentsname{\Large Inhalt\large\dotfill 238/2012}\tableofcontents
+\def\contentsname{\Large Inhalt\large\dotfill 246/2013}\tableofcontents
 \clearpage
-\normalbaselines\linespread{0.88}\selectfont
+\normalbaselines\linespread{1}\selectfont
+ 
+% AI: 11
+\message{[AI:  11] -Gottesdienste}
+% subsection ignoriert (wg. -): -Gottesdienste
+\section{Gottesdienste}
+%Datum  # Predigt  # Liturgie  # Besonderheit       # Musik       # Kollekte
+%14mm  # 15mm       # 17mm          # 26mm              # 16mm         # 18mm
+%14mm  # 14mm       # 16mm          # 26mm              # 20mm         # 16mm
+%15mm  # 14mm       # 17mm          # 23mm              # 16mm         # 19mm
+% war 17
+\begin{tabular}[b]{|L{23.6mm  }|L{ 22.0mm       }|L{ 26.7mm          }|L{ 33.0mm              }|L{ 28.3mm         }|L{ 29.8mm}|} \hline 
+\emph{Datum       }&\emph{ Predigt      }&\emph{ Liturgie     }&\emph{ Besonderheit           }&\emph{ Musik           }&\emph{ Kollekte} \\ \hline \hline
+06.01. 10:15&A. Name&A. Name& & &Purpose \\ \hline
+13.01. 10:15&A. Name &A. Name &Abendmahl&A. Name&Gemeinde \\ \hline
+\end{tabular}
+\newpage
+% AI: 16
+\message{[AI:  16] -GEMEINDELEBEN - Ueberschrift}
+% subsection ignoriert (wg. -): -GEMEINDELEBEN - Ueberschrift
+\section{Gemeindeleben}
+ 
+ 
+% AI: 15
+\message{[AI:  15] Forumsabend: Zu einem bestimmten Thema}
+\subsection{Forumsabend: Zu einem bestimmten Thema}
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+ 
+% AI: 14
+\message{[AI:  14] Arbeitssamstag}
+\subsection{Arbeitssamstag}
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
  
 \end{multicols}%
+\end{document}%

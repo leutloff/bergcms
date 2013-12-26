@@ -25,7 +25,7 @@ OUTPUTFILE=$SOURCEDIR/output/some_articles.tex
 EXPECTEDFILE=$SOURCEDIR/expected/some_articles.tex
 
 $SOURCEDIR/../pex.pl $INPUTFILE $SOUTPUTFILE $OUTPUTFILE
-cat $OUTPUTFILE | grep -v '^\% Program' | diff $EXPECTEDFILE -
+cat $OUTPUTFILE | grep -v '^\% Program' | grep -v '^\% DB' | diff $EXPECTEDFILE -
 
 popd
 

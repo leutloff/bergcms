@@ -9,10 +9,41 @@ use Test::More tests => 17;
 use BERG::PEX qw(get_tex_content);
 
 my $result = '';
-my $begindocument = '% Neues Kapitel: kap'."\n".
+
+
+
+my $begindocument = '% AI: ai1'."\n".
+        '\message{[AI: ai1] title}'."\n".
         '\section{kap}'."\n".
         '\subsection{title}'."\n";
-my $enddocument = '';
+my $enddocument = '\end{document}%'."\n";
+my $beginarticle1 = '% AI: ai1'."\n".
+        '\message{[AI: ai1] title}'."\n".
+        '\subsection{title}'."\n";
+my $beginarticle2 = '% AI: ai2'."\n".
+        '\message{[AI: ai2] title}'."\n".
+        '\subsection{title}'."\n";
+my $beginarticle3 = '% AI: ai3'."\n".
+        '\message{[AI: ai3] title}'."\n".
+        '\subsection{title}'."\n";
+my $beginarticle4 = '% AI: ai4'."\n".
+        '\message{[AI: ai4] title}'."\n".
+        '\subsection{title}'."\n";
+my $beginarticle5 = '% AI: ai5'."\n".
+        '\message{[AI: ai5] title}'."\n".
+        '\subsection{title}'."\n";
+my $beginarticle6 = '% AI: ai6'."\n".
+        '\message{[AI: ai6] title}'."\n".
+        '\subsection{title}'."\n";
+my $beginarticle7 = '% AI: ai7'."\n".
+        '\message{[AI: ai7] title}'."\n".
+        '\subsection{title}'."\n";
+my $beginarticle8 = '% AI: ai8'."\n".
+        '\message{[AI: ai8] title}'."\n".
+        '\subsection{title}'."\n";
+my $beginarticle9 = '% AI: ai9'."\n".
+        '\message{[AI: ai9] title}'."\n".
+        '\subsection{title}'."\n";
 my $startkey = "chapter\x09number\x09title\x09ai";# Key=chapter+number+title+articleindex
 my $startarticle_a  = "kap\x09tnr\x09title\x09A\x09";
 my $startarticle    = $startarticle_a;
@@ -26,6 +57,7 @@ my $startarticle_f2 = "kap\x09tnr\x09title\x09F2\x09";
     #print 'no column set - empty document';
     my %idx = ();
     $result = get_tex_content(\%idx);
+    #print 'result: ', $result;
     ok(''.$enddocument eq $result);
 }
 {
@@ -33,32 +65,33 @@ my $startarticle_f2 = "kap\x09tnr\x09title\x09F2\x09";
     my %idx = ();
     $idx{$startkey.'1'} = $startarticle_a1.'>SPALTEN#1'.'<br>';
     $result = get_tex_content(\%idx);
-    ok($begindocument.''.$enddocument eq $result);#, $result);
+    #print 'result: ', $result;
+    ok($beginarticle1.''.$enddocument eq $result);#, $result);
 }
 {
     #print 'single column set - 2';
     my %idx = ();
     $idx{$startkey.'1'} = $startarticle_a1.'>SPALTEN#2'.'<br>';
     $result = get_tex_content(\%idx);
-    ok($begindocument.
+    #print 'result: ', $result;
+    ok($beginarticle1.
         '\begin{multicols}{2}%'."\n".
         '\end{multicols}%'."\n".
         $enddocument eq $result);#, $result);
 }
-
 {
     #print 'two column set (2, 1)'; 
     my %idx = ();
     $idx{$startkey.'1'} = $startarticle_a.'>SPALTEN#2 '.'<br>';
     $idx{$startkey.'2'} = $startarticle_f.'>SPALTEN#1'.'<br>';
     $result = get_tex_content(\%idx);
-    ok($begindocument.
+    #print 'result: ', $result;
+    ok($beginarticle1.
         '\begin{multicols}{2}%'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle2.
         '\end{multicols}%'."\n".
         $enddocument eq $result);#, $result);
 }
-
 {
     #print 'alternating column set (2,1,2)';
     my %idx = ();
@@ -67,11 +100,11 @@ my $startarticle_f2 = "kap\x09tnr\x09title\x09F2\x09";
     $idx{$startkey.'3'} = $startarticle_a1.'>SPALTEN#2 '.'<br>';
     $result = get_tex_content(\%idx);
     #print '+'.$result.'+'."\n";
-    ok($begindocument.
+    ok($beginarticle1..
         '\begin{multicols}{2}%'."\n".
         '\end{multicols}%'."\n".
-        '\subsection{title}'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle2.
+        $beginarticle3.
         '\begin{multicols}{2}%'."\n".
         '\end{multicols}%'."\n".
         $enddocument eq $result);#, $result);
@@ -85,13 +118,13 @@ my $startarticle_f2 = "kap\x09tnr\x09title\x09F2\x09";
     $idx{$startkey.'4'} = $startarticle_f.'>SPALTEN#1'.'<br>';
     $result = get_tex_content(\%idx);
     #print '+'.$result.'+'."\n";
-    ok($begindocument.
+    ok($beginarticle1.
         '\begin{multicols}{2}%'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle2.
         '\end{multicols}%'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle3.
         '\begin{multicols}{2}%'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle4.
         '\end{multicols}%'."\n".
         $enddocument eq $result);#, $result);
 }
@@ -101,7 +134,7 @@ my $startarticle_f2 = "kap\x09tnr\x09title\x09F2\x09";
     $idx{$startkey.'1'} = $startarticle_a.'>SPALTEN#2 '.'<br>'.'>SPALTEN#1'.'<br>'.'>SPALTEN#2 '.'<br>';
     $result = get_tex_content(\%idx);
     #print '+'.$result.'+'."\n";
-    ok($begindocument.
+    ok($beginarticle1.
         '\begin{multicols}{2}%'."\n".
         '\end{multicols}%'."\n".
         '\begin{multicols}{2}%'."\n".
@@ -117,13 +150,13 @@ my $startarticle_f2 = "kap\x09tnr\x09title\x09F2\x09";
     $idx{$startkey.'4'} = $startarticle_a.'>SPALTEN#1'.'<br>';
     $result = get_tex_content(\%idx);
     #print '+'.$result.'+'."\n";
-    ok($begindocument.
+    ok($beginarticle1.
         '\begin{multicols}{2}% two cols'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle2.
         '\end{multicols}%now back to single'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle3.
         '\begin{multicols}{2}% two again   '."\n".
-        '\subsection{title}'."\n".
+        $beginarticle4.
         '\end{multicols}%'."\n".
         $enddocument eq $result);#, $result);
 }
@@ -133,7 +166,7 @@ my $startarticle_f2 = "kap\x09tnr\x09title\x09F2\x09";
     $idx{$startkey.'1'} = $startarticle_a1.'>SPALTEN#2 '.'<br>'.'>SPALTEN#1%single col - 100%'.'<br>'.'>SPALTEN#2% two cols - 50 %'.'<br>';
     $result = get_tex_content(\%idx);
     #print '+'.$result.'+'."\n";
-    ok($begindocument.
+    ok($beginarticle1.
         '\begin{multicols}{2}%'."\n".
         '\end{multicols}%single col - 100\%'."\n".
         '\begin{multicols}{2}% two cols - 50 \%'."\n".
@@ -150,13 +183,13 @@ my $startarticle_f2 = "kap\x09tnr\x09title\x09F2\x09";
     $idx{$startkey.'4'} = $startarticle_a2.'>SPALTEN#1'.'<br>';
     $result = get_tex_content(\%idx);
     #print '+'.$result.'+'."\n";
-    ok($begindocument.
+    ok($beginarticle1.
         '\begin{multicols}{2}% two cols'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle2.
         '\end{multicols}%now back to single'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle3.
         '\begin{multicols}{2}% two again   '."\n".
-        '\subsection{title}'."\n".
+        $beginarticle4.
         '\end{multicols}%'."\n".
         $enddocument eq $result);#, $result);
 }
@@ -166,7 +199,7 @@ my $startarticle_f2 = "kap\x09tnr\x09title\x09F2\x09";
     $idx{$startkey.'1'} = $startarticle_a1.'>SPALTEN#2 # now with both - 100 % true'.'<br>'.'>SPALTEN#1%single col - 100%'.'<br>'.'>SPALTEN#2% two cols - #2  '.'<br>';
     $result = get_tex_content(\%idx);
     #print '+'.$result.'+'."\n";
-    ok($begindocument.
+    ok($beginarticle1.
         '\begin{multicols}{2}% now with both - 100 \% true'."\n".
         '\end{multicols}%single col - 100\%'."\n".
         '\begin{multicols}{2}% two cols - #2  '."\n".
@@ -185,20 +218,20 @@ my $startarticle_f2 = "kap\x09tnr\x09title\x09F2\x09";
     $idx{$startkey.'6'} = $startarticle_a2.'>SPALTEN#2 '.'<br>';
     $result = get_tex_content(\%idx);
     #print '+'.$result.'+'."\n";
-    ok($begindocument.
+    ok($beginarticle1.
         '\begin{multicols}{2}%'."\n".
-        '\subsection{title}'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle2.
+        $beginarticle3.
         '\end{multicols}%'."\n".
-        '\subsection{title}'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle4.
+        $beginarticle5.
         '\begin{multicols}{2}%'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle6.
         '\end{multicols}%'."\n".
         $enddocument eq $result);#, $result);
 }
 {
-    #print 'ignoring same column no (1,1,2,2,1,1)';
+    #print '13 - ignoring same column no (1,1,2,2,1,1)';
     my %idx = ();
     $idx{$startkey.'1'} = $startarticle.'>SPALTEN#1'.'<br>';
     $idx{$startkey.'2'} = $startarticle.'>SPALTEN#1'.'<br>';
@@ -208,14 +241,14 @@ my $startarticle_f2 = "kap\x09tnr\x09title\x09F2\x09";
     $idx{$startkey.'6'} = $startarticle.'>SPALTEN#1'.'<br>';
     $result = get_tex_content(\%idx);
     #print '+'.$result.'+'."\n";
-    ok($begindocument.
-        '\subsection{title}'."\n".
-        '\subsection{title}'."\n".
+    ok($beginarticle1.
+        $beginarticle2.
+        $beginarticle3.
         '\begin{multicols}{2}%'."\n".
-        '\subsection{title}'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle4.
+        $beginarticle5.
         '\end{multicols}%'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle6.
         $enddocument eq $result);#, $result);
 }
 
@@ -230,15 +263,15 @@ my $startarticle_f2 = "kap\x09tnr\x09title\x09F2\x09";
     $idx{$startkey.'6'} = $startarticle.'>SPALTEN#2 '.'<br>';
     $result = get_tex_content(\%idx);
     #print '+'.$result.'+'."\n";
-    ok($begindocument.
+    ok($beginarticle1.
         '\begin{multicols}{2}%'."\n".
-        '\subsection{title}'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle2.
+        $beginarticle3.
         '\end{multicols}%'."\n".
-        '\subsection{title}'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle4.
+        $beginarticle5.
         '\begin{multicols}{2}%'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle6.
         '\end{multicols}%'."\n".
         $enddocument eq $result);#, $result);
 }
@@ -256,17 +289,17 @@ my $startarticle_f2 = "kap\x09tnr\x09title\x09F2\x09";
     $idx{$startkey.'9'} = $startarticle.'>SPALTEN#1'.'<br>';
     $result = get_tex_content(\%idx);
     #print '+'.$result.'+'."\n";
-    ok($begindocument.
-        '\subsection{title}'."\n".
-        '\subsection{title}'."\n".
-        '\subsection{title}'."\n".
+    ok($beginarticle1.
+        $beginarticle2.
+        $beginarticle3.
+        $beginarticle4.
         '\begin{multicols}{3}%'."\n".
-        '\subsection{title}'."\n".
-        '\subsection{title}'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle5.
+        $beginarticle6.
+        $beginarticle7.
         '\end{multicols}%'."\n".
-        '\subsection{title}'."\n".
-        '\subsection{title}'."\n".
+        $beginarticle8.
+        $beginarticle9.
         $enddocument eq $result);#, $result);
 }
 
@@ -276,7 +309,7 @@ my $startarticle_f2 = "kap\x09tnr\x09title\x09F2\x09";
     $idx{$startkey.'1'} = $startarticle.'>SPALTEN#4'.'<br>';
     $result = get_tex_content(\%idx);
     #print '+'.$result.'+'."\n";
-    ok($begindocument.
+    ok($beginarticle1.
         '% Nur 1, 2 oder 3 Spalten sind erlaubt. Die Angabe von '."'4'".' Spalten wird ignoriert (print_columns).'."\n".
         $enddocument eq $result);#, $result);
 }
@@ -286,7 +319,7 @@ my $startarticle_f2 = "kap\x09tnr\x09title\x09F2\x09";
     $idx{$startkey.'1'} = $startarticle.'>SPALTEN#2b'.'<br>';
     $result = get_tex_content(\%idx);
     #print '+'.$result.'+'."\n";
-    ok($begindocument.
+    ok($beginarticle1.
         '% Nur 1, 2 oder 3 Spalten sind erlaubt. Die Angabe von '."'2b'".' Spalten wird ignoriert (print_columns).'."\n".
         $enddocument eq $result);#, $result);
 }
