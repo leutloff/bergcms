@@ -45,7 +45,7 @@ use Cwd qw(abs_path);
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.10/07.08.2013';
+$VERSION = 'v2.10/26.12.2013';
 # exports are used for testing purposes
 @EXPORT_OK = qw(add_author add_bold add_caption add_italic
                 get_tex_content
@@ -942,8 +942,11 @@ sub replace_characters #...Suchen/ersetzen
     
     #...reservierte Latex-Spezialzeichen
     $s =~ s/\§/\\S/g; # Paragraphzeichen
+
     #...Telefon/Mailsymbole einbauen!
-    $s =~ s/Tel.:|Tel:/\\ding\{37\}/ig; #falls Tel.?-> Telefonsymbolersatz
+#    $s =~ s/Tel.:|Tel:/\\ding\{37\}/ig; #falls Tel.?-> Telefonsymbolersatz
+    $s =~ s/^Tel.?:/\\ding\{37\}/ig; # replace Tel. with telephone symbole
+    $s =~ s/(\s)Tel.?:/$1\\ding\{37\}/ig; # replace Tel. with telephone symbole
     $s =~ s/e-mail:|email:|mail:/\\ding\{41\}/ig; #falls email.?-> Briefsymbolersatz
     $s=dbquote($s); # falls " oder „/“ im Text -> Latex"Ersatz"
     

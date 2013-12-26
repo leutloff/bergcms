@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use utf8;
-use Test::More tests => 8;
+use Test::More tests => 18;
 use BERG::PEX qw(add_author add_bold add_caption add_italic 
                  replace_characters);
 
@@ -18,6 +18,28 @@ ok('& ' eq replace_characters('& '));
 my $result = replace_characters('§ ');
 ok('\S ' eq $result, $result);
 ok(' 1234&1234 ' eq replace_characters(' 1234&1234 '));
+
+# Tel: -> telephone symbole
+$result = replace_characters('Tel:');
+ok('\ding{37}' eq $result, $result);
+$result = replace_characters(' Tel: ');
+ok(' \ding{37} ' eq $result, $result);
+$result = replace_characters('tel:');
+ok('\ding{37}' eq $result, $result);
+$result = replace_characters('tEl:');
+ok('\ding{37}' eq $result, $result);
+$result = replace_characters('Tel.:');
+ok('\ding{37}' eq $result, $result);
+$result = replace_characters(' Tel.: ');
+ok(' \ding{37} ' eq $result, $result);
+$result = replace_characters('tel.:');
+ok('\ding{37}' eq $result, $result);
+$result = replace_characters('tEl.:');
+ok('\ding{37}' eq $result, $result);
+$result = replace_characters('Titel:');
+ok('Titel:' eq $result, $result);
+$result = replace_characters(' Titel: ');
+ok(' Titel: ' eq $result, $result);
 
 $result = add_italic('italic');
 #ok('\textit{\normalsize'."\n".'italic}' eq $result);
