@@ -56,19 +56,19 @@ function print_usage {
     echo "       $0 [-l ftplogin.cred] [-u user] [-p password] [-t test|prod] -c component"
     echo ""
     echo "Known components for deployment:"
-    echo " all       all known components except the testcases"
-    echo " html      static HTML files"
-    echo " css       CSS files"
-    echo " js        Javascript files - libraries and specific"
-    echo " htdocs    static HTML, CSS and Javascript files"
-    echo " perllibs  Perl libraries (Diff.pm/Merge.pm) "
-    echo " dynlibs   boost and ctemplate libraries"
-    echo " libs      all the libraries (C/C++ and Perl)"
-    echo " perl      Perl based parts of the web application"
-    echo " templates templates used by the web application"
-    echo " srv       C++ based parts of the web application"
-    echo " servers   the executable parts of the web application"
-    echo " latex     the text processing related files (LaTeX)"
+    echo " all         all known components except the testcases"
+    echo "   html      static HTML files"
+    echo "   css       CSS files"
+    echo "   js        Javascript files - libraries and specific"
+    echo "  htdocs     static HTML, CSS and Javascript files (=html+css+js)"
+    echo "   perllibs  Perl libraries (Diff.pm/Merge.pm) "
+    echo "   dynlibs   boost and ctemplate libraries"
+    echo "  libs       all the libraries (C/C++ and Perl) (=perllibs+dynlibs)"
+    echo "   perl      Perl based parts of the web application"
+    echo "   templates templates used by the web application"
+    echo "   srv       C++ based parts of the web application"
+    echo "  servers    the executable parts of the web application (=perl+templates+srv)"
+    echo "  latex      the text processing related files (LaTeX)"
     echo ""
     echo " testcases additional files used for test cases only!"
     echo "           Use on test deployments only, because the initial database"
@@ -232,9 +232,9 @@ function deploy_perl {
 }
 function deploy_dyn_libs {
     echo " * Deploying dynamic libraries (Boost and ctemplate) ..."
-    for libwithpath in `ls lib/libboost_{chrono,date_time,filesystem,iostreams,program_options,regex,signals,system,thread}.so.* lib/libctemplate.so.*`; do
+    for libwithpath in `ls cgi-bin/brg/lib/libboost_{chrono,date_time,filesystem,iostreams,program_options,regex,signals,system,thread}.so.* cgi-bin/brg/lib/libctemplate.so.*`; do
         lib=${libwithpath##*/}
-        $FTPPUT $FTPPUTPARAM -X "chmod 0755 $CGIBINDEPLOYDIR/lib/$lib" $CGIBINDEPLOYDIR/lib libwithpath
+        $FTPPUT $FTPPUTPARAM -X "chmod 0755 $CGIBINDEPLOYDIR/lib/$lib" $CGIBINDEPLOYDIR/lib $libwithpath
     done
 }
 function deploy_latex {

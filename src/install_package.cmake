@@ -120,4 +120,9 @@ install(DIRECTORY "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/data" DESTINATION
 install(FILES    "${PROJECT_SOURCE_DIR}/../images/berg-v1/berg.jpg"
         DESTINATION "${BERG_INSTALL_CGIBIN}/br/bilder")
 
+# add files used for testing purposes.
+install(PROGRAMS "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/testcase.pl"
+        DESTINATION "${BERG_INSTALL_CGIBIN}")
+
+
 #install(CODE "MESSAGE(\"Sample install message.\")")
