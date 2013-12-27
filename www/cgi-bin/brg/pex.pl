@@ -45,7 +45,7 @@ use Cwd qw(abs_path);
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.10/26.12.2013';
+$VERSION = 'v2.11/26.12.2013';
 # exports are used for testing purposes
 @EXPORT_OK = qw(add_author add_bold add_caption add_italic
                 get_tex_content

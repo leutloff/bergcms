@@ -35,7 +35,7 @@ void Common::FillDictionaryCommon(ctemplate::TemplateDictionary & dict)
     dict.SetValue("SYSTEM_TITLE_SHORT", "Redaktion AC");
     dict.SetValue("SYSTEM_TITLE_SHORT_ASCII", "Redaktion AC"); // for use in <title>
     dict.SetValue("BERG_LANG", "de");
-    dict.SetValue("BERG_VERSION", "Berg CMS " + GetBergVersion()); //Berg v3.0.0a");
+    dict.SetValue("BERG_VERSION", "Berg CMS " + GetBergVersion()); //Berg v3.0.0");
     dict.SetValue("BERG_COPYRIGHT", "2012, 2013 Christian Leutloff");
     dict.SetValue("BERG_AUTHOR", "Christian Leutloff");
 
@@ -150,11 +150,11 @@ int Common::SendResponse(boost::cgi::request& req, std::string const& output)
 
 string Common::GetBergVersion()
 {
-    return "v3.1.1";
+    return "v3.1.3";
 }
 
 std::string Common::GetBergLastChangedDate()
 {
-    return "05.08.2013";
+    return "27.12.2013";
 }
 
