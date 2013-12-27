@@ -276,7 +276,7 @@ function deploy_testcases {
         if [ -f www/htdocs/favicon.ico ]; then
             $FTPPUT $FTPPUTPARAM htdocs www/htdocs/favicon.ico
         else
-            $FTPPUT $FTPPUTPARAM htdocs htdocs/favicon.ico
+            $FTPPUT $FTPPUTPARAM htdocs htdocs/brg/favicon.ico
         fi
     fi
 }
