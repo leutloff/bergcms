@@ -7,7 +7,16 @@ language: cpp
 compiler:
 - gcc
 #- clang
+cache: apt
+addons:
+  sauce_connect:
+    username:
+    access_key:
+       secure: "WpOa9yQGxYGhSWP1qdzzh/A/NWCyoHMR0D5f5uQ4gCnsj9umdQk28pqobfldtGZ60/t+bfUKo8OtM3ZbgF199KJ8Q7zHxOX/MLMNf4B8E0BmravZkwK1Wj4SsopDpge1nJ6oDuA9Okr21LK+C8GhM77rhk63qzYKZLntUerxNWM="
+hosts:
+    - aachen.local
 before_install:
+- id
 - perl -v
 - lsb_release -a
 - date +%H:%M:%S.%N
@@ -18,6 +27,16 @@ before_script:
 - sudo apt-get update -qq
 # Install Apache for the GUI tests and wget
 - sudo apt-get install wget apache2 apache2-suexec-custom apache2-utils -y
+# configure apache suexec
+- sudo cd /etc/apache2/mods-enabled && ln -s ../mods-available/suexec.load .
+- sudo cp -f build/suexec-www-data /etc/apache2/suexec/www-data
+# configure apache virtual hosts
+- sudo cp -f build/travis-ci-apache /etc/apache2/sites-available/default
+- sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
+- sudo service apache2 restart
+# Install node:
+- sudo curl https://npmjs.org/install.sh | sh
+- sudo npm install wd
 # wput is used to copy the package to an FTP site.
 - sudo apt-get install wput -y
 # boost 1.49 is used be the C++ part
@@ -41,7 +60,7 @@ before_script:
 - cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=FALSE ../src
 #- cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=TRUE ../src
 - date +%H:%M:%S.%N
-script: make && pushd test && ./bergunittests && popd && $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh
+script: make && pushd test && ./bergunittests && popd && $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh && node $TRAVIS_BUILD_DIR/testsuite-webdriver-js/example.js
 after_success:
 - date +%H:%M:%S.%N
 #- make package berg_extract
@@ -53,8 +72,12 @@ after_success:
 #- wput README.md ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload
 #- pushd travis-build/exp && wput echo exptemplate hello_world show_rpath simple_regex ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose; popd
 - date +%H:%M:%S.%N
-# Test Default Apache installation:
+# Test Apache installation:
 - wget http://127.0.0.1/index.html
 - cat index.html
+- wget http://aachen.local/brg/hilfe.html
+- cat hilfe.html
+- echo "cat cgi.log"
+- cat cgi.log
 
 

@@ -1,0 +1,36 @@
+# build/travis-ci-apache - used for testing within Travis CI
+# For another example see doc/etc_apache2/sites-available/aachen.local.conf
+<VirtualHost *:80>
+    ServerName aachen.local
+    ServerAlias aachen
+
+    DocumentRoot %TRAVIS_BUILD_DIR%/www/htdocs
+    SuexecUserGroup "travisci" "travisci"
+
+    <Directory "%TRAVIS_BUILD_DIR%/www/htdocs">
+        Options FollowSymLinks MultiViews +ExecCGI
+        AllowOverride All
+        Order deny,allow
+        Allow from all
+    </Directory>
+
+#    # Wire up Apache to use Travis CI's php-fpm.
+#    <IfModule mod_fastcgi.c>
+#        AddHandler php5-fcgi .php
+#        Action php5-fcgi /php5-fcgi
+#        Alias /php5-fcgi /usr/lib/cgi-bin/php5-fcgi
+#        FastCgiExternalServer /usr/lib/cgi-bin/php5-fcgi -host 127.0.0.1:9000 -pass-header Authorization
+#    </IfModule>
+
+  # Added for development purposes - Location of the CGI script error logfile showing input and output
+  ScriptLog  %TRAVIS_BUILD_DIR%/cgi.log
+  # Maximum amount of PUT or POST requests that will be recorded in the scriptlog, default: 1024
+  # ScriptLogBuffer 1024
+
+  <Location %TRAVIS_BUILD_DIR%/www/cgi-bin/>
+   Options +ExecCGI -Includes
+   Order allow,deny
+   Allow from all
+   SetHandler cgi-script 
+  </Location>
+</VirtualHost>
