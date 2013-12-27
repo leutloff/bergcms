@@ -6,9 +6,10 @@ env:
 language: cpp
 compiler:
 - gcc
-#- clang
+- clang
 before_install:
 - perl -v
+- lsb_release -a
 - date +%H:%M:%S.%N
 - git submodule update --init --recursive
 before_script:
