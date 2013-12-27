@@ -6,7 +6,7 @@ env:
 language: cpp
 compiler:
 - gcc
-- clang
+#- clang
 before_install:
 - perl -v
 - lsb_release -a
@@ -16,7 +16,7 @@ before_script:
 - date +%H:%M:%S.%N
 - sudo add-apt-repository ppa:ukplc-team/testing -y
 - sudo apt-get update -qq
-# Install Apache etc.
+# Install Apache for the GUI tests and wget
 - sudo apt-get install wget apache2 apache2-suexec-custom apache2-utils -y
 # wput is used to copy the package to an FTP site.
 - sudo apt-get install wput -y
