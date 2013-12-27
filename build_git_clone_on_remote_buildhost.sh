@@ -1,8 +1,10 @@
 #!/bin/bash -e
 #
-# Executes the git clone command in the Build VM using ssh.
+# Executes the git clone command in the Build VM using ssh. 
+# This script is only called once. When the git clone is created successfully
+# only the second script build_zip_on_remote_buildhost.sh is called.
 #
-# Copyright 20132013 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2013 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as

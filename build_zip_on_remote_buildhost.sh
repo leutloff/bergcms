@@ -1,8 +1,9 @@
 #!/bin/bash -e
 #
-# Updates the git repository and executes the build script - invoked using ssh in the Build VM.
+# Updates the git repository and executes the build script in the Build VM using ssh.
+# For the initial setup execute the script build_git_clone_on_remote_buildhost.sh.
 #
-# Copyright 20132013 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2013 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -43,10 +44,17 @@ echo "Build on $BUILDHOST in directoriues for src $BERGDIR and for results $BUIL
 # Build
 #ssh debian-squeeze /home/leutloff/work/berg/make_zip.sh
 $SSH $BUILDHOST "cd $BERGDIR && git pull && git submodule update --init --recursive && pushd src/external/ctemplate && ./configure --prefix $BERGDIR/src/external/ctemplate && make && make install && popd && ./make_zip.sh $BUILDDIRONBUILDHOST"
-mkdir -p archive
-$SCP $BUILDHOST:$BUILDDIRONBUILDHOST/Berg*.zip archive/
 
-ls -t archive/Berg-*.zip
+mkdir -p $SOURCEDIR/archive
+actualArchive=$(ssh $BUILDHOST "ls -t $BUILDDIRONBUILDHOST/Berg*.zip | head -1")
+$SCP $BUILDHOST:$actualArchive $SOURCEDIR/archive/
+pushd $SOURCEDIR/archive
+ls -l $(basename $actualArchive)
+unzip $(basename $actualArchive)
+popd
+
+echo "Execute the following commands to deploy the build sources to the test instance:"
+echo "cd $SOURCEDIR/archive/$(basename $actualArchive .zip) && ./deploy.sh -t test -c all && ./deploy.sh -t test -c testcases"
 
 echo "done."
 
