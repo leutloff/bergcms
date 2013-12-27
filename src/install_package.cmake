@@ -101,14 +101,21 @@ install(FILES    "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/perl5/README.txt"
 install(FILES    "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/perl5/Algorithm/Diff.pm"
                  "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/perl5/Algorithm/Merge.pm"
         DESTINATION "${BERG_INSTALL_CGIBIN}/perl5/Algorithm")
-# sample database and LaTeX files
+# the sample database
 #install(FILES    "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/feglogo.jpg"
-install(FILES    "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/sectsty.sty"
-                 "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/wrapfig.sty"
-                 "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/feginfo.csv"
-                 "${PROJECT_SOURCE_DIR}/../latex/class_berg/generated/berg.cls"
+install(FILES    "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/feginfo.csv"
                  "${PROJECT_SOURCE_DIR}/../images/berg-v1/berg.jpg"
         DESTINATION "${BERG_INSTALL_CGIBIN}/br")
+# The LaTeX files
+install(FILES    "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/sectsty.sty"
+                 "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/wrapfig.sty"
+                 "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/ucs.sty"
+                 "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/ucsencs.def"
+                 "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/utf8x.def"
+                 "${PROJECT_SOURCE_DIR}/../latex/class_berg/generated/berg.cls"
+        DESTINATION "${BERG_INSTALL_CGIBIN}/br")
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/br/data" DESTINATION "${BERG_INSTALL_CGIBIN}/br"
+        DIRECTORY_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 install(FILES    "${PROJECT_SOURCE_DIR}/../images/berg-v1/berg.jpg"
         DESTINATION "${BERG_INSTALL_CGIBIN}/br/bilder")
