@@ -70,14 +70,23 @@ var desired = {
 //   })
 // })
 
+// browser.init(desired, function() {
+//     browser.get("http://aachen.local/cgi-bin/brg/maker", function() {
+//         browser.title(function(err, title) {
+//             assert.ok(~title.indexOf('Generator'), 'Wrong title - does not contain Generator!');
+//             browser.elementById('processing-result', function(err, el) {
+//                 assert.ok(~text.indexOf('Keine Fehler.'), 'Maker has failed!');
+//                 browser.quit()
+//             })
+//         })
+//     })
+// })
+
 browser.init(desired, function() {
-    browser.get("http://aachen.local/cgi-bin/brg/maker", function() {
+    browser.get("http://aachen.local/brg/hilfe.html", function() {
         browser.title(function(err, title) {
-            assert.ok(~title.indexOf('Generator'), 'Wrong title - does not contain Generator!');
-            browser.elementById('processing-result', function(err, el) {
-                assert.ok(~text.indexOf('Keine Fehler.'), 'Maker has failed!');
-                browser.quit()
-            })
+            assert.ok(~title.indexOf('Dokumentation'), 'Wrong title - does not contain Dokumentation!');
+            browser.quit()
         })
     })
 })

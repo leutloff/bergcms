@@ -2,7 +2,7 @@
 # For another example see doc/etc_apache2/sites-available/aachen.local.conf
 <VirtualHost *:80>
     ServerName aachen.local
-    ServerAlias aachen
+    ServerAlias aachen www.aachen.local
 
     DocumentRoot %TRAVIS_BUILD_DIR%/www/htdocs
     SuexecUserGroup "travis" "travis"
