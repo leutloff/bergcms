@@ -5,7 +5,7 @@
     ServerAlias aachen
 
     DocumentRoot %TRAVIS_BUILD_DIR%/www/htdocs
-    SuexecUserGroup "travisci" "travisci"
+    SuexecUserGroup "travis" "travis"
 
     <Directory "%TRAVIS_BUILD_DIR%/www/htdocs">
         Options FollowSymLinks MultiViews +ExecCGI
