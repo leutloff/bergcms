@@ -18,20 +18,23 @@ addons:
   hosts:
     - aachen.local
 before_install:
+    - cat /etc/hosts
     - id
     - perl -v
     - lsb_release -a
     - date +%H:%M:%S.%N
     - git submodule update --init --recursive
-    - date +%H:%M:%S.%N
+    - echo "$(date +%H:%M:%S.%N) - before_install end"
 install:
+    - echo "$(date +%H:%M:%S.%N) - install begin"
     # Add PPA with boost libraries
     - date +%H:%M:%S.%N
     - sudo add-apt-repository ppa:ukplc-team/testing -y
     - sudo apt-get update -qq
     - date +%H:%M:%S.%N
-    # Install node:
-    - sudo curl https://npmjs.org/install.sh | sh
+    # Install nodejs and npm:
+    - sudo apt-get install nodejs npm -y
+    #- sudo curl https://npmjs.org/install.sh | sh
     - sudo npm install wd
     # Install selenium - the Python variant
     - pip install selenium nose --use-mirrors
@@ -49,9 +52,9 @@ install:
     # boost 1.49 is used be the C++ part
     - sudo apt-get install libboost1.49-dev libboost-chrono1.49-dev libboost-date-time1.49-dev libboost-filesystem1.49-dev libboost-iostreams1.49-dev libboost-locale1.49-dev libboost-program-options1.49-dev libboost-regex1.49-dev libboost-serialization1.49-dev libboost-signals1.49-dev libboost-system1.49-dev libboost-test1.49-dev libboost-thread1.49-dev -y -qq
     - ls -l /usr/lib/libboost*
-    - date +%H:%M:%S.%N
+    - echo "$(date +%H:%M:%S.%N) - install end"
 before_script:
-    - date +%H:%M:%S.%N
+    - echo "$(date +%H:%M:%S.%N) - before_script begin"
     - pushd src/external/ctemplate
     - ./configure --prefix $TRAVIS_BUILD_DIR/src/external/ctemplate
     - make
@@ -73,11 +76,12 @@ before_script:
     - curl https://gist.github.com/santiycr/5139581/raw/python_appengine_setup.py | python
     # connect to sauce labs
     - curl https://gist.github.com/santiycr/5139565/raw/sauce_connect_setup.sh | bash
+    - echo "$(date +%H:%M:%S.%N) - before_script end"
 script: 
     - make && pushd test && ./bergunittests && popd 
     - $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh 
     - node $TRAVIS_BUILD_DIR/testsuite-webdriver-js/example.js
-    - pushd testsuite-py && nosetests --processes=5 --process-timeout=600 -v tests && popd
+    - pushd testsuite-webdriver-py && nosetests --processes=5 --process-timeout=600 -v tests && popd
 after_success:
     - date +%H:%M:%S.%N
     #- make package berg_extract
