@@ -34,8 +34,8 @@ install:
     - date +%H:%M:%S.%N
     # Install nodejs and npm:
     - sudo apt-get install nodejs -y
-    - curl https://npmjs.org/install.sh
-    - sudo sh install.sh
+    - curl https://npmjs.org/install.sh > install-npm.sh
+    - sudo sh install-npm.sh
     - sudo npm install wd
     # Install selenium - the Python variant
     - pip install selenium nose --use-mirrors
