@@ -65,37 +65,31 @@ before_script:
     - cp /usr/lib/libicu*.so.48 $TRAVIS_BUILD_DIR/src/external/libicu48/lib || true
     - ls -l $TRAVIS_BUILD_DIR/src/external/libicu48/lib
     - mkdir travis-build
-    - cd travis-build
+    - pushd travis-build
     - date +%H:%M:%S.%N
     - cmake --version
     - cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=FALSE ../src
     #- cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=TRUE ../src
-#     - date +%H:%M:%S.%N
-#     # connect to sauce labs
-#     - curl https://gist.github.com/santiycr/5139565/raw/sauce_connect_setup.sh | bash
+    - popd
     - echo "$(date +%H:%M:%S.%N) - before_script end"
-script: 
+script:
+    - pushd travis-build
     - make && pushd test && ./bergunittests && popd 
+    - popd
     - $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh 
     - node $TRAVIS_BUILD_DIR/testsuite-webdriver-js/example.js
-    #- pushd testsuite-webdriver-py && nosetests --processes=5 --process-timeout=600 -v tests && popd
 after_success:
-    - date +%H:%M:%S.%N
+    - echo "$(date +%H:%M:%S.%N) - after_success begin"
     #- make package berg_extract
     - make package
     - ls -l Berg*.zip
     - date +%H:%M:%S.%N
     - wput Berg*.zip ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose
-    #- cd ..
-    #- wput README.md ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload
     #- pushd travis-build/exp && wput echo exptemplate hello_world show_rpath simple_regex ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose; popd
     - date +%H:%M:%S.%N
     # Test Apache installation:
-    - wget http://127.0.0.1/index.html
-    - cat index.html
     - wget http://aachen.local/brg/hilfe.html
     - cat hilfe.html
-    - echo "cat cgi.log"
-    - cat cgi.log
+    - cat $TRAVIS_BUILD_DIR/cgi.log
 
 

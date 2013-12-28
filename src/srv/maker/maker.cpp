@@ -317,11 +317,11 @@ int HandleRequest(boost::cgi::request& req)
     resp << "Bearbeitungszeit betrug " << boost::chrono::duration_cast<bchrono::milliseconds>(stop-start).count() << " ms.\n";
     if (errors == 0)
     {
-        resp << "<p class=\"berg-success\">Keine Fehler.</p>";
+        resp << "<p id=\"processing-result\" class=\"berg-success\">Keine Fehler.</p>";
     }
     else
     {
-        resp << "<p class=\"berg-failure\">" << errors << " Fehler! Hinweise zu den Ursachen sollten sich weiter oben finden lassen.</p>";
+        resp << "<p id=\"processing-result\" class=\"berg-failure\">" << errors << " Fehler! Hinweise zu den Ursachen sollten sich weiter oben finden lassen.</p>";
     }
     resp << "</body></html>";
 

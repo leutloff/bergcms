@@ -150,11 +150,11 @@ int Common::SendResponse(boost::cgi::request& req, std::string const& output)
 
 string Common::GetBergVersion()
 {
-    return "v3.1.3";
+    return "v3.1.4";
 }
 
 std::string Common::GetBergLastChangedDate()
 {
-    return "27.12.2013";
+    return "28.12.2013";
 }
 
