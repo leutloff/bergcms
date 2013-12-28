@@ -10,10 +10,10 @@ compiler:
 cache: apt
 addons:
   sauce_connect:
-    username:
+    username: leutloff
     access_key:
        secure: "WpOa9yQGxYGhSWP1qdzzh/A/NWCyoHMR0D5f5uQ4gCnsj9umdQk28pqobfldtGZ60/t+bfUKo8OtM3ZbgF199KJ8Q7zHxOX/MLMNf4B8E0BmravZkwK1Wj4SsopDpge1nJ6oDuA9Okr21LK+C8GhM77rhk63qzYKZLntUerxNWM="
-hosts:
+  hosts:
     - aachen.local
 before_install:
 - id
