@@ -77,7 +77,7 @@ script:
     - make && pushd test && ./bergunittests && popd 
     - popd
     - $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh 
-    - node $TRAVIS_BUILD_DIR/testsuite-webdriver-js/example.js
+    - node $TRAVIS_BUILD_DIR/testsuite-webdriver-js/maker-result.js
 after_success:
     - echo "$(date +%H:%M:%S.%N) - after_success begin"
     #- make package berg_extract
