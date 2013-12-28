@@ -1,83 +1,100 @@
 env:
   global:
-  - secure: k7XQ1+F5z/i49XgqePdjHB32PyjF7LxUn2dtFBG1W3cwpUm8WQQSvt4q7gLAH73Sh0v4NXpL1R6M04EZfbrpU9y00QpIkjzWzunjjeYZtDBRzbaSDqnR8CMXKS9J/aG0aTDzMFfvRwHjH4PC/YWzLoguulSJP/ehr0VbLJiLSzM=
-  - secure: gpudPjJYyxFNxeBC3yKxUQ//eVlgOib3+TC/H9WpplvAXmune7Hyobpp6V5zV9cyypmhZvO1lftgqS6NO2DbHlXnljHrD1kOWLFRe0/bazi6rxhvVkjyZOAkrP9mtqKA1riydeNgeEqcmoqPzi6GZ1zahi68Amj8UTosoRoWjjA=
-  - secure: PtmjgbGjaB3Ta5fIxwuA1bfK2Q0TgAP2ZvoMuVak/2CRHaArnwQodS3JacpPPHEjpqINe65IUvLpgXCONC0OBl3o/fJb0n7LzBnENqXYyU6wsHWb8aI2d7pOaWSm7C4pvZjiXcCbLUPKD3Cc90N8iR+eAABKdUm4GfiaT99ubS0=
+    - secure: k7XQ1+F5z/i49XgqePdjHB32PyjF7LxUn2dtFBG1W3cwpUm8WQQSvt4q7gLAH73Sh0v4NXpL1R6M04EZfbrpU9y00QpIkjzWzunjjeYZtDBRzbaSDqnR8CMXKS9J/aG0aTDzMFfvRwHjH4PC/YWzLoguulSJP/ehr0VbLJiLSzM=
+    - secure: gpudPjJYyxFNxeBC3yKxUQ//eVlgOib3+TC/H9WpplvAXmune7Hyobpp6V5zV9cyypmhZvO1lftgqS6NO2DbHlXnljHrD1kOWLFRe0/bazi6rxhvVkjyZOAkrP9mtqKA1riydeNgeEqcmoqPzi6GZ1zahi68Amj8UTosoRoWjjA=
+    - secure: PtmjgbGjaB3Ta5fIxwuA1bfK2Q0TgAP2ZvoMuVak/2CRHaArnwQodS3JacpPPHEjpqINe65IUvLpgXCONC0OBl3o/fJb0n7LzBnENqXYyU6wsHWb8aI2d7pOaWSm7C4pvZjiXcCbLUPKD3Cc90N8iR+eAABKdUm4GfiaT99ubS0=
+    - secure: "OCd/NzEOCuD2p+BsYCr4TaUyKXdo3dmzwf2U5VdRQUXPK/TzzTx+HqOy46VxJ/reySYzGAXTF/Zxmu6289GdOzol3v6dIIGdq/g+62+0/SCtFK8IhaVJNRV1dC9ccN7q9oskzmmgEtjuvPAj0gDX0EhtOVWfogobCGvFITjJcgE="
+    - secure: "J1slVeysWT4pntabPUVdOZnlOuOBO95GuRwR7s4GMPWOe8Wm0iWLC07Qr5DoeUK0A17vxsxv62IjzOQsoTARu7yxMjXnWWzit8nqDkOLCi/T6LjOTmDjvB6g0ohQ7Nw8oMWNqqN5HOzd7BpMXVC293+hWkDXvAX/+wIMtbV1gZQ="
 language: cpp
 compiler:
-- gcc
+    - gcc
 #- clang
 cache: apt
 addons:
-  sauce_connect:
-    username: leutloff
-    access_key:
-       secure: "WpOa9yQGxYGhSWP1qdzzh/A/NWCyoHMR0D5f5uQ4gCnsj9umdQk28pqobfldtGZ60/t+bfUKo8OtM3ZbgF199KJ8Q7zHxOX/MLMNf4B8E0BmravZkwK1Wj4SsopDpge1nJ6oDuA9Okr21LK+C8GhM77rhk63qzYKZLntUerxNWM="
+#  sauce_connect:
+#    username: leutloff
+#    access_key:
+#       secure: "WpOa9yQGxYGhSWP1qdzzh/A/NWCyoHMR0D5f5uQ4gCnsj9umdQk28pqobfldtGZ60/t+bfUKo8OtM3ZbgF199KJ8Q7zHxOX/MLMNf4B8E0BmravZkwK1Wj4SsopDpge1nJ6oDuA9Okr21LK+C8GhM77rhk63qzYKZLntUerxNWM="
   hosts:
     - aachen.local
 before_install:
-- id
-- perl -v
-- lsb_release -a
-- date +%H:%M:%S.%N
-- git submodule update --init --recursive
+    - id
+    - perl -v
+    - lsb_release -a
+    - date +%H:%M:%S.%N
+    - git submodule update --init --recursive
+    - date +%H:%M:%S.%N
+install:
+    # Add PPA with boost libraries
+    - date +%H:%M:%S.%N
+    - sudo add-apt-repository ppa:ukplc-team/testing -y
+    - sudo apt-get update -qq
+    - date +%H:%M:%S.%N
+    # Install node:
+    - sudo curl https://npmjs.org/install.sh | sh
+    - sudo npm install wd
+    # Install selenium - the Python variant
+    - pip install selenium nose --use-mirrors
+    # Install Apache for the GUI tests and wget
+    - sudo apt-get install wget apache2 apache2-suexec-custom apache2-utils -y
+    # configure apache suexec
+    - pushd /etc/apache2/mods-enabled && sudo ln -s ../mods-available/suexec.load . && popd
+    - sudo cp -f build/suexec-www-data /etc/apache2/suexec/www-data
+    # configure apache virtual hosts
+    - sudo cp -f build/travis-ci-apache /etc/apache2/sites-available/default
+    - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
+    - sudo service apache2 restart
+    # wput is used to copy the package to an FTP site.
+    - sudo apt-get install wput -y
+    # boost 1.49 is used be the C++ part
+    - sudo apt-get install libboost1.49-dev libboost-chrono1.49-dev libboost-date-time1.49-dev libboost-filesystem1.49-dev libboost-iostreams1.49-dev libboost-locale1.49-dev libboost-program-options1.49-dev libboost-regex1.49-dev libboost-serialization1.49-dev libboost-signals1.49-dev libboost-system1.49-dev libboost-test1.49-dev libboost-thread1.49-dev -y -qq
+    - ls -l /usr/lib/libboost*
+    - date +%H:%M:%S.%N
 before_script:
-- date +%H:%M:%S.%N
-- sudo add-apt-repository ppa:ukplc-team/testing -y
-- sudo apt-get update -qq
-# Install Apache for the GUI tests and wget
-- sudo apt-get install wget apache2 apache2-suexec-custom apache2-utils -y
-# configure apache suexec
-- sudo cd /etc/apache2/mods-enabled && ln -s ../mods-available/suexec.load .
-- sudo cp -f build/suexec-www-data /etc/apache2/suexec/www-data
-# configure apache virtual hosts
-- sudo cp -f build/travis-ci-apache /etc/apache2/sites-available/default
-- sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
-- sudo service apache2 restart
-# Install node:
-- sudo curl https://npmjs.org/install.sh | sh
-- sudo npm install wd
-# wput is used to copy the package to an FTP site.
-- sudo apt-get install wput -y
-# boost 1.49 is used be the C++ part
-- sudo apt-get install libboost1.49-dev libboost-chrono1.49-dev libboost-date-time1.49-dev libboost-filesystem1.49-dev libboost-iostreams1.49-dev libboost-locale1.49-dev libboost-program-options1.49-dev libboost-regex1.49-dev libboost-serialization1.49-dev libboost-signals1.49-dev libboost-system1.49-dev libboost-test1.49-dev libboost-thread1.49-dev -y -qq
-- ls -l /usr/lib/libboost*
-- date +%H:%M:%S.%N
-- pushd src/external/ctemplate
-- ./configure --prefix $TRAVIS_BUILD_DIR/src/external/ctemplate
-- make
-- make install
-- popd
-- date +%H:%M:%S.%N
-- find /usr/lib -name 'libicu*'
-- mkdir -p $TRAVIS_BUILD_DIR/src/external/libicu48/lib
-- cp /usr/lib/libicu*.so.48 $TRAVIS_BUILD_DIR/src/external/libicu48/lib || true
-- ls -l $TRAVIS_BUILD_DIR/src/external/libicu48/lib
-- mkdir travis-build
-- cd travis-build
-- date +%H:%M:%S.%N
-- cmake --version
-- cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=FALSE ../src
-#- cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=TRUE ../src
-- date +%H:%M:%S.%N
-script: make && pushd test && ./bergunittests && popd && $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh && node $TRAVIS_BUILD_DIR/testsuite-webdriver-js/example.js
+    - date +%H:%M:%S.%N
+    - pushd src/external/ctemplate
+    - ./configure --prefix $TRAVIS_BUILD_DIR/src/external/ctemplate
+    - make
+    - make install
+    - popd
+    - date +%H:%M:%S.%N
+    - find /usr/lib -name 'libicu*'
+    - mkdir -p $TRAVIS_BUILD_DIR/src/external/libicu48/lib
+    - cp /usr/lib/libicu*.so.48 $TRAVIS_BUILD_DIR/src/external/libicu48/lib || true
+    - ls -l $TRAVIS_BUILD_DIR/src/external/libicu48/lib
+    - mkdir travis-build
+    - cd travis-build
+    - date +%H:%M:%S.%N
+    - cmake --version
+    - cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=FALSE ../src
+    #- cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=TRUE ../src
+    - date +%H:%M:%S.%N
+    # setup app engine
+    - curl https://gist.github.com/santiycr/5139581/raw/python_appengine_setup.py | python
+    # connect to sauce labs
+    - curl https://gist.github.com/santiycr/5139565/raw/sauce_connect_setup.sh | bash
+script: 
+    - make && pushd test && ./bergunittests && popd 
+    - $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh 
+    - node $TRAVIS_BUILD_DIR/testsuite-webdriver-js/example.js
+    - pushd testsuite-py && nosetests --processes=5 --process-timeout=600 -v tests && popd
 after_success:
-- date +%H:%M:%S.%N
-#- make package berg_extract
-- make package
-- ls -l Berg*.zip
-- date +%H:%M:%S.%N
-- wput Berg*.zip ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose
-#- cd ..
-#- wput README.md ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload
-#- pushd travis-build/exp && wput echo exptemplate hello_world show_rpath simple_regex ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose; popd
-- date +%H:%M:%S.%N
-# Test Apache installation:
-- wget http://127.0.0.1/index.html
-- cat index.html
-- wget http://aachen.local/brg/hilfe.html
-- cat hilfe.html
-- echo "cat cgi.log"
-- cat cgi.log
+    - date +%H:%M:%S.%N
+    #- make package berg_extract
+    - make package
+    - ls -l Berg*.zip
+    - date +%H:%M:%S.%N
+    - wput Berg*.zip ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose
+    #- cd ..
+    #- wput README.md ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload
+    #- pushd travis-build/exp && wput echo exptemplate hello_world show_rpath simple_regex ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose; popd
+    - date +%H:%M:%S.%N
+    # Test Apache installation:
+    - wget http://127.0.0.1/index.html
+    - cat index.html
+    - wget http://aachen.local/brg/hilfe.html
+    - cat hilfe.html
+    - echo "cat cgi.log"
+    - cat cgi.log
 
 
