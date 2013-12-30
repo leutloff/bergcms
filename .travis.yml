@@ -57,7 +57,7 @@ install:
 before_script:
     - echo "$(date +%H:%M:%S.%N) - before_script begin"
     - pushd src/external/ctemplate
-    - ./configure --prefix $TRAVIS_BUILD_DIR/src/external/ctemplate
+    - ./configure --prefix $TRAVIS_BUILD_DIR/src/external/ctemplate 1>/dev/null
     - make
     - make install
     - popd
@@ -79,10 +79,10 @@ script:
     - make
     - make package
     - export BERG_ARCHIVE=$(ls -t Berg*.zip | head -1)
-    - echo "BERG_ARCHIVE - $BERG_ARCHIVE, dir name - $(basename $BERG_ARCHIVE .zip)"
+    #- echo "BERG_ARCHIVE - $BERG_ARCHIVE, dir name - $(basename $BERG_ARCHIVE .zip)"
     - pushd test && ./bergunittests && popd
     - popd
-    - unzip travis-build/$BERG_ARCHIVE
+    - unzip -q travis-build/$BERG_ARCHIVE
     - mv $(basename $BERG_ARCHIVE .zip)/cgi-bin/brg $TRAVIS_BUILD_DIR/www-root/cgi-bin/
     - mv $(basename $BERG_ARCHIVE .zip)/htdocs/brg $TRAVIS_BUILD_DIR/www-root/htdocs/
     - $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh 
@@ -103,6 +103,8 @@ after_success:
     - cat hilfe.html
     - wget http://aachen.local/cgi-bin/brg/maker
     - cat maker
+    - cat $TRAVIS_BUILD_DIR/logs/aachen-error.log
+    - cat $TRAVIS_BUILD_DIR/logs/aachen-access.log
     - cat $TRAVIS_BUILD_DIR/logs/cgi.log
 
 
