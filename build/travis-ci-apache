@@ -4,7 +4,7 @@
     ServerName aachen.local
     ServerAlias aachen www.aachen.local
 
-    DocumentRoot %TRAVIS_BUILD_DIR%/www-root/htdocs
+    DocumentRoot "%TRAVIS_BUILD_DIR%/www-root/htdocs"
     SuexecUserGroup "travis" "travis"
 
     <Directory "%TRAVIS_BUILD_DIR%/www-root/htdocs">
@@ -30,7 +30,7 @@
   # Maximum amount of PUT or POST requests that will be recorded in the scriptlog, default: 1024
   # ScriptLogBuffer 1024
 
-  <Location "%TRAVIS_BUILD_DIR%/www-root/cgi-bin"/>
+  <Location "%TRAVIS_BUILD_DIR%/www-root/cgi-bin">
    Options +ExecCGI -Includes
    Order allow,deny
    Allow from all
