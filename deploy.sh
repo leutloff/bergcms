@@ -23,8 +23,11 @@
 SOURCEDIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 DEPLOYHOST=remote-hostname
-HTDOCSDEPLOYDIR=/home/aachen/htdocs/brg
-CGIBINDEPLOYDIR=/home/aachen/cgi-bin/brg
+# HTDOCSDEPLOYDIR=/home/aachen/htdocs/brg
+# CGIBINDEPLOYDIR=/home/aachen/cgi-bin/brg
+# Required by production system FTP daemon:
+HTDOCSDEPLOYDIR=/htdocs/brg
+CGIBINDEPLOYDIR=/cgi-bin/brg
 
 FTPPUT="ncftpput"
 FTPUSER=
