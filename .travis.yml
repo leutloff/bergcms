@@ -78,7 +78,8 @@ script:
     - pushd travis-build
     - make
     - make package
-    - export BERG_ARCHIVE=$(ls -t Berg*.zip | head -1")
+    - export BERG_ARCHIVE=$(ls -t Berg*.zip | head -1)
+    - echo "BERG_ARCHIVE: $BERG_ARCHIVE, dir name: $(basename $BERG_ARCHIVE .zip)"
     - pushd test && ./bergunittests && popd
     - popd
     - unzip travis-build/$BERG_ARCHIVE
