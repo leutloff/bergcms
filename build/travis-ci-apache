@@ -4,10 +4,10 @@
     ServerName aachen.local
     ServerAlias aachen www.aachen.local
 
-    DocumentRoot %TRAVIS_BUILD_DIR%/www/htdocs
+    DocumentRoot %TRAVIS_BUILD_DIR%/www-root/htdocs
     SuexecUserGroup "travis" "travis"
 
-    <Directory "%TRAVIS_BUILD_DIR%/www/htdocs">
+    <Directory "%TRAVIS_BUILD_DIR%/www-root/htdocs">
         Options FollowSymLinks MultiViews +ExecCGI
         AllowOverride All
         Order deny,allow
@@ -22,12 +22,15 @@
 #        FastCgiExternalServer /usr/lib/cgi-bin/php5-fcgi -host 127.0.0.1:9000 -pass-header Authorization
 #    </IfModule>
 
+  ErrorLog "%TRAVIS_BUILD_DIR%/logs/aachen-error.log" 
+  CustomLog "%TRAVIS_BUILD_DIR%/logs/aachen-access.log" combined
+
   # Added for development purposes - Location of the CGI script error logfile showing input and output
-  ScriptLog  %TRAVIS_BUILD_DIR%/cgi.log
+  ScriptLog  "%TRAVIS_BUILD_DIR%/logs/cgi.log"
   # Maximum amount of PUT or POST requests that will be recorded in the scriptlog, default: 1024
   # ScriptLogBuffer 1024
 
-  <Location %TRAVIS_BUILD_DIR%/www/cgi-bin/>
+  <Location "%TRAVIS_BUILD_DIR%/www-root/cgi-bin"/>
    Options +ExecCGI -Includes
    Order allow,deny
    Allow from all

@@ -41,6 +41,7 @@ install:
     # Install Apache for the GUI tests and wget
     - sudo apt-get install wget apache2 apache2-suexec-custom apache2-utils -y
     # configure apache suexec
+    - mkdir -p $TRAVIS_BUILD_DIR/logs $TRAVIS_BUILD_DIR/www-root/htdocs/dlb $TRAVIS_BUILD_DIR/www-root/cgi-bin
     - pushd /etc/apache2/mods-enabled && sudo ln -s ../mods-available/suexec.load . && popd
     - sudo cp -f build/suexec-www-data /etc/apache2/suexec/www-data
     # configure apache virtual hosts
@@ -75,24 +76,32 @@ before_script:
     - echo "$(date +%H:%M:%S.%N) - before_script end"
 script:
     - pushd travis-build
-    - make && pushd test && ./bergunittests && popd 
+    - make
+    - make package
+    - export BERG_ARCHIVE=$(ls -t Berg*.zip | head -1")
+    - pushd test && ./bergunittests && popd
     - popd
+    - unzip travis-build/$BERG_ARCHIVE
+    - mv $(basename $BERG_ARCHIVE .zip)/cgi-bin/brg $TRAVIS_BUILD_DIR/www-root/cgi-bin/
+    - mv $(basename $BERG_ARCHIVE .zip)/htdocs/brg $TRAVIS_BUILD_DIR/www-root/htdocs/
     - $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh 
     #- node $TRAVIS_BUILD_DIR/testsuite-webdriver-js/maker-result.js
 after_success:
     - echo "$(date +%H:%M:%S.%N) - after_success begin"
+    - pushd travis-build
     #- make package berg_extract
-    - make package
+    #- make package
     - ls -l Berg*.zip
     - date +%H:%M:%S.%N
     - wput Berg*.zip ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose
     #- pushd travis-build/exp && wput echo exptemplate hello_world show_rpath simple_regex ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose; popd
+    - popd
     - date +%H:%M:%S.%N
     # Test Apache installation:
     - wget http://aachen.local/brg/hilfe.html
     - cat hilfe.html
     - wget http://aachen.local/cgi-bin/brg/maker
     - cat maker
-    - cat $TRAVIS_BUILD_DIR/cgi.log
+    - cat $TRAVIS_BUILD_DIR/logs/cgi.log
 
 
