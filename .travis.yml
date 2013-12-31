@@ -100,8 +100,10 @@ after_success:
     - popd
     - date +%H:%M:%S.%N
     # Test Apache installation:
-    - wget http://aachen.local/brg/hilfe.html
-    - cat hilfe.html
+#     - wget http://aachen.local/brg/hilfe.html
+#     - cat hilfe.html
+    - wget http://aachen.local/cgi-bin/brg/berg.pl
+    - cat berg.pl
     - wget http://aachen.local/cgi-bin/brg/maker
     - cat maker
     - ls -l $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/

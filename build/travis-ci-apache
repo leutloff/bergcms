@@ -22,18 +22,18 @@
 #        FastCgiExternalServer /usr/lib/cgi-bin/php5-fcgi -host 127.0.0.1:9000 -pass-header Authorization
 #    </IfModule>
 
-  ErrorLog "%TRAVIS_BUILD_DIR%/logs/aachen-error.log" 
-  CustomLog "%TRAVIS_BUILD_DIR%/logs/aachen-access.log" combined
+    ErrorLog "%TRAVIS_BUILD_DIR%/logs/aachen-error.log" 
+    CustomLog "%TRAVIS_BUILD_DIR%/logs/aachen-access.log" combined
 
-  # Added for development purposes - Location of the CGI script error logfile showing input and output
-  ScriptLog  "%TRAVIS_BUILD_DIR%/logs/cgi.log"
-  # Maximum amount of PUT or POST requests that will be recorded in the scriptlog, default: 1024
-  # ScriptLogBuffer 1024
+    # Added for development purposes - Location of the CGI script error logfile showing input and output
+    ScriptLog  "%TRAVIS_BUILD_DIR%/logs/cgi.log"
+    # Maximum amount of PUT or POST requests that will be recorded in the scriptlog, default: 1024
+    # ScriptLogBuffer 1024
 
-  <Location "%TRAVIS_BUILD_DIR%/www-root/cgi-bin">
-   Options +ExecCGI -Includes
-   Order allow,deny
-   Allow from all
-   SetHandler cgi-script 
-  </Location>
+    <Location /cgi-bin/>
+        Options +ExecCGI -Includes
+        Order allow,deny
+        Allow from all
+        SetHandler cgi-script 
+    </Location>
 </VirtualHost>
