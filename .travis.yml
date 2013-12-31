@@ -101,18 +101,23 @@ after_success:
     - popd
     - date +%H:%M:%S.%N
     # Test Apache installation:
+    - ls -l $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/lib/ $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/
 #     - wget http://aachen.local/brg/hilfe.html
 #     - cat hilfe.html
-    - $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/berg.pl
+    #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/berg.pl
     - wget http://aachen.local/cgi-bin/brg/berg.pl
     - cat berg.pl
+    - ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
+    - cp $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/libctemplate.so.2.0.1 $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/lib/libctemplate.so.2
+    - ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
+    - sudo cp $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/libctemplate.so.2.0.1 /usr/lib/libctemplate.so.2
     - ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
     - $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
     - wget http://aachen.local/cgi-bin/brg/maker
     - cat maker
-    - ls -l $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/
-    - cat /var/log/apache2/error.log
-    - cat /var/log/apache2/suexec.log
+    - sudo cat /var/log/apache2/error.log
+    - sudo cat /var/log/apache2/suexec.log
+    - ls -l $TRAVIS_BUILD_DIR/logs
     - cat $TRAVIS_BUILD_DIR/logs/aachen-error.log
     - cat $TRAVIS_BUILD_DIR/logs/aachen-access.log
     - cat $TRAVIS_BUILD_DIR/logs/cgi.log
