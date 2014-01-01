@@ -101,12 +101,22 @@ after_success:
     - popd
     - date +%H:%M:%S.%N
     # Test Apache installation:
-    - ls -l $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/lib/ $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/
+    - touch $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/touch_out
+    - ls -la $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/lib/ $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/
+# works:
 #     - wget http://aachen.local/brg/hilfe.html
 #     - cat hilfe.html
-    #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/berg.pl
-    - wget http://aachen.local/cgi-bin/brg/berg.pl
-    - cat berg.pl
+# works:
+#     #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/berg.pl
+#     - wget http://aachen.local/cgi-bin/brg/berg.pl
+#     - cat berg.pl
+    - wget http://aachen.local/cgi-bin/brg/show_rpath
+    - cat show_rpath
+    - wget http://aachen.local/cgi-bin/brg/hello_world
+    - cat hello_world
+    - wget http://aachen.local/cgi-bin/brg/berg
+    - cat berg
+    - readelf -d $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker | grep RPATH
     - ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
     - cp $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/libctemplate.so.2.0.1 $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/lib/libctemplate.so.2
     - ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
@@ -121,5 +131,7 @@ after_success:
     - cat $TRAVIS_BUILD_DIR/logs/aachen-error.log
     - cat $TRAVIS_BUILD_DIR/logs/aachen-access.log
     - cat $TRAVIS_BUILD_DIR/logs/cgi.log
+    # Try other executables:
+    
 
 
