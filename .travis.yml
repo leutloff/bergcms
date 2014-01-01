@@ -27,10 +27,13 @@ before_install:
     - git submodule update --init --recursive
     - date +%H:%M:%S.%N
     # Install nodejs, npm and then the selenium webdriver for nodejs:
-    - sudo apt-get install nodejs -y
+    - sudo apt-get install nodejs nodejs-legacy -y
     - curl https://npmjs.org/install.sh > install-npm.sh
     - sudo sh install-npm.sh
-    - sudo npm install wd
+    - sudo npm install -g mocha
+    - pushd test
+    - sudo npm install wd selenium-webdriver
+    - popd
     - echo "$(date +%H:%M:%S.%N) - before_install end"
 install:
     - echo "$(date +%H:%M:%S.%N) - install begin"
@@ -89,6 +92,7 @@ script:
     - mv $(basename $BERG_ARCHIVE .zip)/htdocs/brg $TRAVIS_BUILD_DIR/www-root/htdocs/
     - $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh 
     #- node $TRAVIS_BUILD_DIR/testsuite-webdriver-js/maker-result.js
+    - mocha --reporter min
 after_success:
     - echo "$(date +%H:%M:%S.%N) - after_success begin"
     - pushd travis-build
