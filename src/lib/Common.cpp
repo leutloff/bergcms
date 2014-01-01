@@ -2,7 +2,7 @@
  * @file Common.cpp
  *  Some static shared methods.
  * 
- * Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2012, 2013, 2014 Christian Leutloff <leutloff@sundancer.oche.de>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -36,7 +36,7 @@ void Common::FillDictionaryCommon(ctemplate::TemplateDictionary & dict)
     dict.SetValue("SYSTEM_TITLE_SHORT_ASCII", "Redaktion AC"); // for use in <title>
     dict.SetValue("BERG_LANG", "de");
     dict.SetValue("BERG_VERSION", "Berg CMS " + GetBergVersion()); //Berg v3.0.0");
-    dict.SetValue("BERG_COPYRIGHT", "2012, 2013 Christian Leutloff");
+    dict.SetValue("BERG_COPYRIGHT", "2012, 2013, 2014 Christian Leutloff");
     dict.SetValue("BERG_AUTHOR", "Christian Leutloff");
 
     dict.SetValue("BERG_CGI_ROOT", "/cgi-bin/brg");
@@ -155,6 +155,6 @@ string Common::GetBergVersion()
 
 std::string Common::GetBergLastChangedDate()
 {
-    return "28.12.2013";
+    return "01.01.2014";
 }
 
