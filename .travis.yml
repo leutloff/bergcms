@@ -26,11 +26,16 @@ before_install:
     - date +%H:%M:%S.%N
     - git submodule update --init --recursive
     - date +%H:%M:%S.%N
+    # Add PPA with boost libraries
+    - sudo add-apt-repository ppa:ukplc-team/testing -y
+    # Add PPA with latest nodejs
+    - sudo add-apt-repository ppa:chris-lea/node.js -y 
+    - sudo apt-get update -qq
     # Install nodejs, npm and then the selenium webdriver for nodejs:
     - sudo apt-get install nodejs -y
     # nodejs-legacy is required in later Ubuntu versions than precise:
     - sudo apt-get install nodejs-legacy -y || true
-    - node -v
+    - which node && node -v
     - curl https://npmjs.org/install.sh > install-npm.sh
     - sudo sh install-npm.sh
     - sudo npm install -g mocha
@@ -40,10 +45,7 @@ before_install:
     - echo "$(date +%H:%M:%S.%N) - before_install end"
 install:
     - echo "$(date +%H:%M:%S.%N) - install begin"
-    # Add PPA with boost libraries
     - date +%H:%M:%S.%N
-    - sudo add-apt-repository ppa:ukplc-team/testing -y
-    - sudo apt-get update -qq
     # Install Apache for the GUI tests and wget
     - sudo apt-get install wget apache2 apache2-suexec-custom apache2-utils -y
     # configure apache suexec
