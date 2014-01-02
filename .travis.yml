@@ -117,16 +117,17 @@ after_success:
 #     #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/berg.pl
 #     - wget http://aachen.local/cgi-bin/brg/berg.pl
 #     - cat berg.pl
-    - wget http://aachen.local/cgi-bin/brg/show_rpath
-    - cat show_rpath
-    - wget http://aachen.local/cgi-bin/brg/hello_world
-    - cat hello_world
-    - wget http://aachen.local/cgi-bin/brg/berg
-    - cat berg
+# works:
+#     - wget http://aachen.local/cgi-bin/brg/show_rpath
+#     - cat show_rpath
+# works:
+#     - wget http://aachen.local/cgi-bin/brg/hello_world
+#     - cat hello_world
+# works:
+#     - wget http://aachen.local/cgi-bin/brg/berg
+#     - cat berg
     - readelf -d $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker | grep RPATH
-    - ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
-    - cp $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/libctemplate.so.2.0.1 $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/lib/libctemplate.so.2
-    - ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
+    - pushd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg && ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker maker && popd
     - sudo cp $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/libctemplate.so.2.0.1 /usr/lib/libctemplate.so.2
     - ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
     - $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
