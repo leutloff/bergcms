@@ -41,6 +41,7 @@ before_install:
     - sudo npm install -g mocha
     - pushd test
     - sudo npm install wd selenium-webdriver
+    - curl http://chromedriver.storage.googleapis.com/2.8/chromedriver_linux64.zip > chromedriver_linux64.zip && unzip chromedriver_linux64.zip && sudo mv chromedriver /usr/local/bin && chmod +rx /usr/local/bin/chromedriver
     - popd
     - echo "$(date +%H:%M:%S.%N) - before_install end"
 install:
