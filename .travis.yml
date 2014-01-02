@@ -28,9 +28,9 @@ before_install:
     - date +%H:%M:%S.%N
     # Install nodejs, npm and then the selenium webdriver for nodejs:
     - sudo apt-get install nodejs -y
-    # sudo apt-get install nodejs-legacy -y is not available in precise, therefor set the sym link by hand:
-    #- sudo ln -s /usr/bin/nodejs /usr/bin/node -> file exists
-    - ls -l /usr/bin/nodejs /usr/bin/node
+    # nodejs-legacy is required in later Ubuntu versions than precise:
+    - sudo apt-get install nodejs-legacy -y || true
+    - node -v
     - curl https://npmjs.org/install.sh > install-npm.sh
     - sudo sh install-npm.sh
     - sudo npm install -g mocha
