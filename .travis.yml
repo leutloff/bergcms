@@ -29,7 +29,8 @@ before_install:
     # Install nodejs, npm and then the selenium webdriver for nodejs:
     - sudo apt-get install nodejs -y
     # sudo apt-get install nodejs-legacy -y is not available in precise, therefor set the sym link by hand:
-    - sudo ln -s /usr/bin/nodejs /usr/bin/node
+    #- sudo ln -s /usr/bin/nodejs /usr/bin/node -> file exists
+    - ls -l /usr/bin/nodejs /usr/bin/node
     - curl https://npmjs.org/install.sh > install-npm.sh
     - sudo sh install-npm.sh
     - sudo npm install -g mocha
