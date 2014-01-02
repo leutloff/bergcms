@@ -2,7 +2,7 @@
  * @file FileStorage.h
  * Storage related class.
  * 
- * Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2012, 2014 Christian Leutloff <leutloff@sundancer.oche.de>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,6 +20,10 @@
 
 #if !defined(BERG_STORAGE_H)
 #define BERG_STORAGE_H
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#   pragma once
+#endif
 
 #include "Article.h"
 #include "Filter.h"

@@ -20,6 +20,10 @@
 #if !defined(BERG_COMMON_H)
 #define BERG_COMMON_H
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#   pragma once
+#endif
+
 //#include "BoostFlags.h"
 #include <boost/cgi/cgi.hpp>
 #include <boost/function.hpp>

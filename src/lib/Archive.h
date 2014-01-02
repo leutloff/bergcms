@@ -2,7 +2,7 @@
  * @file Archive.h
  * This class provides the archive specific functions.
  * 
- * Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2012, 2014 Christian Leutloff <leutloff@sundancer.oche.de>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,9 +17,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #ifndef ARCHIVE_H_
 #define ARCHIVE_H_
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#   pragma once
+#endif
 
 #include <string>
 #include <vector>

@@ -1,6 +1,6 @@
 # Storage Library
 #
-# Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013, 2014 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -34,7 +34,7 @@ include_directories(
     ${CTEMPLATE_INCLUDEDIR}
     )
 
-set(BERG_STORAGE_LIB_SRC Common.cpp Helper.cpp FileStorage.cpp Article.cpp Archive.cpp)
+set(BERG_STORAGE_LIB_SRC Common.cpp Helper.cpp FileStorage.cpp Article.cpp Archive.cpp DirectoryLayout.cpp)
 if (MSVC)
     add_library(berg_storage ${BERG_STORAGE_LIB_SRC})
 else()

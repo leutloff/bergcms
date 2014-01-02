@@ -108,7 +108,7 @@ after_success:
     - popd
     - date +%H:%M:%S.%N
     # Test Apache installation:
-    - touch $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/touch_out
+    #- touch $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/touch_out
     - ls -la $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/lib/ $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/
 # works:
 #     - wget http://aachen.local/brg/hilfe.html
