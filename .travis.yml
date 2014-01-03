@@ -40,7 +40,7 @@ before_install:
     - sudo sh install-npm.sh
     - sudo npm install -g mocha
     - pushd test
-    - sudo npm install wd selenium-webdriver
+    - sudo npm install wd selenium-webdriver mocha-as-promised chai chai-as-promised colors
     - curl http://chromedriver.storage.googleapis.com/2.8/chromedriver_linux64.zip > chromedriver_linux64.zip && unzip chromedriver_linux64.zip && sudo mv chromedriver /usr/local/bin && chmod +rx /usr/local/bin/chromedriver
     - popd
     - echo "$(date +%H:%M:%S.%N) - before_install end"
@@ -98,7 +98,7 @@ script:
     - mv $(basename $BERG_ARCHIVE .zip)/htdocs/brg $TRAVIS_BUILD_DIR/www-root/htdocs/
     - $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh 
     #- node $TRAVIS_BUILD_DIR/testsuite-webdriver-js/maker-result.js
-    - mocha --reporter min
+    #- mocha --reporter min
 after_success:
     - echo "$(date +%H:%M:%S.%N) - after_success begin"
     - pushd travis-build
