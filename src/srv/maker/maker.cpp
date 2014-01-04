@@ -128,72 +128,72 @@ int HandleRequest(boost::cgi::request& req)
         }
         resp << "</pre></p>\n";
 
-        // Log to file and to the HTML page.
-        ostringstream oss;
-        fs::ofstream ofs(makerLogfile);
-        TeeDevice teeDevice(oss, ofs);
-        TeeStream log(teeDevice);
+//        // Log to file and to the HTML page.
+//        ostringstream oss;
+//        fs::ofstream ofs(makerLogfile);
+//        TeeDevice teeDevice(oss, ofs);
+//        TeeStream log(teeDevice);
 
-        {
-            //echo "xsc Script $XSCVERSION - " >$BERGLOGDIR/log.txt; echo "Start des Zeitungsgenerators pex (`date`) ..." >>$BERGLOGDIR/log.txt
-            Add(log, oss, "<h1>");
-            log << "Generator (maker " << Common::GetBergVersion() << " " << Common::GetBergLastChangedDate() << ")\n";
-            Add(log, oss, "</h1>\n<p>");
-            pt::time_facet *facet = new pt::time_facet("%d.%m.%Y %H:%M:%S");
-            log.imbue(locale(log.getloc(), facet));
-            log << "Start des Zeitungsgenerators maker (" << pt::second_clock::local_time() << ") im Verzeichnis " << fs::current_path() << "...\n";
+//        {
+//            //echo "xsc Script $XSCVERSION - " >$BERGLOGDIR/log.txt; echo "Start des Zeitungsgenerators pex (`date`) ..." >>$BERGLOGDIR/log.txt
+//            Add(log, oss, "<h1>");
+//            log << "Generator (maker " << Common::GetBergVersion() << " " << Common::GetBergLastChangedDate() << ")\n";
+//            Add(log, oss, "</h1>\n<p>");
+//            pt::time_facet *facet = new pt::time_facet("%d.%m.%Y %H:%M:%S");
+//            log.imbue(locale(log.getloc(), facet));
+//            log << "Start des Zeitungsgenerators maker (" << pt::second_clock::local_time() << ") im Verzeichnis " << fs::current_path() << "...\n";
 
-    //        log << "pwd: " << fs::current_path(ec);
-    //        log << " (ec: " << ec.value() << "/" << ec.message() << ")";
-    //        log << ".\n";
-        }
+//    //        log << "pwd: " << fs::current_path(ec);
+//    //        log << " (ec: " << ec.value() << "/" << ec.message() << ")";
+//    //        log << ".\n";
+//        }
 
-        {
-            // # Die CSV-Datenbank nach feginfo.tex transformieren
-            Add(log, oss, "</p><h3>");
-            log << "Artikel aus der Datenbank holen\n";
-            Add(log, oss, "</h3><pre class=\"berg-dev\">");
-            fs::remove(pexLogfile, ec);
-            log << "Protokolldatei (" << pexLogfile.c_str() << ") " << (ec ? "gelöscht" : "nicht gelöscht") << ".\n";
-            log << "Lese Artikel aus der Datenbank (" << inputDatabaseFile.c_str() << "),\n";
-            log << "verwende dazu PeX (" << scriptPex.c_str() << ") ...\n";
+//        {
+//            // # Die CSV-Datenbank nach feginfo.tex transformieren
+//            Add(log, oss, "</p><h3>");
+//            log << "Artikel aus der Datenbank holen\n";
+//            Add(log, oss, "</h3><pre class=\"berg-dev\">");
+//            fs::remove(pexLogfile, ec);
+//            log << "Protokolldatei (" << pexLogfile.c_str() << ") " << (ec ? "gelöscht" : "nicht gelöscht") << ".\n";
+//            log << "Lese Artikel aus der Datenbank (" << inputDatabaseFile.c_str() << "),\n";
+//            log << "verwende dazu PeX (" << scriptPex.c_str() << ") ...\n";
 
-            // perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
-    #if defined(WIN32)
-            bio::file_descriptor_sink pe_log(pexLogfile);
-    #else
-            bio::file_descriptor_sink pe_log(pexLogfile.c_str());
-    #endif
-            bp::monitor c11 = bp::make_child(
-                        bp::paths(exePerl.c_str(), DirectoryLayout::Instance().GetCgiBinDir().c_str())
-                        , bp::arg(scriptPex.c_str())
-                        , bp::arg(inputDatabaseFile.c_str())
-                        , bp::arg(texFile.c_str())
-                        , bp::std_out_to(pe_log)
-                        , bp::std_err_to(pe_log)
-                        );
-            log << "Inhalt der Protokolldatei (" << pexLogfile.c_str() << "):\n";
-            int ret = c11.join(); // wait for PeX completion
-            AddFileToLog(pexLogfile, log, oss);
-            log << "PeX return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
-            if (ret != 0) { ++errors; }
+//            // perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
+//    #if defined(WIN32)
+//            bio::file_descriptor_sink pe_log(pexLogfile);
+//    #else
+//            bio::file_descriptor_sink pe_log(pexLogfile.c_str());
+//    #endif
+//            bp::monitor c11 = bp::make_child(
+//                        bp::paths(exePerl.c_str(), DirectoryLayout::Instance().GetCgiBinDir().c_str())
+//                        , bp::arg(scriptPex.c_str())
+//                        , bp::arg(inputDatabaseFile.c_str())
+//                        , bp::arg(texFile.c_str())
+//                        , bp::std_out_to(pe_log)
+//                        , bp::std_err_to(pe_log)
+//                        );
+//            log << "Inhalt der Protokolldatei (" << pexLogfile.c_str() << "):\n";
+//            int ret = c11.join(); // wait for PeX completion
+//            AddFileToLog(pexLogfile, log, oss);
+//            log << "PeX return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+//            if (ret != 0) { ++errors; }
 
-            // mv $BERGLOGDIR/pe.log $BERGDLBDIR
-            log << "mv/cp " << pexLogfile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
-            //        fs::remove(BERGDLBDIR / pexLogfile.filename(), ec); // ignore error code
-            //        fs::copy_file(pexLogfile, BERGDLBDIR / pexLogfile.filename(), ec);
-            fs::rename(pexLogfile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / pexLogfile.filename(), ec);
-            CheckErrorCode(log, "mv", ec, errors);
-            log << ".\n";
+//            // mv $BERGLOGDIR/pe.log $BERGDLBDIR
+//            log << "mv/cp " << pexLogfile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
+//            //        fs::remove(BERGDLBDIR / pexLogfile.filename(), ec); // ignore error code
+//            //        fs::copy_file(pexLogfile, BERGDLBDIR / pexLogfile.filename(), ec);
+//            fs::rename(pexLogfile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / pexLogfile.filename(), ec);
+//            CheckErrorCode(log, "mv", ec, errors);
+//            log << ".\n";
 
-            // cp $BERGDBDIR/feginfo.tex $BERGDLBDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
-            log << "cp " << texFile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
-            fs::remove(DirectoryLayout::Instance().GetHtdocsDownloadDir() / texFile.filename(), ec); // ignore error code
-            log << " (remove ec: " << ec.value() << "/" << ec.message() << ")";
-            fs::copy_file(texFile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / texFile.filename(), ec);
-            CheckErrorCode(log, "copy_file", ec, errors);
-            log << ".\n";
-        }
+//            // cp $BERGDBDIR/feginfo.tex $BERGDLBDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
+//            log << "cp " << texFile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
+//            fs::remove(DirectoryLayout::Instance().GetHtdocsDownloadDir() / texFile.filename(), ec); // ignore error code
+//            log << " (remove ec: " << ec.value() << "/" << ec.message() << ")";
+//            fs::copy_file(texFile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / texFile.filename(), ec);
+//            CheckErrorCode(log, "copy_file", ec, errors);
+//            log << ".\n";
+//        }
 
 //        {
 //            // cp $BERGDBDIR/*.sty  $BERGDBDIR/*.jpg $BERGOUTDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
@@ -313,20 +313,20 @@ int HandleRequest(boost::cgi::request& req)
 //            log << ".\n";
 //        }
 
-        //        echo "Zeitungsgenerators beendet (`date`)." >>$BERGLOGDIR/log.txt
-        //        echo "Hier noch das Log von pex.pl:" >>$BERGLOGDIR/log.txt
-        //        cat $BERGLOGDIR/log.txt $BERGDLBDIR/pe.log >$BERGDLBDIR/log.txt
-        bchrono::system_clock::time_point stop = bchrono::system_clock::now();
-        log << "Zeitungsgenerator maker beendet (" << pt::second_clock::local_time() << ") ...\n";
-        log << "mv " << makerLogfile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
-        log.flush();
-        log.close();
-        resp << oss.str();
-        fs::rename(makerLogfile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / makerLogfile.filename(), ec);
-        CheckErrorCode(resp, "", ec, errors);
-        resp << "</pre></p>";
+//        //        echo "Zeitungsgenerators beendet (`date`)." >>$BERGLOGDIR/log.txt
+//        //        echo "Hier noch das Log von pex.pl:" >>$BERGLOGDIR/log.txt
+//        //        cat $BERGLOGDIR/log.txt $BERGDLBDIR/pe.log >$BERGDLBDIR/log.txt
+//        bchrono::system_clock::time_point stop = bchrono::system_clock::now();
+//        log << "Zeitungsgenerator maker beendet (" << pt::second_clock::local_time() << ") ...\n";
+//        log << "mv " << makerLogfile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
+//        log.flush();
+//        log.close();
+//        resp << oss.str();
+//        fs::rename(makerLogfile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / makerLogfile.filename(), ec);
+//        CheckErrorCode(resp, "", ec, errors);
+//        resp << "</pre></p>";
 
-        }
+    }
     catch(std::exception const& ex)
     {
         ++errors;
