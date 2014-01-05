@@ -158,63 +158,64 @@ int HandleRequest(boost::cgi::request& req)
             Add(log, oss, "</p>\n");
         }
 
-//        {
-//            // # Die CSV-Datenbank nach feginfo.tex transformieren
-//            Add(log, oss, "<h3>");
-//            log << "Artikel aus der Datenbank holen\n";
-//            Add(log, oss, "</h3><pre class=\"berg-dev\">");
-//            fs::remove(pexLogfile, ec);
-//            log << "Protokolldatei (" << pexLogfile.c_str() << ") " << (ec ? "gelöscht" : "nicht gelöscht") << ".\n";
-//            log << "Lese Artikel aus der Datenbank (" << inputDatabaseFile.c_str() << "),\n";
-//            log << "verwende dazu PeX (" << scriptPex.c_str() << ") ...\n";
+        {
+            // # Die CSV-Datenbank nach feginfo.tex transformieren
+            Add(log, oss, "<h3>");
+            log << "Artikel aus der Datenbank holen\n";
+            Add(log, oss, "</h3><pre class=\"berg-dev\">");
+            fs::remove(pexLogfile, ec);
+            log << "Protokolldatei (" << pexLogfile.c_str() << ") " << (ec ? "gelöscht" : "nicht gelöscht") << ".\n";
+            log << "Lese Artikel aus der Datenbank (" << inputDatabaseFile.c_str() << "),\n";
+            log << "verwende dazu Perl-Script PeX (" << scriptPex.c_str() << ") ...\n";
 
-//            // perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
-//    #if defined(WIN32)
-//            bio::file_descriptor_sink pe_log(pexLogfile);
-//    #else
-//            bio::file_descriptor_sink pe_log(pexLogfile.c_str());
-//    #endif
-//            bp::monitor c11 = bp::make_child(
-//                        bp::paths(exePerl.c_str(), DirectoryLayout::Instance().GetCgiBinDir().c_str())
-//                        , bp::arg(scriptPex.c_str())
-//                        , bp::arg(inputDatabaseFile.c_str())
-//                        , bp::arg(texFile.c_str())
-//                        , bp::std_out_to(pe_log)
-//                        , bp::std_err_to(pe_log)
-//                        );
-//            log << "Inhalt der Protokolldatei (" << pexLogfile.c_str() << "):\n";
-//            int ret = c11.join(); // wait for PeX completion
-//            AddFileToLog(pexLogfile, log, oss);
-//            log << "PeX return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
-//            if (ret != 0) { ++errors; }
+            // perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
+#if defined(WIN32)
+            bio::file_descriptor_sink pe_log(pexLogfile);
+#else
+            bio::file_descriptor_sink pe_log(pexLogfile.c_str());
+#endif
+            bp::monitor c11 = bp::make_child(
+                        bp::paths(exePerl.c_str(), DirectoryLayout::Instance().GetCgiBinDir().c_str())
+                        , bp::arg(scriptPex.c_str())
+                        , bp::arg(inputDatabaseFile.c_str())
+                        , bp::arg(texFile.c_str())
+                        , bp::std_out_to(pe_log)
+                        , bp::std_err_to(pe_log)
+                        );
+            log << "Inhalt der Protokolldatei (" << pexLogfile.c_str() << "):\n";
+            int ret = c11.join(); // wait for PeX completion
+            AddFileToLog(pexLogfile, log, oss);
+            log << "PeX return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+            if (ret != 0) { ++errors; }
 
-//            // mv $BERGLOGDIR/pe.log $BERGDLBDIR
-//            log << "mv/cp " << pexLogfile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
-//            //        fs::remove(BERGDLBDIR / pexLogfile.filename(), ec); // ignore error code
-//            //        fs::copy_file(pexLogfile, BERGDLBDIR / pexLogfile.filename(), ec);
-//            fs::rename(pexLogfile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / pexLogfile.filename(), ec);
-//            CheckErrorCode(log, "mv", ec, errors);
-//            log << ".\n";
+            // mv $BERGLOGDIR/pe.log $BERGDLBDIR
+            log << "mv/cp " << pexLogfile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
+            //        fs::remove(BERGDLBDIR / pexLogfile.filename(), ec); // ignore error code
+            //        fs::copy_file(pexLogfile, BERGDLBDIR / pexLogfile.filename(), ec);
+            fs::rename(pexLogfile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / pexLogfile.filename(), ec);
+            CheckErrorCode(log, "mv", ec, errors);
+            log << ".\n";
 
-//            // cp $BERGDBDIR/feginfo.tex $BERGDLBDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
-//            log << "cp " << texFile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
-//            fs::remove(DirectoryLayout::Instance().GetHtdocsDownloadDir() / texFile.filename(), ec); // ignore error code
-//            log << " (remove ec: " << ec.value() << "/" << ec.message() << ")";
-//            fs::copy_file(texFile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / texFile.filename(), ec);
-//            CheckErrorCode(log, "copy_file", ec, errors);
-//            log << ".\n";
-//        }
+            // cp $BERGDBDIR/feginfo.tex $BERGDLBDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
+            log << "cp " << texFile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
+            fs::remove(DirectoryLayout::Instance().GetHtdocsDownloadDir() / texFile.filename(), ec); // ignore error code
+            log << " (remove ec: " << ec.value() << "/" << ec.message() << ")";
+            fs::copy_file(texFile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / texFile.filename(), ec);
+            CheckErrorCode(log, "copy_file", ec, errors);
+            log << ".\n";
+            Add(log, oss, "</pre></p>\n");
+        }
 
-//        {
-//            // cp $BERGDBDIR/*.sty  $BERGDBDIR/*.jpg $BERGOUTDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
-//            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "sectsty.sty", log);
-//            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "wrapfig.sty", log);
-//            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "feglogo.jpg", log);
-//        }
+        {
+            // cp $BERGDBDIR/*.sty  $BERGDBDIR/*.jpg $BERGOUTDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
+            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "sectsty.sty", log);
+            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "wrapfig.sty", log);
+            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "feglogo.jpg", log);
+        }
 
 //        {
 //            // # LaTeX-Lauf der .pdf und auch .log erzeugt (pdflatex darf keine Ausgabe erzeugen!)
-//            Add(log, oss, "</pre></p><h2>");
+//            Add(log, oss, "<h2>");
 //            log << "PDF-Datei erzeugen\n";
 //            Add(log, oss, "</h2><p><pre class=\"berg-dev\">");
 //            // cd $BERGDBDIR && pdflatex -interaction=nonstopmode -file-line-error feginfo.tex  >/dev/null
@@ -251,6 +252,7 @@ int HandleRequest(boost::cgi::request& req)
 //            AddFileToLog(texLogfile, log, oss);
 //            log << "pdfTeX return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
 //            if (ret != 0) { ++errors; }
+        // Add(log, oss, "</p>\n");
 //        }
 
 //        {
@@ -299,30 +301,30 @@ int HandleRequest(boost::cgi::request& req)
 //                    log << "Makeindex (" << exeMakeindex.c_str() << ") existiert nicht. ";
 //                }
 //                log << "Bildverzeichnis wird nicht aktualisiert.\n";
-//            }
+//            }Add(log, oss, "</pre></p>\n");
 //        }
 
-//        {
-//            Add(log, oss, "</pre></p><h2>");
-//            log << "Dateien in den Downloadbereich kopieren\n";
-//            Add(log, oss, "</h2><p><pre class=\"berg-dev\">");
-//            //        mv $BERGDBDIR/feginfo.log $BERGDBDIR/feginfo.pdf $BERGDLBDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt - kommt als letztes
-//            //        cp $BERGDBDIR/feginfo.csv $BERGDLBDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
-//            log << "cp " << inputDatabaseFile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
-//            fs::remove(DirectoryLayout::Instance().GetHtdocsDownloadDir() / inputDatabaseFile.filename(), ec);
-//            CheckErrorCode(log, "remove", ec, errors);
-//            fs::copy_file(inputDatabaseFile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / inputDatabaseFile.filename(), ec);
-//            CheckErrorCode(log, "copy_file", ec, errors);
-//            log << ".\n";
+        {
+            Add(log, oss, "<h2>");
+            log << "Dateien in den Downloadbereich kopieren\n";
+            Add(log, oss, "</h2><p><pre class=\"berg-dev\">");
+            //        mv $BERGDBDIR/feginfo.log $BERGDBDIR/feginfo.pdf $BERGDLBDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt - kommt als letztes
+            //        cp $BERGDBDIR/feginfo.csv $BERGDLBDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
+            log << "cp " << inputDatabaseFile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
+            fs::remove(DirectoryLayout::Instance().GetHtdocsDownloadDir() / inputDatabaseFile.filename(), ec);
+            CheckErrorCode(log, "remove", ec, errors);
+            fs::copy_file(inputDatabaseFile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / inputDatabaseFile.filename(), ec);
+            CheckErrorCode(log, "copy_file", ec, errors);
+            log << ".\n";
 
-//            log << "cp " << pdfFile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
-//            fs::remove(DirectoryLayout::Instance().GetHtdocsDownloadDir() / pdfFile.filename(), ec);
-//            CheckErrorCode(log, "remove", ec, errors);
-//            fs::copy_file(pdfFile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / pdfFile.filename(), ec);
-//            CheckErrorCode(log, "copy_file", ec, errors);
-//            log << ".\n";
-        // Add(log, oss, "</pre></p>\n");
-//        }
+            log << "cp " << pdfFile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
+            fs::remove(DirectoryLayout::Instance().GetHtdocsDownloadDir() / pdfFile.filename(), ec);
+            CheckErrorCode(log, "remove", ec, errors);
+            fs::copy_file(pdfFile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / pdfFile.filename(), ec);
+            CheckErrorCode(log, "copy_file", ec, errors);
+            log << ".\n";
+            Add(log, oss, "</pre></p>\n");
+        }
 
         {
             //        echo "Zeitungsgenerators beendet (`date`)." >>$BERGLOGDIR/log.txt
@@ -336,7 +338,7 @@ int HandleRequest(boost::cgi::request& req)
             resp << oss.str();
             fs::rename(makerLogfile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / makerLogfile.filename(), ec);
             CheckErrorCode(resp, "", ec, errors);
-            resp << "</pre></p>";
+            resp << "</pre></p>\n";
             stop = bchrono::system_clock::now();
         }
     }
@@ -367,7 +369,7 @@ int HandleRequest(boost::cgi::request& req)
     {
         resp << "<p id=\"processing-result\" class=\"berg-failure\">" << errors << " Fehler! Hinweise zu den Ursachen sollten sich weiter oben finden lassen.</p>";
     }
-    resp << "</body></html>\n";
+    resp << "\n</body></html>\n";
 
     return cgi::commit(req, resp);
 }

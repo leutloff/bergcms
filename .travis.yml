@@ -129,11 +129,12 @@ after_success:
 # works:
 #     - wget http://aachen.local/cgi-bin/brg/berg
 #     - cat berg
-    - readelf -d $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker | grep RPATH
-    - pushd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg && ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker maker && popd
-    - sudo cp $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/libctemplate.so.2.0.1 /usr/lib/libctemplate.so.2
-    - ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
-    - $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
+    #- readelf -d $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker | grep RPATH
+    - ls -al /usr/bin/pdflatex /usr/bin/makeindex || true
+    - pushd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg && ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker maker && ./maker && popd
+    #- sudo cp $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/libctemplate.so.2.0.1 /usr/lib/libctemplate.so.2
+    #- ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
+    #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
     - wget http://aachen.local/cgi-bin/brg/maker
     - cat maker
     - sudo cat /var/log/apache2/error.log
