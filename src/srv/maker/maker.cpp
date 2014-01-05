@@ -54,19 +54,11 @@ typedef bio::stream<TeeDevice> TeeStream;
 
 // prototypes
 void AddFileToLog(fs::path const& logFile, TeeStream &log, ostringstream & oss);
-void CopyToOutDir(fs::path const& filename, TeeStream & log);
+void CopyToOutDir(fs::path const& bergOutDir, fs::path const& filename, TeeStream & log);
 void Add(TeeStream & log, ostringstream & oss, string const& html);
 void CheckErrorCode(cgi::response & resp, std::string const& functionName, bs::error_code const& ec, uint & errors);
 void CheckErrorCode(TeeStream & log, std::string const& functionName, bs::error_code const& ec, uint & errors);
 void CheckErrorCode(std::string & errorString, std::string const& functionName, bs::error_code const& ec, uint & errors);
-
-// Path definitions
-// /home/aachen/cgi-bin/brg/br
-const fs::path BERGDBDIR = fs::path(DirectoryLayout::Instance().GetCgiBinDir() / "br");
-// /home/aachen/cgi-bin/brg/log
-const fs::path BERGLOGDIR = fs::path(DirectoryLayout::Instance().GetCgiBinDir() / "log");
-const fs::path BERGOUTDIR = fs::path(DirectoryLayout::Instance().GetCgiBinDir() / "out"); // processing output
-//const fs::path BERGDLBDIR("/home/aachen/htdocs/dlb");
 
 int HandleRequest(boost::cgi::request& req)
 {
@@ -85,6 +77,14 @@ int HandleRequest(boost::cgi::request& req)
          << "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n"
          << "<title>Gemeindeinformation - Generator - FeG Aachen</title>\n";
     resp << "</head><body>";
+
+    // Path definitions
+    // /home/aachen/cgi-bin/brg/br
+    const fs::path BERGDBDIR = fs::path(DirectoryLayout::Instance().GetCgiBinDir() / "br");
+    // /home/aachen/cgi-bin/brg/log
+    const fs::path BERGLOGDIR = fs::path(DirectoryLayout::Instance().GetCgiBinDir() / "log");
+    const fs::path BERGOUTDIR = fs::path(DirectoryLayout::Instance().GetCgiBinDir() / "out"); // processing output
+    //const fs::path BERGDLBDIR("/home/aachen/htdocs/dlb");
 
     const fs::path makerLogfile      = fs::path(BERGLOGDIR / "log.txt");
 
@@ -105,6 +105,15 @@ int HandleRequest(boost::cgi::request& req)
     try
     {
         resp << "\n<p><pre class=\"berg-dev\">\n";
+        if (fs::exists(DirectoryLayout::Instance().GetCgiBinDir()))
+        {
+            resp << "cgi-bin Verzeichnis: " << DirectoryLayout::Instance().GetCgiBinDir() << ".\n";
+        }
+        else
+        {
+            resp << "cgi-bin Verzeichnis " << DirectoryLayout::Instance().GetCgiBinDir() << " existiert nicht.\n";
+            ++errors;
+        }
         //  mkdir -p $BERGLOGDIR;
         if (!fs::exists(BERGLOGDIR))
         {
@@ -197,9 +206,9 @@ int HandleRequest(boost::cgi::request& req)
 
 //        {
 //            // cp $BERGDBDIR/*.sty  $BERGDBDIR/*.jpg $BERGOUTDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
-//            CopyToOutDir("sectsty.sty", log);
-//            CopyToOutDir("wrapfig.sty", log);
-//            CopyToOutDir("feglogo.jpg", log);
+//            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "sectsty.sty", log);
+//            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "wrapfig.sty", log);
+//            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "feglogo.jpg", log);
 //        }
 
 //        {
@@ -394,13 +403,14 @@ void AddFileToLog(fs::path const& logFile, TeeStream &log, ostringstream &oss)
 /**
   * copy the given file from DB to OUT dir.
   */
-void CopyToOutDir(fs::path const& filename, TeeStream & log)
+void CopyToOutDir(fs::path const& bergOutDir, fs::path const& filename, TeeStream & log)
 {
-    if (!fs::exists(BERGDBDIR / filename))
+    const fs::path target = bergOutDir / filename.filename();
+    if (!fs::exists(target))
     {
-        log << "cp " << filename.c_str() << " -&gt; " << BERGOUTDIR.c_str();
+        log << "cp " << filename.c_str() << " -&gt; " << target.c_str();
         bs::error_code ec;
-        fs::copy_file(filename, BERGOUTDIR / filename.filename(), ec);
+        fs::copy_file(filename, target, ec);
         log << " (ec: " << ec.value() << "/" << ec.message() << ")";
         log << ".\n";
     }
