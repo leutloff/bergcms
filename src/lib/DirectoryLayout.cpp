@@ -23,21 +23,23 @@
 
 using namespace std;
 using namespace berg;
+namespace bs = boost::system;
 namespace fs = boost::filesystem;
 
 void DirectoryLayout::SetProgramName(std::string const& programName)
 {
+    bs::error_code ec;
     pathProgramName = programName;
-    if (boost::filesystem::exists(programName))
+    if (fs::exists(programName))
     {
-        const fs::path programPath = boost::filesystem::path(programName).parent_path();
+        const fs::path programPath = fs::path(programName).parent_path();
         if (!programPath.string().empty())
         {
             dirCgiBin = CheckPath(programPath, BERG_DEFAULT_CGIBIN);
         }
         else
         {
-            dirCgiBin = CheckPath(fs::current_path(), BERG_DEFAULT_CGIBIN);
+            dirCgiBin = CheckPath(fs::current_path(ec), BERG_DEFAULT_CGIBIN);
         }
         dirHtDocs = CheckPath(dirCgiBin / ".." / ".." / "htdocs" / "brg", BERG_DEFAULT_HTDOCS);
         dirDlb = CheckPath(dirHtDocs / ".." / "dlb", BERG_DEFAULT_DLB);

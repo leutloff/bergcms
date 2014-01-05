@@ -138,29 +138,29 @@ int HandleRequest(boost::cgi::request& req)
         }
         resp << "</pre></p>\n";
 
-//        // Log to file and to the HTML page.
-//        ostringstream oss;
-//        fs::ofstream ofs(makerLogfile);
-//        TeeDevice teeDevice(oss, ofs);
-//        TeeStream log(teeDevice);
+        // Log to file and to the HTML page.
+        ostringstream oss;
+        fs::ofstream ofs(makerLogfile);
+        TeeDevice teeDevice(oss, ofs);
+        TeeStream log(teeDevice);
 
-//        {
-//            //echo "xsc Script $XSCVERSION - " >$BERGLOGDIR/log.txt; echo "Start des Zeitungsgenerators pex (`date`) ..." >>$BERGLOGDIR/log.txt
-//            Add(log, oss, "<h1>");
-//            log << "Generator (maker " << Common::GetBergVersion() << " " << Common::GetBergLastChangedDate() << ")\n";
-//            Add(log, oss, "</h1>\n<p>");
-//            pt::time_facet *facet = new pt::time_facet("%d.%m.%Y %H:%M:%S");
-//            log.imbue(locale(log.getloc(), facet));
-//            log << "Start des Zeitungsgenerators maker (" << pt::second_clock::local_time() << ") im Verzeichnis " << fs::current_path() << "...\n";
-
-//    //        log << "pwd: " << fs::current_path(ec);
-//    //        log << " (ec: " << ec.value() << "/" << ec.message() << ")";
-//    //        log << ".\n";
-//        }
+        {
+            //echo "xsc Script $XSCVERSION - " >$BERGLOGDIR/log.txt; echo "Start des Zeitungsgenerators pex (`date`) ..." >>$BERGLOGDIR/log.txt
+            Add(log, oss, "<h1>");
+            log << "Generator (maker " << Common::GetBergVersion() << " " << Common::GetBergLastChangedDate() << ")\n";
+            Add(log, oss, "</h1>\n<p>");
+            pt::time_facet *facet = new pt::time_facet("%d.%m.%Y %H:%M:%S");
+            log.imbue(locale(log.getloc(), facet));
+            log << "Start des Zeitungsgenerators maker (" << pt::second_clock::local_time() << ") im Verzeichnis " << fs::current_path() << "...\n";
+//            log << "pwd: " << fs::current_path(ec);
+//            log << " (ec: " << ec.value() << "/" << ec.message() << ")";
+//            log << ".\n";
+            Add(log, oss, "</p>\n");
+        }
 
 //        {
 //            // # Die CSV-Datenbank nach feginfo.tex transformieren
-//            Add(log, oss, "</p><h3>");
+//            Add(log, oss, "<h3>");
 //            log << "Artikel aus der Datenbank holen\n";
 //            Add(log, oss, "</h3><pre class=\"berg-dev\">");
 //            fs::remove(pexLogfile, ec);
@@ -321,21 +321,24 @@ int HandleRequest(boost::cgi::request& req)
 //            fs::copy_file(pdfFile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / pdfFile.filename(), ec);
 //            CheckErrorCode(log, "copy_file", ec, errors);
 //            log << ".\n";
+        // Add(log, oss, "</pre></p>\n");
 //        }
 
-//        //        echo "Zeitungsgenerators beendet (`date`)." >>$BERGLOGDIR/log.txt
-//        //        echo "Hier noch das Log von pex.pl:" >>$BERGLOGDIR/log.txt
-//        //        cat $BERGLOGDIR/log.txt $BERGDLBDIR/pe.log >$BERGDLBDIR/log.txt
-//        bchrono::system_clock::time_point stop = bchrono::system_clock::now();
-//        log << "Zeitungsgenerator maker beendet (" << pt::second_clock::local_time() << ") ...\n";
-//        log << "mv " << makerLogfile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
-//        log.flush();
-//        log.close();
-//        resp << oss.str();
-//        fs::rename(makerLogfile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / makerLogfile.filename(), ec);
-//        CheckErrorCode(resp, "", ec, errors);
-//        resp << "</pre></p>";
-
+        {
+            //        echo "Zeitungsgenerators beendet (`date`)." >>$BERGLOGDIR/log.txt
+            //        echo "Hier noch das Log von pex.pl:" >>$BERGLOGDIR/log.txt
+            //        cat $BERGLOGDIR/log.txt $BERGDLBDIR/pe.log >$BERGDLBDIR/log.txt
+            Add(log, oss, "<p><pre class=\"berg-dev\">");
+            log << "Zeitungsgenerator maker beendet (" << pt::second_clock::local_time() << ") ...\n";
+            log << "mv " << makerLogfile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
+            log.flush();
+            log.close();
+            resp << oss.str();
+            fs::rename(makerLogfile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / makerLogfile.filename(), ec);
+            CheckErrorCode(resp, "", ec, errors);
+            resp << "</pre></p>";
+            stop = bchrono::system_clock::now();
+        }
     }
     catch(std::exception const& ex)
     {
@@ -355,7 +358,7 @@ int HandleRequest(boost::cgi::request& req)
 
 
     resp << "<h2>Bearbeitungsergebnis</h2>";
-    resp << "Bearbeitungszeit betrug " << boost::chrono::duration_cast<bchrono::milliseconds>(stop-start).count() << " ms.\n";
+    resp << "<p class=\"berg-dev\">Bearbeitungszeit betrug " << boost::chrono::duration_cast<bchrono::milliseconds>(stop-start).count() << " ms.</p>\n";
     if (errors == 0)
     {
         resp << "<p id=\"processing-result\" class=\"berg-success\">Keine Fehler.</p>";
@@ -364,7 +367,7 @@ int HandleRequest(boost::cgi::request& req)
     {
         resp << "<p id=\"processing-result\" class=\"berg-failure\">" << errors << " Fehler! Hinweise zu den Ursachen sollten sich weiter oben finden lassen.</p>";
     }
-    resp << "</body></html>";
+    resp << "</body></html>\n";
 
     return cgi::commit(req, resp);
 }
@@ -457,8 +460,7 @@ void CheckErrorCode(std::string & errorString, std::string const& functionName, 
 
 int main(int argc, char* argv[])
 {
-    //if (0 < argc) { DirectoryLayout::MutableInstance().SetProgramName(argv[0]); }
-     DirectoryLayout::MutableInstance().SetProgramName("maker");
+    if (0 < argc) { DirectoryLayout::MutableInstance().SetProgramName(argv[0]); }
     return Common::InvokeWithErrorHandling(&HandleRequest);
 }
 
