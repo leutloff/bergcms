@@ -457,7 +457,8 @@ void CheckErrorCode(std::string & errorString, std::string const& functionName, 
 
 int main(int argc, char* argv[])
 {
-    if (0 < argc) { DirectoryLayout::MutableInstance().SetProgramName(argv[0]); }
+    //if (0 < argc) { DirectoryLayout::MutableInstance().SetProgramName(argv[0]); }
+     DirectoryLayout::MutableInstance().SetProgramName("maker");
     return Common::InvokeWithErrorHandling(&HandleRequest);
 }
 

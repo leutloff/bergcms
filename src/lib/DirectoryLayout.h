@@ -57,22 +57,10 @@ public:
      * @brief SetProgramName call from main with argv[0].
      * All executables are expected in cgi-bin/brg. Therefore all other
      * directories are referenced relative to this directory.
+     * If argv[0] does not contain a directory the current working directory is used instead.
      * @param programName
      */
-    void SetProgramName(std::string const& programName)
-    {
-        pathProgramName = programName;
-        if (boost::filesystem::exists(programName))
-        {
-            dirCgiBin = CheckPath(boost::filesystem::path(programName).parent_path(), BERG_DEFAULT_CGIBIN);
-            dirHtDocs = CheckPath(dirCgiBin / ".." / ".." / "htdocs" / "brg", BERG_DEFAULT_HTDOCS);
-            dirDlb = CheckPath(dirHtDocs / ".." / "dlb", BERG_DEFAULT_DLB);
-        }
-        else
-        {
-            Init();
-        }
-    }
+    void SetProgramName(std::string const& programName);
     boost::filesystem::path const& GetProgramName() const { return pathProgramName; }
 
     boost::filesystem::path const& GetCgiBinDir() const { return dirCgiBin; }
