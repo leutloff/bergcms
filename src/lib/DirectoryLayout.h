@@ -42,6 +42,7 @@ private:
 #define BERG_DEFAULT_DLB    "/home/aachen/htdocs/dlb"
 
     boost::filesystem::path dirCgiBin, dirHtDocs, dirDlb;
+    boost::filesystem::path pathProgramName;
 
 protected:
     DirectoryLayout() : dirCgiBin(BERG_DEFAULT_CGIBIN), dirHtDocs(BERG_DEFAULT_HTDOCS), dirDlb(BERG_DEFAULT_DLB)
@@ -60,6 +61,7 @@ public:
      */
     void SetProgramName(std::string const& programName)
     {
+        pathProgramName = programName;
         if (boost::filesystem::exists(programName))
         {
             dirCgiBin = CheckPath(boost::filesystem::path(programName).parent_path(), BERG_DEFAULT_CGIBIN);
@@ -71,6 +73,7 @@ public:
             Init();
         }
     }
+    boost::filesystem::path const& GetProgramName() const { return pathProgramName; }
 
     boost::filesystem::path const& GetCgiBinDir() const { return dirCgiBin; }
     boost::filesystem::path const& GetHtdocsDir() const { return dirHtDocs; }

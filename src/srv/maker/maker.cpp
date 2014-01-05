@@ -105,6 +105,7 @@ int HandleRequest(boost::cgi::request& req)
     try
     {
         resp << "\n<p><pre class=\"berg-dev\">\n";
+        resp << "Programmname: " << DirectoryLayout::Instance().GetProgramName() << ".\n";
         if (fs::exists(DirectoryLayout::Instance().GetCgiBinDir()))
         {
             resp << "cgi-bin Verzeichnis: " << DirectoryLayout::Instance().GetCgiBinDir() << ".\n";
