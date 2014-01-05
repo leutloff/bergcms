@@ -206,103 +206,121 @@ int HandleRequest(boost::cgi::request& req)
             Add(log, oss, "</pre></p>\n");
         }
 
+// this is no longer needed - TEXINPUTS is set appropriate below
+//        {
+//            // cp $BERGDBDIR/*.sty  $BERGDBDIR/*.jpg $BERGOUTDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
+//            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "sectsty.sty", log);
+//            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "wrapfig.sty", log);
+//            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "feglogo.jpg", log);
+//        }
+
         {
-            // cp $BERGDBDIR/*.sty  $BERGDBDIR/*.jpg $BERGOUTDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
-            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "sectsty.sty", log);
-            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "wrapfig.sty", log);
-            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "feglogo.jpg", log);
+            // # LaTeX-Lauf der .pdf und auch .log erzeugt (pdflatex darf keine Ausgabe erzeugen!)
+            Add(log, oss, "<h2>");
+            log << "PDF-Datei erzeugen\n";
+            Add(log, oss, "</h2>");
+            if (fs::exists(exePdfLatex))
+            {
+                Add(log, oss, "<p><pre class=\"berg-dev\">");
+                // cd $BERGDBDIR && pdflatex -interaction=nonstopmode -file-line-error feginfo.tex  >/dev/null
+                log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
+
+#if defined(BOOST_WINDOWS_API)
+                const wstring wsTexFileString = texFile.parent_path().c_str(); // c_str in Win is wstring
+                const string texFileString(wsTexFileString.begin(), wsTexFileString.end());
+#else
+                const string texFileString = texFile.parent_path().c_str();
+#endif
+                const string outputdir = string("-output-directory=") + texFileString;
+                const string texFilenameOnly = texFile.filename().c_str();
+                log << exePdfLatex.c_str() << " -interaction=nonstopmode -file-line-error " << outputdir << " " << texFilenameOnly;
+                log << "\n";
+
+#if defined(WIN32)
+                bio::file_descriptor_sink tex_log(texLogfile);
+#else
+                bio::file_descriptor_sink tex_log(texLogfile.c_str());
+#endif
+                bp::monitor c12 = bp::make_child(
+                            bp::paths(exePdfLatex.c_str(), BERGOUTDIR.c_str())
+                            , bp::arg("-interaction=nonstopmode")
+                            , bp::arg("-file-line-error")
+                            , bp::arg(outputdir)
+                            , bp::arg(texFilenameOnly)
+                            , bp::environment("TEXINPUTS", ".//:../br//:/usr/share/texmf-texlive/tex/latex//:/usr/share/texlive/texmf-dist/tex/latex//:/usr/share/texmf-texlive/tex/generic//:/usr/share/texlive/texmf-dist/tex/generic//:/etc/texmf/tex//")
+                            , bp::std_out_to(tex_log)
+                            , bp::std_err_to(tex_log)
+                            );
+                log << "Inhalt der Protokolldatei (" << texLogfile.c_str() << "):\n";
+                int ret = c12.join(); // wait for pdflatex completion
+                AddFileToLog(texLogfile, log, oss);
+                log << "pdfTeX return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+                if (ret != 0) { ++errors; }
+                Add(log, oss, "</pre>");
+            }
+            else
+            {
+                Add(log, oss, "<p class=\"berg-failure\"");
+                log << "PDFLaTeX (" << exePdfLatex.c_str() << ") existiert nicht. PDF kann deswegen nicht erzeugt werden.";
+                ++errors;
+            }
+            Add(log, oss, "</p>\n");
         }
 
-//        {
-//            // # LaTeX-Lauf der .pdf und auch .log erzeugt (pdflatex darf keine Ausgabe erzeugen!)
-//            Add(log, oss, "<h2>");
-//            log << "PDF-Datei erzeugen\n";
-//            Add(log, oss, "</h2><p><pre class=\"berg-dev\">");
-//            // cd $BERGDBDIR && pdflatex -interaction=nonstopmode -file-line-error feginfo.tex  >/dev/null
-//            log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
+        {
+            // # Bildverzeichnis erzeugen
+            Add(log, oss, "<h2>");
+            log << "Bildverzeichnis für den nächsten Durchlauf erzeugen\n";
+            Add(log, oss, "</h2>");
+            //        #cd $BERGDBDIR && if [ -f feginfo.idx ]; xindy feginfo.idx; fi 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
+            //        #echo "xindy calling .." >>$BERGLOGDIR/log.txt
+            //        #cd $BERGDBDIR && xindy -L german-din feginfo.idx 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
+            //        echo "makeindex calling .." >>$BERGLOGDIR/log.txt
+            //        cd $BERGDBDIR && makeindex feginfo.idx 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
+            //        cd $BERGDBDIR && which ls 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
+            //        cd $BERGDBDIR && which makeindex 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
+            if (fs::exists(BERGOUTDIR / idxFile) && fs::exists(exeMakeindex))
+            {
+                Add(log, oss, "<p><pre class=\"berg-dev\">");
+                log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
+                log << exeMakeindex.c_str() << " " << idxFile.c_str();
+                log << "\n";
 
-//    #if defined(BOOST_WINDOWS_API)
-//            const wstring wsTexFileString = texFile.parent_path().c_str(); // c_str in Win is wstring
-//            const string texFileString(wsTexFileString.begin(), wsTexFileString.end());
-//    #else
-//            const string texFileString = texFile.parent_path().c_str();
-//    #endif
-//            const string outputdir = string("-output-directory=") + texFileString;
-//            const string texFilenameOnly = texFile.filename().c_str();
-//            log << exePdfLatex.c_str() << " -interaction=nonstopmode -file-line-error " << outputdir << " " << texFilenameOnly;
-//            log << "\n";
-
-//    #if defined(WIN32)
-//            bio::file_descriptor_sink tex_log(texLogfile);
-//    #else
-//            bio::file_descriptor_sink tex_log(texLogfile.c_str());
-//    #endif
-//            bp::monitor c12 = bp::make_child(
-//                        bp::paths(exePdfLatex.c_str(), BERGOUTDIR.c_str())
-//                        , bp::arg("-interaction=nonstopmode")
-//                        , bp::arg("-file-line-error")
-//                        , bp::arg(outputdir)
-//                        , bp::arg(texFilenameOnly)
-//                        , bp::environment("TEXINPUTS", ".//:../br//:/usr/share/texmf-texlive/tex/latex//:/usr/share/texlive/texmf-dist/tex/latex//:/usr/share/texmf-texlive/tex/generic//:/usr/share/texlive/texmf-dist/tex/generic//:/etc/texmf/tex//")
-//                        , bp::std_out_to(tex_log)
-//                        , bp::std_err_to(tex_log)
-//                        );
-//            log << "Inhalt der Protokolldatei (" << texLogfile.c_str() << "):\n";
-//            int ret = c12.join(); // wait for pdflatex completion
-//            AddFileToLog(texLogfile, log, oss);
-//            log << "pdfTeX return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
-//            if (ret != 0) { ++errors; }
-        // Add(log, oss, "</p>\n");
-//        }
-
-//        {
-//            // # Bildverzeichnis erzeugen
-//            Add(log, oss, "</pre></p><h2>");
-//            log << "Bildverzeichnis für den nächsten Durchlauf erzeugen\n";
-//            Add(log, oss, "</h2><p><pre class=\"berg-dev\">");
-//            //        #cd $BERGDBDIR && if [ -f feginfo.idx ]; xindy feginfo.idx; fi 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
-//            //        #echo "xindy calling .." >>$BERGLOGDIR/log.txt
-//            //        #cd $BERGDBDIR && xindy -L german-din feginfo.idx 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
-//            //        echo "makeindex calling .." >>$BERGLOGDIR/log.txt
-//            //        cd $BERGDBDIR && makeindex feginfo.idx 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
-//            //        cd $BERGDBDIR && which ls 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
-//            //        cd $BERGDBDIR && which makeindex 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
-//            if (fs::exists(BERGOUTDIR / idxFile) && fs::exists(exeMakeindex))
-//            {
-//                log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
-//                log << exeMakeindex.c_str() << " " << idxFile.c_str();
-//                log << "\n";
-
-//    #if defined(WIN32)
-//                bio::file_descriptor_sink tex_log(idxLogfile);
-//    #else
-//                bio::file_descriptor_sink idx_log(idxLogfile.c_str());
-//    #endif
-//                bp::monitor c12 = bp::make_child(
-//                            bp::paths(exeMakeindex.c_str(), BERGOUTDIR.c_str())
-//                            , bp::arg(idxFile.c_str())
-//                            , bp::std_out_to(idx_log)
-//                            , bp::std_err_to(idx_log)
-//                            );
-//                log << "Inhalt der Protokolldatei (" << idxLogfile.c_str() << "):\n";
-//                int ret = c12.join(); // wait for makeindex completion
-//                AddFileToLog(idxLogfile, log, oss);
-//                log << "Makeindex return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
-//                if (ret != 0) { ++errors; }
-//            }
-//            else
-//            {
-//                if (!fs::exists(BERGOUTDIR / idxFile))
-//                {
-//                    log << "Indexdatei (" << idxFile.c_str() << ") für das Bildverzeichnis existiert nicht. ";
-//                }
-//                if (!fs::exists(exeMakeindex))
-//                {
-//                    log << "Makeindex (" << exeMakeindex.c_str() << ") existiert nicht. ";
-//                }
-//                log << "Bildverzeichnis wird nicht aktualisiert.\n";
-//            }Add(log, oss, "</pre></p>\n");
-//        }
+#if defined(WIN32)
+                bio::file_descriptor_sink tex_log(idxLogfile);
+#else
+                bio::file_descriptor_sink idx_log(idxLogfile.c_str());
+#endif
+                bp::monitor c12 = bp::make_child(
+                            bp::paths(exeMakeindex.c_str(), BERGOUTDIR.c_str())
+                            , bp::arg(idxFile.c_str())
+                            , bp::std_out_to(idx_log)
+                            , bp::std_err_to(idx_log)
+                            );
+                log << "Inhalt der Protokolldatei (" << idxLogfile.c_str() << "):\n";
+                int ret = c12.join(); // wait for makeindex completion
+                AddFileToLog(idxLogfile, log, oss);
+                log << "Makeindex return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+                if (ret != 0) { ++errors; }
+                Add(log, oss, "</pre>");
+            }
+            else
+            {
+                Add(log, oss, "<p class=\"berg-failure\"");
+                if (!fs::exists(BERGOUTDIR / idxFile))
+                {
+                    log << "Indexdatei (" << idxFile.c_str() << ") für das Bildverzeichnis existiert nicht. ";
+                    ++errors;
+                }
+                if (!fs::exists(exeMakeindex))
+                {
+                    log << "Makeindex (" << exeMakeindex.c_str() << ") existiert nicht. ";
+                    ++errors;
+                }
+                log << "Bildverzeichnis wird nicht aktualisiert.\n";
+            }
+            Add(log, oss, "</p>\n");
+        }
 
         {
             Add(log, oss, "<h2>");

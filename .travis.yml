@@ -63,6 +63,8 @@ install:
     # boost 1.49 is used be the C++ part
     - sudo apt-get install libboost1.49-dev libboost-chrono1.49-dev libboost-date-time1.49-dev libboost-filesystem1.49-dev libboost-iostreams1.49-dev libboost-locale1.49-dev libboost-program-options1.49-dev libboost-regex1.49-dev libboost-serialization1.49-dev libboost-signals1.49-dev libboost-system1.49-dev libboost-test1.49-dev libboost-thread1.49-dev -y -qq
     - ls -l /usr/lib/libboost*
+    # Install the latex base with pdflatex and makeindex.
+    - sudo apt-get install texlive-latex-base -y
     - echo "$(date +%H:%M:%S.%N) - install end"
 before_script:
     - echo "$(date +%H:%M:%S.%N) - before_script begin"
