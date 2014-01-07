@@ -21,7 +21,7 @@ addons:
 before_install:
     - cat /etc/hosts
     - id
-    - gcc -version && perl -v && java -version
+    - gcc --version && perl -v && java -version
     - lsb_release -a
     - date +%H:%M:%S.%N
     - git submodule update --init --recursive
