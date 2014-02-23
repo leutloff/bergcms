@@ -4,7 +4,7 @@
 # commands starting with >. Output is a LaTeX file for final processing.
 #
 # (c) 2007, 2009-2011 Heiko Decker
-# (c) 2011-2013 Christian Leutloff
+# (c) 2011-2014 Christian Leutloff
 # 
 # This program is free software; you can redistribute it and/or modify it 
 # under the same terms as Perl itself, i.e., under the terms of the 
@@ -45,7 +45,7 @@ use Cwd qw(abs_path);
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.11/26.12.2013';
+$VERSION = 'v2.12/23.02.2014';
 # exports are used for testing purposes
 @EXPORT_OK = qw(add_author add_bold add_caption add_italic
                 get_tex_content
@@ -61,16 +61,9 @@ binmode(STDOUT, ":encoding(utf8)");
 __PACKAGE__->run(@ARGV) unless caller();
 
 #--- Define the Global Variables --------------------------------------------------
-#our $SPM=1;#SpaltenMemo - damit Automatik bei TagGesamtTabellen(=1spaltig) und zurücksetzen funzt!27.11.2008
-#our %TTKEY=();#TagTabellenSpalten-Hash init -> GesamtArtikelTabelle 26.11.2008
-#our $TTKAP="";#Kapitelspeicher-> Tabellenplot nach Kapitelwechsel! 26.11.2008
-#our $TABTXTFLG=1;#ArtikelTagFlag-> 2=komplett 1=NUR InfoKopftabelle(ohne Textanhang 0=ABSCHALTEN(komplett ausblenden->man.Übersichtstabellen einfügen möglich!26.11.2008
 our $ITZ=0;#Latex\item-Zähler
 our $ITS="";# letztes Metazeichen - wird in testit() ggf. mit ausgegeben, Beispielwert ist \item
-#our $TAGM=0;#WochentagsSpeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
 our @TXZ=undef;#globaler Textzeilenspeicher
-#our $Iformat="|p{10mm}||p{42mm}|";#InfoTabellenformat->Artikelheader (falls gewünscht ! - unterbinden: 1.Zeile = >*
-#our $Bpfad="bilder";#Bilder-Pfad -> *.jpg-Archiv
 our $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";#Bilder-Pfad -> *.jpg-Archiv
 our $Logopfad="/home/aachen/cgi-bin/brg/br/icons";#Bilder-Pfad -> *.jpg-Archiv
 our $SCALE=1.57;#Skalierung festlegen, z.B. bei Tabellen
@@ -240,7 +233,6 @@ sub create_tex_file
     $ActualColumsNo = 1;
     my $zz = 0;
     my $lines = 0;
-    #my @WTG= qw(nix Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag);#-----WochentagDef s. INFOLISTE TODO remove
     print  "\nDas TeX-Dokument [$OUPTEX] wird erzeugt ...\n";
     foreach $k (sort keys %idx)
     {
@@ -263,19 +255,7 @@ sub create_tex_file
             {
                 print_columns(substr($typ, 1, 1));
             }
-#             if($KAPM ne $kap)# start new chapter?
-#             {
-#                 $KAPM=$kap;
-#                 print $OUT "% Neues Kapitel: $KAPM\n";
-#                 #if ('A' eq substr($typ, 0, 1))# only articles are expected to print chapter headings
-#                 {
-#                     my ($x,$ueber)=split(/\:/, $kap, 2);
-#                     if (!defined($ueber)) { $ueber = $x; }
-#                     testit(">1#".$ueber."#x");# write the section
-#                 }
-#             }
             if(length($titel)>=2){ testit(">2#".$titel."#x"); }# write the subsection
-#           shift(@TXZ);# 1. Dummyzeile entfernen!
         }
         # process the remaining lines
         my $s = '';
@@ -288,36 +268,6 @@ sub create_tex_file
     print_columns('1');# ensure \end{multicols} if necessary.
     print_enddocument();
 }
-
-# #TODO entfernen:
-# #-----------------------------------------------------
-# sub create_infotab  #...Artikel-Kopftabelle generieren!
-# #-----------------------------------------------------
-#     {
-#     my ($hl,@f,$s,$format);
-#     $format=$Iformat;
-#     if($SCALE){$format=~ s/([0-9.]+)/sprintf("%1.1f",$1 * $SCALE) /ge; }# TabellenSpaltenSkalierung!
-#     $hl="";
-#     if($format=~/\|/)# Vertikallinien im TabFormat?->Horizontallinie
-#           {
-#           $hl="\\cline{1-2}\n";
-#           }
-#     print $OUT " \\begin{tabular}{$format}$hl";
-#     while($#TXZ>=0)
-#         {
-#         $s=shift(@TXZ);# leeren des Zeilenspeichers
-#         last if $s=~/^\>\*/;# falls >* folgt abbruch!
-#         $s=~ s/Tel.:|Tel:/\\ding\{37\}/g; #falls Tel.?-> Telefonsymbolersatz
-#         $s=~ s/e-mail:|email:|mail:/\\ding\{41\}/ig; #falls email.?-> Briefsymbolersatz
-#         @f=split(/#/,$s);
-#         my $fx=$f[0];
-#         if($fx=~s/^\-//g)# falls 1.Zeichen in 1.Spalte ="-" ->Hline unterbinden
-#               { print $OUT "$fx&$f[1]\\\\\n";}
-#         else {print $OUT "$fx&$f[1]\\\\$hl\n";}
-#         }
-#     print $OUT "\\end{tabular} \\\\ [1.5ex]\n";
-#     }
-
 
 #** @function
 # Prints the table. Reads the lines until >* is detected.
@@ -492,7 +442,6 @@ sub add_logo_image_jpg  #...Einfuegen jpg- Logo/Icon-Bildatei
         print "* Logo fehlt: $Logopfad/$dn.jpg\n";
         return($tx1." ".$tx2." ");
     }
-    #return($tx1."\%\n\\includegraphics[height=".$hx."]{$Logopfad/$dn.jpg}\%\n".$tx2." ");
     return($tx1."\\setlength\\intextsep{0pt}\\begin{wrapfigure}{l}{0pt}\%\n\\includegraphics[height=".$hx."]{$Logopfad/$dn.jpg}\%\n\\end{wrapfigure}\%\n".$tx2." ");
     # argh der folgende Text muss noch Bestandteil sein 8-( return($tx1."\\begin{figwindow}[1,1,\%\n\\includegraphics[height=".$hx."]{$Logopfad/$dn.jpg},}\%\n\\end{figwindow}\%\n".$tx2." ");
 }
@@ -613,11 +562,8 @@ sub evaluate_commands
     if($f[0] =~/NUM/i){print_enumeration();return;}
     if($f[0] =~/PUN/i) {print_itemize();return;}
     if($f[0] =~/SYMBOL/i) {print_dinglist($f[1]);return;}
-    #if($f[0] =~/INFOTAB/i) {$Iformat=$f[1];return;}# InfoTab-Tabellenformat ->ArtikelHeader
     if($f[0] =~/LISTE/i) {print_list();return;}
     if($f[0] =~/TABELLE/i) {print_table();return;}
-# TODO entfernen:
-#    if($f[0] =~/TAGTAB/i && $TABTXTFLG==0) {print_table_for_day_init($f[1]);return;}
     if($f[0] =~/TAGTAB/i) { report_warning('>TAGTAB wird nicht mehr unterstützt.');return;}
     if($f[0] =~/BILDNACHWEIS/i) { print_picturecredits(); return; }
     if($f[0] =~/BILD/i) {print_image_jpg();return;}   
@@ -652,58 +598,6 @@ sub initialize_issue_information
     $RENDE='Redaktionsschluss für die nächste Ausgabe: \textbf{'."$Rende. $memo}\\\\";
     print "Ausgabe: $AUSGABE\t$Jahr\t\t$ISSUENUMBER\n$RENDE\n";
 }
-
-# # TODO entfernen
-# #-----------------------------------------------------
-# sub print_table_for_day # eine Zeile der Tagesartikel-Gesamttabelle  ausgeben
-# #-----------------------------------------------------
-#     {
-#     my $titel=shift;
-#     my (@f,$s,$k,$w,@tab,$l);
-#     foreach $s (%TTKEY) { if (defined $TTKEY{$s}) {$tab[$TTKEY{$s}]=" ";}}#vorbelegen
-#     $tab[0]=$titel;
-#     while($#TXZ>=0)
-#         {
-#         $s=shift(@TXZ);# leeren des Zeilenspeichers
-#         last if $s=~/^\>\*/;# falls >* folgt Abbruch!
-#         $s=replace_characters($s);
-#         @f=split(/#/,$s);# 2spaltige Kopftabelle Feld und Inhalt auslesen
-#         if (defined $f[0])
-#             {
-#             $f[0]=~s/ |\-//g;#leerzeichen und - eleminieren!
-#             if(!$f[0])# falls Feld leer letzem Feld zuordnen
-#                 {$f[0]=$l;} else {$l=$f[0];}
-#             $tab[$TTKEY{$f[0]}].=" ".$f[1] if (defined($TTKEY{$f[0]}));
-#             }
-#         }
-#     print $OUT ''.join('&',@tab).'\\\\ \hline'."\n";
-#     }
-
-# # TODO entfernen
-# #-----------------------------------------------------
-# sub print_table_for_day_init # initialisieren der Tagesartikel-Gesamttabelle
-# #-----------------------------------------------------
-#     {
-#     my $s=shift;
-#     my @f=split(/,/,$s);
-#     my $k=0;
-#     my ($e,$sn,$br);
-#     my $format='|';
-#     my $u;
-#     $TTKAP=$KAPM; # akt. Kapitel merken
-#     # my $titel=shift(@f);
-#     foreach $s (@f)
-#         {
-#         $s=~s/ //g;#leerzeiche raus
-#         if($s){
-#         ($sn,$br)=split(/=/,$s);#Spaltenname, Spaltenbreite filtern 27.11.2008
-#         $TTKEY{$sn}=$k;
-#         $k++;$format.='L{'.$br.'}|';$u.='\emph{'.$sn.'}&';} #Spaltenreihenfolge im Hash festlegen
-#         }
-#     print $OUT "\\begin{tabular}{$format}".'\hline'."\n";
-#     chop($u);
-#     print $OUT ''.$u.' \\\\ \hline \hline'."\n";
-#     }
 
 #** @function
 # Changing the number of columns. Output is only generated when the number is 
@@ -915,14 +809,6 @@ sub replace_characters #...Suchen/ersetzen
     #print $OUT "% - testit()=> $s\n";
     if($s =~ /^;/) #1.Zeichen ;=Kommentar->bergehen!
        {return("");}
-#    if($s !~ /^>/)
-#        {  # suchen/ersetzen TextMakros 23.10.2010
-#        while($s =~/(::.)/)
-#            {
-#            if($s=~s/(::.)>/$1\{/g){$s.='}';} #::.>  falls Befehl f. ganze restzeile gelten soll einbinden {}
-#            $s=~s/(::.)/$BEF{$1}/g;
-#            }
-#        }
     if($s =~ /:logo:/) #enthaelt Zeile Logo(Grafik)-Einbindung?
         {$s=add_logo_image_jpg($s);}
     $s =~ s/(\d+ *)\%/$1\\\%/gi; #n%  richtig setzen
@@ -944,7 +830,6 @@ sub replace_characters #...Suchen/ersetzen
     $s =~ s/\§/\\S/g; # Paragraphzeichen
 
     #...Telefon/Mailsymbole einbauen!
-#    $s =~ s/Tel.:|Tel:/\\ding\{37\}/ig; #falls Tel.?-> Telefonsymbolersatz
     $s =~ s/^Tel.?:/\\ding\{37\}/ig; # replace Tel. with telephone symbole
     $s =~ s/(\s)Tel.?:/$1\\ding\{37\}/ig; # replace Tel. with telephone symbole
     $s =~ s/e-mail:|email:|mail:/\\ding\{41\}/ig; #falls email.?-> Briefsymbolersatz
