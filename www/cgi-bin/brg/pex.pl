@@ -37,6 +37,7 @@ package BERG::PEX;
 use strict;
 use warnings;
 
+use FindBin;                       # locate this script
 use IO::File;                      # FileHandel(OO-Generation!)
 use Fcntl qw/:flock/;              # LOCK_EX etc. definieren
 use PerlIO::encoding;              # Zeichenkodierung ändern können, z.B. beim Wegschreiben 
@@ -64,8 +65,8 @@ __PACKAGE__->run(@ARGV) unless caller();
 our $ITZ=0;#Latex\item-Zähler
 our $ITS="";# letztes Metazeichen - wird in testit() ggf. mit ausgegeben, Beispielwert ist \item
 our @TXZ=undef;#globaler Textzeilenspeicher
-our $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";#Bilder-Pfad -> *.jpg-Archiv
-our $Logopfad="/home/aachen/cgi-bin/brg/br/icons";#Bilder-Pfad -> *.jpg-Archiv
+our $Bpfad="bilder";#Path to images -> *.jpg
+our $Logopfad="icons";#Path to icons
 our $SCALE=1.57;#Skalierung festlegen, z.B. bei Tabellen
 our $ISSUENUMBER=undef;#Fortlaufende Nummerierung der Gemeindeinformationen
 our $ISSUEYEAR=undef;
@@ -89,9 +90,8 @@ our $OUT = undef;# Handle to the resulting output file
 INIT {
     $ITZ=0;
     $ITS="";
-    # TODO: remove path and use TEXINPUTS or use relative path
-    $Bpfad="/home/aachen/cgi-bin/brg/br/bilder";
-    $Logopfad="/home/aachen/cgi-bin/brg/br/icons";
+    $Bpfad="bilder";
+    $Logopfad="icons";
 
     $SCALE=1.57;
     $SGO=4;
@@ -134,11 +134,11 @@ sub run
     if ($ARGV[2])
     {
         my $options = ','.lc($ARGV[2]).',';
-        if ($options =~ /,userelativepaths,/)
-        {
-            $Bpfad="br/bilder";
-            $Logopfad="br/icons";
-        }
+#         if ($options =~ /,userelativepaths,/)
+#         {
+#             $Bpfad="br/bilder";
+#             $Logopfad="br/icons";
+#         }
     }
 
     open($OUT, ">:encoding(utf8)", $OUPTEX) or die "Die Ausgabedatei $OUPTEX kann nicht geöffnet werden.";
@@ -394,7 +394,7 @@ sub print_image_jpg  #...Einfuegen JPG-Bildatei
 {
     my ($nix,$kom,$xf,$dn,$b,$photographer)=split(/#/,$_);
     my ($sx,$dx);
-    if(not -e "$Bpfad/$dn.jpg")
+    if(not -e "$FindBin::Bin/br/$Bpfad/$dn.jpg")
     {
         print $OUT "\n{\\Large\\ding\{212\} Bild \\textbf\{FEHLT\}: $Bpfad/$dn.jpg}\\\\\n";
         print "* Bild fehlt: $Bpfad/$dn.jpg\n";
@@ -422,7 +422,12 @@ sub print_background_image_jpg  #...Einfuegen jpg-Hintergrund-Bildatei
 {
     my ($nix,$px,$py,$hx,$bx,$dn)=split(/#/,$_);
     my ($hy,$sx,$dx);
-    if(not -e "$Bpfad/$dn.jpg"){print $OUT "\n{\\Large\\ding\{212\} Bild \\textbf\{FEHLT\}: $Bpfad/$dn.jpg}\\\\\n";return;}
+    if(not -e "$FindBin::Bin/br/$Bpfad/$dn.jpg")
+    {
+        print $OUT "\n{\\Large\\ding\{212\} Bild \\textbf\{FEHLT\}: $Bpfad/$dn.jpg}\\\\\n";
+        print "* Bild fehlt: $Bpfad/$dn.jpg\n";
+        return;
+    }
     $hy=$hx-1;
     $py-=$hy;
     print $OUT "{\\unitlength=1mm \\begin{picture}(0,0) \\put($px,$py){\\includegraphics["."width=$bx"."mm,height=$hx"."mm]{$Bpfad/$dn.jpg}} \\end{picture}}\n";
@@ -436,7 +441,7 @@ sub add_logo_image_jpg  #...Einfuegen jpg- Logo/Icon-Bildatei
     my ($tx1,$nix,$dn,$hx,$tx2)=split(/:/,$s);
     #if(not defined $dn) { $dn = ""; }
     #if(not defined $tx2) { $tx2 = ""; }
-    if(not -e "$Logopfad/$dn.jpg")
+    if(not -e "$FindBin::Bin/br/$Logopfad/$dn.jpg")
     {
         print $OUT "\n{\\Large\\ding\{212\} Logo \\textbf\{FEHLT\}: $Logopfad/$dn.jpg}\\\\\n";
         print "* Logo fehlt: $Logopfad/$dn.jpg\n";
@@ -532,7 +537,7 @@ sub evaluate_commands
         if ($f[1] =~/^-/) { print $OUT "% subsubsection ignoriert (wg. -): $f[1]\n";return; }
         else { $u=add_hierachical_caption($f[1]);print_alignment("\\subsubsection{$u}",$f[2]);return;}
     }
-    if($f[0] =~/BPFAD/i) {$Bpfad=$f[1]; return;} #Standardjpg-Bildverzeichnis
+    #if($f[0] =~/BPFAD/i) {$Bpfad=$f[1]; return;} #Standardjpg-Bildverzeichnis
     #...AbschnittsEnde (LIFO-Stack)
     if($f[0] eq "*")#prüfen ob Nummerierungsblock aktiv?
     {

@@ -4,8 +4,8 @@
 # CRUD companion to berg.pl. CRUD means Create, Reload, Update and
 # Delete of the articles in the flat file database (.csv).
 #
-# (c) 2006, 2007, 2008, 2009, 2010, 2011 Heiko Decker
-# (c) 2011, 2012 Christian Leutloff
+# (c) 2006-2011 Heiko Decker
+# (c) 2011-2014 Christian Leutloff
 # 
 # This program is free software; you can redistribute it and/or modify it 
 # under the same terms as Perl itself, i.e., under the terms of the 
@@ -17,8 +17,8 @@ use strict;
 use warnings;
 
 # Pfad mit Modulen ergänzen, z.B. für Algorithm::Merge
-use lib qw(../../perl5);# Entwicklung
-use lib qw(/home/aachen/perl5);# FeG
+use FindBin;                       # locate this script
+use lib qw($FindBin::Bin/perl5);   # path to Algorithm::Merge
 
 use CGI qw/:standard :html4/;      # Standard CGI Functions
 use CGI::Carp qw(fatalsToBrowser); # Show fatal errors in the browser and not only as Internal Server Error
@@ -38,7 +38,7 @@ binmode(STDOUT, ":encoding(utf8)");
 
 
 #--- GlobalSet ---
-my $VERSION="v2.09, 28.12.2012";
+my $VERSION="v2.10, 23.02.2014";
 my $Neuflg;# falls  ? in Select-Listen wird Auswahlliste für Neueingabe unterdrückt!
 my $Sftz=',';# Select-Listen-Feldtrenner
 my $SPATH=defined ($ENV{'SCRIPT_FILENAME'}) ? $ENV{'SCRIPT_FILENAME'} : $ENV{'PATH_TRANSLATED'}.$ENV{'SCRIPT_NAME'};#ScriptPfad - SCRIPT_FILENAME Ersatz bei Mini Java CgiHandler 0.2
