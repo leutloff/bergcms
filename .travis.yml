@@ -35,13 +35,13 @@ before_install:
     - sudo apt-get install nodejs -y
     # nodejs-legacy is required in later Ubuntu versions than precise:
     - sudo apt-get install nodejs-legacy -y || true
-    - which node && node -v
-    - curl https://npmjs.org/install.sh > install-npm.sh
-    - sudo sh install-npm.sh
-    - sudo npm install -g mocha
+    - which node && node -v && npm verion || true
+    - #curl https://npmjs.org/install.sh > install-npm.sh
+    - #sudo sh install-npm.sh
+    - #sudo npm install -g mocha
     - pushd test
-    - sudo npm install wd selenium-webdriver mocha-as-promised chai chai-as-promised colors
-    - curl http://chromedriver.storage.googleapis.com/2.8/chromedriver_linux64.zip > chromedriver_linux64.zip && unzip chromedriver_linux64.zip && sudo mv chromedriver /usr/local/bin && sudo chmod +rx /usr/local/bin/chromedriver
+    - #sudo npm install wd selenium-webdriver mocha-as-promised chai chai-as-promised colors
+    - #curl http://chromedriver.storage.googleapis.com/2.8/chromedriver_linux64.zip > chromedriver_linux64.zip && unzip chromedriver_linux64.zip && sudo mv chromedriver /usr/local/bin && sudo chmod +rx /usr/local/bin/chromedriver
     - popd
     - echo "$(date +%H:%M:%S.%N) - before_install end"
 install:
@@ -69,9 +69,9 @@ install:
 before_script:
     - echo "$(date +%H:%M:%S.%N) - before_script begin"
     # get and start selenium standalone server to perform local tests, too. Reasoning: Document and test local test development.
-    - curl -O http://selenium.googlecode.com/files/selenium-server-standalone-2.39.0.jar
-    - java -jar selenium-server-standalone-2.39.0.jar &
-    #- python -m SimpleHTTPServer 8080 &
+    #- curl -O http://selenium.googlecode.com/files/selenium-server-standalone-2.39.0.jar
+    #- java -jar selenium-server-standalone-2.39.0.jar &
+    ##- python -m SimpleHTTPServer 8080 &
     # Build ctemplate
     - pushd src/external/ctemplate
     - ./configure --prefix $TRAVIS_BUILD_DIR/src/external/ctemplate 1>/dev/null
