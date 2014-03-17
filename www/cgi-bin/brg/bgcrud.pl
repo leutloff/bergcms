@@ -18,7 +18,7 @@ use warnings;
 
 # Pfad mit Modulen ergänzen, z.B. für Algorithm::Merge
 use FindBin;                       # locate this script
-use lib qw($FindBin::Bin/perl5);   # path to Algorithm::Merge
+use lib "$FindBin::Bin/perl5";     # path to Algorithm::Merge
 
 use CGI qw/:standard :html4/;      # Standard CGI Functions
 use CGI::Carp qw(fatalsToBrowser); # Show fatal errors in the browser and not only as Internal Server Error
@@ -38,7 +38,7 @@ binmode(STDOUT, ":encoding(utf8)");
 
 
 #--- GlobalSet ---
-my $VERSION="v2.10, 23.02.2014";
+my $VERSION="v2.10, 17.03.2014";
 my $Neuflg;# falls  ? in Select-Listen wird Auswahlliste für Neueingabe unterdrückt!
 my $Sftz=',';# Select-Listen-Feldtrenner
 my $SPATH=defined ($ENV{'SCRIPT_FILENAME'}) ? $ENV{'SCRIPT_FILENAME'} : $ENV{'PATH_TRANSLATED'}.$ENV{'SCRIPT_NAME'};#ScriptPfad - SCRIPT_FILENAME Ersatz bei Mini Java CgiHandler 0.2
@@ -456,7 +456,8 @@ sub make_db_backup(*)
     my $backupname = $SPATH.'gi_backup/feginfo_'.$timestr.'.csv.gz';
     return if (-r $backupname);# wenn die Datei schon existiert, nicht nochmal anlegen        
     seek($unmodified, 0, SEEK_SET);
-    gzip $unmodified => $backupname or die print_error_page("Fehler: Konnte komprimiertes Backup der Datenbank nicht erstellen (make_db_backup - ".$GzipError.")!");;
+    #     gzip $unmodified => $backupname or die print_error_page("Fehler: Konnte komprimiertes Backup der Datenbank nicht erstellen (make_db_backup - ".$GzipError.")!");
+    gzip(encode("utf8", $unmodified)) => $backupname or die print_error_page("Fehler: Konnte komprimiertes Backup der Datenbank nicht erstellen (make_db_backup - ".$GzipError.")!");
     }
 
 
