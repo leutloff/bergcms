@@ -247,7 +247,10 @@ int HandleRequest(boost::cgi::request& req)
                             , bp::arg("-file-line-error")
                             , bp::arg(outputdir)
                             , bp::arg(texFilenameOnly)
-                            , bp::environment("TEXINPUTS", ".//:../br//:/usr/share/texmf-texlive/tex/latex//:/usr/share/texlive/texmf-dist/tex/latex//:/usr/share/texmf-texlive/tex/generic//:/usr/share/texlive/texmf-dist/tex/generic//:/etc/texmf/tex//")
+                            , bp::environment("TEXINPUTS",
+                                              ".//:../br//:/usr/share/texmf-texlive/tex/latex//:/usr/share/texlive/texmf-dist/tex/latex//"
+                                              ":/usr/share/texmf-texlive/tex/generic//:/usr/share/texlive/texmf-dist/tex/generic//"
+                                              ":/etc/texmf/tex//:/usr/share/texmf//")
                             , bp::std_out_to(tex_log)
                             , bp::std_err_to(tex_log)
                             );
@@ -387,6 +390,10 @@ int HandleRequest(boost::cgi::request& req)
     {
         resp << "<p id=\"processing-result\" class=\"berg-failure\">" << errors << " Fehler! Hinweise zu den Ursachen sollten sich weiter oben finden lassen.</p>";
     }
+    resp << "<p>Einige Download-Links:</p>"
+            << "<p><a href=\"/dlb/feginfo.pdf\">PDF des Gemeindebriefs</a>,<br />"
+            << "<a href=\"/dlb/feginfo.tex\">LaTeX-Datei</a>,<br />"
+            << "<a href=\"/dlb/feginfo.csv\">die CSV-Datenbank</a></p>";
     resp << "\n</body></html>\n";
 
     return cgi::commit(req, resp);
