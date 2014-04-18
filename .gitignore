@@ -19,3 +19,5 @@ qtcreator-build
 remotehosts.cfg
 install_locally.cfg
 archive
+node_modules
+selenium-server-standalone-*.jar
