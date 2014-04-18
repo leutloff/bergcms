@@ -6,7 +6,7 @@ printed news letter, e.g. a bimonthly parish newsletter. It is suitable
 for small editorial committees.
 
 The focus of the system is the next issue to publish. An issue consists
-of several articles. These articles are preprocessed and then composited
+of several articles. These articles are preprocessed and then composed
 by LaTeX. The outcome is a PDF file that can be downloaded and then
 sent directly to the print shop.
 
@@ -15,6 +15,12 @@ Building from Source
 ====================
 
 [![Build Status](https://travis-ci.org/leutloff/berg.png)](https://travis-ci.org/leutloff/berg)
+
+The most up-to-date documentation will be the Continuous Integration build
+on Travis CI. The file .travis.yml performs the build of the C++ based
+modules, runs C++ and Perl based unit tests, installs everything on a 
+local Apache web server and will perform some GUI tests. Nevertheless these 
+are the steps to perform a build:
 
 - Clone or download the repository.
 - Execute the script update_and_build_submodules.sh to initialize, update and
@@ -79,7 +85,7 @@ Copying everything to the production server:
     ./deploy.sh -t prod -c all
 
 
-Test Suite and Unit Tests
+GUI Tests and Unit Tests
 ========================
 
 The test suite for the user interface is based on the Selenium IDE.
@@ -88,7 +94,7 @@ from [http://seleniumhq.org/download/](http://seleniumhq.org/download/).
 Installation is described at
 [http://seleniumhq.org/docs/02_selenium_ide.html](http://seleniumhq.org/docs/02_selenium_ide.html).
 
-The test suites and test cases are located in the folder test suite.
+The test suites and test cases are located in the folder testsuite.
 Put the file www/cgi-bin/brg/testcase.pl only on testing instances.
 The CGI script will copy a database according the selected test case.
 This will destroy the existing database. The existence of the testcase.pl
