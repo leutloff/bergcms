@@ -110,7 +110,8 @@ script:
     - mv $(basename $BERG_ARCHIVE .zip)/htdocs/brg $TRAVIS_BUILD_DIR/www-root/htdocs/
     - $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh 
     #- node $TRAVIS_BUILD_DIR/testsuite-webdriver-js/maker-result.js
-    #- mocha --reporter min
+    - echo "Running first js test"
+    - mocha --reporter min test/hilfe.js
 after_success:
     - echo "$(date +%H:%M:%S.%N) - after_success begin"
     - pushd travis-build

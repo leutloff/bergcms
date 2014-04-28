@@ -10,9 +10,9 @@ BUILDDIR=$SOURCEDIR/build-mk-$HOSTNAME
 TARGETDIR=/home/aachen
 
 # Used to invoke the webbrowser with the given URL, e.g.
-# firefox "http://aachen.burg.local/cgi-bin/brg/maker"
+# firefox "http://aachen.local/cgi-bin/brg/maker"
 MYBROWSER=firefox
-LOCALWWWHOST=http://aachen.burg.local
+LOCALWWWHOST=http://aachen.local
 LOCALCGIDIR=/cgi-bin/brg
 
 # Override any variables above by placing them into a file named install_locally.cfg.

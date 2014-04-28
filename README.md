@@ -61,11 +61,11 @@ Installation/Deployment
 =======================
 
 The installation means copying the content of the archive to the web server 
-executing the web applications. This can be done using different ways depending
+executing the web applications. This can be accomplished in different ways depending
 on the requirements of the web server. The archive is build during the build 
 process as described above.
 
-Part of the archive content is deployment script. The script deploy.sh copies 
+Part of the archive content is a deployment script. The script deploy.sh copies 
 the surrounding files to a web server using ncftpput. So the version deployed 
 to web server depends on the path where the deploy.sh script is executed.
 
