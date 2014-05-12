@@ -5,6 +5,16 @@ env:
     - secure: PtmjgbGjaB3Ta5fIxwuA1bfK2Q0TgAP2ZvoMuVak/2CRHaArnwQodS3JacpPPHEjpqINe65IUvLpgXCONC0OBl3o/fJb0n7LzBnENqXYyU6wsHWb8aI2d7pOaWSm7C4pvZjiXcCbLUPKD3Cc90N8iR+eAABKdUm4GfiaT99ubS0=
     - secure: "OCd/NzEOCuD2p+BsYCr4TaUyKXdo3dmzwf2U5VdRQUXPK/TzzTx+HqOy46VxJ/reySYzGAXTF/Zxmu6289GdOzol3v6dIIGdq/g+62+0/SCtFK8IhaVJNRV1dC9ccN7q9oskzmmgEtjuvPAj0gDX0EhtOVWfogobCGvFITjJcgE="
     - secure: "J1slVeysWT4pntabPUVdOZnlOuOBO95GuRwR7s4GMPWOe8Wm0iWLC07Qr5DoeUK0A17vxsxv62IjzOQsoTARu7yxMjXnWWzit8nqDkOLCi/T6LjOTmDjvB6g0ohQ7Nw8oMWNqqN5HOzd7BpMXVC293+hWkDXvAX/+wIMtbV1gZQ="
+  matrix:
+    - _BROWSER: "firefox"
+      _PLATFORM: "Linux"
+      _VERSION: "29"
+    #- _BROWSER: "firefox"
+    #  _PLATFORM: "Windows_7"
+    #  _VERSION: "29"
+    - _BROWSER: "chrome"
+      _PLATFORM: "Windows_7"
+      _VERSION: "34"
 language: cpp
 compiler:
     - gcc
@@ -98,16 +108,18 @@ script:
     - make package
     - export BERG_ARCHIVE=$(ls -t Berg*.zip | head -1)
     #- echo "BERG_ARCHIVE - $BERG_ARCHIVE, dir name - $(basename $BERG_ARCHIVE .zip)"
+    - echo "Running the C++ unit tests..."
     - pushd test && ./bergunittests && popd
     - popd
+    - echo "Install the Berg CMS to tests the web application..."
     - unzip -q travis-build/$BERG_ARCHIVE
     - mv $(basename $BERG_ARCHIVE .zip)/cgi-bin/brg $TRAVIS_BUILD_DIR/www-root/cgi-bin/
     - chmod go-w $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg
     - mv $(basename $BERG_ARCHIVE .zip)/htdocs/brg $TRAVIS_BUILD_DIR/www-root/htdocs/
+    - echo "Running the Perl unit tests..."
     - $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh 
-    #- node $TRAVIS_BUILD_DIR/testsuite-webdriver-js/maker-result.js
-    - echo "Running first js test"
-    - mocha --reporter min test/hilfe.js
+    - echo "Running Web Application tests using the Javascript based on Selenium/SauceLabs..."
+    - export TEST_RUN_LOCAL=false && npm test
 after_success:
     - echo "$(date +%H:%M:%S.%N) - after_success begin"
     - pushd travis-build
