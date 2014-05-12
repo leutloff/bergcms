@@ -127,7 +127,7 @@ after_success:
     #- make package
     - ls -l Berg*.zip
     - date +%H:%M:%S.%N
-    - wput Berg*.zip ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose
+    - wput Berg*.zip ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose --tries=2 || true
     #- pushd travis-build/exp && wput echo exptemplate hello_world show_rpath simple_regex ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose; popd
     - popd
     - date +%H:%M:%S.%N
