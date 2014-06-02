@@ -1,16 +1,17 @@
 {
-    "name": "berg", 
-    "version": "0.0.2", 
+    "name": "berg",
+    "version": "0.0.3",
     "license": "MIT",
-    "private": true, 
+    "private": true,
     "dependencies": {
+        "jquery": "~2.1.1"
     },
     "devDependencies": {
         "chai": "~1.9.1",
-        "mocha": "~1.18.2",
+        "mocha": "~1.20.0",
         "saucelabs": "~0.1.1",
         "util": "~0.10.3",
-        "webdriverjs": "~1.6.1"
+        "webdriverjs": "~1.7.1"
     },
     "scripts": {
         "test": "mocha --reporter spec --timeout 60000 test/hilfe.js"
