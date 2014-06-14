@@ -46,7 +46,7 @@ before_install:
     # nodejs-legacy is required in later Ubuntu versions than precise:
     - sudo apt-get install nodejs-legacy -y || true
     - which node && node -v && npm version || true
-    - sudo npm install -g mocha
+    - sudo npm install -g mocha browserify uglifyjs
     - sudo npm update
     #- pushd test
     # download selenium server
