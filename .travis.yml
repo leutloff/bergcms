@@ -28,14 +28,26 @@ addons:
   hosts:
     - aachen.local
     - www.aachen.local
+  apt:
+    packages:
+    #- apache2
+    #- apache2-suexec-custom apache2-utils
+    - texlive-latex-base
+    - texlive-latex-recommended
+    - texlive-latex-extra
+    - texlive-lang-german 
+    - texlive-fonts-recommended
+    - texlive-fonts-extra
+    - fonts-linuxlibertine 
+    - latex-xcolor 
+    # do NOT install: texlive-fonts-recommended-doc- texlive-fonts-extra-doc- texlive-latex-base-doc- texlive-luatex- texlive-xetex- texlive-latex-recommended-doc- texlive-latex-extra-doc- texlive-pictures-doc- texlive-pstricks-doc-    
+    - wget 
 before_install:
     - cat /etc/hosts
     - id
     - gcc --version && perl -v && java -version
     - lsb_release -a
-    - date +%H:%M:%S.%N
     - git submodule update --init --recursive
-    - date +%H:%M:%S.%N
     # Add PPA with boost libraries
     - sudo add-apt-repository ppa:ukplc-team/testing -y
     # Add PPA with latest nodejs
@@ -58,12 +70,9 @@ before_install:
     # install phantomjs, too:
     - sudo apt-get install phantomjs
     #- sleep 10
-    - echo "$(date +%H:%M:%S.%N) - before_install end"
 install:
-    - echo "$(date +%H:%M:%S.%N) - install begin"
-    - date +%H:%M:%S.%N
-    # Install Apache for the GUI tests and wget
-    - sudo apt-get install wget apache2 apache2-suexec-custom apache2-utils -y
+    # Install Apache for the GUI tests
+    - sudo apt-get install apache2 apache2-suexec-custom apache2-utils -y
     # configure apache suexec
     - mkdir -p $TRAVIS_BUILD_DIR/logs $TRAVIS_BUILD_DIR/www-root/htdocs/dlb $TRAVIS_BUILD_DIR/www-root/cgi-bin
     - pushd $TRAVIS_BUILD_DIR/www-root/htdocs && ln -sf ../cgi-bin . && popd
@@ -79,29 +88,24 @@ install:
     - sudo apt-get install libboost1.49-dev libboost-chrono1.49-dev libboost-date-time1.49-dev libboost-filesystem1.49-dev libboost-iostreams1.49-dev libboost-locale1.49-dev libboost-program-options1.49-dev libboost-regex1.49-dev libboost-serialization1.49-dev libboost-signals1.49-dev libboost-system1.49-dev libboost-test1.49-dev libboost-thread1.49-dev -y -qq
     - ls -l /usr/lib/libboost*
     # Install the latex base with pdflatex and makeindex. Additionally: ngerman, eurosym.sty and mdwlist.sty
-    - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra fonts-linuxlibertine texlive-lang-german latex-xcolor texlive-fonts-recommended-doc- texlive-fonts-extra-doc- texlive-latex-base-doc- texlive-luatex- texlive-xetex- texlive-latex-recommended-doc- texlive-latex-extra-doc- texlive-pictures-doc- texlive-pstricks-doc- -y
-    - echo "$(date +%H:%M:%S.%N) - install end"
+    # - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra fonts-linuxlibertine texlive-lang-german latex-xcolor texlive-fonts-recommended-doc- texlive-fonts-extra-doc- texlive-latex-base-doc- texlive-luatex- texlive-xetex- texlive-latex-recommended-doc- texlive-latex-extra-doc- texlive-pictures-doc- texlive-pstricks-doc- -y
 before_script:
-    - echo "$(date +%H:%M:%S.%N) - before_script begin"
     # Build ctemplate
     - pushd src/external/ctemplate
     - ./configure --prefix $TRAVIS_BUILD_DIR/src/external/ctemplate 1>/dev/null
     - make
     - make install
     - popd
-    - date +%H:%M:%S.%N
     - find /usr/lib -name 'libicu*'
     - mkdir -p $TRAVIS_BUILD_DIR/src/external/libicu48/lib
     - cp /usr/lib/libicu*.so.48 $TRAVIS_BUILD_DIR/src/external/libicu48/lib || true
     - ls -l $TRAVIS_BUILD_DIR/src/external/libicu48/lib
     - mkdir travis-build
     - pushd travis-build
-    - date +%H:%M:%S.%N
     - cmake --version
     - cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=FALSE ../src
     #- cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=TRUE ../src
     - popd
-    - echo "$(date +%H:%M:%S.%N) - before_script end"
 script:
     - pushd travis-build
     - make
@@ -121,16 +125,13 @@ script:
     - echo "Running Web Application tests using the Javascript based on Selenium/SauceLabs..."
     - export TEST_RUN_LOCAL=false && npm test
 after_success:
-    - echo "$(date +%H:%M:%S.%N) - after_success begin"
     - pushd travis-build
     #- make package berg_extract
     #- make package
     - ls -l Berg*.zip
-    - date +%H:%M:%S.%N
     - wput Berg*.zip ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose --tries=2 || true
     #- pushd travis-build/exp && wput echo exptemplate hello_world show_rpath simple_regex ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose; popd
     - popd
-    - date +%H:%M:%S.%N
     # Test Apache installation:
     #- touch $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/touch_out
     - ls -la $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/lib/ $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/
