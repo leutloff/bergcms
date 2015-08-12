@@ -1,0 +1,1 @@
+The images in this directory not used in an article in the Berg CMS can be deleted at any time. 
