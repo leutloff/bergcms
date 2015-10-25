@@ -43,8 +43,12 @@ else()
     # Ubuntu 13.10 saucy (my Development system) -> 1.53 in different place /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.53.0
     # Ubuntu 14.04 trusty -> 1.54
     # Ubuntu 15.05 vivid -> 1.55
+    # Ubuntu 15.10 vivid -> 1.58
     # Debian wheezy (and jessie and sid 20130720) -> 1.49.0.1
-    if(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.55.0")
+    if(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.58.0")
+        set(BERG_BOOST_VERSION 1.58.0)
+        set(BOOST_LIBRARYDIR "/usr/lib/x86_64-linux-gnu")
+    elseif(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.55.0")
         set(BERG_BOOST_VERSION 1.55.0)
         set(BOOST_LIBRARYDIR "/usr/lib/x86_64-linux-gnu")
     elseif(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.54.0")
