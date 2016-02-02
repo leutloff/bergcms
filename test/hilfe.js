@@ -8,7 +8,7 @@
 var chai = require('chai');
 var assert = chai.assert, // TDD
 expect = chai.expect, // BDD
-webdriverjs = require('webdriverjs');
+webdriverio = require('webdriverio');
 
 process.on('uncaughtException', function(e) {
     console.log(require('util').inspect(e, {showHidden:true}));
@@ -27,7 +27,7 @@ if ((process.env.TRAVIS === 'true') && (process.env.TEST_RUN_LOCAL !== 'true')) 
     var BUILDID = process.env.TRAVIS_BUILD_ID || 'unknown-buildid';
     var TUNNELIDENTIFIER = process.env.TRAVIS_JOB_NUMBER || 'unknown-jobnumber';
     // select selenium version - for available versions see https://saucelabs.com/docs/additional-config#selenium-version
-    var SELENIUMVERSION = '2.40.0';
+    var SELENIUMVERSION = '2.50.1';
     
     //    console.log('BROWSERNAME: ' + BROWSERNAME);
     //    console.log('BROWSERVERSION: ' + BROWSERVERSION);
@@ -40,7 +40,7 @@ if ((process.env.TRAVIS === 'true') && (process.env.TEST_RUN_LOCAL !== 'true')) 
         version: BROWSERVERSION,
         platform: BROWSERPLATFORM,
         tags: ['examples'],
-        name: 'Run web app \'page test\' using webdriverjs/Selenium.',
+        name: 'Run web app \'page test\' using webdriverio/Selenium.',
         build: BUILDID,
         'tunnel-identifier': TUNNELIDENTIFIER,
         'selenium-version': SELENIUMVERSION
@@ -74,7 +74,7 @@ describe('Testing the static german help page.', function() {
         // console.log('--before--');
         this.timeout(60000);
         
-        client = webdriverjs.remote(options);
+        client = webdriverio.remote(options);
         
         // start the session
         client.init()
@@ -97,13 +97,12 @@ describe('Testing the static german help page.', function() {
     });
     
     it('checks the title only', function(done) {
-        // uses helper command getTitle()
-        client.getTitle(function(err, result) {
-            assert.strictEqual(err, null);
-            console.log('1 Title was: ' + result);
-            assert.strictEqual(result, 'Dokumentation - Gemeindezeitungs-Generator');
+        client.getTitle().then(function(title) {
+            console.log('1 Title was: ' + title);
+            assert.strictEqual(title, 'Dokumentation - Gemeindezeitungs-Generator');
         })
         .call(done);
-    });   
+    });
+    
 });
   
