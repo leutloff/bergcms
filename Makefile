@@ -1,8 +1,7 @@
 
-
-SELENIUMVERSION=2.41
-SELENIUMJAR=selenium-server-standalone-$(SELENIUMVERSION).0.jar
-SELENIUMPID=$(shell ps -ef | grep  'selenium-server-standalone-$(SELENIUMVERSION).0.jar$$' | cut -d ' ' -f 2-3)
+SELENIUMVERSION=2.50
+SELENIUMJAR=selenium-server-standalone-$(SELENIUMVERSION).1.jar
+SELENIUMPID=$(shell ps -ef | grep  'selenium-server-standalone-$(SELENIUMVERSION).1.jar$$' | cut -d ' ' -f 2-3)
 
 help:
 	@echo "This Makefile is intended to execute the GUI tests."
@@ -15,7 +14,7 @@ update:
 
 $(SELENIUMJAR):
 	@echo "Getting selenium server $(SELENIUMJAR) ..."
-	curl -O http://selenium-release.storage.googleapis.com/$(SELENIUMVERSION)/$(SELENIUMJAR)
+	curl -O https://selenium-release.storage.googleapis.com/$(SELENIUMVERSION)/$(SELENIUMJAR)
 
 launchselenium: $(SELENIUMJAR)
 ifneq (,$(SELENIUMPID))
