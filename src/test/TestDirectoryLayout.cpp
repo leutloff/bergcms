@@ -26,6 +26,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <fstream>
+#include <iostream>
 
 using namespace std;
 using namespace berg;

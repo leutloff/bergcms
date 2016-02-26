@@ -22,6 +22,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/cgi/cgi.hpp>
 #include <locale>
+#include <iostream>
 
 using namespace std;
 using namespace berg;
