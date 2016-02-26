@@ -8,13 +8,13 @@ env:
   matrix:
     - _BROWSER: "firefox"
       _PLATFORM: "Linux"
-      _VERSION: "43.0"
+      _VERSION: "44.0"
     #- _BROWSER: "firefox"
     #  _PLATFORM: "Windows_7"
-    #  _VERSION: "43.0"
+    #  _VERSION: "44.0"
     - _BROWSER: "chrome"
       _PLATFORM: "Windows_7"
-      _VERSION: "47.0"
+      _VERSION: "48.0"
 language: cpp
 compiler:
     - gcc

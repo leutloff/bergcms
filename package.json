@@ -9,9 +9,9 @@
     "devDependencies": {
         "chai": "~3.5.0",
         "mocha": "~2.4.5",
-        "saucelabs": "~1.0.1",
+        "saucelabs": "~1.2.0",
         "util": "~0.10.3",
-        "webdriverio": "~3.4.0"
+        "webdriverio": "~4.0.3"
     },
     "scripts": {
         "test": "mocha --reporter spec --timeout 60000 test/hilfe.js"
