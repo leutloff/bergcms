@@ -1,15 +1,16 @@
 /*!
  * Berg CMS JavaScript
  *
- * Copyright 2013 Christian Leutloff
+ * Copyright 2013, 2014 Christian Leutloff
  * Released under the MIT license
  * https://github.com/leutloff/berg/blob/master/LICENSES/MIT-LICENSE.txt
  */
+var $ = require('jquery');
 var brg = {
     // function should be called on document ready. Adds version information to HTML page.
     onLoadCommon: function (){
         if (console) { console.log("brgOnLoadCommon called."); }
-        $("#brg-version").append(" (berg js v0.1, jQuery v" + $().jquery + ")");
+        $("#brg-version").append(" (berg js v0.2, jQuery v" + $().jquery + ")");
 
     },
 
