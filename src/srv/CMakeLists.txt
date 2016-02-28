@@ -1,6 +1,6 @@
 # add all the server side programs - these are CGI aware programs.
 #
-# Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+add_subdirectory (bgrest)
 add_subdirectory (berg)
 add_subdirectory (archive)
 add_subdirectory (maker)

@@ -33,8 +33,8 @@ addons:
     - www.aachen.local
   apt:
     packages:
-      #- apache2
-      #- apache2-suexec-custom apache2-utils
+      - apache2
+      - apache2-suexec-custom apache2-utils
       #
       # Install the latex base with pdflatex and makeindex. Additionally: ngerman, eurosym.sty and mdwlist.sty
       - texlive-latex-base
@@ -50,9 +50,9 @@ addons:
       # the boost libraries are used by the C++ part
       - libboost-all-dev
       # wput is used to copy the package to an FTP site.
-      - wput
+      # package not allowed (20160228): - wput
       # nodejs-legacy is required in later Ubuntu versions than precise:
-      - nodejs-legacy
+      # package not allowed (20160228): - nodejs-legacy
 before_install:
     - cat /etc/hosts
     - id
@@ -62,15 +62,15 @@ before_install:
     # Add PPA with boost libraries
     #- sudo add-apt-repository ppa:ukplc-team/testing -y
     # Add PPA with latest nodejs
-    #- sudo add-apt-repository ppa:chris-lea/node.js -y 
-    #- sudo apt-get update -qq
+    - sudo add-apt-repository ppa:chris-lea/node.js -y 
+    - sudo apt-get update -qq
     # Install nodejs, npm and then the selenium webdriver for nodejs:
-    #- sudo apt-get install nodejs -y
+    - sudo apt-get install nodejs -y
     # nodejs-legacy is required in later Ubuntu versions than precise:
-    #- sudo apt-get install nodejs-legacy -y || true
+    - sudo apt-get install nodejs-legacy -y || true
     - which node && node -v && npm version || true
-    - sudo npm install -g mocha browserify uglifyjs
-    - sudo npm update
+    - sudo npm install -g mocha browserify uglifyjs || true
+    - sudo npm update || true
     # Download selenium server
     # Latest version: http://www.seleniumhq.org/download/
     - curl -O https://selenium-release.storage.googleapis.com/2.50/selenium-server-standalone-2.50.1.jar
@@ -93,7 +93,7 @@ install:
     - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
     - sudo service apache2 restart
     # wput is used to copy the package to an FTP site.
-    #- sudo apt-get install wput -y
+    - sudo apt-get install wput -y
     # the boost libraries are used by the C++ part
     - ls -l /usr/lib/libboost* /usr/lib/i386-linux-gnu/libboost* /usr/lib/x86_64-linux-gnu/libboost*  || true
 before_script:
