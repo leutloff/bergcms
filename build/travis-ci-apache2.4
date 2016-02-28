@@ -1,4 +1,4 @@
-# build/travis-ci-apache - used for testing within Travis CI
+# build/travis-ci-apache2.4 - used for testing within Travis CI using Apache 2.4
 # For another example see doc/etc_apache2/sites-available/aachen.local.conf
 <VirtualHost *:80>
     ServerName aachen.local
@@ -10,9 +10,9 @@
     <Directory "%TRAVIS_BUILD_DIR%/www-root/htdocs">
         Options FollowSymLinks MultiViews +ExecCGI
         AllowOverride All
-        Order deny,allow
-        Allow from all
+        Require all granted
     </Directory>
+    ScriptAlias /cgi-bin "%TRAVIS_BUILD_DIR%/www-root/cgi-bin/"
 
 #    # Wire up Apache to use Travis CI's php-fpm.
 #    <IfModule mod_fastcgi.c>
@@ -32,8 +32,7 @@
 
     <Location /cgi-bin/>
         Options +ExecCGI -Includes
-        Order allow,deny
-        Allow from all
+        Require all granted
         SetHandler cgi-script 
     </Location>
 </VirtualHost>

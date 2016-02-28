@@ -46,9 +46,9 @@ addons:
       - texlive-fonts-extra
       - fonts-linuxlibertine 
       - latex-xcolor 
-      # do NOT install: texlive-fonts-recommended-doc- texlive-fonts-extra-doc- texlive-latex-base-doc- texlive-luatex- texlive-xetex- texlive-latex-recommended-doc- texlive-latex-extra-doc- texlive-pictures-doc- texlive-pstricks-doc-    
+      # Do NOT install: texlive-fonts-recommended-doc- texlive-fonts-extra-doc- texlive-latex-base-doc- texlive-luatex- texlive-xetex- texlive-latex-recommended-doc- texlive-latex-extra-doc- texlive-pictures-doc- texlive-pstricks-doc-    
       - wget
-      # the boost libraries are used by the C++ part
+      # The boost libraries are used by the C++ part
       - libboost-all-dev
       # wput is used to copy the package to an FTP site.
       # Disallowing packages (20160228): - wput
@@ -60,8 +60,6 @@ before_install:
     - gcc --version && perl -v && java -version
     - lsb_release -a
     - git submodule update --init --recursive
-    # Add PPA with boost libraries
-    #- sudo add-apt-repository ppa:ukplc-team/testing -y
     # Add PPA with latest nodejs
     - sudo add-apt-repository ppa:chris-lea/node.js -y 
     - sudo apt-get update -qq
@@ -85,18 +83,20 @@ install:
     # Install Apache for the GUI tests (apache2 is installed above)
     - sudo apt-get install apache2-suexec-custom apache2-utils -y
     # configure apache suexec:
-    - mkdir -p $TRAVIS_BUILD_DIR/logs $TRAVIS_BUILD_DIR/www-root/htdocs/dlb $TRAVIS_BUILD_DIR/www-root/cgi-bin
-    - pushd $TRAVIS_BUILD_DIR/www-root/htdocs && ln -sf ../cgi-bin . && popd
+    - mkdir -p $TRAVIS_BUILD_DIR/logs $TRAVIS_BUILD_DIR/www-root/htdocs/dlb
+    #- pushd $TRAVIS_BUILD_DIR/www-root/htdocs && ln -sf ../cgi-bin . && popd
     - pushd /etc/apache2/mods-enabled && sudo ln -s ../mods-available/suexec.load . && popd
     - sudo cp -f build/suexec-www-data /etc/apache2/suexec/www-data
     # configure apache virtual hosts:
-    - sudo cp -f build/travis-ci-apache /etc/apache2/sites-available/default
+    #- sudo cp -f build/travis-ci-apache2.2 /etc/apache2/sites-available/default
+    - sudo cp -f build/travis-ci-apache2.4 /etc/apache2/sites-available/default
     - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
+    - sudo /usr/sbin/apache2ctl configtest || true
     - sudo service apache2 restart
     # wput is used to copy the package to an FTP site.
     - sudo apt-get install wput -y
     # the boost libraries are used by the C++ part
-    - ls -l /usr/lib/libboost* /usr/lib/i386-linux-gnu/libboost* /usr/lib/x86_64-linux-gnu/libboost*  || true
+    - ls -l /usr/lib/libboost* /usr/lib/i386-linux-gnu/libboost* /usr/lib/x86_64-linux-gnu/libboost* || true
 before_script:
     # Build ctemplate
     - pushd src/external/ctemplate
