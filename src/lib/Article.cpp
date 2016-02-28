@@ -1,9 +1,9 @@
 /**
  * @file Article.cpp
  * Article related methods.
- * 
- * Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
- * 
+ *
+ * Copyright 2012, 2013, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -24,6 +24,8 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 #include <boost/tokenizer.hpp>
 #include <algorithm>
 #include <sstream>
@@ -32,6 +34,8 @@
 using namespace std;
 using namespace berg;
 namespace tpl = ctemplate;
+namespace pt = boost::property_tree;
+
 
 const std::string Article::ITEM_SEPARATOR = "\t";
 const size_t      Article::INCREMENT_LINECOUNT_FOR_DISPLAY = 3;
@@ -127,4 +131,59 @@ size_t Article::CountDisplayedLines(std::string const& articlePart)
     // count line breaks itself
     cnt += std::count(articlePart.begin(), articlePart.end(), '\n');
     return cnt;
+}
+
+void Article::SetFromJSON(const string &jsonArticle)
+{
+    pt::ptree tree;
+    istringstream iss(jsonArticle);
+    pt::read_json(iss, tree);
+
+    id = tree.get<unsigned>("article.id");
+    priority = tree.get<int>("article.priority", 100);
+    type = tree.get("article.type", "A");
+    chapter = tree.get("article.chapter", "");
+    title = tree.get("article.title", "");
+    header = tree.get("article.header", "");
+    body = tree.get("article.body", "");
+    footer = tree.get("article.footer", "");
+    lastChanged = tree.get("article.lastChanged", "");
+}
+
+/**
+ * @brief AddJsonValue writes the value w/o quotes.
+ */
+void AddJsonValue(ostream & os, string const& name, string const& value, bool isLastElement = false)
+{
+    os << "        \"" << name << "\": " << value;
+    if (!isLastElement) { os << ","; }
+    os << endl;
+}
+/**
+ * @brief AddJsonQuotedValue writes the element as quoted value.
+ */
+void AddJsonQuotedValue(ostream & os, string const& name, string const& value, bool isLastElement = false)
+{
+    string quoted = "\"" + value + "\"";
+    AddJsonValue(os, name, quoted, isLastElement);
+}
+
+void Article::GetAsJSON(std::string & jsonArticle) const
+{
+    jsonArticle.clear();
+    ostringstream oss;
+    oss << "{" << endl;
+    oss << "    \"article\": {" << endl;
+    AddJsonValue(oss, "id", boost::lexical_cast<string>(id));
+    AddJsonValue(oss, "priority", boost::lexical_cast<string>(priority));
+    AddJsonQuotedValue(oss, "type", type);
+    AddJsonQuotedValue(oss, "chapter", chapter);
+    AddJsonQuotedValue(oss, "title", title);
+    AddJsonQuotedValue(oss, "header", header);
+    AddJsonQuotedValue(oss, "body", body);
+    AddJsonQuotedValue(oss, "footer", footer);
+    AddJsonQuotedValue(oss, "lastChanged", lastChanged, true);
+    oss << "    }" << endl;
+    oss << "}" << endl;
+    jsonArticle = oss.str();
 }

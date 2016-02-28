@@ -1,6 +1,6 @@
-# Testing the library using unit tests.
+# Testing the library using C++ unit tests.
 #
-# Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-message("***   Entering test (unit tests)   ***")
+message("***   Entering test (unit tests), target: bergunittests   ***")
 
 include("${PROJECT_SOURCE_DIR}/shared_config.cmake")
 if(MSVC)
@@ -58,7 +58,8 @@ endif()
 set(UNITTEST_SRC TestMain.cpp
                  TestArticle.cpp TestStorage.cpp TestHelper.cpp
                  TestTexGenerationUsingPex.cpp
-                 TestDirectoryLayout.cpp)
+                 TestDirectoryLayout.cpp
+                 TestArticleJson.cpp)
 
 add_executable(bergunittests ${UNITTEST_SRC})
 target_link_libraries(bergunittests berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})

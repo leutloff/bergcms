@@ -26,6 +26,7 @@
 
 #include <ctemplate/template_dictionary.h>
 
+#include <limits>
 #include <string>
 
 namespace berg
@@ -52,6 +53,7 @@ private:
     static const size_t      INCREMENT_LINECOUNT_FOR_DISPLAY;
 
 public:
+    Article() { id = std::numeric_limits<unsigned>::max(); priority = -1; }
     /// Parses the given article and stores the artifacts in the attributes.
     Article(std::string wholeArticle);
     ~Article()
@@ -92,6 +94,16 @@ public:
       */
     static size_t CountDisplayedLines(std::string const& articlePart);
 
+    /**
+     * @brief SetFromJSON sets the whole article from the JSON object.
+     * @param json the JSON object
+     */
+    void SetFromJSON(std::string const& jsonArticle);
+    /**
+     * @brief GetAsJSON returns the article as JSON object.
+     * @return the article formatted as JSON object
+     */
+    void GetAsJSON(std::string &jsonArticle) const;
 
 
     std::string getBody() const

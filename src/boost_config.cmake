@@ -1,7 +1,7 @@
 # boost_config.cmake
 # This file holds all the Boost related configurations.
 #
-# Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -40,10 +40,10 @@ else()
     # Ubuntu 12.04 LTS precise (Travis CI) -> provides 1.46 which lacks the chrono lib
     #     therefore boost 1.49 is installed from PPA https://launchpad.net/~ukplc-team
     # Ubuntu 13.04 raring -> 1.49
-    # Ubuntu 13.10 saucy (my Development system) -> 1.53 in different place /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.53.0
+    # Ubuntu 13.10 saucy -> 1.53 in different place /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.53.0
     # Ubuntu 14.04 trusty -> 1.54
     # Ubuntu 15.05 vivid -> 1.55
-    # Ubuntu 15.10 vivid -> 1.58
+    # Ubuntu 15.10 vivid (my Development system) -> 1.58
     # Debian wheezy (and jessie and sid 20130720) -> 1.49.0.1
     if(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.58.0")
         set(BERG_BOOST_VERSION 1.58.0)
