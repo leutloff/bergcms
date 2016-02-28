@@ -33,18 +33,21 @@ addons:
     - www.aachen.local
   apt:
     packages:
-    #- apache2
-    #- apache2-suexec-custom apache2-utils
-    - texlive-latex-base
-    - texlive-latex-recommended
-    - texlive-latex-extra
-    - texlive-lang-german 
-    - texlive-fonts-recommended
-    - texlive-fonts-extra
-    - fonts-linuxlibertine 
-    - latex-xcolor 
-    # do NOT install: texlive-fonts-recommended-doc- texlive-fonts-extra-doc- texlive-latex-base-doc- texlive-luatex- texlive-xetex- texlive-latex-recommended-doc- texlive-latex-extra-doc- texlive-pictures-doc- texlive-pstricks-doc-    
-    - wget 
+      #- apache2
+      #- apache2-suexec-custom apache2-utils
+      #
+      # Install the latex base with pdflatex and makeindex. Additionally: ngerman, eurosym.sty and mdwlist.sty
+      - texlive-latex-base
+      - texlive-latex-recommended
+      - texlive-latex-extra
+      - texlive-lang-german 
+      - texlive-fonts-recommended
+      - texlive-fonts-extra
+      - fonts-linuxlibertine 
+      - latex-xcolor 
+      # do NOT install: texlive-fonts-recommended-doc- texlive-fonts-extra-doc- texlive-latex-base-doc- texlive-luatex- texlive-xetex- texlive-latex-recommended-doc- texlive-latex-extra-doc- texlive-pictures-doc- texlive-pstricks-doc-    
+      - wget
+      - libboost-all-dev
 before_install:
     - cat /etc/hosts
     - id
@@ -52,7 +55,7 @@ before_install:
     - lsb_release -a
     - git submodule update --init --recursive
     # Add PPA with boost libraries
-    - sudo add-apt-repository ppa:ukplc-team/testing -y
+    #- sudo add-apt-repository ppa:ukplc-team/testing -y
     # Add PPA with latest nodejs
     - sudo add-apt-repository ppa:chris-lea/node.js -y 
     - sudo apt-get update -qq
@@ -89,8 +92,8 @@ install:
     - sudo apt-get install wput -y
     # boost 1.49 is used by the C++ part
     #precise: - sudo apt-get install libboost1.49-dev libboost-chrono1.49-dev libboost-date-time1.49-dev libboost-filesystem1.49-dev libboost-iostreams1.49-dev libboost-locale1.49-dev libboost-program-options1.49-dev libboost-regex1.49-dev libboost-serialization1.49-dev libboost-signals1.49-dev libboost-system1.49-dev libboost-test1.49-dev libboost-thread1.49-dev -y -qq
-    - sudo apt-get install libboost-all-dev -y -qq
-    - ls -l /usr/lib/libboost* /usr/lib/i386-linux-gnu/libboost* /usr/lib/x86_64-linux-gnu/libboost*
+    #trusty: - sudo apt-get install libboost-all-dev -y -qq
+    - ls -l /usr/lib/libboost* /usr/lib/i386-linux-gnu/libboost* /usr/lib/x86_64-linux-gnu/libboost*  || true
     # Install the latex base with pdflatex and makeindex. Additionally: ngerman, eurosym.sty and mdwlist.sty
     # - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra fonts-linuxlibertine texlive-lang-german latex-xcolor texlive-fonts-recommended-doc- texlive-fonts-extra-doc- texlive-latex-base-doc- texlive-luatex- texlive-xetex- texlive-latex-recommended-doc- texlive-latex-extra-doc- texlive-pictures-doc- texlive-pstricks-doc- -y
 before_script:
