@@ -15,6 +15,9 @@ env:
     - _BROWSER: "chrome"
       _PLATFORM: "Windows_7"
       _VERSION: "48.0"
+# try to use trusty (14.04) instead of precise (12.04)
+sudo: required
+dist: trusty
 language: cpp
 compiler:
     - gcc
@@ -115,7 +118,7 @@ script:
     - echo "Running the C++ unit tests..."
     - pushd test && ./bergunittests && popd
     - popd
-    - echo "Install the Berg CMS to tests the web application..."
+    - echo "Install the Berg CMS to test the web application..."
     - unzip -q travis-build/$BERG_ARCHIVE
     - mv $(basename $BERG_ARCHIVE .zip)/cgi-bin/brg $TRAVIS_BUILD_DIR/www-root/cgi-bin/
     - chmod go-w $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg
