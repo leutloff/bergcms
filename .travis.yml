@@ -34,7 +34,8 @@ addons:
   apt:
     packages:
       - apache2
-      - apache2-suexec-custom apache2-utils
+      # Disallowing packages (20160228): apache2-suexec-custom apache2-utils
+      #- apache2-suexec-custom apache2-utils
       #
       # Install the latex base with pdflatex and makeindex. Additionally: ngerman, eurosym.sty and mdwlist.sty
       - texlive-latex-base
@@ -50,9 +51,9 @@ addons:
       # the boost libraries are used by the C++ part
       - libboost-all-dev
       # wput is used to copy the package to an FTP site.
-      # package not allowed (20160228): - wput
+      # Disallowing packages (20160228): - wput
       # nodejs-legacy is required in later Ubuntu versions than precise:
-      # package not allowed (20160228): - nodejs-legacy
+      # Disallowing packages (20160228): - nodejs-legacy
 before_install:
     - cat /etc/hosts
     - id
@@ -81,14 +82,14 @@ before_install:
     - java -jar selenium-server-standalone-2.50.1.jar -Dwebdriver.chrome.driver=./chromedriver &
     #- sleep 10
 install:
-    # Install Apache for the GUI tests
-    - sudo apt-get install apache2 apache2-suexec-custom apache2-utils -y
-    # configure apache suexec
+    # Install Apache for the GUI tests (apache2 is installed above)
+    - sudo apt-get install apache2-suexec-custom apache2-utils -y
+    # configure apache suexec:
     - mkdir -p $TRAVIS_BUILD_DIR/logs $TRAVIS_BUILD_DIR/www-root/htdocs/dlb $TRAVIS_BUILD_DIR/www-root/cgi-bin
     - pushd $TRAVIS_BUILD_DIR/www-root/htdocs && ln -sf ../cgi-bin . && popd
     - pushd /etc/apache2/mods-enabled && sudo ln -s ../mods-available/suexec.load . && popd
     - sudo cp -f build/suexec-www-data /etc/apache2/suexec/www-data
-    # configure apache virtual hosts
+    # configure apache virtual hosts:
     - sudo cp -f build/travis-ci-apache /etc/apache2/sites-available/default
     - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
     - sudo service apache2 restart
