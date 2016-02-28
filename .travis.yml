@@ -47,7 +47,12 @@ addons:
       - latex-xcolor 
       # do NOT install: texlive-fonts-recommended-doc- texlive-fonts-extra-doc- texlive-latex-base-doc- texlive-luatex- texlive-xetex- texlive-latex-recommended-doc- texlive-latex-extra-doc- texlive-pictures-doc- texlive-pstricks-doc-    
       - wget
+      # the boost libraries are used by the C++ part
       - libboost-all-dev
+      # wput is used to copy the package to an FTP site.
+      - wput
+      # nodejs-legacy is required in later Ubuntu versions than precise:
+      - nodejs-legacy
 before_install:
     - cat /etc/hosts
     - id
@@ -57,16 +62,15 @@ before_install:
     # Add PPA with boost libraries
     #- sudo add-apt-repository ppa:ukplc-team/testing -y
     # Add PPA with latest nodejs
-    - sudo add-apt-repository ppa:chris-lea/node.js -y 
-    - sudo apt-get update -qq
+    #- sudo add-apt-repository ppa:chris-lea/node.js -y 
+    #- sudo apt-get update -qq
     # Install nodejs, npm and then the selenium webdriver for nodejs:
-    - sudo apt-get install nodejs -y
+    #- sudo apt-get install nodejs -y
     # nodejs-legacy is required in later Ubuntu versions than precise:
-    - sudo apt-get install nodejs-legacy -y || true
+    #- sudo apt-get install nodejs-legacy -y || true
     - which node && node -v && npm version || true
     - sudo npm install -g mocha browserify uglifyjs
     - sudo npm update
-    #- pushd test
     # Download selenium server
     # Latest version: http://www.seleniumhq.org/download/
     - curl -O https://selenium-release.storage.googleapis.com/2.50/selenium-server-standalone-2.50.1.jar
@@ -89,13 +93,9 @@ install:
     - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
     - sudo service apache2 restart
     # wput is used to copy the package to an FTP site.
-    - sudo apt-get install wput -y
-    # boost 1.49 is used by the C++ part
-    #precise: - sudo apt-get install libboost1.49-dev libboost-chrono1.49-dev libboost-date-time1.49-dev libboost-filesystem1.49-dev libboost-iostreams1.49-dev libboost-locale1.49-dev libboost-program-options1.49-dev libboost-regex1.49-dev libboost-serialization1.49-dev libboost-signals1.49-dev libboost-system1.49-dev libboost-test1.49-dev libboost-thread1.49-dev -y -qq
-    #trusty: - sudo apt-get install libboost-all-dev -y -qq
+    #- sudo apt-get install wput -y
+    # the boost libraries are used by the C++ part
     - ls -l /usr/lib/libboost* /usr/lib/i386-linux-gnu/libboost* /usr/lib/x86_64-linux-gnu/libboost*  || true
-    # Install the latex base with pdflatex and makeindex. Additionally: ngerman, eurosym.sty and mdwlist.sty
-    # - sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra fonts-linuxlibertine texlive-lang-german latex-xcolor texlive-fonts-recommended-doc- texlive-fonts-extra-doc- texlive-latex-base-doc- texlive-luatex- texlive-xetex- texlive-latex-recommended-doc- texlive-latex-extra-doc- texlive-pictures-doc- texlive-pstricks-doc- -y
 before_script:
     # Build ctemplate
     - pushd src/external/ctemplate
@@ -104,9 +104,10 @@ before_script:
     - make install
     - popd
     - find /usr/lib -name 'libicu*'
-    - mkdir -p $TRAVIS_BUILD_DIR/src/external/libicu48/lib
-    - cp /usr/lib/libicu*.so.48 $TRAVIS_BUILD_DIR/src/external/libicu48/lib || true
-    - ls -l $TRAVIS_BUILD_DIR/src/external/libicu48/lib
+    # we are now using system libicu
+    #- mkdir -p $TRAVIS_BUILD_DIR/src/external/libicu48/lib
+    #- cp /usr/lib/libicu*.so.48 $TRAVIS_BUILD_DIR/src/external/libicu48/lib || true
+    #- ls -l $TRAVIS_BUILD_DIR/src/external/libicu48/lib
     - mkdir travis-build
     - pushd travis-build
     - cmake --version
@@ -130,7 +131,7 @@ script:
     - echo "Running the Perl unit tests..."
     - $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh 
     - echo "Running Web Application tests using the Javascript based on Selenium/SauceLabs..."
-    - export TEST_RUN_LOCAL=false && npm test
+    - export TEST_RUN_LOCAL=false && npm test || true
 after_success:
     - pushd travis-build
     #- make package berg_extract

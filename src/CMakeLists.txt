@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Debian Lenny only provides 2.6
-#cmake_minimum_required (VERSION 2.6)
 cmake_minimum_required (VERSION 2.8)
 
 message("***   Entering the main CMakeLists.txt file  ***")
@@ -25,8 +24,8 @@ project (Berg CXX)
 
 # set these for release
 set(APPLICATION_VERSION_MAJOR "3")
-set(APPLICATION_VERSION_MINOR "1")
-set(APPLICATION_VERSION_PATCH "5")
+set(APPLICATION_VERSION_MINOR "2")
+set(APPLICATION_VERSION_PATCH "0")
 
 # use this command to enable verbose CMAKE processing
 # cmake -D CMAKE_VERBOSE_MAKEFILE=true -D CMAKE_BUILD_TYPE=Debug ../src
