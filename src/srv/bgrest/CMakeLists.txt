@@ -1,6 +1,6 @@
-# Testing the library using C++ unit tests.
+# Compile the RESTful api to the article database.
 #
-# Copyright 2012, 2013, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2016 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-message("***   Entering test (unit tests), target: bergunittests   ***")
+message("***   Entering srv/bgrest (the RESTful api to the DB)   ***")
 
 include("${PROJECT_SOURCE_DIR}/shared_config.cmake")
 if(MSVC)
@@ -25,7 +25,7 @@ if(MSVC)
     add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
 endif()
 
-#find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS date_time filesystem iostreams regex system thread unit_test_framework REQUIRED)
+#find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS chrono date_time filesystem iostreams regex system thread REQUIRED)
 
 include_directories(
     ${CX_INC_DIR}
@@ -35,8 +35,6 @@ include_directories(
     ${BOOST_CGI_INCLUDEDIR}
     ${BOOST_PROCESS_INCLUDEDIR}
     ${CTEMPLATE_INCLUDEDIR}
-    ${CTEMPLATETESTS_INCLUDEDIR}
-    ${VISUAL_LEAK_DETECTOR_INCLUDEDIR}
     )
 
 if(EXISTS "${PROJECT_SOURCE_DIR}/external/lib-${BUILDHOST}")
@@ -51,23 +49,19 @@ else()
         "${BOOST_LIBRARYDIR}"
         "${CTEMPLATE_LIBRARYDIR}"
         "${ICU_LIBRARYDIR}"
-        ${VISUAL_LEAK_DETECTOR_LIBRARYDIR}
         )
 endif()
 
-set(UNITTEST_SRC TestMain.cpp
-                 TestArticle.cpp TestStorage.cpp TestHelper.cpp
-                 TestTexGenerationUsingPex.cpp
-                 TestDirectoryLayout.cpp
-                 TestArticleJson.cpp TestRESTfulApi.cpp)
+set(BGREST_SRC bgrest.cpp)
 
-add_executable(bergunittests ${UNITTEST_SRC})
-target_link_libraries(bergunittests berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
-add_dependencies(bergunittests berg_storage)
+add_executable(bgrest ${BGREST_SRC}) 
+
+target_link_libraries(bgrest berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
+
+add_dependencies(bgrest berg_storage)
+
 if(${BERG_LINK_FLAGS})
-    set_target_properties(bergunittests PROPERTIES LINK_FLAGS ${BERG_LINK_FLAGS})
+    set_target_properties(bgrest PROPERTIES LINK_FLAGS ${BERG_LINK_FLAGS})
 endif()
 
-
-
-
+install(TARGETS bgrest DESTINATION "${BERG_INSTALL_CGIBIN}")

@@ -182,6 +182,27 @@ namespace berg
 
 
         /**
+         * @brief Determines the directory containing build of the srv directory, e.g. srv/bgrest/bgrest.
+         * @return the directory base of the srv files, srv
+         */
+        inline boost::filesystem::path GetSrvBuildDir()
+        {
+            namespace fs = boost::filesystem;
+            std::string input = "../../srv/bgrest/bgrest";
+            if (fs::exists(input))
+            {
+                return fs::canonical("../../srv/");
+            }
+            input = "../srv/bgrest/bgrest";
+            if (fs::exists(input))
+            {
+                return fs::canonical("../srv/");
+            }
+            return fs::path("");
+        }
+
+
+        /**
          * @brief Read the file and print each line to the output stream
          * @param file to read
          * @param oss stream the content is written to

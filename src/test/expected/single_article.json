@@ -1,0 +1,10 @@
+Content-type: application/json; charset=utf-8
+
+{
+    "article": {
+        "id": 4294967295,
+        "priority": -1,
+        "type": "",
+        "lastChanged": ""
+    }
+}

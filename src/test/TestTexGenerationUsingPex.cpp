@@ -1,5 +1,5 @@
 /**
- * @file TestStorage.cpp
+ * @file TestTexGenerationUsingPex.cpp
  * Testing the generation of the TeX files using the Perl based PeX script.
  *
  * Copyright 2013 Christian Leutloff <leutloff@sundancer.oche.de>
@@ -106,7 +106,7 @@ BOOST_AUTO_TEST_CASE(test_calling_simple_perl_script)
     //bt::PrintFileToStream(simplePerlScriptOutput, cout);
 }
 
-// this processes an database with a single article that should be ignored, because prio is -1.
+// this processes a database with a single article that should be ignored, because prio is -1.
 BOOST_AUTO_TEST_CASE(test_calling_pex)
 {
     // www/cgi-bin/brg/pex.pl
