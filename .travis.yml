@@ -144,8 +144,8 @@ after_success:
     #- touch $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/touch_out
     - ls -la $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/lib/ $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/
 # works (once):
-     - wget http://aachen.local/brg/hilfe.html
-     - cat hilfe.html
+    - wget http://aachen.local/brg/hilfe.html
+    - cat hilfe.html
 # works:
 #     #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/berg.pl
 #     - wget http://aachen.local/cgi-bin/brg/berg.pl
@@ -177,7 +177,3 @@ after_success:
     - cat $TRAVIS_BUILD_DIR/logs/aachen-error.log
     - cat $TRAVIS_BUILD_DIR/logs/aachen-access.log
     - cat $TRAVIS_BUILD_DIR/logs/cgi.log
-
-    
-
-
