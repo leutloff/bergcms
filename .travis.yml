@@ -65,11 +65,13 @@ before_install:
     - sudo add-apt-repository ppa:chris-lea/node.js -y 
     - sudo apt-get update -qq
     # Install nodejs, npm and then the selenium webdriver for nodejs:
-    - sudo apt-get install nodejs -y
+    #- sudo apt-get install nodejs -y
     # nodejs-legacy is required in later Ubuntu versions than precise:
-    - sudo apt-get install nodejs-legacy -y || true
+    #fails anyway: - sudo apt-get install nodejs-legacy -y || true
     - which node && node -v && npm version || true
-    - sudo npm install -g mocha browserify uglifyjs dredd || true
+    # runs about 70s:
+    #- sudo npm install -g mocha browserify uglifyjs dredd || true
+    - sudo npm install -g mocha || true
     - sudo npm update || true
     # Download selenium server
     # Latest version: http://www.seleniumhq.org/download/

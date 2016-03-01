@@ -8,7 +8,7 @@
     SuexecUserGroup "travis" "travis"
 
     <Directory "%TRAVIS_BUILD_DIR%/www-root/htdocs">
-        Options FollowSymLinks MultiViews +ExecCGI
+        Options +FollowSymLinks +MultiViews +ExecCGI
         AllowOverride All
         Require all granted
     </Directory>
