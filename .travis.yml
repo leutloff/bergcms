@@ -47,6 +47,7 @@ addons:
       - fonts-linuxlibertine 
       - latex-xcolor 
       # Do NOT install: texlive-fonts-recommended-doc- texlive-fonts-extra-doc- texlive-latex-base-doc- texlive-luatex- texlive-xetex- texlive-latex-recommended-doc- texlive-latex-extra-doc- texlive-pictures-doc- texlive-pstricks-doc-    
+      - curl
       - wget
       # The boost libraries are used by the C++ part
       - libboost-all-dev
@@ -89,8 +90,9 @@ install:
     - sudo cp -f build/suexec-www-data /etc/apache2/suexec/www-data
     # configure apache virtual hosts:
     #- sudo cp -f build/travis-ci-apache2.2 /etc/apache2/sites-available/default
-    - sudo cp -f build/travis-ci-apache2.4 /etc/apache2/sites-available/default
-    - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
+    #- sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
+    - sudo cp -f build/travis-ci-apache2.4 /etc/apache2/sites-available/000-default.conf
+    - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/000-default.conf
     - sudo /usr/sbin/apache2ctl configtest || true
     - sudo service apache2 restart
     # wput is used to copy the package to an FTP site.
@@ -167,9 +169,10 @@ after_success:
     #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
     - wget http://aachen.local/cgi-bin/brg/maker
     - cat maker
-    - ls -al /var/log/apache2 /var/www /var/www/html /etc/apache2 /etc/apache2/sites-enabled || true
+    - sudo ls -al /var/log/apache2 /var/www /var/www/html /etc/apache2 /etc/apache2/sites-enabled || true
     - sudo cat /etc/apache2/envvars
-    - sudo cat /etc/apache2/apache2.conf   
+    - sudo cat /etc/apache2/apache2.conf
+    - sudo cat /etc/apache2/sites-enabled/000-default.conf
     - sudo cat /var/log/apache2/access.log
     - sudo cat /var/log/apache2/error.log
     - sudo cat /var/log/apache2/suexec.log
