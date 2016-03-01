@@ -25,10 +25,12 @@
     ErrorLog "%TRAVIS_BUILD_DIR%/logs/aachen-error.log" 
     CustomLog "%TRAVIS_BUILD_DIR%/logs/aachen-access.log" combined
 
-    # Added for development purposes - Location of the CGI script error logfile showing input and output
-    ScriptLog  "%TRAVIS_BUILD_DIR%/logs/cgi.log"
-    # Maximum amount of PUT or POST requests that will be recorded in the scriptlog, default: 1024
-    # ScriptLogBuffer 1024
+    <IfModule mod_cgi.c>
+        # Added for development purposes - Location of the CGI script error logfile showing input and output
+        ScriptLog  "%TRAVIS_BUILD_DIR%/logs/cgi.log"
+        # Maximum amount of PUT or POST requests that will be recorded in the scriptlog, default: 1024
+        # ScriptLogBuffer 1024
+    </IfModule>
 
     <Location /cgi-bin/>
         Options +ExecCGI -Includes

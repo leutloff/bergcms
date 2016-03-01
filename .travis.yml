@@ -88,7 +88,7 @@ install:
     # configure apache suexec:
     - mkdir -p $TRAVIS_BUILD_DIR/logs $TRAVIS_BUILD_DIR/www-root/htdocs/dlb $TRAVIS_BUILD_DIR/www-root/cgi-bin/
     #- pushd $TRAVIS_BUILD_DIR/www-root/htdocs && ln -sf ../cgi-bin . && popd
-    - pushd /etc/apache2/mods-enabled && sudo ln -s ../mods-available/suexec.load . && popd
+    - pushd /etc/apache2/mods-enabled && sudo ln -s ../mods-available/suexec.load . && sudo ln -fs ../mods-available/cgid.load . sudo ln -fs ../mods-available/cgid.conf . && sudo ls -l . ../mods-available && popd
     - sudo cp -f build/suexec-www-data /etc/apache2/suexec/www-data
     # configure apache virtual hosts:
     #- sudo cp -f build/travis-ci-apache2.2 /etc/apache2/sites-available/default
