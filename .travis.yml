@@ -49,6 +49,8 @@ addons:
       # Do NOT install: texlive-fonts-recommended-doc- texlive-fonts-extra-doc- texlive-latex-base-doc- texlive-luatex- texlive-xetex- texlive-latex-recommended-doc- texlive-latex-extra-doc- texlive-pictures-doc- texlive-pstricks-doc-    
       - curl
       - wget
+      - nodejs
+      - npm
       # The boost libraries are used by the C++ part
       - libboost-all-dev
       # wput is used to copy the package to an FTP site.
@@ -163,6 +165,8 @@ after_success:
 # works:
 #     - wget http://aachen.local/cgi-bin/brg/berg
 #     - cat berg
+    - wget http://localhost/index.html
+    - cat index.html
     #- readelf -d $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker | grep RPATH
     - ls -al /usr/bin/pdflatex /usr/bin/makeindex || true
     - pushd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg && ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker maker && ./maker && popd
@@ -175,6 +179,7 @@ after_success:
     - sudo cat /etc/apache2/envvars
     - sudo cat /etc/apache2/apache2.conf
     - sudo cat /etc/apache2/sites-enabled/000-default.conf
+    - sudo ls -al /home /home/travis /home/travis/build /home/travis/build/leutloff /home/travis/build/leutloff/berg /home/travis/build/leutloff/berg/www-root /home/travis/build/leutloff/berg/www-root/htdocs  || true
     - sudo cat /var/log/apache2/access.log
     - sudo cat /var/log/apache2/error.log
     - sudo cat /var/log/apache2/suexec.log
