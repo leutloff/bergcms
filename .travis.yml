@@ -68,7 +68,7 @@ before_install:
     # nodejs-legacy is required in later Ubuntu versions than precise:
     - sudo apt-get install nodejs-legacy -y || true
     - which node && node -v && npm version || true
-    - sudo npm install -g mocha browserify uglifyjs || true
+    - sudo npm install -g mocha browserify uglifyjs dredd || true
     - sudo npm update || true
     # Download selenium server
     # Latest version: http://www.seleniumhq.org/download/
@@ -136,8 +136,6 @@ script:
     - export TEST_RUN_LOCAL=false && npm test || true
 after_success:
     - pushd travis-build
-    #- make package berg_extract
-    #- make package
     - ls -l Berg*.zip
     - wput Berg*.zip ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose --tries=2 || true
     #- pushd travis-build/exp && wput echo exptemplate hello_world show_rpath simple_regex ftp://$FTP_USER:$FTP_PASSWORD@$FTP_HOST/upload/ --reupload --less-verbose; popd
@@ -145,9 +143,9 @@ after_success:
     # Test Apache installation:
     #- touch $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/touch_out
     - ls -la $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/lib/ $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/
-# works:
-#     - wget http://aachen.local/brg/hilfe.html
-#     - cat hilfe.html
+# works (once):
+     - wget http://aachen.local/brg/hilfe.html
+     - cat hilfe.html
 # works:
 #     #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/berg.pl
 #     - wget http://aachen.local/cgi-bin/brg/berg.pl
@@ -169,6 +167,10 @@ after_success:
     #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
     - wget http://aachen.local/cgi-bin/brg/maker
     - cat maker
+    - ls -al /var/log/apache2 /var/www /var/www/html /etc/apache2 /etc/apache2/sites-enabled || true
+    - sudo cat /etc/apache2/envvars
+    - sudo cat /etc/apache2/apache2.conf   
+    - sudo cat /var/log/apache2/access.log
     - sudo cat /var/log/apache2/error.log
     - sudo cat /var/log/apache2/suexec.log
     - ls -l $TRAVIS_BUILD_DIR/logs
