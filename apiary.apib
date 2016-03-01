@@ -1,0 +1,31 @@
+FORMAT: 1A
+HOST: http://polls.apiblueprint.org/
+
+# Berg CMS
+
+The Berg CMS uses a simple API allowing consumers to view the stored articles and change them.
+
+## Articles of the Actual Issue [/articles]
+
+### List All Articles [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 25,
+                "title": "Title of the article",
+                "chapter": "Introduction"
+            }
+        ]
+
+
+### Get Article [GET /articles/:id]
+
++ Response 200 (application/json)
+
+        {
+            "id": 25,
+            "title": "Title of the article",
+            "chapter": "Introduction"
+        }
