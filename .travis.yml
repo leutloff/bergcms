@@ -15,13 +15,13 @@ env:
     #- _BROWSER: "chrome"
     #  _PLATFORM: "Windows_7"
     #  _VERSION: "48.0"
-# try to use trusty (14.04) instead of precise (12.04)
+# trusty (14.04) is now working instead of precise (12.04)
 sudo: required
 dist: trusty
 language: cpp
 compiler:
     - gcc
-#- clang
+    - clang
 cache: apt
 addons:
   sauce_connect:
@@ -57,6 +57,9 @@ addons:
       # Disallowing packages (20160228): - wput
       # nodejs-legacy is required in later Ubuntu versions than precise:
       # Disallowing packages (20160228): - nodejs-legacy
+      #
+      # install automake for building ctemplate
+      - automake
 before_install:
     - cat /etc/hosts
     - id
@@ -80,6 +83,7 @@ before_install:
     #- sudo npm install -g mocha browserify uglifyjs dredd || true
     - sudo npm install -g mocha || true
     - sudo npm update || true
+    - which node && node -v && npm version || true
     # Download selenium server
     # Latest version: http://www.seleniumhq.org/download/
     - curl -O https://selenium-release.storage.googleapis.com/2.50/selenium-server-standalone-2.50.1.jar
@@ -129,6 +133,7 @@ before_script:
     - pushd travis-build
     - cmake --version
     - cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=FALSE ../src
+    # Use this to debug a failing CMake run and build:
     #- cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=TRUE ../src
     - popd
 script:
@@ -149,6 +154,9 @@ script:
     - $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh 
     - echo "Running Web Application tests using the Javascript based on Selenium/SauceLabs..."
     - ls -al $TRAVIS_BUILD_DIR/www-root/htdocs/brg $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg || true
+    # works - get it to speed up the following test:
+    - wget http://aachen.local/brg/hilfe.html
+    - cat hilfe.html
     - export TEST_RUN_LOCAL=false && npm test || true
 after_success:
     - pushd travis-build
@@ -159,9 +167,6 @@ after_success:
     # Test Apache installation:
     #- touch $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/touch_out
     - ls -la $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/lib/ $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/
-# works (once):
-    - wget http://aachen.local/brg/hilfe.html
-    - cat hilfe.html
 # works:
 #     #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/berg.pl
 #     - wget http://aachen.local/cgi-bin/brg/berg.pl
@@ -175,8 +180,6 @@ after_success:
 # works:
 #     - wget http://aachen.local/cgi-bin/brg/berg
 #     - cat berg
-    - wget http://localhost/index.html
-    - cat index.html
     #- readelf -d $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker | grep RPATH
     - ls -al /usr/bin/pdflatex /usr/bin/makeindex || true
     - pushd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg && ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker maker && ./maker && popd
@@ -185,11 +188,13 @@ after_success:
     #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
     - wget http://aachen.local/cgi-bin/brg/maker
     - cat maker
-    - sudo ls -al /var/log/apache2 /var/www /var/www/html /etc/apache2 /etc/apache2/sites-enabled || true
-    - sudo cat /etc/apache2/envvars
-    - sudo cat /etc/apache2/apache2.conf
-    - sudo cat /etc/apache2/sites-enabled/000-default.conf
-    - sudo ls -al /home /home/travis /home/travis/build /home/travis/build/leutloff /home/travis/build/leutloff/berg /home/travis/build/leutloff/berg/www-root /home/travis/build/leutloff/berg/www-root/htdocs  || true
+    # Show Apache related paths and configuration:
+    #- sudo ls -al /var/log/apache2 /var/www /var/www/html /etc/apache2 /etc/apache2/sites-enabled || true
+    #- sudo cat /etc/apache2/envvars
+    #- sudo cat /etc/apache2/apache2.conf
+    #- sudo cat /etc/apache2/sites-enabled/000-default.conf
+    #- sudo ls -al /home /home/travis /home/travis/build /home/travis/build/leutloff /home/travis/build/leutloff/berg /home/travis/build/leutloff/berg/www-root /home/travis/build/leutloff/berg/www-root/htdocs  || true
+    - sudo ls -l /var/log/apache2
     - sudo cat /var/log/apache2/access.log
     - sudo cat /var/log/apache2/error.log
     - sudo cat /var/log/apache2/suexec.log
