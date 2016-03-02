@@ -49,7 +49,7 @@ addons:
       # Do NOT install: texlive-fonts-recommended-doc- texlive-fonts-extra-doc- texlive-latex-base-doc- texlive-luatex- texlive-xetex- texlive-latex-recommended-doc- texlive-latex-extra-doc- texlive-pictures-doc- texlive-pstricks-doc-    
       - curl
       - wget
-      - nodejs
+      # using NoedSource - nodejs
       # Disallowing packages (20160301): npm
       # The boost libraries are used by the C++ part
       - libboost-all-dev
@@ -66,12 +66,15 @@ before_install:
     - echo "Already installed node"  || true
     - which node && node -v && npm version || true
     # Add PPA with latest nodejs
-    - sudo add-apt-repository ppa:chris-lea/node.js -y 
-    - sudo apt-get update -qq
+    #- sudo add-apt-repository ppa:chris-lea/node.js -y 
+    #- sudo apt-get update -qq
     # Install nodejs, npm and then the selenium webdriver for nodejs:
-    - sudo apt-get install nodejs npm -y
+    #- sudo apt-get install nodejs npm -y
     # nodejs-legacy is required in later Ubuntu versions than precise:
     #fails anyway: - sudo apt-get install nodejs-legacy -y || true
+    # Install nodejs and npm from 
+    - curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -  || true
+    - sudo apt-get install -y nodejs || true
     - which node && node -v && npm version || true
     # runs about 70s:
     #- sudo npm install -g mocha browserify uglifyjs dredd || true
