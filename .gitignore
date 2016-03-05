@@ -18,6 +18,7 @@ Upload.txt
 qtcreator-build
 remotehosts.cfg
 install_locally.cfg
+remotehosts-squeeze.cfg
 archive
 node_modules
 selenium-server-standalone-*.jar
