@@ -3,7 +3,7 @@
 # This file holds the information to create a ZIP package.
 # This can the be used to transfer the whole application to the web server.
 #
-# Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -22,7 +22,7 @@ include("${PROJECT_SOURCE_DIR}/directory_layout.cmake")
 include("${PROJECT_SOURCE_DIR}/shared_config.cmake")
 
 # CPack settings
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Berg CMS - Redaktionssystem zur Erstellung der Gemeindeinformation (Pfarrbrief) für die FeG Aachen.")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Berg CMS - Web App to publish regular printed news letter.")
 set(CPACK_PACKAGE_VENDOR "Christian Leutloff")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "leutloff@sundancer.oche.de")
 set(CPACK_PACKAGE_CONTACT "leutloff@sundancer.oche.de")
@@ -39,16 +39,19 @@ set(CPACK_SOURCE_IGNORE_FILES ${CPACK_SOURCE_IGNORE_FILES}
 /.git/;/build/;~$;.*\\\\.bin$;.*\\\\.swp$)
 #set(CPACK_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 set(CPACK_INSTALL_PREFIX "")
-set(CPACK_STRIP_FILES  TRUE)
+set(CPACK_STRIP_FILES TRUE)
 set(CPACK_SOURCE_GENERATOR "ZIP")
 set(CPACK_GENERATOR "ZIP")
-#set(CPACK_PACKAGE_NAME "${PROJECT_NAME}-${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}.${APPLICATION_VERSION_PATCH}-${CMAKE_SYSTEM}")
+set(APPLICATION_VERSION "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}.${APPLICATION_VERSION_PATCH}")
+set(CPACK_PACKAGE_NAME "${PROJECT_NAME}-${APPLICATION_VERSION}")
 # TODO add build system (lsb_release -dcs ) and architecture (uname -m) instead of buildhostname
-set(CPACK_PACKAGE_NAME "${PROJECT_NAME}-${BUILDHOST}")
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_CXX_COMPILER_ID}-${BUILDHOST}")
 include(CPack)
 
-# Add the deploy script
+# Add the deploy scripts
 install(PROGRAMS "${PROJECT_SOURCE_DIR}/../deploy.sh"
+        DESTINATION "/")
+install(PROGRAMS "${PROJECT_SOURCE_DIR}/../deploy_ssh.sh"
         DESTINATION "/")
 
 # BERG_INSTALL_HTDOCS is htdocs/brg
