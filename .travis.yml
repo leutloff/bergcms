@@ -3,12 +3,12 @@ env:
     - secure: k7XQ1+F5z/i49XgqePdjHB32PyjF7LxUn2dtFBG1W3cwpUm8WQQSvt4q7gLAH73Sh0v4NXpL1R6M04EZfbrpU9y00QpIkjzWzunjjeYZtDBRzbaSDqnR8CMXKS9J/aG0aTDzMFfvRwHjH4PC/YWzLoguulSJP/ehr0VbLJiLSzM=
     - secure: gpudPjJYyxFNxeBC3yKxUQ//eVlgOib3+TC/H9WpplvAXmune7Hyobpp6V5zV9cyypmhZvO1lftgqS6NO2DbHlXnljHrD1kOWLFRe0/bazi6rxhvVkjyZOAkrP9mtqKA1riydeNgeEqcmoqPzi6GZ1zahi68Amj8UTosoRoWjjA=
     - secure: PtmjgbGjaB3Ta5fIxwuA1bfK2Q0TgAP2ZvoMuVak/2CRHaArnwQodS3JacpPPHEjpqINe65IUvLpgXCONC0OBl3o/fJb0n7LzBnENqXYyU6wsHWb8aI2d7pOaWSm7C4pvZjiXcCbLUPKD3Cc90N8iR+eAABKdUm4GfiaT99ubS0=
-    - secure: "OCd/NzEOCuD2p+BsYCr4TaUyKXdo3dmzwf2U5VdRQUXPK/TzzTx+HqOy46VxJ/reySYzGAXTF/Zxmu6289GdOzol3v6dIIGdq/g+62+0/SCtFK8IhaVJNRV1dC9ccN7q9oskzmmgEtjuvPAj0gDX0EhtOVWfogobCGvFITjJcgE="
-    - secure: "J1slVeysWT4pntabPUVdOZnlOuOBO95GuRwR7s4GMPWOe8Wm0iWLC07Qr5DoeUK0A17vxsxv62IjzOQsoTARu7yxMjXnWWzit8nqDkOLCi/T6LjOTmDjvB6g0ohQ7Nw8oMWNqqN5HOzd7BpMXVC293+hWkDXvAX/+wIMtbV1gZQ="
+    - secure: OCd/NzEOCuD2p+BsYCr4TaUyKXdo3dmzwf2U5VdRQUXPK/TzzTx+HqOy46VxJ/reySYzGAXTF/Zxmu6289GdOzol3v6dIIGdq/g+62+0/SCtFK8IhaVJNRV1dC9ccN7q9oskzmmgEtjuvPAj0gDX0EhtOVWfogobCGvFITjJcgE=
+    - secure: J1slVeysWT4pntabPUVdOZnlOuOBO95GuRwR7s4GMPWOe8Wm0iWLC07Qr5DoeUK0A17vxsxv62IjzOQsoTARu7yxMjXnWWzit8nqDkOLCi/T6LjOTmDjvB6g0ohQ7Nw8oMWNqqN5HOzd7BpMXVC293+hWkDXvAX/+wIMtbV1gZQ=
   matrix:
-    - _BROWSER: "firefox"
-      _PLATFORM: "Linux"
-      _VERSION: "44.0"
+    - _BROWSER: firefox
+      _PLATFORM: Linux
+      _VERSION: '44.0'
     #- _BROWSER: "firefox"
     #  _PLATFORM: "Windows_7"
     #  _VERSION: "44.0"
@@ -27,7 +27,7 @@ addons:
   sauce_connect:
     username: leutloff
     access_key:
-       secure: "WpOa9yQGxYGhSWP1qdzzh/A/NWCyoHMR0D5f5uQ4gCnsj9umdQk28pqobfldtGZ60/t+bfUKo8OtM3ZbgF199KJ8Q7zHxOX/MLMNf4B8E0BmravZkwK1Wj4SsopDpge1nJ6oDuA9Okr21LK+C8GhM77rhk63qzYKZLntUerxNWM="
+       secure: WpOa9yQGxYGhSWP1qdzzh/A/NWCyoHMR0D5f5uQ4gCnsj9umdQk28pqobfldtGZ60/t+bfUKo8OtM3ZbgF199KJ8Q7zHxOX/MLMNf4B8E0BmravZkwK1Wj4SsopDpge1nJ6oDuA9Okr21LK+C8GhM77rhk63qzYKZLntUerxNWM=
   hosts:
     - aachen.local
     - www.aachen.local
@@ -202,3 +202,12 @@ after_success:
     - cat $TRAVIS_BUILD_DIR/logs/aachen-error.log
     - cat $TRAVIS_BUILD_DIR/logs/aachen-access.log
     - cat $TRAVIS_BUILD_DIR/logs/cgi.log
+deploy:
+  provider: releases
+  api_key:
+    secure: TOPwMKaw8zEpAL3MMBPgD5qlxWIDYC2kmjuGCZCOBFrD4jdzv9Q/KAJg+0klPsIbK8b9ZpLycv/V4f/t/vcSjY0ojoeW3tt6Uxw3MgeEp1d+fPtWuvPoKmP6S6HYdWmwSZzCyHcxvaT3mQ5NxpEqf/0lzc5CC0wrhSv3Pu9FH74=
+  file: travis-build/$BERG_ARCHIVE
+  skip_cleanup: true
+  draft: true
+  on:
+    repo: leutloff/berg
