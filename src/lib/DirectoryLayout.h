@@ -2,7 +2,7 @@
  * @file DirectoryLayout.h
  * A Singleton providing information about the directory layout.
  *
- * Copyright 2014 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2014, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -77,6 +77,13 @@ private:
      * the pathToUseInErrorCase is returned.
      */
     static boost::filesystem::path CheckPath(boost::filesystem::path const& pathToCheck, std::string const& pathToUseInErrorCase);
+    /**
+     * @brief Same as CheckPath with two parameters but the
+     * second parameter is tried in addition to the first one.
+     */
+    static boost::filesystem::path CheckPath(boost::filesystem::path const& pathToCheckFirst,
+                                             boost::filesystem::path const& pathToCheckSecond,
+                                             std::string const& pathToUseInErrorCase);
 
     void Init()
     {

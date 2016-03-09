@@ -2,7 +2,7 @@
  * @file DirectoryLayout.cpp
  * A Singleton providing information about the directory layout.
  *
- * Copyright 2014 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2014, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -41,7 +41,7 @@ void DirectoryLayout::SetProgramName(std::string const& programName)
         {
             dirCgiBin = CheckPath(fs::current_path(ec), BERG_DEFAULT_CGIBIN);
         }
-        dirHtDocs = CheckPath(dirCgiBin / ".." / ".." / "htdocs" / "brg", BERG_DEFAULT_HTDOCS);
+        dirHtDocs = CheckPath(dirCgiBin / ".." / ".." / "htdocs" / "brg", dirCgiBin / ".." / ".." / "web" / "brg", BERG_DEFAULT_HTDOCS);
         dirDlb = CheckPath(dirHtDocs / ".." / "dlb", BERG_DEFAULT_DLB);
     }
     else
@@ -57,6 +57,31 @@ boost::filesystem::path DirectoryLayout::CheckPath(boost::filesystem::path const
     {
         boost::system::error_code ec;
         fs::path pathToReturn = boost::filesystem::canonical(pathToCheck, ec);
+        if (ec.value() == 0)
+        {
+            return pathToReturn;
+        }
+    }
+    return fs::path(pathToUseInErrorCase);
+}
+
+boost::filesystem::path DirectoryLayout::CheckPath(boost::filesystem::path const& pathToCheckFirst,
+                                                   boost::filesystem::path const& pathToCheckSecond,
+                                                   std::string const& pathToUseInErrorCase)
+{
+    if (!pathToCheckFirst.empty())
+    {
+        boost::system::error_code ec;
+        fs::path pathToReturn = boost::filesystem::canonical(pathToCheckFirst, ec);
+        if (ec.value() == 0)
+        {
+            return pathToReturn;
+        }
+    }
+    if (!pathToCheckSecond.empty())
+    {
+        boost::system::error_code ec;
+        fs::path pathToReturn = boost::filesystem::canonical(pathToCheckSecond, ec);
         if (ec.value() == 0)
         {
             return pathToReturn;

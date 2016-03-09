@@ -102,6 +102,32 @@ BOOST_AUTO_TEST_CASE(test_a_tmp_directory_layout)
     BOOST_CHECK_EQUAL("/tmp/berg-unittest/htdocs/dlb", berg::DirectoryLayout::Instance().GetHtdocsDownloadDir());
 }
 
+
+// Testing the layout as found in standard ISPConfig.
+// HTDOCS /var/www/clients/client1/web1/web/brg
+// CGI-BIN /var/www/clients/client1/web1/cgi-bin/brg
+// maker is  /var/www/clients/client1/web1/cgi-bin/brg/maker
+BOOST_AUTO_TEST_CASE(test_tmp_directory_layout_ispconfig)
+{
+    // create directory layout in the system
+    fs::create_directories("/tmp/berg-unittest/clients/client1/web1/web/brg");
+    fs::create_directories("/tmp/berg-unittest/clients/client1/web1/web/dlb");
+    fs::create_directories("/tmp/berg-unittest/clients/client1/web1/cgi-bin/brg");
+    {
+        ofstream ofs("/tmp/berg-unittest/clients/client1/web1/cgi-bin/brg/maker");
+        ofs << "Used for DirectoryLayout tests, only." << endl;
+        ofs.close();
+    }
+
+    berg::DirectoryLayout::MutableInstance().SetProgramName("/tmp/berg-unittest/clients/client1/web1/cgi-bin/brg/maker");
+    BOOST_CHECK_EQUAL("/tmp/berg-unittest/clients/client1/web1/cgi-bin/brg", berg::DirectoryLayout::Instance().GetCgiBinDir());
+    BOOST_CHECK_EQUAL("/tmp/berg-unittest/clients/client1/web1/web/brg", berg::DirectoryLayout::Instance().GetHtdocsDir());
+    fs::path dir;
+    berg::DirectoryLayout::Instance().GetHtdocsDownloadDir(dir);
+    BOOST_CHECK_EQUAL("/tmp/berg-unittest/clients/client1/web1/web/dlb", dir);
+    BOOST_CHECK_EQUAL("/tmp/berg-unittest/clients/client1/web1/web/dlb", berg::DirectoryLayout::Instance().GetHtdocsDownloadDir());
+}
+
 // Ensuring a graceful fallback for a not existing directory structure.
 BOOST_AUTO_TEST_CASE(test_gracefully_fail_of_directory_layout)
 {
