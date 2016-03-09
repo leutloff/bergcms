@@ -240,7 +240,7 @@ function deploy_perl {
 function deploy_dyn_libs {
     echo " * Deploying dynamic libraries (Boost and ctemplate) ..."
     $SSH $DEPLOYTO "mkdir -p $CGIBINDEPLOYDIR/lib"
-    for libwithpath in `ls cgi-bin/brg/lib/libboost_{chrono,date_time,filesystem,iostreams,program_options,regex,signals,system,thread}.so.* cgi-bin/brg/lib/libctemplate.so.*`; do
+    for libwithpath in `ls cgi-bin/brg/lib/libboost_{chrono,date_time,filesystem,iostreams,program_options,regex,signals,system,thread,unit_test_framework}.so.* cgi-bin/brg/lib/libctemplate.so.*`; do
         lib=${libwithpath##*/}
         #$SCP $DEPLOYTO:-X "chmod 0755 $CGIBINDEPLOYDIR/lib/$lib" $CGIBINDEPLOYDIR/lib $libwithpath
         $SCP $libwithpath $DEPLOYTO:$CGIBINDEPLOYDIR/lib
