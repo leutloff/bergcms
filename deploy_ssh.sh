@@ -22,7 +22,6 @@
 
 SOURCEDIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-DEPLOYHOST=remote-hostname
 # HTDOCSDEPLOYDIR=/home/aachen/htdocs/brg
 # CGIBINDEPLOYDIR=/home/aachen/cgi-bin/brg
 # Required by production system FTP daemon:
@@ -43,6 +42,9 @@ DEPLOYTO=bergcms1@bergcms.local
 if [ -r $SOURCEDIR/remotehosts.cfg ]; then
     echo "Using $SOURCEDIR/remotehosts.cfg for local adaptations."
     . $SOURCEDIR/remotehosts.cfg
+elif [ -r $SOURCEDIR/../remotehosts.cfg ]; then
+    echo "Using $SOURCEDIR/../remotehosts.cfg for local adaptations."
+    . $SOURCEDIR/../remotehosts.cfg
 else
     echo "$SOURCEDIR/remotehosts.cfg for local adaptations is not available and therefore not used."
 fi
