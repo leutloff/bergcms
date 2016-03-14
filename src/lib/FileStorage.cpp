@@ -26,7 +26,6 @@
 #include <boost/interprocess/sync/file_lock.hpp>
 #include <boost/interprocess/sync/scoped_lock.hpp>
 #include <boost/interprocess/sync/sharable_lock.hpp>
-#include <boost/lexical_cast.hpp>
 #include <fstream>
 #include <iostream>
 
@@ -107,11 +106,6 @@ Article const& FileStorage::GetArticle(unsigned no) const
         }
     }
     throw "Article Number " + boost::lexical_cast<string>(no) + " does not exists.";
-}
-
-Article const& FileStorage::GetArticle(std::string const& no) const
-{
-    return GetArticle(boost::lexical_cast<unsigned>(no));
 }
 
 void FileStorage::SetArticle(unsigned no, Article const& article)

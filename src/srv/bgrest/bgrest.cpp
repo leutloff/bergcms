@@ -20,6 +20,7 @@
 
 #include "Common.h"
 #include "DirectoryLayout.h"
+#include "FileStorage.h"
 #include <boost/cgi/cgi.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -32,7 +33,7 @@
 #include <iostream>
 #include <locale>
 #include <sstream>
-#include <stdlib.h>
+#include <cstdlib>
 
 using namespace std;
 using namespace berg;
@@ -55,29 +56,44 @@ int HandleRequest(boost::cgi::request& req)
     bs::error_code ec;
     resp << cgi::content_type("application/json") << cgi::charset("utf-8");
 
-    resp << "{\r\n    \"article\": {\r\n        \"id\": 4294967295,\r\n        \"priority\": -1,\r\n        \"type\": \"\",\r\n"
-//            "        \"chapter\": \"\",\n        \"title\": \"\",\n"
-//            "        \"header\": \"\",\n        \"body\": \"\",\n        \"footer\": \"\",\n"
-            "        \"lastChanged\": \"\"\r\n    }\r\n}\r\n";
-
+    string database = "br/feginfo.csv";
     try
     {
-
+        {
+            // Environment variable overrides the default settings to determine the DB location.
+            // This is used for the test cases to select different databases.
+            const char* env_p = std::getenv("BERGCMSDB");
+            if ((NULL != env_p) && fs::exists(env_p))
+            {
+                database = env_p;
+                // TODO log: Database changed to '%s'.
+            }
+        }
+        FileStorage storage;
+        storage.Load(database);
+//        articles storage.GetArticles();
+//        for (TArticles::const_iterator it = articles.begin(); it < articles.end(); ++it)
+//        {
+//        }
+                resp << "[\r\n    {\r\n        \"id\": 4294967295,\r\n        \"priority\": -1,\r\n        \"type\": \"\",\r\n"
+            //            "        \"chapter\": \"\",\n        \"title\": \"\",\n"
+            //            "        \"header\": \"\",\n        \"body\": \"\",\n        \"footer\": \"\",\n"
+                        "        \"lastChanged\": \"\"\r\n    }\r\n]\r\n";
     }
     catch(std::exception const& ex)
     {
         ++errors;
-        resp << "<p class=\"berg-failure\">Fehler: " << ex.what() << "</p>";
+        resp << "Error: " << ex.what() << "";
     }
     catch(std::string const& ex)
     {
         ++errors;
-        resp << "<p class=\"berg-failure\">Interner Fehler: " << ex << "</p>";
+        resp << "Internal Error: " << ex << "";
     }
     catch(...)
     {
         ++errors;
-        resp << "<p class=\"berg-failure\">Fehler: Exception.</p>";
+        resp << "Error: Exception.";
     }
 
     return cgi::commit(req, resp, errors);

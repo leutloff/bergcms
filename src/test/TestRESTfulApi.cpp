@@ -58,8 +58,10 @@ void VerifyGeneratedFileContent(boost::filesystem::path const& expectedFile, boo
 }
 
 
-// this processes a database with a single article with prio is -1.
-BOOST_AUTO_TEST_CASE(test_bgrest_articles_single)
+/**
+ * This unit test processes a database with one single article with prio set to -1.
+ */
+BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_single)
 {
     // ../srv/bgrest/bgrest
     const fs::path exeBgRest         = fs::path(bt::GetSrvBuildDir() / "bgrest" / "bgrest");
@@ -75,7 +77,7 @@ BOOST_AUTO_TEST_CASE(test_bgrest_articles_single)
 #endif
     bp::monitor c11 = bp::make_child(
                 bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
-                , bp::environment("BGDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "GET")("QUERY_STRING", "/articles")
+                , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "GET")("QUERY_STRING", "/articles")
                 , bp::std_out_to(bgrestOut)
                 , bp::std_err_to(bgrestOut)
                 );
@@ -87,5 +89,37 @@ BOOST_AUTO_TEST_CASE(test_bgrest_articles_single)
 
     VerifyGeneratedFileContent(jsonFileExpected, jsonFile);
 }
+
+///**
+// * This unit test processes a database with some articles.
+// */
+//BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_some)
+//{
+//    // ../srv/bgrest/bgrest
+//    const fs::path exeBgRest         = fs::path(bt::GetSrvBuildDir() / "bgrest" / "bgrest");
+//    const fs::path inputDatabaseFile = fs::path(bt::GetInputDir()    / "some_articles.csv");
+//    const fs::path jsonFile          = fs::path(bt::GetOutputDir()   / "some_articles.json");
+//    const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "some_articles.json");
+
+//    cout << exeBgRest.c_str() << " " << inputDatabaseFile.c_str() << " " << jsonFile.c_str() << " " << jsonFileExpected.c_str() << endl;
+//#if defined(WIN32)
+//    bio::file_descriptor_sink bgrestOut(jsonFile);
+//#else
+//    bio::file_descriptor_sink bgrestOut(jsonFile.c_str());
+//#endif
+//    bp::monitor c11 = bp::make_child(
+//                bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
+//                , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "GET")("QUERY_STRING", "/articles")
+//                , bp::std_out_to(bgrestOut)
+//                , bp::std_err_to(bgrestOut)
+//                );
+//    int ret = c11.join(); // wait for completion
+//    //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+//    BOOST_CHECK_EQUAL(0, ret);
+//    cout << "***   jsonFile   ***" << endl;
+//    bt::PrintFileToStream(jsonFile, cout);
+
+//    VerifyGeneratedFileContent(jsonFileExpected, jsonFile);
+//}
 
 BOOST_AUTO_TEST_SUITE_END()

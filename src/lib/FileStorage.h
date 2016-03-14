@@ -30,6 +30,7 @@
 
 #define BOOST_SYSTEM_NO_DEPRECATED
 #include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp> //no i/o just types
 #include <ctemplate/template_dictionary.h>
@@ -43,8 +44,8 @@ namespace berg
 class FileStorage
 {
 public:
-    /// Wait at most ms to get access to the FileStorage file for reading or writing.
-    static const int WAIT_FOR_FILE_LOCK_TIMEOUT_ms = 5000;
+    // Wait at most ms to get access to the FileStorage file for reading or writing - not used so far.
+    //static const int WAIT_FOR_FILE_LOCK_TIMEOUT_ms = 1000;
 
 private:
     typedef std::vector<boost::shared_ptr<Article> > TArticles;
@@ -74,7 +75,11 @@ public:
     void Save(std::string const& filename) const;
 
     Article const& GetArticle(unsigned no) const;
-    Article const& GetArticle(std::string const& no) const;
+    Article const& GetArticle(std::string const& no) const
+    {
+        return GetArticle(boost::lexical_cast<unsigned>(no));
+    }
+
     void SetArticle(unsigned no, Article const& article);
 
     /**
