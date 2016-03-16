@@ -17,7 +17,8 @@
 
 # Debian Lenny only provides 2.6, Jessie 3.0
 # Ubuntu Trusty 2.8, Xenial 3.3
-cmake_minimum_required (VERSION 2.8)
+# Install CMake 2.5 from https://cmake.org/files/v3.5/cmake-3.5.0-Linux-x86_64.sh or https://cmake.org/files/v3.5/cmake-3.5.0-Linux-i386.sh
+cmake_minimum_required (VERSION 3.5)
 
 message("***   Entering the main CMakeLists.txt file  ***")
 

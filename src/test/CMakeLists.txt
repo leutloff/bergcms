@@ -61,8 +61,13 @@ set(UNITTEST_SRC TestMain.cpp
                  TestDirectoryLayout.cpp
                  TestArticleJson.cpp TestRESTfulApi.cpp)
 
+# add -lpthread when required
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+#find_package(Threads REQUIRED)
+find_package(Threads)
+
 add_executable(bergunittests ${UNITTEST_SRC})
-target_link_libraries(bergunittests berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
+target_link_libraries(bergunittests berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES} Threads::Threads)
 add_dependencies(bergunittests berg_storage)
 if(${BERG_LINK_FLAGS})
     set_target_properties(bergunittests PROPERTIES LINK_FLAGS ${BERG_LINK_FLAGS})
