@@ -2,7 +2,7 @@
  * @file FileStorage.h
  * Storage related class.
  * 
- * Copyright 2012, 2014 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2012, 2014, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -46,9 +46,9 @@ class FileStorage
 public:
     // Wait at most ms to get access to the FileStorage file for reading or writing - not used so far.
     //static const int WAIT_FOR_FILE_LOCK_TIMEOUT_ms = 1000;
+    typedef std::vector<boost::shared_ptr<Article> > TArticles;
 
 private:
-    typedef std::vector<boost::shared_ptr<Article> > TArticles;
     TArticles articles;
     unsigned lastArticleId;
     std::string storageName; ///< archive including path and extension
@@ -73,6 +73,8 @@ public:
     }
 
     void Save(std::string const& filename) const;
+
+    TArticles const& GetArticles() const { return articles; }
 
     Article const& GetArticle(unsigned no) const;
     Article const& GetArticle(std::string const& no) const

@@ -15,7 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Debian Lenny only provides 2.6
+# Debian Lenny only provides 2.6, Jessie 3.0
+# Ubuntu Trusty 2.8, Xenial 3.3
 cmake_minimum_required (VERSION 2.8)
 
 message("***   Entering the main CMakeLists.txt file  ***")

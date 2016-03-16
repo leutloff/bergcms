@@ -1,10 +1,13 @@
 Content-type: application/json; charset=utf-8
 
-[
-    {
-        "id": 4294967295,
-        "priority": -1,
-        "type": "",
-        "lastChanged": ""
-    }
-]
+{
+    "id": 1,
+    "priority": -1,
+    "type": "K",
+    "chapter": "chapter",
+    "title": "title",
+    "header": "head",
+    "body": "body",
+    "footer": "footer",
+    "lastChanged": "20111006-212548-Do / 127.0.0.1:63880"
+}

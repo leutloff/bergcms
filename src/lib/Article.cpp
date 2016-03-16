@@ -139,15 +139,24 @@ void Article::SetFromJSON(const string &jsonArticle)
     istringstream iss(jsonArticle);
     pt::read_json(iss, tree);
 
-    id = tree.get<unsigned>("article.id");
-    priority = tree.get<int>("article.priority", 100);
-    type = tree.get("article.type", "A");
-    chapter = tree.get("article.chapter", "");
-    title = tree.get("article.title", "");
-    header = tree.get("article.header", "");
-    body = tree.get("article.body", "");
-    footer = tree.get("article.footer", "");
-    lastChanged = tree.get("article.lastChanged", "");
+//    id = tree.get<unsigned>("article.id");
+//    priority = tree.get<int>("article.priority", 100);
+//    type = tree.get("article.type", "A");
+//    chapter = tree.get("article.chapter", "");
+//    title = tree.get("article.title", "");
+//    header = tree.get("article.header", "");
+//    body = tree.get("article.body", "");
+//    footer = tree.get("article.footer", "");
+//    lastChanged = tree.get("article.lastChanged", "");
+    id = tree.get<unsigned>("id");
+    priority = tree.get<int>("priority", 100);
+    type = tree.get("type", "A");
+    chapter = tree.get("chapter", "");
+    title = tree.get("title", "");
+    header = tree.get("header", "");
+    body = tree.get("body", "");
+    footer = tree.get("footer", "");
+    lastChanged = tree.get("lastChanged", "");
 }
 
 /**
@@ -155,7 +164,7 @@ void Article::SetFromJSON(const string &jsonArticle)
  */
 void AddJsonValue(ostream & os, string const& name, string const& value, bool isLastElement = false)
 {
-    os << "        \"" << name << "\": " << value;
+    os << "    \"" << name << "\": " << value;
     if (!isLastElement) { os << ","; }
     os << endl;
 }
@@ -173,7 +182,6 @@ void Article::GetAsJSON(std::string & jsonArticle) const
     jsonArticle.clear();
     ostringstream oss;
     oss << "{" << endl;
-    oss << "    \"article\": {" << endl;
     AddJsonValue(oss, "id", boost::lexical_cast<string>(id));
     AddJsonValue(oss, "priority", boost::lexical_cast<string>(priority));
     AddJsonQuotedValue(oss, "type", type);
@@ -183,7 +191,6 @@ void Article::GetAsJSON(std::string & jsonArticle) const
     AddJsonQuotedValue(oss, "body", body);
     AddJsonQuotedValue(oss, "footer", footer);
     AddJsonQuotedValue(oss, "lastChanged", lastChanged, true);
-    oss << "    }" << endl;
     oss << "}" << endl;
     jsonArticle = oss.str();
 }

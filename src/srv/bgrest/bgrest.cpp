@@ -1,9 +1,9 @@
 /**
  * @file maker.cpp
  * Provides the RESTful api to the article database.
- * 
+ *
  * Copyright 2016 Christian Leutloff <leutloff@sundancer.oche.de>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,7 +21,9 @@
 #include "Common.h"
 #include "DirectoryLayout.h"
 #include "FileStorage.h"
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/cgi/cgi.hpp>
+#include <boost/cgi/http/status_code.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/foreach.hpp>
@@ -42,9 +44,11 @@ using namespace berg;
 //namespace pt = boost::posix_time;
 //namespace bp = boost::process;
 
+namespace alg = boost::algorithm;
 namespace bs = boost::system;
 namespace cgi = boost::cgi;
 namespace fs = boost::filesystem;
+namespace http = boost::cgi::http;
 
 
 int HandleRequest(boost::cgi::request& req)
@@ -69,31 +73,73 @@ int HandleRequest(boost::cgi::request& req)
                 // TODO log: Database changed to '%s'.
             }
         }
-        FileStorage storage;
-        storage.Load(database);
-//        articles storage.GetArticles();
-//        for (TArticles::const_iterator it = articles.begin(); it < articles.end(); ++it)
-//        {
-//        }
-                resp << "[\r\n    {\r\n        \"id\": 4294967295,\r\n        \"priority\": -1,\r\n        \"type\": \"\",\r\n"
-            //            "        \"chapter\": \"\",\n        \"title\": \"\",\n"
-            //            "        \"header\": \"\",\n        \"body\": \"\",\n        \"footer\": \"\",\n"
-                        "        \"lastChanged\": \"\"\r\n    }\r\n]\r\n";
+
+        // Dispatch the requested service
+        // CGI
+        string const& query = req.query_string();
+        if (0 == query.length()) { throw "Empty query"; } // TODO return Default
+        if (alg::starts_with(query, "/articles"))
+        {
+            FileStorage storage;
+            storage.Load(database);
+            if ("/articles" == query)
+            {
+                string jsonArticle;
+                resp << "[\r\n";
+                FileStorage::TArticles const& articles = storage.GetArticles();
+                bool isFirst = true;
+                for (FileStorage::TArticles::const_iterator it = articles.begin(); it < articles.end(); ++it)
+                {
+                    if (!isFirst)
+                    {
+                        resp << ",\r\n";
+                    }
+                    else
+                    {
+                        isFirst = false;
+                    }
+                    (*it)->GetAsJSON(jsonArticle);
+                    resp << jsonArticle;
+                }
+                resp << "\r\n";
+                resp << "]\r\n";
+                //                resp << "[\r\n    {\r\n        \"id\": 4294967295,\r\n        \"priority\": -1,\r\n        \"type\": \"\",\r\n"
+                //            //            "        \"chapter\": \"\",\n        \"title\": \"\",\n"
+                //            //            "        \"header\": \"\",\n        \"body\": \"\",\n        \"footer\": \"\",\n"
+                //                        "        \"lastChanged\": \"\"\r\n    }\r\n]\r\n";
+                resp.status(http::ok);
+            }
+            else
+            {
+                //constexpr size_type artLen = length("/articles/"); TODO
+                size_t artLen = 10; // length("/articles/");
+                //int id = lexical_cast<int>(query.substr(artLen));
+                string const& id = query.substr(artLen);
+                Article const& article = storage.GetArticle(id); // TODO use int id?
+                string jsonArticle;
+                article.GetAsJSON(jsonArticle);
+                resp << jsonArticle << "\r\n";
+                resp.status(http::ok);
+            }
+        }
     }
     catch(std::exception const& ex)
     {
         ++errors;
         resp << "Error: " << ex.what() << "";
+        resp.status(http::internal_server_error);
     }
     catch(std::string const& ex)
     {
         ++errors;
         resp << "Internal Error: " << ex << "";
+        resp.status(http::internal_server_error);
     }
     catch(...)
     {
         ++errors;
         resp << "Error: Exception.";
+        resp.status(http::internal_server_error);
     }
 
     return cgi::commit(req, resp, errors);
