@@ -27,7 +27,7 @@ project (Berg CXX)
 # set these for release
 set(APPLICATION_VERSION_MAJOR "3")
 set(APPLICATION_VERSION_MINOR "2")
-set(APPLICATION_VERSION_PATCH "3")
+set(APPLICATION_VERSION_PATCH "4")
 
 # use this command to enable verbose CMAKE processing
 # cmake -D CMAKE_VERBOSE_MAKEFILE=true -D CMAKE_BUILD_TYPE=Debug ../src
@@ -71,7 +71,7 @@ add_subdirectory(exp)# programs used to experiment with something, e.g. getting 
 include("${PROJECT_SOURCE_DIR}/install_package.cmake")
 
 message("Name of BUILDHOST is ${BUILDHOST}.")
-message("Using ICU version ${BERG_ICU_VERSION}.")
+# message("Using ICU version ${BERG_ICU_VERSION}.")
 message("Using the BOOST_LIBRARYDIR with the value of ${BOOST_LIBRARYDIR}.")
 message("Using the Boost_LIBRARY_DIRS with the value of ${Boost_LIBRARY_DIRS}.")
 message("Using the Boost_INCLUDE_DIRS with the value of ${Boost_INCLUDE_DIRS}.")

@@ -27,7 +27,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/foreach.hpp>
-//#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/lexical_cast.hpp>
 //#include <boost/iostreams/tee.hpp>
 //#include <boost/iostreams/stream.hpp>
 //#include <boost/process/process.hpp>
@@ -111,11 +111,9 @@ int HandleRequest(boost::cgi::request& req)
             }
             else
             {
-                //constexpr size_type artLen = length("/articles/"); TODO
-                size_t artLen = 10; // length("/articles/");
-                //int id = lexical_cast<int>(query.substr(artLen));
-                string const& id = query.substr(artLen);
-                Article const& article = storage.GetArticle(id); // TODO use int id?
+                constexpr string::size_type artLen = strlen("/articles/");
+                int id = boost::lexical_cast<int>(query.substr(artLen));
+                Article const& article = storage.GetArticle(id);
                 string jsonArticle;
                 article.GetAsJSON(jsonArticle);
                 resp << jsonArticle << "\r\n";
