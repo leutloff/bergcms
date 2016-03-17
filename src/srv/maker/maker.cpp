@@ -434,11 +434,11 @@ void AddFileToLog(fs::path const& logFile, TeeStream &log, ostringstream &oss)
 }
 
 /**
-  * copy the given file from DB to OUT dir.
+  * Copy the given file from DB to OUT dir.
   */
 void CopyToOutDir(fs::path const& bergOutDir, fs::path const& filename, TeeStream & log)
 {
-    const fs::path target = bergOutDir / filename.filename();
+    fs::path const& target = bergOutDir / filename.filename();
     if (!fs::exists(target))
     {
         log << "cp " << filename.c_str() << " -&gt; " << target.c_str();
