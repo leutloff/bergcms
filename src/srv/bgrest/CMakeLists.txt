@@ -64,6 +64,6 @@ add_dependencies(bgrest berg_storage)
 if(${BERG_LINK_FLAGS})
     set_target_properties(bgrest PROPERTIES LINK_FLAGS ${BERG_LINK_FLAGS})
 endif()
-target_compile_features(bgrest PRIVATE cxx_constexpr)
+target_compile_features(bgrest PRIVATE ${BERG_USED_CXX_FEATURES})
 
 install(TARGETS bgrest DESTINATION "${BERG_INSTALL_CGIBIN}")

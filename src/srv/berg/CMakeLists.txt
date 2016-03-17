@@ -64,5 +64,6 @@ add_dependencies(berg berg_storage)
 if(${BERG_LINK_FLAGS})
     set_target_properties(berg PROPERTIES LINK_FLAGS ${BERG_LINK_FLAGS})
 endif()
+target_compile_features(berg PRIVATE ${BERG_USED_CXX_FEATURES})
 
 install(TARGETS berg DESTINATION "${BERG_INSTALL_CGIBIN}")

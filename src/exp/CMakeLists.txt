@@ -74,6 +74,7 @@ target_link_libraries(echo ${Boost_LIBRARIES} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
 if(${BERG_LINK_FLAGS})
     set_target_properties(echo PROPERTIES LINK_FLAGS ${BERG_LINK_FLAGS})
 endif()
+target_compile_features(echo PRIVATE ${BERG_USED_CXX_FEATURES})
 install(TARGETS echo DESTINATION "${BERG_INSTALL_CGIBIN}")
 
 IF(USE_CTEMPLATE)
