@@ -93,7 +93,7 @@ before_install:
     # start this before installation to let the server be up and ready without extra waiting time.
     - java -jar selenium-server-standalone-2.50.1.jar -Dwebdriver.chrome.driver=./chromedriver &
     #- sleep 10
-    - sudo apt-get --purge remove cmake
+    - sudo apt-get --purge remove cmake -y
     - export OPTDIR=/home/travis
     - export CMAKEDIR=/home/travis/cmake-3.5
     - mkdir -p "$OPTDIR" "$CMAKEDIR" && (cd "$OPTDIR" && \
