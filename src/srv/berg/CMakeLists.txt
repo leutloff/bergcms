@@ -18,8 +18,8 @@
 message("***   Entering srv/berg (main entry point on web server)   ***")
 
 include("${PROJECT_SOURCE_DIR}/shared_config.cmake")
+add_definitions(${BERG_ADD_DEFINITIONS})
 if(MSVC)
-    add_definitions(${BERG_ADD_DEFINITIONS})
     add_definitions("-D_SCL_SECURE_NO_WARNINGS")
     add_definitions("-D_CRT_SECURE_NO_DEPRECATE")
     #add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
