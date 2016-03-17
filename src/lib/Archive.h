@@ -28,7 +28,9 @@
 #include <vector>
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
+#if defined(USE_CTEMPLATE)
 #include <ctemplate/template_dictionary.h>
+#endif
 
 namespace berg
 {
@@ -64,6 +66,7 @@ public:
 
     TArchiveFiles const& GetDatabaseList() const { return archiveFiles; }
 
+#if defined(USE_CTEMPLATE)
     /**
      * Adds the Head related content to the dictionary.
      */
@@ -80,6 +83,7 @@ public:
      */
     void FillDictionaryBody(ctemplate::TemplateDictionary & dict) const;
 
+#endif
     /**
       * Returns the archive name from the given filename, e.g.
       * for path/to/archive/gi003.cvs it returns gi003.

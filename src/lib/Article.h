@@ -24,7 +24,9 @@
 #define BOOST_SYSTEM_NO_DEPRECATED
 #include <boost/algorithm/string.hpp>
 
+#if defined(USE_CTEMPLATE)
 #include <ctemplate/template_dictionary.h>
+#endif
 
 #include <limits>
 #include <string>
@@ -81,11 +83,13 @@ public:
         return ret;
     }
 
+#if defined(USE_CTEMPLATE)
     /**
      * Adds the Body related content to the dictionary.
      * In this case this is the whole article.
      */
     void FillDictionaryBody(ctemplate::TemplateDictionary & dict) const;
+#endif
 
     /**
       * Returns the expected number of lines when displayed in the Browser.

@@ -18,14 +18,14 @@ Building from Source
 
 The most up-to-date documentation will be the Continuous Integration build
 on Travis CI. The file .travis.yml performs the build of the C++ based
-modules, runs C++ and Perl based unit tests, installs everything on a 
-local Apache web server and will perform some GUI tests. Nevertheless these 
+modules, runs C++ and Perl based unit tests, installs everything on a
+local Apache web server and will perform some GUI tests. Nevertheless these
 are the steps to perform a build:
 
 - Clone or download the repository.
 - Execute the script update_and_build_submodules.sh to initialize, update and
   build the submodules.
-- Install the [Boost C++ library](http://boost.org). The easiest way is to 
+- Install the [Boost C++ library](http://boost.org). The easiest way is to
   install the version provided by the distribution, e.g. for an up-to-date
   Ubuntu only the following command is necessary:
     sudo apt-get install libboost-all-dev
@@ -35,9 +35,9 @@ are the steps to perform a build:
       sudo add-apt-repository ppa:ukplc-team/testing
       sudo apt-get update
       sudo apt-get install libboost1.49-dev libboost-chrono1.49-dev libboost-date-time1.49-dev libboost-filesystem1.49-dev libboost-iostreams1.49-dev libboost-locale1.49-dev libboost-program-options1.49-dev libboost-regex1.49-dev libboost-serialization1.49-dev libboost-signals1.49-dev libboost-system1.49-dev libboost-test1.49-dev libboost-thread1.49-dev libboost-timer1.49-dev
-  The last way is to download the Boost C++ Library from 
+  The last way is to download the Boost C++ Library from
   [http://www.boost.org/users/download/](http://www.boost.org/users/download/)
-  (start with version 1.49, when unsure). Then extract and build boost library 
+  (start with version 1.49, when unsure). Then extract and build boost library
   in src/external.
 - Copy your libicu to src/external/libicuNN. If used other than the mentioned
   in shared_config.cmake, add your version, too. Supported out of the box
@@ -52,34 +52,55 @@ are the steps to perform a build:
 - Run the script make_zip.sh. This will build all applications and put all
   the required files in a single ZIP file.
 - Install the content of the ZIP file on the Web Server. An outline of the
-  Apache configuration is shown in doc/etc_apache2. Use the script 
+  Apache configuration is shown in doc/etc_apache2. Use the script
   install_locally.sh to perform this step together with some tweaks with
   regard the file permissions. The used install path can be adapted to
   local differences by overriding shell variables in a file named
   install_locally.cfg.
 
 
+Building with Visual Studio 2015
+================================
+
+Build Boost from source http://www.boost.org/users/download/ or
+install prebuilt binaries from
+https://sourceforge.net/projects/boost/files/boost-binaries/
+
+Create a symbolic link from lib to lib32-msvc-14.0 in the unpacked
+directory. Start a command window as Administrator, go to directory and
+enter `MKLINK /D lib lib32-msvc-14.0`
+
+Install CMake 3.5.0 or newer and launch the CMake GUI. Enter the Berg
+CMS source directory `bergcms\src`. Add an entry `BOOST_ROOT`
+pointing to the above installed directory and an entry setting `USE_CTEMPLATE` to FALSE. Click on Configure and
+Generate. Open the generated Solution with Visual Studio and build. It
+is expected that the unit tests (bergunittests) are running successfully
+on Windows, too.
+
+
+
+
 Installation/Deployment
 =======================
 
-The installation means copying the content of the archive to the web server 
+The installation means copying the content of the archive to the web server
 executing the web applications. This can be accomplished in different ways depending
-on the requirements of the web server. The archive is build during the build 
+on the requirements of the web server. The archive is build during the build
 process as described above.
 
-Part of the archive content is a deployment script. The script deploy.sh copies 
-the surrounding files to a web server using ncftpput. So the version deployed 
+Part of the archive content is a deployment script. The script deploy.sh copies
+the surrounding files to a web server using ncftpput. So the version deployed
 to web server depends on the path where the deploy.sh script is executed.
 
-The servers are configured in a file named remotehosts.cfg. The supported 
-parameters should be copied from the beginning of the deploy.sh script. Here are 
-some examples calling the deploy.sh script. 
+The servers are configured in a file named remotehosts.cfg. The supported
+parameters should be copied from the beginning of the deploy.sh script. Here are
+some examples calling the deploy.sh script.
 
 Showing the available options and components:
     ./deploy.sh -h
 
-The script supports the deployment to two different servers. One is called test 
-and the other one is the production server. Deploying the static HTML files to 
+The script supports the deployment to two different servers. One is called test
+and the other one is the production server. Deploying the static HTML files to
 the test server can be done using this command:
     ./deploy.sh -t test -c html
 
@@ -146,5 +167,3 @@ Feedback
 ========
 
 Feedback is welcome. Patches and pull requests are even more welcome.
-
-

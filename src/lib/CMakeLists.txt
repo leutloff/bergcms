@@ -1,6 +1,6 @@
 # Storage Library
 #
-# Copyright 2012, 2013, 2014 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013, 2014, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -23,7 +23,7 @@ if(MSVC)
     add_definitions(${BERG_ADD_DEFINITIONS})
     add_definitions("-D_SCL_SECURE_NO_WARNINGS")
     add_definitions("-D_CRT_SECURE_NO_DEPRECATE")
-    add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
+    #add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
 endif()
 
 include_directories(

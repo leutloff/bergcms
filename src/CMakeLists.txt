@@ -1,6 +1,6 @@
 # Main CMake file
 #
-# Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -34,11 +34,17 @@ set(APPLICATION_VERSION_PATCH "4")
 #set(CMAKE_VERBOSE_MAKEFILE TRUE)
 message("CMAKE_VERBOSE_MAKEFILE is ${CMAKE_VERBOSE_MAKEFILE}.")
 
-if(NOT CMAKE_BUILD_TYPE)
+if(NOT DEFINED CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
     set(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING "selects the configuration for the Makefile generator. Known values: None, Debug, Release, RelWithDebInfo, MinSizeRel, Distribution")
 endif()
 message("CMAKE_BUILD_TYPE is ${CMAKE_BUILD_TYPE}.")
+
+if(NOT DEFINED USE_CTEMPLATE)
+    set(USE_CTEMPLATE TRUE)
+    set(USE_CTEMPLATE "${USE_CTEMPLATE}" CACHE BOOL "flag wheter the build should be with ctemplate or not.")
+ENDIF()
+message("USE_CTEMPLATE is ${USE_CTEMPLATE}.")
 
 if(COMMAND cmake_policy)
     # Included scripts do automatic cmake_policy PUSH and POP.
@@ -56,6 +62,7 @@ endif()
 #set(CMAKE_BUILD_TYPE distribution)
 set(CMAKE_CXX_FLAGS_DISTRIBUTION "-O3")
 set(CMAKE_C_FLAGS_DISTRIBUTION "-O3")
+set(BERG_ADD_DEFINITIONS "")
 
 # add standard boost library
 include("${PROJECT_SOURCE_DIR}/boost_config.cmake")

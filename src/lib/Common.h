@@ -27,7 +27,9 @@
 //#include "BoostFlags.h"
 #include <boost/cgi/cgi.hpp>
 #include <boost/function.hpp>
+#if defined(USE_CTEMPLATE)
 #include <ctemplate/template_dictionary.h>
+#endif
 #include <string>
 
 namespace berg
@@ -39,6 +41,8 @@ namespace berg
 class Common
 {
 public:
+
+#if defined(USE_CTEMPLATE)
     /**
      * Adds the Common strings to the dictionary, like System title
      * version and copyright information.
@@ -50,6 +54,7 @@ public:
      */
     static void FillDictionaryHead(ctemplate::TemplateDictionary & dict);
 
+#endif
 
     /**
       * Returns the full path to the template.

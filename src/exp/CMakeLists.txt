@@ -1,6 +1,6 @@
 # Single file experiments.
 #
-# Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -22,7 +22,7 @@ if(MSVC)
     add_definitions(${BERG_ADD_DEFINITIONS})
     add_definitions("-D_SCL_SECURE_NO_WARNINGS")
     add_definitions("-D_CRT_SECURE_NO_DEPRECATE")
-    add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
+    #add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
 endif()
 
 #find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS regex filesystem system REQUIRED)
@@ -45,7 +45,8 @@ else()
     link_directories(
         ${CX_LIB_DIR}
         "${PROJECT_SOURCE_DIR}/lib"
-        "${BOOST_LIBRARYDIR}"
+        #"${BOOST_LIBRARYDIR}"
+        "${Boost_LIBRARY_DIRS}"
         "${CTEMPLATE_LIBRARYDIR}"
         "${ICU_LIBRARYDIR}"
         )
@@ -75,10 +76,11 @@ if(${BERG_LINK_FLAGS})
 endif()
 install(TARGETS echo DESTINATION "${BERG_INSTALL_CGIBIN}")
 
-add_executable (exptemplate exptemplate.cpp)
-target_link_libraries(exptemplate ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
-if(${BERG_LINK_FLAGS})
-    set_target_properties(exptemplate PROPERTIES LINK_FLAGS ${BERG_LINK_FLAGS})
-endif()
-install(TARGETS exptemplate DESTINATION "${BERG_INSTALL_CGIBIN}")
-
+IF(USE_CTEMPLATE)
+    add_executable (exptemplate exptemplate.cpp)
+    target_link_libraries(exptemplate ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
+    if(${BERG_LINK_FLAGS})
+        set_target_properties(exptemplate PROPERTIES LINK_FLAGS ${BERG_LINK_FLAGS})
+    endif()
+    install(TARGETS exptemplate DESTINATION "${BERG_INSTALL_CGIBIN}")
+ENDIF()

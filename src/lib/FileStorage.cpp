@@ -33,7 +33,9 @@ using namespace std;
 using namespace berg;
 namespace fs = boost::filesystem;
 namespace ip = boost::interprocess;
+#if defined(USE_CTEMPLATE)
 namespace tpl = ctemplate;
+#endif
 
 void FileStorage::Load(std::string const& filename)
 {
@@ -113,6 +115,7 @@ void FileStorage::SetArticle(unsigned no, Article const& article)
     // TODO
 }
 
+#if defined(USE_CTEMPLATE)
 void FileStorage::FillDictionaryBody(ctemplate::TemplateDictionary & dict) const
 {
     string id;
@@ -126,3 +129,4 @@ void FileStorage::FillDictionaryBody(ctemplate::TemplateDictionary & dict) const
         (*it)->FillDictionaryBody(*list);
     }
 }
+#endif

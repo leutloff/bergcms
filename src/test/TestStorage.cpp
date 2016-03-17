@@ -34,10 +34,12 @@
 #pragma warning(disable: 4251) // 'ctemplate::Template::resolved_filename_' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ctemplate::Template'          
 #endif // defined(_MSC_VER)
 
+#if defined(USE_CTEMPLATE)
 // the following file is provided with the ctemplate tests
 // if not found, adapt CTEMPLATETESTS_INCLUDEDIR in shared_config.make
 #undef CTEMPLATE_DLL_DECL
 #include <tests/template_test_util.h>
+#endif
 
 #if defined(_MSC_VER)
 #pragma warning(disable: 6011)
@@ -57,7 +59,9 @@ using namespace std;
 using namespace berg;
 namespace bt = berg::testonly;
 namespace fs = boost::filesystem;
+#if defined(USE_CTEMPLATE)
 namespace tpl = ctemplate;
+#endif
 
 static const string sample = "some_articles.csv";
 static const size_t ARCHIVE_FILES = 5;
@@ -247,6 +251,7 @@ BOOST_AUTO_TEST_CASE(test_archive_load)
 //
 //}
 
+#if defined(USE_CTEMPLATE)
 BOOST_AUTO_TEST_CASE(test_archive_fill_template_dictionary)
 {
     try
@@ -523,9 +528,11 @@ BOOST_AUTO_TEST_CASE(test_single_article_fill_template_dictionary)
         BOOST_FAIL(oss.str());
     }
 }
+#endif
 
 BOOST_AUTO_TEST_SUITE_END()
 
+#if defined(USE_CTEMPLATE)
 // "link" to implementation of the test utils, e.g. TemplateDictionaryPeer::GetSectionValue
 #include <tests/template_test_util.cc>
-
+#endif

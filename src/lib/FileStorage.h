@@ -33,7 +33,9 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp> //no i/o just types
+#if defined(USE_CTEMPLATE)
 #include <ctemplate/template_dictionary.h>
+#endif
 
 #include <string> 
 #include <vector>
@@ -84,10 +86,12 @@ public:
 
     void SetArticle(unsigned no, Article const& article);
 
+#if defined(USE_CTEMPLATE)
     /**
      * Adds the Body related content to the dictionary.
      */
     void FillDictionaryBody(ctemplate::TemplateDictionary & dict) const;
+#endif
 
 private:
     void ResetLastArticleId() { lastArticleId = 0; }

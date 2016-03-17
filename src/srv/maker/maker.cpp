@@ -56,15 +56,15 @@ typedef bio::stream<TeeDevice> TeeStream;
 void AddFileToLog(fs::path const& logFile, TeeStream &log, ostringstream & oss);
 void CopyToOutDir(fs::path const& bergOutDir, fs::path const& filename, TeeStream & log);
 void Add(TeeStream & log, ostringstream & oss, string const& html);
-void CheckErrorCode(cgi::response & resp, std::string const& functionName, bs::error_code const& ec, uint & errors);
-void CheckErrorCode(TeeStream & log, std::string const& functionName, bs::error_code const& ec, uint & errors);
-void CheckErrorCode(std::string & errorString, std::string const& functionName, bs::error_code const& ec, uint & errors);
+void CheckErrorCode(cgi::response & resp, std::string const& functionName, bs::error_code const& ec, int & errors);
+void CheckErrorCode(TeeStream & log, std::string const& functionName, bs::error_code const& ec, int & errors);
+void CheckErrorCode(std::string & errorString, std::string const& functionName, bs::error_code const& ec, int & errors);
 
 int HandleRequest(boost::cgi::request& req)
 {
     bchrono::system_clock::time_point start = bchrono::system_clock::now();
     bchrono::system_clock::time_point stop = start;
-    uint errors = 0;
+    int errors = 0;
 
     req.load(cgi::parse_get); // Read and parse STDIN data - GET only plus ENV.
     cgi::response resp;
@@ -228,11 +228,13 @@ int HandleRequest(boost::cgi::request& req)
 #if defined(BOOST_WINDOWS_API)
                 const wstring wsTexFileString = texFile.parent_path().c_str(); // c_str in Win is wstring
                 const string texFileString(wsTexFileString.begin(), wsTexFileString.end());
+                const wstring wsFilenameOnly = texFile.filename().c_str();
+                const string texFilenameOnly(wsFilenameOnly.begin(), wsFilenameOnly.end());
 #else
                 const string texFileString = texFile.parent_path().c_str();
+                const string texFilenameOnly = texFile.filename().c_str();
 #endif
                 const string outputdir = string("-output-directory=") + texFileString;
-                const string texFilenameOnly = texFile.filename().c_str();
                 log << exePdfLatex.c_str() << " -interaction=nonstopmode -file-line-error " << outputdir << " " << texFilenameOnly;
                 log << "\n";
 
@@ -290,7 +292,7 @@ int HandleRequest(boost::cgi::request& req)
                 log << "\n";
 
 #if defined(WIN32)
-                bio::file_descriptor_sink tex_log(idxLogfile);
+                bio::file_descriptor_sink idx_log(idxLogfile);
 #else
                 bio::file_descriptor_sink idx_log(idxLogfile.c_str());
 #endif
@@ -459,7 +461,7 @@ void Add(TeeStream & log, ostringstream & oss, string const& html)
 /**
   * Add Error Code to the resp and increment errors is ec is an error.
   */
-void CheckErrorCode(cgi::response & resp, std::string const& functionName, bs::error_code const& ec, uint & errors)
+void CheckErrorCode(cgi::response & resp, std::string const& functionName, bs::error_code const& ec, int & errors)
 {
     std::string errorString;
     CheckErrorCode(errorString, "", ec, errors);
@@ -469,14 +471,14 @@ void CheckErrorCode(cgi::response & resp, std::string const& functionName, bs::e
 /**
   * Add Error Code to the log and increment errors is ec is an error.
   */
-void CheckErrorCode(TeeStream & log, std::string const& functionName, bs::error_code const& ec, uint & errors)
+void CheckErrorCode(TeeStream & log, std::string const& functionName, bs::error_code const& ec, int & errors)
 {
     std::string errorString;
     CheckErrorCode(errorString, "", ec, errors);
     log << errorString;
 }
 
-void CheckErrorCode(std::string & errorString, std::string const& functionName, bs::error_code const& ec, uint & errors)
+void CheckErrorCode(std::string & errorString, std::string const& functionName, bs::error_code const& ec, int & errors)
 {
     ostringstream oss;
     if (0 < ec.value()) { ++errors; }

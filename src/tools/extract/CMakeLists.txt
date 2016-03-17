@@ -22,7 +22,7 @@ if(MSVC)
     add_definitions(${BERG_ADD_DEFINITIONS})
     add_definitions("-D_SCL_SECURE_NO_WARNINGS")
     add_definitions("-D_CRT_SECURE_NO_DEPRECATE")
-    add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
+    #add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
 endif()
 
 #find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS date_time filesystem regex program_options thread system REQUIRED)
@@ -45,7 +45,8 @@ else()
     link_directories(
         ${CX_LIB_DIR}
         "${PROJECT_SOURCE_DIR}/lib"
-        "${BOOST_LIBRARYDIR}"
+        #"${BOOST_LIBRARYDIR}"
+        "${Boost_LIBRARY_DIRS}"
         "${CTEMPLATE_LIBRARYDIR}"
         "${ICU_LIBRARYDIR}"
         )
@@ -55,12 +56,7 @@ set(EXTRACT_SRC extract.cpp)
 
 add_executable (berg_extract ${EXTRACT_SRC}) 
 
-if (MSVC) 
-    # MSVC does "automatically" link to the required libraries
-    target_link_libraries(berg_extract berg_storage ${CTEMPLATE_LIBRARY})
-else()
-    target_link_libraries(berg_extract berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
-endif()
+target_link_libraries(berg_extract berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
 
 add_dependencies(berg_extract berg_storage)
 

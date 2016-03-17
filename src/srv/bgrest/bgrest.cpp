@@ -53,7 +53,7 @@ namespace http = boost::cgi::http;
 
 int HandleRequest(boost::cgi::request& req)
 {
-    uint errors = 0;
+    int errors = 0;
 
     req.load(cgi::parse_get); // Read and parse STDIN data - GET only plus ENV.
     cgi::response resp;
@@ -111,7 +111,7 @@ int HandleRequest(boost::cgi::request& req)
             }
             else
             {
-                constexpr string::size_type artLen = strlen("/articles/");
+                constexpr string::size_type artLen = sizeof("/articles/");
                 int id = boost::lexical_cast<int>(query.substr(artLen));
                 Article const& article = storage.GetArticle(id);
                 string jsonArticle;

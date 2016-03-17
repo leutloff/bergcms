@@ -22,7 +22,7 @@ if(MSVC)
     add_definitions(${BERG_ADD_DEFINITIONS})
     add_definitions("-D_SCL_SECURE_NO_WARNINGS")
     add_definitions("-D_CRT_SECURE_NO_DEPRECATE")
-    add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
+    #add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
 endif()
 
 #find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS date_time filesystem iostreams regex system thread unit_test_framework REQUIRED)
@@ -48,7 +48,8 @@ else()
     link_directories(
         ${CX_LIB_DIR}
         "${PROJECT_SOURCE_DIR}/lib"
-        "${BOOST_LIBRARYDIR}"
+        #"${BOOST_LIBRARYDIR}"
+        "${Boost_LIBRARY_DIRS}"
         "${CTEMPLATE_LIBRARYDIR}"
         "${ICU_LIBRARYDIR}"
         ${VISUAL_LEAK_DETECTOR_LIBRARYDIR}
@@ -67,7 +68,11 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads)
 
 add_executable(bergunittests ${UNITTEST_SRC})
-target_link_libraries(bergunittests berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES} Threads::Threads)
+IF (MSVC)
+    target_link_libraries(bergunittests berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
+ELSE()
+    target_link_libraries(bergunittests berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES} Threads::Threads)
+ENDIF()
 add_dependencies(bergunittests berg_storage)
 if(${BERG_LINK_FLAGS})
     set_target_properties(bergunittests PROPERTIES LINK_FLAGS ${BERG_LINK_FLAGS})

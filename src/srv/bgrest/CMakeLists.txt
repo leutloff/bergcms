@@ -22,7 +22,7 @@ if(MSVC)
     add_definitions(${BERG_ADD_DEFINITIONS})
     add_definitions("-D_SCL_SECURE_NO_WARNINGS")
     add_definitions("-D_CRT_SECURE_NO_DEPRECATE")
-    add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
+    #add_definitions("-DHAS_VISUAL_LEAK_DETECTOR")
 endif()
 
 #find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS chrono date_time filesystem iostreams regex system thread REQUIRED)
@@ -46,7 +46,8 @@ else()
     link_directories(
         ${CX_LIB_DIR}
         "${PROJECT_SOURCE_DIR}/lib"
-        "${BOOST_LIBRARYDIR}"
+        #"${BOOST_LIBRARYDIR}"
+        "${Boost_LIBRARY_DIRS}"
         "${CTEMPLATE_LIBRARYDIR}"
         "${ICU_LIBRARYDIR}"
         )

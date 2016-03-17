@@ -32,7 +32,9 @@
 using namespace std;
 using namespace berg;
 namespace fs = boost::filesystem;
+#if defined(USE_CTEMPLATE)
 namespace tpl = ctemplate;
+#endif
 
 static const std::string STANDARD_FILEXTENSION = ".csv";
 
@@ -65,6 +67,7 @@ size_t Archive::Load(boost::filesystem::path const& archivePath, boost::regex co
     return archiveFiles.size();
 }
 
+#if defined(USE_CTEMPLATE)
 /**
  * Adds the Head related content to the dictionary.
  */
@@ -103,6 +106,7 @@ void Archive::FillDictionaryBody(ctemplate::TemplateDictionary & dict) const
     }
 }
 
+#endif
 
 std::string Archive::GetArchiveNameFromPath(std::string & filenameWithPath)
 {

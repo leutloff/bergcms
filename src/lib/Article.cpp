@@ -33,7 +33,9 @@
 
 using namespace std;
 using namespace berg;
+#if defined(USE_CTEMPLATE)
 namespace tpl = ctemplate;
+#endif
 namespace pt = boost::property_tree;
 
 
@@ -94,6 +96,7 @@ void Article::GetArticleForFileStorage(std::string & wholeArticle) const
     wholeArticle = oss.str();
 }
 
+#if defined(USE_CTEMPLATE)
 void Article::FillDictionaryBody(ctemplate::TemplateDictionary & dict) const
 {
     dict.SetValue("ARTICLE_ID", boost::lexical_cast<string>(id));
@@ -116,6 +119,7 @@ void Article::FillDictionaryBody(ctemplate::TemplateDictionary & dict) const
 
     dict.SetValue("ARTICLE_LASTCHANGED", lastChanged);
 }
+#endif
 
 size_t Article::CountDisplayedLines(std::string const& articlePart)
 {

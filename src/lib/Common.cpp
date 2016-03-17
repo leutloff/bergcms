@@ -29,6 +29,7 @@ using namespace berg;
 namespace cgi = boost::cgi;
 namespace fs = boost::filesystem;
 
+#if defined(USE_CTEMPLATE)
 void Common::FillDictionaryCommon(ctemplate::TemplateDictionary & dict)
 {
     dict.SetValue("SYSTEM_TITLE", "Redaktion FeG Aachen");
@@ -48,6 +49,7 @@ void Common::FillDictionaryHead(ctemplate::TemplateDictionary & dict)
     dict.SetValue("HEAD_TITLE", "Berg CMS");
     //dict.SetValue("ACTIVE_ARCHIVE", " active"); // this is the class attribute to indicate the we are in the archive section
 }
+#endif 
 
 string Common::GetTemplate(string const& templateBase)
 {
@@ -151,11 +153,11 @@ int Common::SendResponse(boost::cgi::request& req, std::string const& output)
 
 string Common::GetBergVersion()
 {
-    return "v3.2.3";
+    return "v3.2.5";
 }
 
 std::string Common::GetBergLastChangedDate()
 {
-    return "10.03.2016";
+    return "17.03.2016";
 }
 
