@@ -93,15 +93,16 @@ before_install:
     # start this before installation to let the server be up and ready without extra waiting time.
     - java -jar selenium-server-standalone-2.50.1.jar -Dwebdriver.chrome.driver=./chromedriver &
     #- sleep 10
-    - apt-get --purge remove cmake
-    - export OPTDIR=/opt
-    - export CMAKEDIR=/opt/cmake-3.5
+    - sudo apt-get --purge remove cmake
+    - export OPTDIR=/home/travis
+    - export CMAKEDIR=/home/travis/cmake-3.5
     - mkdir -p "$OPTDIR" "$CMAKEDIR" && (cd "$OPTDIR" && \
         curl -LO https://cmake.org/files/v3.5/cmake-3.5.0-Linux-x86_64.sh && \
         /bin/sh ./cmake-*-Linux-x86_64.sh --prefix=$CMAKEDIR --skip-license && \
-        ln -sf $CMAKEDIR/bin/cmake /usr/local/bin/cmake && \
-        ln -sf $CMAKEDIR/bin/cpack /usr/local/bin/cpack && \
-        ln -sf $CMAKEDIR/bin/ctest /usr/local/bin/ctest && \
+        sudo ln -sf $CMAKEDIR/bin/cmake /usr/local/bin/cmake && \
+        sudo ln -sf $CMAKEDIR/bin/ccmake /usr/local/bin/ccmake && \
+        sudo ln -sf $CMAKEDIR/bin/cpack /usr/local/bin/cpack && \
+        sudo ln -sf $CMAKEDIR/bin/ctest /usr/local/bin/ctest && \
         cd -)
     - cmake --version
 install:
