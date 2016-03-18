@@ -5,7 +5,7 @@
 # Delete of the articles in the flat file database (.csv).
 #
 # (c) 2006-2011 Heiko Decker
-# (c) 2011-2014 Christian Leutloff
+# (c) 2011-2016 Christian Leutloff
 # 
 # This program is free software; you can redistribute it and/or modify it 
 # under the same terms as Perl itself, i.e., under the terms of the 
@@ -38,7 +38,7 @@ binmode(STDOUT, ":encoding(utf8)");
 
 
 #--- GlobalSet ---
-my $VERSION="v2.10, 17.03.2014";
+my $VERSION="v2.11, 18.03.2016";
 my $Neuflg;# falls  ? in Select-Listen wird Auswahlliste für Neueingabe unterdrückt!
 my $Sftz=',';# Select-Listen-Feldtrenner
 my $SPATH=defined ($ENV{'SCRIPT_FILENAME'}) ? $ENV{'SCRIPT_FILENAME'} : $ENV{'PATH_TRANSLATED'}.$ENV{'SCRIPT_NAME'};#ScriptPfad - SCRIPT_FILENAME Ersatz bei Mini Java CgiHandler 0.2
@@ -56,7 +56,8 @@ my $felder = "Artikel-ID,Kapitel,Nummer,Titel,Typ,Kopftext,Haupttext,Fußtext,TS
 
 my $headline;
 my ($LCrud,$Crud,$Aw)=("","1R","");#
-my $Secl = "u_ c_ d_<br>F:A<br>M:F(3,w)<br>M:G(10,w,virtual)<br>M:H(3,w)<br>S:C(?,-1=INAKTIV,1=Mo,2=Di,3=Mi,4=Do,5=Fr,6=Sa,7=So)<br>S:E(A=Artikel,F=Fixtext,K=Konfiguration)<br>F:I(?ts / ?id)";
+#my $Secl = "u_ c_ d_<br>F:A<br>M:F(3,w)<br>M:G(10,w,virtual)<br>M:H(3,w)<br>S:C(?,-1=INAKTIV,1=Mo,2=Di,3=Mi,4=Do,5=Fr,6=Sa,7=So)<br>S:E(A=Artikel,F=Fixtext,K=Konfiguration)<br>F:I(?ts / ?id)";
+my $Secl = "u_ c_ d_<br>F:A<br>M:F(3,w)<br>M:G(10,w,virtual)<br>M:H(3,w)<br>S:C(?)<br>S:E(A=Artikel,F=Fixtext,K=Konfiguration,A1=Artikel einspaltig,F1=Fixtext einspaltig,A2=Artikel zweispaltig,F2=Fixtext zweispaltig)<br>F:I(?ts / ?id / ?userid)";
 my %Formular=();
 my %Formsort=();
 #my ($tst,$x,$l);
@@ -66,7 +67,7 @@ my $ai = hidden(
         );#--- FormularSet ---
 my %Liste=();
 my $REMOTEID=(defined($ENV{'REMOTE_ADDR'})?$ENV{'REMOTE_ADDR'}:'127.0.0.1').':'.(defined($ENV{'REMOTE_PORT'})?$ENV{'REMOTE_PORT'}:'-');# IP:Port des Aufrufers
-
+my $USERID=(defined($ENV{'REMOTE_USER'})?$ENV{'REMOTE_USER'}:'-');
 
 if (defined param('AW'))
     {
@@ -81,9 +82,9 @@ if (defined param('TIDX') || defined param('CLR'))
 else
     {
     do
-    	{
+        {
         $TIDX = "X".substr(rand(1),2,15);#TransaktionsID GENERIEREN
-    	}
+        }
     while -e $TIDP.$TIDX.".txt";     
     }
 if (defined param('AI'))
@@ -149,7 +150,7 @@ sub get_view_link
 sub get_clr_link
 {
     my $CLR='/cgi-bin/brg/bgcrud.pl?'.get_view_link()."&CLR=".$TIDX."";# es werden vor Abbruch von bgcrud.pl temp. TID-Datei gelöscht!
-    return $CLR;	
+    return $CLR;    
 }
 
 ######################################################################
@@ -328,16 +329,17 @@ sub    crud_ctrl#CRUD-Controler
     }
 
 ######################################################################
-sub    check_value #Aliasse und Sonderzeichenumwandlung 15.9.2008
+sub check_value # Replace ?ts, ?id and ?userid with their values.
 ######################################################################
     {
     my $wert=shift;
-    #.......Sonderparameter ?t, ?id ->NUR falls Quelle NICHT 'berg' enthält
+    #.......Sonderparameter ?ts, ?id ->NUR falls Quelle NICHT 'berg' enthält
     if($dbfile=~/berg/i){;}else
         {
         my $Ts0=get_single_date();
         $wert=~s/\?ts/$Ts0/g;#mask - TimeStamp
         $wert=~s/\?id/$REMOTEID/g;#mask
+        $wert=~s/\?userid/$USERID/g;#mask
         }
     return $wert;
     }
@@ -530,26 +532,26 @@ sub put_data                # Datenauswahlsatz ->ändern,neu,löschen!
     if ($cmd=~/^3C/ || $cmd=~/^5C/) #autoID holen falls ?next oder 1.Feld=ID=Nummerisch
         {
         $nid=next_id(FILE);
-	    if($Satz=~/\?next/) 
-	        {
-	    	$Satz=~s/\?next/$nid/g;
-	        }
-	    else
-	        {
+        if($Satz=~/\?next/) 
+            {
+            $Satz=~s/\?next/$nid/g;
+            }
+        else
+            {
             $Satz=~s/^\d+/$nid/;
-	        }
-	    #create_db();# DB erzeugen falls noch nicht vorhanden 22.2.2008
-	    }
-	seek(FILE, 0, SEEK_SET);
-	if ($cmd=~/^3C/) {print FILE $buf1.$dataset.$Satz.$buf2;}
-	elsif ($cmd=~/^2U/) {truncate(FILE, 0); print FILE $buf1.$Satz.$buf2;}# truncate: Dateiinhalt löschen, damit auch weniger Infos gespeichert werden können
-	elsif ($cmd=~/^(4D|5C|6D)/) {truncate(FILE, 0); print FILE $buf1.$buf2;}
-	else {print_error_page("Fehler: Unbekanntes Kommando (put_data)!");}
-	flock(FILE, LOCK_UN) || print_error_page("Fehler: Konnte zum Schreiben gesperrte Datei $dbfile nicht freigeben (put_data - ".$!.")!");
-	close(FILE);
+            }
+        #create_db();# DB erzeugen falls noch nicht vorhanden 22.2.2008
+        }
+    seek(FILE, 0, SEEK_SET);
+    if ($cmd=~/^3C/) {print FILE $buf1.$dataset.$Satz.$buf2;}
+    elsif ($cmd=~/^2U/) {truncate(FILE, 0); print FILE $buf1.$Satz.$buf2;}# truncate: Dateiinhalt löschen, damit auch weniger Infos gespeichert werden können
+    elsif ($cmd=~/^(4D|5C|6D)/) {truncate(FILE, 0); print FILE $buf1.$buf2;}
+    else {print_error_page("Fehler: Unbekanntes Kommando (put_data)!");}
+    flock(FILE, LOCK_UN) || print_error_page("Fehler: Konnte zum Schreiben gesperrte Datei $dbfile nicht freigeben (put_data - ".$!.")!");
+    close(FILE);
     put_msatz_backup($cmd, $dbfile, $dataset);# Backup erst nach Freigabe des Locks, um ein Deadlock zu vermeiden. Beim Backup muß die DB auch gelockt werden.
-	#befx(); #Nachverarbeitung wird zur Zeit nicht genutzt, aber die Weiterleitung auf berg.pl erfolgt dort auch.
-	print redirect(get_view_link());
+    #befx(); #Nachverarbeitung wird zur Zeit nicht genutzt, aber die Weiterleitung auf berg.pl erfolgt dort auch.
+    print redirect(get_view_link());
     }
 
 #######################################################################
@@ -689,13 +691,13 @@ sub get_select# Generiere Auswahl-(Selection)Feld 17.4.2007.
     if($sflg)
         {
         foreach $e (sort @le)        # Liste sortiert 27.5.2009
-	        {
-	        if($e=~/=/)#Wertzuweisung:anderer Wert als Listeneintrag
-	            {($v,$n)=split(/=/, $e);}
-	        else {$v=$e;$n=$e;}
-	        if($sel eq $v){$o='<option selected ';} else {$o='<option ';}
-	        $s.=$o.' value="'.$v.'">'.$n.'</option>'."\n";
-	        }
+            {
+            if($e=~/=/)#Wertzuweisung:anderer Wert als Listeneintrag
+                {($v,$n)=split(/=/, $e);}
+            else {$v=$e;$n=$e;}
+            if($sel eq $v){$o='<option selected ';} else {$o='<option ';}
+            $s.=$o.' value="'.$v.'">'.$n.'</option>'."\n";
+            }
         }
     else  
         {
@@ -741,11 +743,11 @@ sub get_date_list    # generiere Komma-Datumsliste ->anzahl=tage ab heute!     1
                 # Falls Schaltjahr -> Feb=29Tage
                 if(($j%4)==0) {$md[2]=29;} else {$md[2]=28;}
                 }
-            if ($jx && $jx ne $j){$t++;$wt++,$jt++;next;}# Nur Zieljahr listen 18.11.2008
+            if ($jx && $jx ne $j){$t++;$wt++,$jt++;next;}# Nur Zieljahr listen 
             $s.="$Sftz  $Sftz * $mn[$m] $j * $Sftz ";
             }
-        if ($jx && $j >  $jx){$anz=0;next;}# Nur Zieljahr listen 18.11.2008
-        if ($jx && $jx ne $j){$t++;$wt++,$jt++;next;}# Nur Zieljahr listen 18.11.2008
+        if ($jx && $j >  $jx){$anz=0;next;}# Nur Zieljahr listen 
+        if ($jx && $jx ne $j){$t++;$wt++,$jt++;next;}# Nur Zieljahr listen 
         if ($mod == 1){    $s.=sprintf("$Sftz%02d.%02d.%04d",$t,$m,$j);}
         elsif ($mod == 2){$s.=sprintf("$Sftz%02d.%02d.%04d - %s",$t,$m,$j,$wd[$wt]);}
         elsif ($mod == 3){$s.=sprintf("$Sftz%02d.%02d.%04d - %s (%02d)",$t,$m,$j,$wd[$wt],$kw);}
@@ -756,7 +758,7 @@ sub get_date_list    # generiere Komma-Datumsliste ->anzahl=tage ab heute!     1
     return("$s\n");
 }
 
-sub get_number_list    # generiere Komma-Ziffernliste ->breite,start,ende,inc     12.9.2008
+sub get_number_list    # generiere Komma-Ziffernliste ->breite,start,ende,inc
     {
     my ($breite,$anf,$end,$inc,$fwert)=@_;
     my ($s,$fm);
@@ -772,7 +774,7 @@ sub get_number_list    # generiere Komma-Ziffernliste ->breite,start,ende,inc   
     return("$s");
     }
 
-sub get_field_list    # generiere UniqueFeldInhaltsliste s.a. 1SpaltenModus in berg.pl     15.5.2009
+sub get_field_list    # generiere UniqueFeldInhaltsliste s.a. 1SpaltenModus in berg.pl
     {
     my ($fnr,$fwert)=@_;
     $fnr--;
