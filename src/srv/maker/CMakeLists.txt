@@ -46,7 +46,6 @@ else()
     link_directories(
         ${CX_LIB_DIR}
         "${PROJECT_SOURCE_DIR}/lib"
-        #"${BOOST_LIBRARYDIR}"
         "${Boost_LIBRARY_DIRS}"
         "${CTEMPLATE_LIBRARYDIR}"
         "${ICU_LIBRARYDIR}"

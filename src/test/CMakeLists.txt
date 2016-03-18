@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-message("***   Entering test (unit tests), target: bergunittests   ***")
+message("***   Entering test (C++ unit tests), target: bergunittests   ***")
 
 include("${PROJECT_SOURCE_DIR}/shared_config.cmake")
 if(MSVC)

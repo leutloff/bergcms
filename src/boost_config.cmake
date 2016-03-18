@@ -48,6 +48,7 @@
     # Debian wheezy -> 1.49.0.1
     # Debian jessie -> 1.55.0
     # Windows latest as of 20160317 -> 1.60.0
+    # Boost filesystem < 1.57 can not be compiled with -std=c++11 (undefined reference to `boost::filesystem::detail::copy_file)
     if(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.58.0")
         set(BERG_BOOST_VERSION 1.58.0)
         #set(BOOST_LIBRARYDIR "/usr/lib/x86_64-linux-gnu")

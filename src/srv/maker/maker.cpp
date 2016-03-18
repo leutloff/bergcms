@@ -26,9 +26,14 @@
 //#include "BoostFlags.h"
 #include <boost/cgi/cgi.hpp>
 #include <boost/chrono.hpp>
+#include <boost/foreach.hpp>
+#if (BOOST_VERSION < 105800)
+// workaround for "undefined reference to `boost::filesystem::detail::copy_file(...)'" in boost version < 1.58 and using -std=c++11
+// https://svn.boost.org/trac/boost/ticket/10038
+#define BOOST_NO_CXX11_SCOPED_ENUMS 1
+#endif
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <boost/foreach.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/iostreams/tee.hpp>
 #include <boost/iostreams/stream.hpp>
@@ -200,7 +205,8 @@ int HandleRequest(boost::cgi::request& req)
             log << "cp " << texFile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
             fs::remove(DirectoryLayout::Instance().GetHtdocsDownloadDir() / texFile.filename(), ec); // ignore error code
             log << " (remove ec: " << ec.value() << "/" << ec.message() << ")";
-            fs::copy_file(texFile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / texFile.filename(), ec);
+            fs::copy_file(texFile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / texFile.filename(),
+                          fs::copy_option::overwrite_if_exists, ec);
             CheckErrorCode(log, "copy_file", ec, errors);
             log << ".\n";
             Add(log, oss, "</pre></p>\n");
@@ -336,14 +342,16 @@ int HandleRequest(boost::cgi::request& req)
             log << "cp " << inputDatabaseFile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
             fs::remove(DirectoryLayout::Instance().GetHtdocsDownloadDir() / inputDatabaseFile.filename(), ec);
             CheckErrorCode(log, "remove", ec, errors);
-            fs::copy_file(inputDatabaseFile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / inputDatabaseFile.filename(), ec);
+            fs::copy_file(inputDatabaseFile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / inputDatabaseFile.filename(),
+                          fs::copy_option::overwrite_if_exists, ec);
             CheckErrorCode(log, "copy_file", ec, errors);
             log << ".\n";
 
             log << "cp " << pdfFile.c_str() << " -&gt; " << DirectoryLayout::Instance().GetHtdocsDownloadDir().c_str();
             fs::remove(DirectoryLayout::Instance().GetHtdocsDownloadDir() / pdfFile.filename(), ec);
             CheckErrorCode(log, "remove", ec, errors);
-            fs::copy_file(pdfFile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / pdfFile.filename(), ec);
+            fs::copy_file(pdfFile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / pdfFile.filename(),
+                          fs::copy_option::overwrite_if_exists, ec);
             CheckErrorCode(log, "copy_file", ec, errors);
             log << ".\n";
             Add(log, oss, "</pre></p>\n");
@@ -438,12 +446,12 @@ void AddFileToLog(fs::path const& logFile, TeeStream &log, ostringstream &oss)
   */
 void CopyToOutDir(fs::path const& bergOutDir, fs::path const& filename, TeeStream & log)
 {
-    fs::path const& target = bergOutDir / filename.filename();
+    auto target = bergOutDir / filename.filename();
     if (!fs::exists(target))
     {
         log << "cp " << filename.c_str() << " -&gt; " << target.c_str();
         bs::error_code ec;
-        fs::copy_file(filename, target, ec);
+        fs::copy_file(filename, target, fs::copy_option::overwrite_if_exists, ec);
         log << " (ec: " << ec.value() << "/" << ec.message() << ")";
         log << ".\n";
     }
