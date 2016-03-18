@@ -47,6 +47,7 @@
     # Ubuntu 16.04 xenial LTS -> 1.58 (32 and 64 bit)
     # Debian wheezy -> 1.49.0.1
     # Debian jessie -> 1.55.0
+    # Windows latest as of 20160317 -> 1.60.0
     if(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.58.0")
         set(BERG_BOOST_VERSION 1.58.0)
         #set(BOOST_LIBRARYDIR "/usr/lib/x86_64-linux-gnu")
@@ -56,12 +57,12 @@
     elseif(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.55.0")
         set(BERG_BOOST_VERSION 1.55.0)
         #set(BOOST_LIBRARYDIR "/usr/lib/x86_64-linux-gnu")
-#     elseif(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.54.0")
-#         set(BERG_BOOST_VERSION 1.54.0)
-#         set(BOOST_LIBRARYDIR "/usr/lib/x86_64-linux-gnu")
-#     elseif(EXISTS "/usr/lib/i386-linux-gnu/libboost_filesystem.so.1.54.0")
-#         set(BERG_BOOST_VERSION 1.54.0)
-#         set(BOOST_LIBRARYDIR "/usr/lib/i386-linux-gnu")
+    elseif(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.54.0")
+        set(BERG_BOOST_VERSION 1.54.0)
+        #set(BOOST_LIBRARYDIR "/usr/lib/x86_64-linux-gnu")
+    elseif(EXISTS "/usr/lib/i386-linux-gnu/libboost_filesystem.so.1.54.0")
+        set(BERG_BOOST_VERSION 1.54.0)
+        #set(BOOST_LIBRARYDIR "/usr/lib/i386-linux-gnu")
 #     elseif(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.53.0")
 #         set(BERG_BOOST_VERSION 1.53.0)
 #         set(BOOST_LIBRARYDIR "/usr/lib/x86_64-linux-gnu")
@@ -75,9 +76,9 @@
 #         set(BERG_BOOST_VERSION 1.49.0)
 #         set(BOOST_LIBRARYDIR "/usr/lib")
     else()
-        # Library versions below 1.55 are not tested any more. But feel free to test them and make them work...
+        # Library versions below 1.54 are not tested any more. But feel free to test them and make them work...
         message("Specific version of the Boost Filesystem Library not found. Please add it to the list above in boost_config.cmake.")
-        set(BERG_BOOST_VERSION 1.60.0)
+        set(BERG_BOOST_VERSION 1.54.0)
         #set(BOOST_LIBRARYDIR "/usr/lib")
         #return()
     endif()
