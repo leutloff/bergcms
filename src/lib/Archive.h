@@ -2,7 +2,7 @@
  * @file Archive.h
  * This class provides the archive specific functions.
  * 
- * Copyright 2012, 2014 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2012, 2014, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -23,6 +23,8 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #   pragma once
 #endif
+
+#include "BoostFlags.h"
 
 #include <string>
 #include <vector>

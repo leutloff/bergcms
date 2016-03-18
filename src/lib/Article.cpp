@@ -19,7 +19,6 @@
  */
 
 #include "Article.h"
-#include "BoostFlags.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>

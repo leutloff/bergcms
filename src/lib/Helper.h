@@ -2,7 +2,7 @@
  * @file Helper.h
  * Some static helper methods.
  * 
- * Copyright 2012, 2014 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2012, 2014, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as

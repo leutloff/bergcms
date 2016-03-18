@@ -2,7 +2,7 @@
  * @file Archive.cpp
  * This class implements the archive specific functions.
  * 
- * Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2012, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,9 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Archive.h>
-#include <Helper.h>
-#include <BoostFlags.h>
+#include "Archive.h"
+#include "Helper.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>

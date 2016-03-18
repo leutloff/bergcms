@@ -18,7 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Helper.h>
+#include "Helper.h"
+#include "BoostFlags.h"
 #include <boost/lexical_cast.hpp>
 #include <sstream>
 

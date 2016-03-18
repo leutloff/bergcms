@@ -27,8 +27,8 @@
 
 #include "Article.h"
 #include "Filter.h"
+#include "BoostFlags.h"
 
-#define BOOST_SYSTEM_NO_DEPRECATED
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>

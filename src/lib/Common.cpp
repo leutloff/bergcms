@@ -1,6 +1,6 @@
 /**
  * @file Common.cpp
- *  Some static shared methods.
+ * Some static shared methods.
  * 
  * Copyright 2012, 2013, 2014 Christian Leutloff <leutloff@sundancer.oche.de>
  * 

@@ -24,6 +24,7 @@
 #   pragma once
 #endif
 
+#include "BoostFlags.h"
 #include <boost/serialization/singleton.hpp>
 #include <boost/filesystem.hpp>
 #include <string>

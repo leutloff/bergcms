@@ -21,22 +21,13 @@
  * But improved since then, e.g. added makeindex calls.
  */
 
+
 #include "Common.h"
 #include "DirectoryLayout.h"
-//#include "BoostFlags.h"
 #include <boost/cgi/cgi.hpp>
 #include <boost/chrono.hpp>
 #include <boost/foreach.hpp>
-//#if (BOOST_VERSION < 105800)
-//// workaround for "undefined reference to `boost::filesystem::detail::copy_file(...)'" in boost version < 1.58 and using -std=c++11
-//// https://svn.boost.org/trac/boost/ticket/10038
-//#define BOOST_NO_CXX11_SCOPED_ENUMS 1
-//#endif
-//
-// https://stackoverflow.com/questions/15634114/cant-link-program-using-boost-filesystem/17988317#17988317
-#define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
-#undef BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem/fstream.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/iostreams/tee.hpp>
