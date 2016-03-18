@@ -64,6 +64,6 @@ add_dependencies(maker berg_storage)
 if(${BERG_LINK_FLAGS})
     set_target_properties(maker PROPERTIES LINK_FLAGS ${BERG_LINK_FLAGS})
 endif()
-#target_compile_features(maker PRIVATE ${BERG_USED_CXX_FEATURES})
+target_compile_features(maker PRIVATE ${BERG_USED_CXX_FEATURES})
 
 install(TARGETS maker DESTINATION "${BERG_INSTALL_CGIBIN}")

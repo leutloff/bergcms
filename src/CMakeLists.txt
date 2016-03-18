@@ -78,7 +78,7 @@ add_subdirectory(exp)# programs used to experiment with something, e.g. getting 
 include("${PROJECT_SOURCE_DIR}/install_package.cmake")
 
 message("Name of BUILDHOST is ${BUILDHOST}.")
-# message("Using ICU version ${BERG_ICU_VERSION}.")
-message("Using the BOOST_LIBRARYDIR with the value of ${BOOST_LIBRARYDIR}.")
+#message("Using ICU version ${BERG_ICU_VERSION}.")
+#message("Using the BOOST_LIBRARYDIR with the value of ${BOOST_LIBRARYDIR}.")
 message("Using the Boost_LIBRARY_DIRS with the value of ${Boost_LIBRARY_DIRS}.")
 message("Using the Boost_INCLUDE_DIRS with the value of ${Boost_INCLUDE_DIRS}.")
