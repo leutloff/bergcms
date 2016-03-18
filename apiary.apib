@@ -7,7 +7,7 @@ The Berg CMS uses a simple API allowing consumers to view the stored articles an
 
 ## Articles of the Actual Issue [/articles]
 
-### List All Articles [GET]
+### List All Articles [GET /articles]
 
 + Response 200 (application/json)
 
@@ -15,13 +15,13 @@ The Berg CMS uses a simple API allowing consumers to view the stored articles an
             {
                 "id": 25,
                 "priority": 100,
-                "type": "",
+                "type": "A|F|C|A1|F1|A2|F2|A3|F3",
                 "chapter": "Introduction",
                 "title": "Title of the article",
                 "header": "Heading part of the article",
                 "body": "The main part of the article",
                 "footer": "Buttom part of the article",
-                "lastchanged": "yyyymmdd-hhmmss;ip:port;user"
+                "lastChanged": "yyyymmdd-hhmmss;ip:port;user"
             }
         ]
 
