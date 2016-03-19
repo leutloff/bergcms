@@ -220,4 +220,5 @@ deploy:
   skip_cleanup: true
   draft: true
   on:
+    tags: true 
     repo: leutloff/berg
