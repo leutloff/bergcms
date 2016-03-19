@@ -18,10 +18,11 @@ env:
 # trusty (14.04) is now working instead of precise (12.04)
 sudo: required
 dist: trusty
+#dist: xenial
 language: cpp
 compiler:
-    - gcc
     - clang
+    - gcc
 cache: apt
 addons:
   sauce_connect:
@@ -114,7 +115,7 @@ before_install:
     - cd ${boost_dir}
     #- ./bootstrap.sh --show-libraries
     - ./bootstrap.sh --with-libraries=atomic,chrono,date_time,filesystem,iostreams,log,program_options,regex,signals,system,test,thread
-    - sudo ./b2 -j 4 link=shared runtime-link=shared install --prefix=/usr
+    - sudo ./b2 -j 4 link=shared runtime-link=shared install -d0 --prefix=/usr
     - cd ..
     #- rm -rf ${boost_dir} 
     - sudo ldconfig
@@ -150,15 +151,15 @@ before_script:
     - make
     - make install
     - popd
-    - find /usr/lib -name 'libicu*'
+    - find /usr/lib -name 'libicu*.so.*'
     # we are now using system libicu
     #- mkdir -p $TRAVIS_BUILD_DIR/src/external/libicu48/lib
     #- cp /usr/lib/libicu*.so.48 $TRAVIS_BUILD_DIR/src/external/libicu48/lib || true
     #- ls -l $TRAVIS_BUILD_DIR/src/external/libicu48/lib
     - mkdir travis-build
     - pushd travis-build
-    - cmake --version
-    - cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=FALSE ../src
+    #- cmake --version
+    - cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=FALSE -D Boost_DEBUG=FALSE ../src
     # Use this to debug a failing CMake run and build:
     #- cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=TRUE ../src
     - popd
