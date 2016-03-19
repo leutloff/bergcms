@@ -6,8 +6,8 @@ Content-type: application/json; charset=utf-8
     "type": "K",
     "chapter": "chapter",
     "title": "title",
-    "header": "head",
-    "body": "body",
-    "footer": "footer",
-    "lastChanged": "20111006-212548-Do / 127.0.0.1:63880"
+    "header": " head",
+    "body": " body",
+    "footer": " footer",
+    "lastChanged": "20111006-212548-Do / 127.0.0.1:63880 / bergcms"
 }

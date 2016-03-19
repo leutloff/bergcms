@@ -103,16 +103,13 @@ int HandleRequest(boost::cgi::request& req)
                 }
                 resp << "\r\n";
                 resp << "]\r\n";
-                //                resp << "[\r\n    {\r\n        \"id\": 4294967295,\r\n        \"priority\": -1,\r\n        \"type\": \"\",\r\n"
-                //            //            "        \"chapter\": \"\",\n        \"title\": \"\",\n"
-                //            //            "        \"header\": \"\",\n        \"body\": \"\",\n        \"footer\": \"\",\n"
-                //                        "        \"lastChanged\": \"\"\r\n    }\r\n]\r\n";
                 resp.status(http::ok);
             }
             else
             {
-                constexpr string::size_type artLen = sizeof("/articles/");
-                int id = boost::lexical_cast<int>(query.substr(artLen));
+                constexpr string::size_type artLen = sizeof("/articles/")/sizeof(' ') - 1;
+                auto strid = query.substr(artLen);
+                int id = boost::lexical_cast<int>(strid);
                 Article const& article = storage.GetArticle(id);
                 string jsonArticle;
                 article.GetAsJSON(jsonArticle);

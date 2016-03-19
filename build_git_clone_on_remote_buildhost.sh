@@ -23,7 +23,7 @@ SOURCEDIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SSH=ssh
 BUILDHOST=remote-hostname
 WORKDIR=~/work
-GITCLONE="git clone -b master https://github.com/leutloff/berg.git berg"
+GITCLONE="git clone -b master https://github.com/leutloff/bergcms.git bergcms"
 
 # Override any variables above by placing them into a file named remotehosts.cfg.
 # This is especially useful for the BUILDHOST. Just copy the lines from above to the file
@@ -38,8 +38,8 @@ fi
 echo "Build on $BUILDHOST with git command $GITCLONE..."
 
 # Build
-#ssh debian-squeeze /home/leutloff/work/berg/make_zip.sh
-$SSH $BUILDHOST "mkdir -p $WORKDIR && cd $WORKDIR && $GITCLONE && ls -l $WORKDIR/berg"
+#ssh debian-squeeze /home/leutloff/work/bergcms/make_zip.sh
+$SSH $BUILDHOST "mkdir -p $WORKDIR && cd $WORKDIR && $GITCLONE && ls -l $WORKDIR/bergcms"
 
 echo "done."
 echo "Check that the boost libraries are installed for development."

@@ -169,7 +169,7 @@ void AddJsonValue(ostream & os, string const& name, string const& value, bool is
 {
     os << "    \"" << name << "\": " << value;
     if (!isLastElement) { os << ","; }
-    os << endl;
+    os << "\r\n";
 }
 /**
  * @brief AddJsonQuotedValue writes the element as quoted value.
@@ -184,7 +184,7 @@ void Article::GetAsJSON(std::string & jsonArticle) const
 {
     jsonArticle.clear();
     ostringstream oss;
-    oss << "{" << endl;
+    oss << "{" << "\r\n";
     AddJsonValue(oss, "id", boost::lexical_cast<string>(id));
     AddJsonValue(oss, "priority", boost::lexical_cast<string>(priority));
     AddJsonQuotedValue(oss, "type", type);
@@ -194,6 +194,6 @@ void Article::GetAsJSON(std::string & jsonArticle) const
     AddJsonQuotedValue(oss, "body", body);
     AddJsonQuotedValue(oss, "footer", footer);
     AddJsonQuotedValue(oss, "lastChanged", lastChanged, true);
-    oss << "}" << endl;
+    oss << "}";
     jsonArticle = oss.str();
 }

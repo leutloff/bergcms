@@ -23,8 +23,7 @@ fi
 
 echo "Build (from $SOURCEDIR on $HOSTNAME) and install the project (in $TARGETDIR)..."
 
-# /home/aachen$ ~/work/berg/make_zip.sh &&  unzip -o ~/work/berg/build-mk/Berg-3.0.0-Linux.zip && (cd htdocs/cgi-bin/brg ; ./archive)
-
+# /home/aachen$ ~/work/bergcms/make_zip.sh &&  unzip -o ~/work/bergcms/build-mk/Berg-3.0.0-Linux.zip && (cd htdocs/cgi-bin/brg ; ./archive)
 (cd $SOURCEDIR && ./make_zip.sh)
 
 pushd $TARGETDIR

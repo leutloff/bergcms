@@ -35,14 +35,14 @@ else
 fi
 
 # Source directory
-BERGDIR=$WORKDIR/berg
+BERGDIR=$WORKDIR/bergcms
 # Absolute path on Build Host to store the makefile, the object files and the ZIP file.
 BUILDDIRONBUILDHOST=$WORKDIR/berg-build-mk-$BUILDHOST
 
 echo "Build on $BUILDHOST in directoriues for src $BERGDIR and for results $BUILDDIRONBUILDHOST..."
 
 # Build
-#ssh debian-squeeze /home/leutloff/work/berg/make_zip.sh
+#ssh debian-squeeze /home/leutloff/work/bergcms/make_zip.sh
 $SSH $BUILDHOST "cd $BERGDIR && git pull && git submodule update --init --recursive && pushd src/external/ctemplate && ./configure --prefix $BERGDIR/src/external/ctemplate && make && make install && popd && ./make_zip.sh $BUILDDIRONBUILDHOST"
 
 mkdir -p $SOURCEDIR/archive

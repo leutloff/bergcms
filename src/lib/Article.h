@@ -69,7 +69,7 @@ public:
     /// This is the opposite operation of the constructor.
     void GetArticleForFileStorage(std::string & wholeArticle) const;
 
-    /// prepares the for storage, e.g. replace new line/line feed and tabulators.
+    /// Prepares the item for storage, e.g. replace new line/line feed and tabulators.
     static std::string PrepareForFileStorage(std::string const& item)
     {
         std::string ret = boost::replace_all_copy(item, "\n", "<br>");
@@ -78,7 +78,7 @@ public:
     }
 
 
-    /// reverts the replacements of PrepareForFileStorage.
+    /// Reverts the replacements of PrepareForFileStorage.
     static std::string UndoPrepareForFileStorage(std::string const& item)
     {
         // $wert=~s/\<br\>/\x0a/g;#LF aus <br> erzeugen
@@ -109,7 +109,9 @@ public:
     void SetFromJSON(std::string const& jsonArticle);
     /**
      * @brief GetAsJSON returns the article as JSON object.
-     * @return the article formatted as JSON object
+     * @return The article formatted as JSON object.
+     *         A line feed is not added at the end of the article.
+     *         This allows adding a comma when the Article is part of an array.
      */
     void GetAsJSON(std::string &jsonArticle) const;
 

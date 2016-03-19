@@ -269,12 +269,15 @@ namespace berg
        {
            size_t nMax = std::max(expected.size(), actual.size());
            size_t i = 0;
-           while((nMax > i) && (std::string::npos != expected[i].find("<ignoreline>")))
+           while ((nMax > i) && (std::string::npos != expected[i].find("<ignoreline>")))
            {
                ++i;
            }
-           expected.erase(expected.begin(), expected.begin()+i);
-           actual.erase(actual.begin(), actual.begin()+i);
+           if (0 < i)
+           {
+               expected.erase(expected.begin(), expected.begin()+i);
+               actual.erase(actual.begin(), actual.begin()+i);
+           }
        }
 
     }
