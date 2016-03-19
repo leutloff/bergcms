@@ -134,12 +134,13 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two_id1)
 //    cout << "***   jsonFile (fixed file)   ***" << endl;
 //    bt::PrintFileToStream(jsonFile, cout);
 
-#if (BOOST_VERSION < 105800)
-    // see https://svn.boost.org/trac/boost/ticket/5033
-#   warning "TODO: There are UTF-16 characters in the generated output. Fixme."
-#else
+// a fix seems to be provided in https://stackoverflow.com/questions/10260688/boostproperty-treejson-parser-and-two-byte-wide-characters
+//#if (BOOST_VERSION < 105800)
+//    // see https://svn.boost.org/trac/boost/ticket/5033
+//#   warning "There are UTF-16 characters in the generated output. Fixme."
+//#else
     VerifyGeneratedFileContent(jsonFileExpected, jsonFile);
-#endif
+//#endif
 }
 
 /**
@@ -181,12 +182,12 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two_id42)
 //    cout << "***   jsonFile (fixed file)   ***" << endl;
 //    bt::PrintFileToStream(jsonFile, cout);
 
-#if (BOOST_VERSION < 105800)
-    // see https://svn.boost.org/trac/boost/ticket/5033
-#   warning "TODO: There are UTF-16 characters in the generated output. Fixme."
-#else
+//#if (BOOST_VERSION < 105800)
+//    // see https://svn.boost.org/trac/boost/ticket/5033
+//#   warning "There are UTF-16 characters in the generated output. Fixme."
+//#else
     VerifyGeneratedFileContent(jsonFileExpected, jsonFile);
-#endif
+//#endif
 }
 
 ///**

@@ -51,8 +51,9 @@ addons:
       - wget
       # using NoedSource - nodejs
       # Disallowing packages (20160301): npm
+      - libicu-dev
       # The boost libraries are used by the C++ part
-      - libboost-all-dev
+      #- libboost-all-dev
       # wput is used to copy the package to an FTP site.
       # Disallowing packages (20160228): - wput
       # nodejs-legacy is required in later Ubuntu versions than precise:
@@ -93,6 +94,7 @@ before_install:
     # start this before installation to let the server be up and ready without extra waiting time.
     - java -jar selenium-server-standalone-2.50.1.jar -Dwebdriver.chrome.driver=./chromedriver &
     #- sleep 10
+    # Install CMake
     - sudo apt-get --purge remove cmake -y
     - export OPTDIR=/home/travis
     - export CMAKEDIR=/home/travis/cmake-3.5
@@ -103,6 +105,20 @@ before_install:
     - sudo ln -sf $CMAKEDIR/bin/cpack  /usr/local/bin/cpack
     - sudo ln -sf $CMAKEDIR/bin/ctest  /usr/local/bin/ctest
     - cmake --version
+    # Install boost library
+    - export boost_version=1.58.0
+    - export boost_dir=boost_1_58_0
+    - curl -LO https://downloads.sourceforge.net/project/boost/boost/${boost_version}/${boost_dir}.tar.bz2
+    - tar --bzip2 -xf ${boost_dir}.tar.bz2 
+    #- rm ${boost_dir}.tar.bz2 
+    - cd ${boost_dir}
+    #- ./bootstrap.sh --show-libraries
+    - ./bootstrap.sh --with-libraries=atomic,chrono,date_time,filesystem,iostreams,log,program_options,regex,signals,system,test,thread
+    - sudo ./b2 -j 4 link=shared runtime-link=shared install --prefix=/usr
+    - cd ..
+    #- rm -rf ${boost_dir} 
+    - sudo ldconfig
+    - find /usr/lib -name 'libboost*' -print
 install:
     # Install Apache for the GUI tests (apache2 is installed above)
     - sudo apt-get install apache2-suexec-custom apache2-utils -y
