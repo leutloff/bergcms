@@ -77,7 +77,7 @@ add_dependencies(bergunittests berg_storage)
 if(${BERG_LINK_FLAGS})
     set_target_properties(bergunittests PROPERTIES LINK_FLAGS ${BERG_LINK_FLAGS})
 endif()
-
+target_compile_features(bergunittests PRIVATE ${BERG_USED_CXX_FEATURES})
 
 
 

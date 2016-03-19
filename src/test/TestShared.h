@@ -20,6 +20,8 @@
 #ifndef TEST_SHARED_H_
 #define TEST_SHARED_H_
 
+#include <BoostFlags.h>
+#include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <iostream>
@@ -279,6 +281,23 @@ namespace berg
                actual.erase(actual.begin(), actual.begin()+i);
            }
        }
+
+//       /**
+//        * @brief Replaces the utf-16 character representation.
+//        * @param lines
+//        */
+//       inline bool ReplaceUTF16(boost::filesystem::path const& file)
+//       {
+//           std::vector<std::string> fileContent;
+//           if (!LoadFile(file, fileContent)) { return false; }
+//           boost::filesystem::ofstream ofs(file);
+//           if (!ofs.is_open())  { return false; }
+//           for (auto& line: fileContent)
+//           {
+//               line = boost::replace_all_copy(line, "\t", "+\t+"); // \u0009 -> \t
+//               ofs << line << std::endl;
+//           }
+//       }
 
     }
 }
