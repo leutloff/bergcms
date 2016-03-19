@@ -2,7 +2,7 @@
  * @file TestShared.h
  * This header provides the functions used for testing purposes only.
  *
- * Copyright 2013 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2013, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -48,6 +48,11 @@ namespace berg
             {
                 return fs::canonical(input);
             }
+            input = "../../bergcms/src/test/input/";
+            if (fs::exists(input))
+            {
+                return fs::canonical(input);
+            }
             input = "../../berg/src/test/input/";
             if (fs::exists(input))
             {
@@ -73,6 +78,11 @@ namespace berg
             {
                 return fs::canonical(input);
             }
+            input = "../../bergcms/src/test/input/archive/";
+            if (fs::exists(input))
+            {
+                return fs::canonical(input);
+            }
             input = "../../berg/src/test/input/archive/";
             if (fs::exists(input))
             {
@@ -94,6 +104,11 @@ namespace berg
                 return fs::canonical(input);
             }
             input = "../src/test/output/";
+            if (fs::exists(input))
+            {
+                return fs::canonical(input);
+            }
+            input = "../../bergcms/src/test/output/";
             if (fs::exists(input))
             {
                 return fs::canonical(input);
@@ -124,6 +139,11 @@ namespace berg
             {
                 return fs::canonical(input);
             }
+            input = "../../bergcms/src/test/";
+            if (fs::exists(input))
+            {
+                return fs::canonical(input);
+            }
             input = "../../berg/src/test/";
             if (fs::exists(input))
             {
@@ -149,6 +169,11 @@ namespace berg
             {
                 return fs::canonical(input);
             }
+            input = "../../bergcms/src/test/expected/";
+            if (fs::exists(input))
+            {
+                return fs::canonical(input);
+            }
             input = "../../berg/src/test/expected/";
             if (fs::exists(input))
             {
@@ -170,6 +195,11 @@ namespace berg
                 return fs::canonical(input);
             }
             input = "../www/cgi-bin/brg/";
+            if (fs::exists(input))
+            {
+                return fs::canonical(input);
+            }
+            input = "../../bergcms/www/cgi-bin/brg/";
             if (fs::exists(input))
             {
                 return fs::canonical(input);
