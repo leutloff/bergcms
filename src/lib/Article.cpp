@@ -180,20 +180,38 @@ void AddJsonQuotedValue(ostream & os, string const& name, string const& value, b
     AddJsonValue(os, name, quoted, isLastElement);
 }
 
+//void Article::GetAsJSON(std::string & jsonArticle) const
+//{
+//    jsonArticle.clear();
+//    ostringstream oss;
+//    oss << "{" << "\r\n";
+//    AddJsonValue(oss, "id", boost::lexical_cast<string>(id));
+//    AddJsonValue(oss, "priority", boost::lexical_cast<string>(priority));
+//    AddJsonQuotedValue(oss, "type", type);
+//    AddJsonQuotedValue(oss, "chapter", chapter);
+//    AddJsonQuotedValue(oss, "title", title);
+//    AddJsonQuotedValue(oss, "header", header);
+//    AddJsonQuotedValue(oss, "body", body);
+//    AddJsonQuotedValue(oss, "footer", footer);
+//    AddJsonQuotedValue(oss, "lastChanged", lastChanged, true);
+//    oss << "}";
+//    jsonArticle = oss.str();
+//}
+
 void Article::GetAsJSON(std::string & jsonArticle) const
 {
     jsonArticle.clear();
+    pt::ptree tree;
+    tree.put("id", id);
+    tree.put("priority", priority);
+    tree.put("type", type);
+    tree.put("chapter", chapter);
+    tree.put("title", title);
+    tree.put("header", header);
+    tree.put("body", body);
+    tree.put("footer", footer);
+    tree.put("lastChanged", lastChanged);
     ostringstream oss;
-    oss << "{" << "\r\n";
-    AddJsonValue(oss, "id", boost::lexical_cast<string>(id));
-    AddJsonValue(oss, "priority", boost::lexical_cast<string>(priority));
-    AddJsonQuotedValue(oss, "type", type);
-    AddJsonQuotedValue(oss, "chapter", chapter);
-    AddJsonQuotedValue(oss, "title", title);
-    AddJsonQuotedValue(oss, "header", header);
-    AddJsonQuotedValue(oss, "body", body);
-    AddJsonQuotedValue(oss, "footer", footer);
-    AddJsonQuotedValue(oss, "lastChanged", lastChanged, true);
-    oss << "}";
+    pt::write_json(oss, tree);
     jsonArticle = oss.str();
 }

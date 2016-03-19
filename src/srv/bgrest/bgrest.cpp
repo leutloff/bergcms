@@ -113,7 +113,7 @@ int HandleRequest(boost::cgi::request& req)
                 Article const& article = storage.GetArticle(id);
                 string jsonArticle;
                 article.GetAsJSON(jsonArticle);
-                resp << jsonArticle << "\r\n";
+                resp << jsonArticle;
                 resp.status(http::ok);
             }
         }

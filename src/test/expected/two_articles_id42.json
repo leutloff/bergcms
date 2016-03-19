@@ -1,0 +1,13 @@
+Content-type: application/json; charset=utf-8
+
+{
+    "id": "42",
+    "priority": "100",
+    "type": "A1",
+    "chapter": "\\textbf{chapter \"with quotes\"}",
+    "title": "\\section{\"title\"}",
+    "header": "This is the beginning of the \"article\".\nThis is the second line.",
+    "body": "The main part.\n\n\"\"\"\"\\\\\"\"",
+    "footer": "The last line.\nNow some nasty content öäüÖÄÜ\"`'\"\\n\\t\\\\\\\".\nHope everything works... ;-)",
+    "lastChanged": "20160319-124907-Sa \/ 127.0.0.1:52134 \/ leutloff"
+}

@@ -35,21 +35,31 @@ BOOST_AUTO_TEST_CASE(empty_article)
 {
     {
         Article article;
-        const string completeEmptyArticle = "{\r\n    \"id\": 4294967295,\r\n    \"priority\": -1,\r\n    \"type\": \"\",\r\n"
-                                    "    \"chapter\": \"\",\r\n    \"title\": \"\",\r\n"
-                                    "    \"header\": \"\",\r\n    \"body\": \"\",\r\n    \"footer\": \"\",\r\n"
-                                    "    \"lastChanged\": \"\"\r\n}";
+        // id an priority as real numbers:
+        //        const string completeEmptyArticle = "{\n    \"id\": 4294967295,\n    \"priority\": -1,\n    \"type\": \"\",\n"
+        //                                    "    \"chapter\": \"\",\n    \"title\": \"\",\n"
+        //                                    "    \"header\": \"\",\n    \"body\": \"\",\n    \"footer\": \"\",\n"
+        //                                    "    \"lastChanged\": \"\"\n}\n";
+        const string completeEmptyArticle = "{\n    \"id\": \"4294967295\",\n    \"priority\": \"-1\",\n    \"type\": \"\",\n"
+                                            "    \"chapter\": \"\",\n    \"title\": \"\",\n"
+                                            "    \"header\": \"\",\n    \"body\": \"\",\n    \"footer\": \"\",\n"
+                                            "    \"lastChanged\": \"\"\n}\n";
         string json;
         article.GetAsJSON(json);
         BOOST_CHECK_EQUAL(completeEmptyArticle, json);
 
-        const string minimalAcceptableArticle = "{\r\n    \"id\": 25\r\n}\r\n";
+        const string minimalAcceptableArticle = "{\n    \"id\": 25\n}\n";
         article.SetFromJSON(minimalAcceptableArticle);
         article.GetAsJSON(json);
-        const string nearlyDefaultArticle = "{\r\n    \"id\": 25,\r\n    \"priority\": 100,\r\n    \"type\": \"A\",\r\n"
-                                    "    \"chapter\": \"\",\r\n    \"title\": \"\",\r\n"
-                                    "    \"header\": \"\",\r\n    \"body\": \"\",\r\n    \"footer\": \"\",\r\n"
-                                    "    \"lastChanged\": \"\"\r\n}";
+        // id an priority as real numbers:
+        //        const string nearlyDefaultArticle = "{\n    \"id\": 25,\n    \"priority\": 100,\n    \"type\": \"A\",\n"
+        //                                    "    \"chapter\": \"\",\n    \"title\": \"\",\n"
+        //                                    "    \"header\": \"\",\n    \"body\": \"\",\n    \"footer\": \"\",\n"
+        //                                    "    \"lastChanged\": \"\"\n}\n";
+        const string nearlyDefaultArticle = "{\n    \"id\": \"25\",\n    \"priority\": \"100\",\n    \"type\": \"A\",\n"
+                                    "    \"chapter\": \"\",\n    \"title\": \"\",\n"
+                                    "    \"header\": \"\",\n    \"body\": \"\",\n    \"footer\": \"\",\n"
+                                    "    \"lastChanged\": \"\"\n}\n";
         BOOST_CHECK_EQUAL(nearlyDefaultArticle, json);
     }
 }
@@ -58,10 +68,14 @@ BOOST_AUTO_TEST_CASE(single_article)
 {
     {
         Article article;
-        string jsonStored = "{\r\n    \"id\": 1,\r\n    \"priority\": 400,\r\n    \"type\": \"F\",\r\n"
-                            "    \"chapter\": \"the chapter\",\r\n    \"title\": \"the title\",\r\n"
-                            "    \"header\": \"the header\",\r\n    \"body\": \"the main body\",\r\n    \"footer\": \"the footer\",\r\n"
-                            "    \"lastChanged\": \"last changed time stamp\"\r\n}";
+//        string jsonStored = "{\n    \"id\": 1,\n    \"priority\": 400,\n    \"type\": \"F\",\n"
+//                            "    \"chapter\": \"the chapter\",\n    \"title\": \"the title\",\n"
+//                            "    \"header\": \"the header\",\n    \"body\": \"the main body\",\n    \"footer\": \"the footer\",\n"
+//                            "    \"lastChanged\": \"last changed time stamp\"\n}\n";
+        string jsonStored = "{\n    \"id\": \"1\",\n    \"priority\": \"400\",\n    \"type\": \"F\",\n"
+                            "    \"chapter\": \"the chapter\",\n    \"title\": \"the title\",\n"
+                            "    \"header\": \"the header\",\n    \"body\": \"the main body\",\n    \"footer\": \"the footer\",\n"
+                            "    \"lastChanged\": \"last changed time stamp\"\n}\n";
         article.SetFromJSON(jsonStored);
         string jsonReturned;
         article.GetAsJSON(jsonReturned);

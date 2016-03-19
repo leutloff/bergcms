@@ -1,0 +1,13 @@
+Content-type: application/json; charset=utf-8
+
+{
+    "id": "1",
+    "priority": "900",
+    "type": "F",
+    "chapter": "The First Chapter",
+    "title": "First Title",
+    "header": "First\nHead",
+    "body": "\nFrist Body\n",
+    "footer": "Last\tFooter",
+    "lastChanged": "20160319-125207-Sa \/ 127.0.0.1:52134 \/ leutloff"
+}
