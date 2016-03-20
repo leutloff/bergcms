@@ -23,7 +23,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/tokenizer.hpp>
 #include <algorithm>
@@ -162,23 +161,23 @@ void Article::SetFromJSON(const string &jsonArticle)
     lastChanged = tree.get("lastChanged", "");
 }
 
-/**
- * @brief AddJsonValue writes the value w/o quotes.
- */
-void AddJsonValue(ostream & os, string const& name, string const& value, bool isLastElement = false)
-{
-    os << "    \"" << name << "\": " << value;
-    if (!isLastElement) { os << ","; }
-    os << "\r\n";
-}
-/**
- * @brief AddJsonQuotedValue writes the element as quoted value.
- */
-void AddJsonQuotedValue(ostream & os, string const& name, string const& value, bool isLastElement = false)
-{
-    string quoted = "\"" + value + "\"";
-    AddJsonValue(os, name, quoted, isLastElement);
-}
+///**
+// * @brief AddJsonValue writes the value w/o quotes.
+// */
+//void AddJsonValue(ostream & os, string const& name, string const& value, bool isLastElement = false)
+//{
+//    os << "    \"" << name << "\": " << value;
+//    if (!isLastElement) { os << ","; }
+//    os << "\r\n";
+//}
+///**
+// * @brief AddJsonQuotedValue writes the element as quoted value.
+// */
+//void AddJsonQuotedValue(ostream & os, string const& name, string const& value, bool isLastElement = false)
+//{
+//    string quoted = "\"" + value + "\"";
+//    AddJsonValue(os, name, quoted, isLastElement);
+//}
 
 //void Article::GetAsJSON(std::string & jsonArticle) const
 //{
@@ -214,4 +213,19 @@ void Article::GetAsJSON(std::string & jsonArticle) const
     ostringstream oss;
     pt::write_json(oss, tree);
     jsonArticle = oss.str();
+}
+
+boost::property_tree::ptree Article::Get() const
+{
+    pt::ptree tree;
+    tree.put("id", id);
+    tree.put("priority", priority);
+    tree.put("type", type);
+    tree.put("chapter", chapter);
+    tree.put("title", title);
+    tree.put("header", header);
+    tree.put("body", body);
+    tree.put("footer", footer);
+    tree.put("lastChanged", lastChanged);
+    return tree;
 }

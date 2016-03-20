@@ -2,7 +2,7 @@
  * @file Article.h
  * A single Article.
  * 
- * Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2012, 2013, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -27,6 +27,7 @@
 
 #include "BoostFlags.h"
 #include <boost/algorithm/string.hpp>
+#include <boost/property_tree/ptree.hpp>
 
 #if defined(USE_CTEMPLATE)
 #include <ctemplate/template_dictionary.h>
@@ -110,11 +111,15 @@ public:
     /**
      * @brief GetAsJSON returns the article as JSON object.
      * @return The article formatted as JSON object.
-     *         A line feed is not added at the end of the article.
-     *         This allows adding a comma when the Article is part of an array.
      */
     void GetAsJSON(std::string &jsonArticle) const;
 
+    /**
+     * @brief Get returns the article as property tree object.
+     * @return The article formatted as property tree object.
+     *         This can then be written as JSON or XML.
+     */
+    boost::property_tree::ptree Get() const;
 
     std::string getBody() const
     {

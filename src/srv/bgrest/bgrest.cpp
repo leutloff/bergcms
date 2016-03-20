@@ -28,9 +28,7 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
-//#include <boost/iostreams/tee.hpp>
-//#include <boost/iostreams/stream.hpp>
-//#include <boost/process/process.hpp>
+#include <boost/property_tree/json_parser.hpp>
 #include <fstream>
 #include <iostream>
 #include <locale>
@@ -39,17 +37,13 @@
 
 using namespace std;
 using namespace berg;
-//namespace bchrono = boost::chrono;
-//namespace bio = boost::iostreams;
-//namespace pt = boost::posix_time;
-//namespace bp = boost::process;
 
 namespace alg = boost::algorithm;
 namespace bs = boost::system;
 namespace cgi = boost::cgi;
 namespace fs = boost::filesystem;
 namespace http = boost::cgi::http;
-
+namespace pt = boost::property_tree;
 
 int HandleRequest(boost::cgi::request& req)
 {
@@ -84,29 +78,28 @@ int HandleRequest(boost::cgi::request& req)
             storage.Load(database);
             if ("/articles" == query)
             {
-                string jsonArticle;
-                resp << "[\r\n";
                 FileStorage::TArticles const& articles = storage.GetArticles();
-                bool isFirst = true;
-                for (FileStorage::TArticles::const_iterator it = articles.begin(); it < articles.end(); ++it)
+                if (articles.size() > 0)
                 {
-                    if (!isFirst)
+                    pt::ptree arrayArticles;
+                    for (FileStorage::TArticles::const_iterator it = articles.begin(); it < articles.end(); ++it)
                     {
-                        resp << ",\r\n";
+                        arrayArticles.push_back(std::make_pair("", (*it)->Get()));
                     }
-                    else
-                    {
-                        isFirst = false;
-                    }
-                    (*it)->GetAsJSON(jsonArticle);
+                    pt::ptree tree;
+                    tree.put_child("articles", arrayArticles);
+                    string jsonArticle;
+                    ostringstream oss;
+                    pt::write_json(oss, tree);
+                    jsonArticle = oss.str();
                     resp << jsonArticle;
                 }
-                resp << "\r\n";
-                resp << "]\r\n";
+                // else empty DB
                 resp.status(http::ok);
             }
             else
             {
+                // single article
                 constexpr string::size_type artLen = sizeof("/articles/")/sizeof(' ') - 1;
                 auto strid = query.substr(artLen);
                 int id = boost::lexical_cast<int>(strid);

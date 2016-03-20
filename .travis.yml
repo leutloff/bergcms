@@ -238,4 +238,4 @@ deploy:
   draft: true
   on:
     tags: true 
-    repo: leutloff/berg
+    repo: leutloff/bergcms

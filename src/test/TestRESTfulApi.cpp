@@ -125,13 +125,10 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two_id1)
     int ret = c11.join(); // wait for completion
     //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
-    cout << "***   jsonFileExpected   ***" << endl;
-    bt::PrintFileToStream(jsonFileExpected, cout);
-    cout << endl;
-    cout << "***   jsonFile (generated file)   ***" << endl;
-    bt::PrintFileToStream(jsonFile, cout);
-//    bt::ReplaceUTF16(jsonFile);
-//    cout << "***   jsonFile (fixed file)   ***" << endl;
+//    cout << "***   jsonFileExpected   ***" << endl;
+//    bt::PrintFileToStream(jsonFileExpected, cout);
+//    cout << endl;
+//    cout << "***   jsonFile (generated file)   ***" << endl;
 //    bt::PrintFileToStream(jsonFile, cout);
 
 // a fix seems to be provided in https://stackoverflow.com/questions/10260688/boostproperty-treejson-parser-and-two-byte-wide-characters
@@ -173,14 +170,11 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two_id42)
     int ret = c11.join(); // wait for completion
     //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
-    cout << "***   jsonFileExpected   ***" << endl;
-    bt::PrintFileToStream(jsonFileExpected, cout);
-    cout << endl;
+//    cout << "***   jsonFileExpected   ***" << endl;
+//    bt::PrintFileToStream(jsonFileExpected, cout);
+//    cout << endl;
     cout << "***   jsonFile (generated file)   ***" << endl;
     bt::PrintFileToStream(jsonFile, cout);
-//    bt::ReplaceUTF16(jsonFile);
-//    cout << "***   jsonFile (fixed file)   ***" << endl;
-//    bt::PrintFileToStream(jsonFile, cout);
 
 //#if (BOOST_VERSION < 105800)
 //    // see https://svn.boost.org/trac/boost/ticket/5033
@@ -190,42 +184,42 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two_id42)
 //#endif
 }
 
-///**
-// * This unit test processes a database with some articles.
-// * Set run environment:
-// * QUERY_STRING /articles
-// * BERGCMSDB    /home/leutloff/work/bergcms/src/test/input/two_articles.csv
-// */
-//BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two)
-//{
-//    // ../srv/bgrest/bgrest
-//    const fs::path inputDatabaseFile = fs::path(bt::GetInputDir()    / "two_articles.csv");
-//    const fs::path jsonFile          = fs::path(bt::GetOutputDir()   / "two_articles.json");
-//    const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "two_articles.json");
+/**
+ * This unit test processes a database with some articles.
+ * Set run environment:
+ * QUERY_STRING /articles
+ * BERGCMSDB    /home/leutloff/work/bergcms/src/test/input/two_articles.csv
+ */
+BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two)
+{
+    // ../srv/bgrest/bgrest
+    const fs::path inputDatabaseFile = fs::path(bt::GetInputDir()    / "two_articles.csv");
+    const fs::path jsonFile          = fs::path(bt::GetOutputDir()   / "two_articles.json");
+    const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "two_articles.json");
 
-//    cout << exeBgRest.c_str() << " " << inputDatabaseFile.c_str() << " " << jsonFile.c_str() << " " << jsonFileExpected.c_str() << endl;
-//#if defined(WIN32)
-//    bio::file_descriptor_sink bgrestOut(jsonFile);
-//#else
-//    bio::file_descriptor_sink bgrestOut(jsonFile.c_str());
-//#endif
-//    bp::monitor c11 = bp::make_child(
-//                bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
-//                , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "GET")("QUERY_STRING", "/articles")
-//                , bp::std_out_to(bgrestOut)
-//                , bp::std_err_to(bgrestOut)
-//                );
-//    int ret = c11.join(); // wait for completion
-//    //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
-//    BOOST_CHECK_EQUAL(0, ret);
-//    cout << "***   jsonFileExpected   ***" << endl;
-//    bt::PrintFileToStream(jsonFileExpected, cout);
-//    cout << endl;
-//    cout << "***   jsonFile   ***" << endl;
-//    bt::PrintFileToStream(jsonFile, cout);
+    cout << exeBgRest.c_str() << " " << inputDatabaseFile.c_str() << " " << jsonFile.c_str() << " " << jsonFileExpected.c_str() << endl;
+#if defined(WIN32)
+    bio::file_descriptor_sink bgrestOut(jsonFile);
+#else
+    bio::file_descriptor_sink bgrestOut(jsonFile.c_str());
+#endif
+    bp::monitor c11 = bp::make_child(
+                bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
+                , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "GET")("QUERY_STRING", "/articles")
+                , bp::std_out_to(bgrestOut)
+                , bp::std_err_to(bgrestOut)
+                );
+    int ret = c11.join(); // wait for completion
+    //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+    BOOST_CHECK_EQUAL(0, ret);
+    cout << "***   jsonFileExpected   ***" << endl;
+    bt::PrintFileToStream(jsonFileExpected, cout);
+    cout << endl;
+    cout << "***   jsonFile (generated file)   ***" << endl;
+    bt::PrintFileToStream(jsonFile, cout);
 
-//    VerifyGeneratedFileContent(jsonFileExpected, jsonFile);
-//}
+    VerifyGeneratedFileContent(jsonFileExpected, jsonFile);
+}
 
 ///**
 // * This unit test processes a database with some articles.
