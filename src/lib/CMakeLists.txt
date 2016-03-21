@@ -35,10 +35,13 @@ include_directories(
     )
 
 set(BERG_STORAGE_LIB_SRC Common.cpp Helper.cpp FileStorage.cpp Article.cpp Archive.cpp DirectoryLayout.cpp)
+set(BERG_STORAGE_LIB_H BoostFlags.h Common.h Helper.h FileStorage.h Article.h Archive.h DirectoryLayout.h)
+
+source_group("Headers" FILES ${BERG_STORAGE_LIB_H})
 if (MSVC)
-    add_library(berg_storage ${BERG_STORAGE_LIB_SRC})
+    add_library(berg_storage ${BERG_STORAGE_LIB_SRC} ${BERG_STORAGE_LIB_H})
 else()
-    add_library(berg_storage STATIC ${BERG_STORAGE_LIB_SRC})
+    add_library(berg_storage STATIC ${BERG_STORAGE_LIB_SRC} ${BERG_STORAGE_LIB_H})
 endif()
 
 target_compile_features(berg_storage PRIVATE ${BERG_USED_CXX_FEATURES})
