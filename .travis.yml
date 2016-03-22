@@ -42,12 +42,12 @@ addons:
       - texlive-latex-base
       - texlive-latex-recommended
       - texlive-latex-extra
-      - texlive-lang-german 
+      - texlive-lang-german
       - texlive-fonts-recommended
       - texlive-fonts-extra
-      - fonts-linuxlibertine 
-      - latex-xcolor 
-      # Do NOT install: texlive-fonts-recommended-doc- texlive-fonts-extra-doc- texlive-latex-base-doc- texlive-luatex- texlive-xetex- texlive-latex-recommended-doc- texlive-latex-extra-doc- texlive-pictures-doc- texlive-pstricks-doc-    
+      - fonts-linuxlibertine
+      - latex-xcolor
+      # Do NOT install: texlive-fonts-recommended-doc- texlive-fonts-extra-doc- texlive-latex-base-doc- texlive-luatex- texlive-xetex- texlive-latex-recommended-doc- texlive-latex-extra-doc- texlive-pictures-doc- texlive-pstricks-doc-
       - curl
       - wget
       # using NoedSource - nodejs
@@ -71,13 +71,13 @@ before_install:
     - echo "Already installed node"  || true
     - which node && node -v && npm version || true
     # Add PPA with latest nodejs
-    #- sudo add-apt-repository ppa:chris-lea/node.js -y 
+    #- sudo add-apt-repository ppa:chris-lea/node.js -y
     #- sudo apt-get update -qq
     # Install nodejs, npm and then the selenium webdriver for nodejs:
     #- sudo apt-get install nodejs npm -y
     # nodejs-legacy is required in later Ubuntu versions than precise:
     #fails anyway: - sudo apt-get install nodejs-legacy -y || true
-    # Install nodejs and npm from 
+    # Install nodejs and npm from
     - curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -  || true
     - sudo apt-get install -y nodejs || true
     - which node && node -v && npm version || true
@@ -110,14 +110,14 @@ before_install:
     - export boost_version=1.58.0
     - export boost_dir=boost_1_58_0
     - curl -LO https://downloads.sourceforge.net/project/boost/boost/${boost_version}/${boost_dir}.tar.bz2
-    - tar --bzip2 -xf ${boost_dir}.tar.bz2 
-    #- rm ${boost_dir}.tar.bz2 
+    - tar --bzip2 -xf ${boost_dir}.tar.bz2
+    #- rm ${boost_dir}.tar.bz2
     - cd ${boost_dir}
     #- ./bootstrap.sh --show-libraries
-    - ./bootstrap.sh --with-libraries=atomic,chrono,date_time,filesystem,iostreams,log,program_options,regex,signals,system,test,thread
-    - sudo ./b2 -j 4 link=shared runtime-link=shared install -d0 --prefix=/usr
+    - ./bootstrap.sh --with-libraries=atomic,chrono,date_time,exception,filesystem,iostreams,log,program_options,regex,signals,system,test,thread
+    - sudo ./b2 -j 4 link=shared runtime-link=shared install -d0 --prefix=/usr/local
     - cd ..
-    #- rm -rf ${boost_dir} 
+    #- rm -rf ${boost_dir}
     - sudo ldconfig
     - find /usr/lib -name 'libboost*' -print
 install:
@@ -178,7 +178,7 @@ script:
     - chmod go-w $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg
     - mv $(basename $BERG_ARCHIVE .zip)/htdocs/brg $TRAVIS_BUILD_DIR/www-root/htdocs/
     - echo "Running the Perl unit tests..."
-    - $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh 
+    - $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh
     - echo "Running Web Application tests using the Javascript based on Selenium/SauceLabs..."
     - ls -al $TRAVIS_BUILD_DIR/www-root/htdocs/brg $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg || true
     # works - get it to speed up the following test:
@@ -237,5 +237,5 @@ deploy:
   skip_cleanup: true
   draft: true
   on:
-    tags: true 
+    tags: true
     repo: leutloff/bergcms
