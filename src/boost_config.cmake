@@ -2,17 +2,17 @@
 # This file holds all the Boost related configurations.
 #
 # Copyright 2012, 2013, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -59,6 +59,8 @@
         set(BERG_BOOST_VERSION 1.58.0)
     elseif(EXISTS "/usr/lib/libboost_filesystem.so.1.58.0")
         set(BERG_BOOST_VERSION 1.58.0)
+    elseif(EXISTS "/usr/local/lib/libboost_filesystem.so.1.58.0")
+        set(BERG_BOOST_VERSION 1.58.0)
     elseif(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.55.0")
         set(BERG_BOOST_VERSION 1.55.0)
     elseif(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.54.0")
@@ -70,12 +72,9 @@
         # Even lower than 1.58 are returning not useful utf-16 chars in JSON parse-tree writer.
         message("Specific version of the Boost Filesystem Library not found. Please add it to the list above in boost_config.cmake.")
         set(BERG_BOOST_VERSION 1.54.0)
-        #set(BOOST_LIBRARYDIR "/usr/lib")
-        #return()
     endif()
-    #set(BOOST_INCLUDEDIR "/usr/include")
 #endif()
-if(MSVC) 
+if(MSVC)
     set(Boost_USE_MULTITHREADED     ON)# only multithreaded libs build for MSVC
 else()
     set(Boost_USE_MULTITHREADED     OFF)
@@ -119,4 +118,3 @@ install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_signals.so.${BERG_BOOST_VERSION}
 install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_system.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
 install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_thread.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
 install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_unit_test_framework.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
-
