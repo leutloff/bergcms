@@ -10,6 +10,18 @@ of several articles. These articles are preprocessed and then composed
 by LaTeX. The outcome is a PDF file that can be downloaded and then
 sent directly to the print shop.
 
+Installing from ZIP Archives
+============================
+
+There are three supported systems:
+ - Ubuntu 14.04 Trusty, 64-bit: https://github.com/leutloff/bergcms/releases/latest/
+ - Ubuntu 14.04 Trusty, 32-bit: https://github.com/leutloff/bergcms-build-ubuntu-i686/releases/latest/
+ - Debian Jessie, 64-bit: https://github.com/leutloff/bergcms-build-debian/releases/latest/
+
+Just unpack the ZIP-Archives, set up where to upload in a file named remoteconfig.cfg
+and the use one of the deployment scripts, e.g. deploy.sh using FTP commands and
+deploy_ssh.sh using SSH based commands.
+
 
 Building from Source
 ====================
