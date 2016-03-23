@@ -34,8 +34,18 @@
 #include <boost/test/included/unit_test.hpp>  // include this to get main()
 
 
+//#include <boost/test/included/unit_test.hpp>
+//using namespace boost::unit_test;
+//
+//test_suite* init_unit_test_suite(int argc, char* argv[])
+//{
+//    framework::master_test_suite().p_name.value = "Berg CMS Library Tests";
+//
+//    return 0;
+//}
+
 //int main(int argc, char* argv[])
 //{
-//    extern ::boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] );
+//    extern ::boost::unit_test::test_suite* init_unit_test_suite(int argc, char* argv[]);
 //    return ::boost::unit_test::unit_test_main(&init_unit_test_suite, argc, argv);
 //}

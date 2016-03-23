@@ -26,7 +26,7 @@ deploy_ssh.sh using SSH based commands.
 Building from Source
 ====================
 
-[![Build Status](https://travis-ci.org/leutloff/berg.png)](https://travis-ci.org/leutloff/berg)
+[![Build Status](https://travis-ci.org/leutloff/bergcms.png)](https://travis-ci.org/leutloff/bergcms)
 
 The most up-to-date documentation will be the Continuous Integration build
 on Travis CI. The file .travis.yml performs the build of the C++ based
@@ -37,23 +37,12 @@ are the steps to perform a build:
 - Clone or download the repository.
 - Execute the script update_and_build_submodules.sh to initialize, update and
   build the submodules.
-- Install the [Boost C++ library](http://boost.org). The easiest way is to
-  install the version provided by the distribution, e.g. for an up-to-date
-  Ubuntu only the following command is necessary:
-    sudo apt-get install libboost-all-dev
-  For Ubuntu 12.04 LTS use the PPA https://launchpad.net/~ukplc-team and
-  install boost with these commands - an up-to-date version is located in
-  .travis.yml:
-      sudo add-apt-repository ppa:ukplc-team/testing
-      sudo apt-get update
-      sudo apt-get install libboost1.49-dev libboost-chrono1.49-dev libboost-date-time1.49-dev libboost-filesystem1.49-dev libboost-iostreams1.49-dev libboost-locale1.49-dev libboost-program-options1.49-dev libboost-regex1.49-dev libboost-serialization1.49-dev libboost-signals1.49-dev libboost-system1.49-dev libboost-test1.49-dev libboost-thread1.49-dev libboost-timer1.49-dev
-  The last way is to download the Boost C++ Library from
+- Install the [Boost C++ library](http://boost.org). Download the Boost C++ Library from
   [http://www.boost.org/users/download/](http://www.boost.org/users/download/)
-  (start with version 1.49, when unsure). Then extract and build boost library
-  in src/external.
-- Copy your libicu to src/external/libicuNN. If used other than the mentioned
-  in shared_config.cmake, add your version, too. Supported out of the box
-  are at least libicu48, libicu44 and libicu38.
+  (start with version 1.58, when unsure). Then extract and build boost library.
+  Execute the following commands in the extracted source:
+      ./bootstrap.sh --with-libraries=atomic,chrono,date_time,exception,filesystem,iostreams,log,program_options,regex,signals,system,test,thread
+      sudo ./b2 -j 4 link=shared runtime-link=shared install -d0 --prefix=/usr/local
 - To test the build environment:
   Launch CMake GUI and point the source code the src directory and
   build the project. Alternatively the build can done using these commands:
@@ -74,22 +63,41 @@ are the steps to perform a build:
 Building with Visual Studio 2015
 ================================
 
-Build Boost from source http://www.boost.org/users/download/ or
-install prebuilt binaries from
-https://sourceforge.net/projects/boost/files/boost-binaries/
+Build Boost C++ Library
+-----------------------
 
+Build Boost from source http://www.boost.org/users/download/. Just follow the
+"Getting Started"
+(http://www.boost.org/doc/libs/1_60_0/more/getting_started/windows.html)
+and follow section 5.1 "Simplified Build From Source". Execute the following
+commands in the unpacked source directory:
+    bootstrap.bat
+    .\b2 --with-atomic --with-chrono --with-date_time  --with-exception --with-filesystem --with-iostreams --with-log --with-program_options --with-regex --with-signals --with-system --with-test --with-thread link=shared
+
+When using the prebuilt binaries from
+https://sourceforge.net/projects/boost/files/boost-binaries/ it is required
+to add a symbolic link.
 Create a symbolic link from lib to lib32-msvc-14.0 in the unpacked
 directory. Start a command window as Administrator, go to directory and
-enter `MKLINK /D lib lib32-msvc-14.0`
+enter `MKLINK /D lib lib32-msvc-14.0`.
 
+Install CMake
+-------------
 Install CMake 3.5.0 or newer and launch the CMake GUI. Enter the Berg
 CMS source directory `bergcms\src`. Add an entry `BOOST_ROOT`
-pointing to the above installed directory and an entry setting `USE_CTEMPLATE` to FALSE. Click on Configure and
-Generate. Open the generated Solution with Visual Studio and build. It
+pointing to the above installed directory and an entry setting
+`USE_CTEMPLATE` to FALSE. Click on Configure and
+Generate.
+
+Build and execute the unit tests
+--------------------------------
+
+Open the generated Solution with Visual Studio and build it. It
 is expected that the unit tests (bergunittests) are running successfully
 on Windows, too.
 
-
+Adaptation to a windows web server would be the next step to make it run on
+Windows.
 
 
 Installation/Deployment
