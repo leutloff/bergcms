@@ -9,6 +9,8 @@ The Berg CMS uses a simple API allowing consumers to view the stored articles an
 
 ### List All Articles [GET /articles]
 
+Returns all the articles of the actual issue.
+
 + Response 200 (application/json)
 
         [
@@ -28,10 +30,26 @@ The Berg CMS uses a simple API allowing consumers to view the stored articles an
 
 ### Get Article [GET /articles/:id]
 
+Returns a specific article that can be displayed and edited.
+
 + Response 200 (application/json)
 
         {
             "id": 25,
             "title": "Title of the article",
             "chapter": "Introduction"
+        }
+        
+### Create New Article [POST /articles]
+
+Creates an empty article. Main purpose is to reserve the unique ID for this article.
+
++ Request (application/json)
+
+        { }
+    
++ Response 201 (application/json)
+
+        {
+            "id": 26
         }
