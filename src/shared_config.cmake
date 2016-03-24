@@ -2,7 +2,7 @@
 # This file holds all the shared configurations.
 # It will load all other configurations.
 #
-# Copyright 2012, 2013 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -146,10 +146,10 @@ if(NOT MSVC)
     endif()
 endif(NOT MSVC)
 
-# enable MS VC specific stuff
-if(MSVC)
-    set(BERG_ADD_DEFINITIONS "${BERG_ADD_DEFINITIONS} -D_WIN32_WINNT=0x0501")
-endif()
+## enable MS VC specific stuff
+#if(MSVC)
+#    set(BERG_ADD_DEFINITIONS "${BERG_ADD_DEFINITIONS} -D_WIN32_WINNT=0x0501")
+#endif()
 
 # enable gcc specific stuff
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -177,4 +177,4 @@ set(CMAKE_INSTALL_RPATH "lib")
 #SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 
-set(BERG_USED_CXX_FEATURES cxx_constexpr cxx_auto_type cxx_range_for)
+set(BERG_USED_CXX_FEATURES cxx_constexpr cxx_auto_type cxx_range_for cxx_delegating_constructors)

@@ -75,6 +75,9 @@ public:
     }
 
     void Save(std::string const& filename) const;
+    void Save() const { Save(storageName); }
+    /// Creates an empty database.
+    static void CreateEmptyDatabase (std::string const& filename);
 
     TArticles const& GetArticles() const { return articles; }
 
@@ -84,6 +87,10 @@ public:
         return GetArticle(boost::lexical_cast<unsigned>(no));
     }
 
+    /**
+     * Stores a new article in the db. The ID is ignored and replaced by a new one.
+     */
+    void NewArticle(Article & article);
     void SetArticle(unsigned no, Article const& article);
 
 #if defined(USE_CTEMPLATE)

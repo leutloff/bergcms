@@ -14,9 +14,12 @@ Installing from ZIP Archives
 ============================
 
 There are three supported systems:
- - Ubuntu 14.04 Trusty, 64-bit: https://github.com/leutloff/bergcms/releases/latest/
- - Ubuntu 14.04 Trusty, 32-bit: https://github.com/leutloff/bergcms-build-ubuntu-i686/releases/latest/
- - Debian Jessie, 64-bit: https://github.com/leutloff/bergcms-build-debian/releases/latest/
+ - Ubuntu 14.04 Trusty, 64-bit:  
+   https://github.com/leutloff/bergcms/releases/latest/
+ - Ubuntu 14.04 Trusty, 32-bit:  
+   https://github.com/leutloff/bergcms-build-ubuntu-i686/releases/latest/
+ - Debian Jessie, 64-bit:  
+   https://github.com/leutloff/bergcms-build-debian/releases/latest/
 
 Just unpack the ZIP-Archives, set up where to upload in a file named remoteconfig.cfg
 and the use one of the deployment scripts, e.g. deploy.sh using FTP commands and

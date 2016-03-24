@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(empty_article)
         //                                    "    \"chapter\": \"\",\n    \"title\": \"\",\n"
         //                                    "    \"header\": \"\",\n    \"body\": \"\",\n    \"footer\": \"\",\n"
         //                                    "    \"lastChanged\": \"\"\n}\n";
-        const string completeEmptyArticle = "{\n    \"id\": \"4294967295\",\n    \"priority\": \"-1\",\n    \"type\": \"\",\n"
+        const string completeEmptyArticle = "{\n    \"id\": \"4294967295\",\n    \"priority\": \"-1\",\n    \"type\": \"A\",\n"
                                             "    \"chapter\": \"\",\n    \"title\": \"\",\n"
                                             "    \"header\": \"\",\n    \"body\": \"\",\n    \"footer\": \"\",\n"
                                             "    \"lastChanged\": \"\"\n}\n";

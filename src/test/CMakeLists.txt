@@ -56,6 +56,8 @@ else()
         )
 endif()
 
+set(UNITTEST_H   TestShared.h)
+
 set(UNITTEST_SRC TestMain.cpp
                  TestArticle.cpp TestStorage.cpp TestHelper.cpp
                  TestTexGenerationUsingPex.cpp
@@ -67,7 +69,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 #find_package(Threads REQUIRED)
 find_package(Threads)
 
-add_executable(bergunittests ${UNITTEST_SRC})
+add_executable(bergunittests ${UNITTEST_SRC} ${UNITTEST_H})
 IF (MSVC)
     target_link_libraries(bergunittests berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
 ELSE()

@@ -49,7 +49,7 @@ int HandleRequest(boost::cgi::request& req)
 {
     int errors = 0;
 
-    req.load(cgi::parse_get); // Read and parse STDIN data - GET only plus ENV.
+    req.load(cgi::parse_all); // Read and parse STDIN data - GET only plus ENV.
     cgi::response resp;
     bs::error_code ec;
     resp << cgi::content_type("application/json") << cgi::charset("utf-8");
@@ -76,39 +76,56 @@ int HandleRequest(boost::cgi::request& req)
         {
             FileStorage storage;
             storage.Load(database);
-            if ("/articles" == query)
+            if ("GET" == req.method())
             {
-                FileStorage::TArticles const& articles = storage.GetArticles();
-                if (articles.size() > 0)
+                if ("/articles" == query)
                 {
-                    pt::ptree arrayArticles;
-                    for (FileStorage::TArticles::const_iterator it = articles.begin(); it < articles.end(); ++it)
+                    FileStorage::TArticles const& articles = storage.GetArticles();
+                    if (articles.size() > 0)
                     {
-                        arrayArticles.push_back(std::make_pair("", (*it)->Get()));
+                        pt::ptree arrayArticles;
+                        for (FileStorage::TArticles::const_iterator it = articles.begin(); it < articles.end(); ++it)
+                        {
+                            arrayArticles.push_back(std::make_pair("", (*it)->Get()));
+                        }
+                        pt::ptree tree;
+                        tree.put_child("articles", arrayArticles);
+                        string jsonArticle;
+                        ostringstream oss;
+                        pt::write_json(oss, tree);
+                        jsonArticle = oss.str();
+                        resp << jsonArticle;
                     }
-                    pt::ptree tree;
-                    tree.put_child("articles", arrayArticles);
-                    string jsonArticle;
-                    ostringstream oss;
-                    pt::write_json(oss, tree);
-                    jsonArticle = oss.str();
-                    resp << jsonArticle;
+                    // else empty DB
+                    resp.status(http::ok);
                 }
-                // else empty DB
-                resp.status(http::ok);
+                else
+                {
+                    // single article
+                    constexpr string::size_type artLen = sizeof("/articles/")/sizeof(' ') - 1;
+                    auto strid = query.substr(artLen);
+                    int id = boost::lexical_cast<int>(strid);
+                    Article const& article = storage.GetArticle(id);
+                    string jsonArticle;
+                    article.GetAsJSON(jsonArticle);
+                    resp << jsonArticle;
+                    resp.status(http::ok);
+                }
             }
-            else
+            else if ("POST" == req.method())
             {
-                // single article
-                constexpr string::size_type artLen = sizeof("/articles/")/sizeof(' ') - 1;
-                auto strid = query.substr(artLen);
-                int id = boost::lexical_cast<int>(strid);
-                Article const& article = storage.GetArticle(id);
-                string jsonArticle;
-                article.GetAsJSON(jsonArticle);
-                resp << jsonArticle;
-                resp.status(http::ok);
+                if ("/articles" == query) // create new article
+                {
+                    Article newArticle;
+                    // TODO fill with provided information - the ID is ignored - better overwritten in the NewArticle method.
+                    storage.NewArticle(newArticle);
+                    string jsonArticle;
+                    newArticle.GetAsJSON(jsonArticle);
+                    resp << jsonArticle;
+                    resp.status(http::created);
+                }
             }
+            else { throw "Method not supported: " + req.method(); }
         }
     }
     catch(std::exception const& ex)

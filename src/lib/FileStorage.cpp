@@ -42,10 +42,14 @@ void FileStorage::Load(std::string const& filename)
     storageName = filename;
     if (!fs::exists(storageName))
     {
-        storageName += ".csv";
-        if (!fs::exists(storageName))
+        if (fs::exists(storageName + ".csv"))
         {
-            throw("Die Datenbankdatei " + filename + " existiert nicht!");
+            storageName += ".csv";
+        }
+        else
+        {
+            // TODO log throw("Die Datenbankdatei " + filename + " existiert nicht!");
+            CreateEmptyDatabase(storageName);
         }
     }
     archiveName = Archive::GetArchiveNameFromPath(storageName);
@@ -98,6 +102,16 @@ void FileStorage::Save(std::string const& filename) const
     }
 }
 
+void FileStorage::CreateEmptyDatabase (std::string const& filename)
+{
+    ofstream db(filename);
+    Article empty(0); // Article 0 is reserved for configuration parameters.
+    string wholeArticle = "";
+    empty.GetArticleForFileStorage(wholeArticle);
+    db << wholeArticle << endl;
+    db.close();
+}
+
 Article const& FileStorage::GetArticle(unsigned no) const
 {
     for (TArticles::const_iterator it = articles.begin(); it < articles.end(); ++it)
@@ -108,6 +122,15 @@ Article const& FileStorage::GetArticle(unsigned no) const
         }
     }
     throw "Article Number " + boost::lexical_cast<string>(no) + " does not exists.";
+}
+
+void FileStorage::NewArticle(Article & article)
+{
+    ++lastArticleId;
+    article.setId(lastArticleId);
+    boost::shared_ptr<Article> newArticle(new Article(article));
+    articles.push_back(newArticle);
+    Save();
 }
 
 void FileStorage::SetArticle(unsigned no, Article const& article)

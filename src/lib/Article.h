@@ -60,7 +60,8 @@ private:
     static const size_t      INCREMENT_LINECOUNT_FOR_DISPLAY;
 
 public:
-    Article() { id = std::numeric_limits<unsigned>::max(); priority = -1; }
+    Article(unsigned newId) { id = newId; priority = -1; type = "A"; }
+    Article() : Article (std::numeric_limits<unsigned>::max()) {}
     /// Parses the given article and stores the artifacts in the attributes.
     Article(std::string wholeArticle);
     ~Article()
