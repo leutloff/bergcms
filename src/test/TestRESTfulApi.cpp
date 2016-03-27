@@ -74,11 +74,7 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_single)
     const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "single_article.json");
 
     //cout << exeBgRest.c_str() << " " << inputDatabaseFile.c_str() << " " << jsonFile.c_str() << " " << jsonFileExpected.c_str() << endl;
-#if defined(WIN32)
     bio::file_descriptor_sink bgrestOut(jsonFile);
-#else
-    bio::file_descriptor_sink bgrestOut(jsonFile.c_str());
-#endif
     bp::monitor c11 = bp::make_child(
                 bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
                 , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "GET")("QUERY_STRING", "/articles/1")
@@ -111,11 +107,7 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two_id1)
     const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "two_articles_id1.json");
 
     //cout << exeBgRest.c_str() << " " << inputDatabaseFile.c_str() << " " << jsonFile.c_str() << " " << jsonFileExpected.c_str() << endl;
-#if defined(WIN32)
     bio::file_descriptor_sink bgrestOut(jsonFile);
-#else
-    bio::file_descriptor_sink bgrestOut(jsonFile.c_str());
-#endif
     bp::monitor c11 = bp::make_child(
                 bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
                 , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "GET")("QUERY_STRING", "/articles/1")
@@ -156,11 +148,7 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two_id42)
     const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "two_articles_id42.json");
 
     // cout << exeBgRest.c_str() << " " << inputDatabaseFile.c_str() << " " << jsonFile.c_str() << " " << jsonFileExpected.c_str() << endl;
-#if defined(WIN32)
     bio::file_descriptor_sink bgrestOut(jsonFile);
-#else
-    bio::file_descriptor_sink bgrestOut(jsonFile);
-#endif
     bp::monitor c11 = bp::make_child(
                 bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
                 , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "GET")("QUERY_STRING", "/articles/42")
@@ -232,11 +220,7 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two)
 //    const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "some_articles.json");
 
 //    cout << exeBgRest.c_str() << " " << inputDatabaseFile.c_str() << " " << jsonFile.c_str() << " " << jsonFileExpected.c_str() << endl;
-//#if defined(WIN32)
 //    bio::file_descriptor_sink bgrestOut(jsonFile);
-//#else
-//    bio::file_descriptor_sink bgrestOut(jsonFile.c_str());
-//#endif
 //    bp::monitor c11 = bp::make_child(
 //                bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
 //                , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "GET")("QUERY_STRING", "/articles")
@@ -265,7 +249,8 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two)
 //BOOST_AUTO_TEST_CASE(test_bgrest_create_article_empty_db)
 //{
 //    // ../srv/bgrest/bgrest
-//    const fs::path inputDatabaseFile = fs::path(bt::GetOutputDir()    / "empty_db.csv");
+//    const fs::path inputDatabaseFile = fs::path(bt::GetOutputDir()   / "empty_db.csv");
+//    const fs::path jsonFileInput     = fs::path(bt::GetInputDir()    / "empty_article.json");
 //    const fs::path jsonFile          = fs::path(bt::GetOutputDir()   / "empty_db.json");
 //    const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "empty_db.json");
 
@@ -274,7 +259,8 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two)
 //    bio::file_descriptor_sink bgrestOut(jsonFile);
 //    bp::monitor c11 = bp::make_child(
 //                bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
-//                , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "POST")("QUERY_STRING", "/articles")
+//                , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "POST")("QUERY_STRING", "/articles")("CONTENT_LENGTH", "4")
+//                , bp::std_in_from_path(jsonFileInput)
 //                , bp::std_out_to(bgrestOut)
 //                , bp::std_err_to(bgrestOut)
 //                );

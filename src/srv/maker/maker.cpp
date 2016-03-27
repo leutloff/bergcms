@@ -2,7 +2,7 @@
  * @file maker.cpp
  * Extracts the actual articles and generates the PDF.
  * 
- * Copyright 2012, 2013, 2014 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2012, 2013, 2014, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -169,11 +169,7 @@ int HandleRequest(boost::cgi::request& req)
             log << "verwende dazu Perl-Script PeX (" << scriptPex.c_str() << ") ...\n";
 
             // perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
-#if defined(WIN32)
             bio::file_descriptor_sink pe_log(pexLogfile);
-#else
-            bio::file_descriptor_sink pe_log(pexLogfile.c_str());
-#endif
             bp::monitor c11 = bp::make_child(
                         bp::paths(exePerl.c_str(), DirectoryLayout::Instance().GetCgiBinDir().c_str())
                         , bp::arg(scriptPex.c_str())
@@ -238,11 +234,7 @@ int HandleRequest(boost::cgi::request& req)
                 log << exePdfLatex.c_str() << " -interaction=nonstopmode -file-line-error " << outputdir << " " << texFilenameOnly;
                 log << "\n";
 
-#if defined(WIN32)
                 bio::file_descriptor_sink tex_log(texLogfile);
-#else
-                bio::file_descriptor_sink tex_log(texLogfile.c_str());
-#endif
                 bp::monitor c12 = bp::make_child(
                             bp::paths(exePdfLatex.c_str(), BERGOUTDIR.c_str())
                             , bp::arg("-interaction=nonstopmode")
@@ -291,11 +283,7 @@ int HandleRequest(boost::cgi::request& req)
                 log << exeMakeindex.c_str() << " " << idxFile.c_str();
                 log << "\n";
 
-#if defined(WIN32)
                 bio::file_descriptor_sink idx_log(idxLogfile);
-#else
-                bio::file_descriptor_sink idx_log(idxLogfile.c_str());
-#endif
                 bp::monitor c12 = bp::make_child(
                             bp::paths(exeMakeindex.c_str(), BERGOUTDIR.c_str())
                             , bp::arg(idxFile.c_str())

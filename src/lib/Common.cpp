@@ -158,6 +158,6 @@ string Common::GetBergVersion()
 
 std::string Common::GetBergLastChangedDate()
 {
-    return "17.03.2016";
+    return "27.03.2016";
 }
 
