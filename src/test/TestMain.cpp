@@ -3,7 +3,7 @@
  * Main function calling unit_test_main. Avoids using the main from the library,
  * because it is not available on the backported library (from wheezy to squeeze).
  *
- * Copyright 2013 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2013, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,33 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//#define BOOST_TEST_NO_MAIN
-//#include <boost/test/included/unit_test.hpp>
-//#include <boost/test/unit_test.hpp>
 #include <boost/version.hpp>
 
 #define BOOST_TEST_DYN_LINK
+
 // the following definition must be defined once per test project
 #if (BOOST_VERSION < 105900)
 #define BOOST_TEST_MAIN
 #else
 #define BOOST_TEST_MODULE Berg CMS Library Tests
 #endif
-#include <boost/test/included/unit_test.hpp>  // include this to get main()
-
-
-//#include <boost/test/included/unit_test.hpp>
-//using namespace boost::unit_test;
-//
-//test_suite* init_unit_test_suite(int argc, char* argv[])
-//{
-//    framework::master_test_suite().p_name.value = "Berg CMS Library Tests";
-//
-//    return 0;
-//}
-
-//int main(int argc, char* argv[])
-//{
-//    extern ::boost::unit_test::test_suite* init_unit_test_suite(int argc, char* argv[]);
-//    return ::boost::unit_test::unit_test_main(&init_unit_test_suite, argc, argv);
-//}
+#include <boost/test/unit_test.hpp>  // include this to get main()
