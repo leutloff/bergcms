@@ -1,19 +1,31 @@
 {
-    "name": "berg",
-    "version": "0.0.5",
-    "license": "MIT",
+    "name": "bergcms",
+    "description": "A web based CMS for publishing a regular newsletter used by a small editorial committee.",
+    "keywords": ["CMS", "LaTeX", "Publish", "Edit", "Newsletter"],
+    "version": "0.0.6",
+    "license": "(MIT, AGPL)",
     "private": true,
+    "author": "Christian Leutloff <leutloff@sundancer.oche.de>",
+    "contributors": [],
     "dependencies": {
-        "jquery": "~2.2.1"
+        "jquery": "^2.2.2"
     },
     "devDependencies": {
-        "chai": "~3.5.0",
-        "mocha": "~2.4.5",
-        "saucelabs": "~1.2.0",
-        "util": "~0.10.3",
-        "webdriverio": "~4.0.3"
+        "chai": "^3.5.0",
+        "mocha": "^2.4.5",
+        "saucelabs": "^1.2.0",
+        "util": "^0.10.3",
+        "webdriverio": "^4.0.5"
     },
     "scripts": {
         "test": "mocha --reporter spec --timeout 120000 test/hilfe.js"
-    }
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/leutloff/bergcms.git"
+    },
+    "bugs": {
+        "url": "https://github.com/leutloff/bergcms/issues"
+    },
+    "homepage": "https://github.com/leutloff/bergcms/#readme"
 }
