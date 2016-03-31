@@ -146,10 +146,11 @@ if(NOT MSVC)
     endif()
 endif(NOT MSVC)
 
-## enable MS VC specific stuff
-#if(MSVC)
-#    set(BERG_ADD_DEFINITIONS "${BERG_ADD_DEFINITIONS} -D_WIN32_WINNT=0x0501")
-#endif()
+# enable MS VC specific stuff
+if(MSVC)
+    # _WIN32_WINNT_WIN7 (0x0601)
+    set(BERG_ADD_DEFINITIONS "${BERG_ADD_DEFINITIONS} -D_WIN32_WINNT=0x0601")
+endif()
 
 # enable gcc specific stuff
 if(CMAKE_COMPILER_IS_GNUCXX)
