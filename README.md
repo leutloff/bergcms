@@ -186,7 +186,13 @@ Coding Guidelines
 - Use tool based formatting where available.
 
 
-Feedback
-========
+Support and Feedback
+====================
 
 Feedback is welcome. Patches and pull requests are even more welcome.
+
+There is public group for all sorts of discusssions like new ideas, questions and so on:
+https://groups.google.com/d/forum/bergcms-discuss
+
+Only members can write, but anyone interested is invited to apply and will become a member.
+This is only to protect the group against spam.
