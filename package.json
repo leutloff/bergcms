@@ -2,7 +2,7 @@
     "name": "bergcms",
     "description": "A web based CMS for publishing a regular newsletter used by a small editorial committee.",
     "keywords": ["CMS", "LaTeX", "Publish", "Edit", "Newsletter"],
-    "version": "0.0.6",
+    "version": "0.0.7",
     "license": "(MIT, AGPL)",
     "private": true,
     "author": "Christian Leutloff <leutloff@sundancer.oche.de>",
@@ -18,7 +18,7 @@
         "webdriverio": "^4.0.5"
     },
     "scripts": {
-        "test": "mocha --reporter spec --timeout 120000 test/hilfe.js"
+        "test": "mocha --reporter spec --timeout 120000 e2e-test/spec/gen1/hilfe.js"
     },
     "repository": {
         "type": "git",
