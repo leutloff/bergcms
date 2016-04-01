@@ -1,7 +1,7 @@
 // Testing the static german help page.
 //
 // Call this script:
-// mocha test/hilfe.js
+// mocha e2e-test/spec/gen1/hilfe.js
 
 'use strict';
 
@@ -35,7 +35,7 @@ if ((process.env.TRAVIS === 'true') && (process.env.TEST_RUN_LOCAL !== 'true')) 
     //    console.log('BUILDID: ' + BUILDID);
     //    console.log('TUNNELIDENTIFIER: ' + TUNNELIDENTIFIER);
     
-    var options = { desiredCapabilities: {
+    options = { desiredCapabilities: {
         browserName: BROWSERNAME,
         version: BROWSERVERSION,
         platform: BROWSERPLATFORM,
