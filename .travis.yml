@@ -8,13 +8,13 @@ env:
   matrix:
     - _BROWSER: firefox
       _PLATFORM: Linux
-      _VERSION: '44.0'
+      _VERSION: "45.0"
     #- _BROWSER: "firefox"
     #  _PLATFORM: "Windows_7"
-    #  _VERSION: "44.0"
+    #  _VERSION: "45.0"
     #- _BROWSER: "chrome"
     #  _PLATFORM: "Windows_7"
-    #  _VERSION: "48.0"
+    #  _VERSION: "49.0"
 # trusty (14.04) is now working instead of precise (12.04)
 sudo: required
 dist: trusty
@@ -88,12 +88,12 @@ before_install:
     - which node && node -v && npm version || true
     # Download selenium server
     # Latest version: http://www.seleniumhq.org/download/
-    - curl -O https://selenium-release.storage.googleapis.com/2.50/selenium-server-standalone-2.50.1.jar
+    #- curl -O https://selenium-release.storage.googleapis.com/2.50/selenium-server-standalone-2.50.1.jar
     # Download and install the chromedriver to be able to execute the browser tests locally
     # Latest version: https://sites.google.com/a/chromium.org/chromedriver/downloads
-    - curl https://chromedriver.storage.googleapis.com/2.20/chromedriver_linux64.zip > chromedriver_linux64.zip && unzip chromedriver_linux64.zip && sudo cp chromedriver /usr/local/bin && sudo chmod +rx chromedriver /usr/local/bin/chromedriver
+    #- curl https://chromedriver.storage.googleapis.com/2.20/chromedriver_linux64.zip > chromedriver_linux64.zip && unzip chromedriver_linux64.zip && sudo cp chromedriver /usr/local/bin && sudo chmod +rx chromedriver /usr/local/bin/chromedriver
     # start this before installation to let the server be up and ready without extra waiting time.
-    - java -jar selenium-server-standalone-2.50.1.jar -Dwebdriver.chrome.driver=./chromedriver &
+    #- java -jar selenium-server-standalone-2.50.1.jar -Dwebdriver.chrome.driver=./chromedriver &
     #- sleep 10
     # Install CMake
     - sudo apt-get --purge remove cmake -y
