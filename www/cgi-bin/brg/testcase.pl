@@ -1,20 +1,20 @@
 #!/usr/bin/perl
 #############################################################################
-# Prepare a specific test case on the server side. Put this scirpt only on
+# Prepare a specific test case on the server side. Put this script only on
 # servers that are used for testing purposes, because it overwrites existing
 # databases.
 #
-# (c) 2012 Christian Leutloff
-# 
-# This program is free software; you can redistribute it and/or modify it 
-# under the same terms as Perl itself, i.e., under the terms of the 
+# (c) 2012, 2016 Christian Leutloff
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the same terms as Perl itself, i.e., under the terms of the
 # ``Artistic License'' or the ``GNU General Public License''.
 #
 # Script used on test servers only! Changes Database etc. to prepare the
 # starting condition of a test case. The existence of this file
 # is ensured in all test cases that are changing the content. This is
 # achieved by setting the test case to the desired one as first task.
-# If this script is missing the test case will fail immediatly.
+# If this script is missing the test case will fail immediately.
 #
 #############################################################################
 
@@ -23,13 +23,13 @@ use warnings;
 
 use CGI qw/:standard :html5/;      # Standard CGI Functions
 use CGI::Carp qw(fatalsToBrowser); # Show fatal errors in the browser and not only as Internal Server Error
-use Fcntl qw/:flock :seek/;        # define LOCK_EX, SEEK_SET etc. 
-use PerlIO::encoding;              # Change character encoding when desired, e.g. when writing back to disk 
+use Fcntl qw/:flock :seek/;        # define LOCK_EX, SEEK_SET etc.
+use PerlIO::encoding;              # Change character encoding when desired, e.g. when writing back to disk
 use utf8;                          # UTF-8 character encoding is recognize in regular expressions, too.
 use File::Copy;                    # import file copy
 
 #---> Global Variables
-my $VERSION="v1.00, 12.08.2012";
+my $VERSION="v1.01, 03.04.2016";
 my $sep = '/';
 my $dbpath = 'br';
 my $dbname = 'feginfo.csv';
@@ -100,7 +100,7 @@ sub setup_tc3()
 #----------------------------------------------------------------------------
 sub print_success_page($)
 {
-    my ($testcasenumber) = shift;
+  my ($testcasenumber) = shift;
 	my $title = 'Setting up of the Test Case '.$testcasenumber.' succeeded';
 	print header('-charset' => 'utf-8');
 	print  start_html('-title'     => $title,
@@ -108,7 +108,7 @@ sub print_success_page($)
 	                  '-encoding'  => 'utf-8',
 	                  '-lang'      => 'en');
     print h2($title);
-    print p('Result: ok.');
+    print p({-id=>opresult}, 'Result: ok.');
     print_html_version();
     print end_html();
 }
@@ -176,6 +176,7 @@ sub print_error_page($)
         th($gfx), th(replace_umlauts(escapeHTML($msg))), td(replace_umlauts($back))
         ),
         h2({'-align'=>'center'}, "*\n");
+    print p({-id=>opresult}, 'Result: Error.');
     print_html_version();
     print end_html();
     exit 1;
@@ -188,6 +189,6 @@ sub print_html_version()
 {
     print "\n";
     print '<p class="version">Version: '.$VERSION." (Perl $])</p>\n";
-}    
+}
 
 ;

@@ -24,3 +24,5 @@ node_modules
 selenium-server-standalone-*.jar
 /nbproject/private/
 nbproject
+errorShots
+.idea

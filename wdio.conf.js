@@ -1,5 +1,5 @@
 exports.config = {
-    
+
     //
     // =================
     // Service Providers
@@ -10,7 +10,7 @@ exports.config = {
     //
     user: process.env.SAUCE_USERNAME,
     key: process.env.SAUCE_ACCESS_KEY,
-    
+
     //
     // ==================
     // Specify Test Files
@@ -42,7 +42,7 @@ exports.config = {
     // files and you set maxInstances to 10, all spec files will get tested at the same time
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
-    
+
     // tunnel-identifier and build are documented in http://webdriver.io/guide/usage/cloudservices.html
 
     // capabilities: [{
@@ -54,7 +54,7 @@ exports.config = {
         // 'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER || 'unknown-jobnumber',
         // 'build': process.env.TRAVIS_BUILD_NUMBER || 'unknown-build'
     // }],
-    
+
     capabilities: [{
         browserName: (process.env._BROWSER || process.env.BROWSER || 'chrome').replace(/_/g,' '),
         //browserName: (process.env._BROWSER || process.env.BROWSER || 'firefox').replace(/_/g,' '),
@@ -134,7 +134,7 @@ exports.config = {
     // The following are supported: dot (default), spec, and xunit
     // see also: http://webdriver.io/guide/testrunner/reporters.html
     reporters: ['dot'],
-    
+
     //
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
