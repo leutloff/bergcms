@@ -108,7 +108,7 @@ sub print_success_page($)
 	                  '-encoding'  => 'utf-8',
 	                  '-lang'      => 'en');
     print h2($title);
-    print p({-id=>opresult}, 'Result: ok.');
+    print p({'-id' => 'opresult'}, 'Result: ok.');
     print_html_version();
     print end_html();
 }

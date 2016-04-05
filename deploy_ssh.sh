@@ -24,7 +24,6 @@ SOURCEDIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # HTDOCSDEPLOYDIR=/home/aachen/htdocs/brg
 # CGIBINDEPLOYDIR=/home/aachen/cgi-bin/brg
-# Required by production system FTP daemon:
 #HTDOCSDEPLOYDIR=/htdocs/brg
 HTDOCSDEPLOYDIR=/var/www/clients/client1/web1/web/brg
 #CGIBINDEPLOYDIR=/cgi-bin/brg
@@ -32,9 +31,9 @@ CGIBINDEPLOYDIR=/var/www/clients/client1/web1/cgi-bin/brg
 
 SCP="scp"
 SSH="ssh"
-FTPLOGFILE=deploy_ssh.log
-#DEPLOYTO=test
-DEPLOYTO=bergcms1@bergcms.local
+DEPLOYTOTEST=bergcms1@bergcms.local
+DEPLOYTOPROD=bergcms1@bergcms.local
+DEPLOYTO=$DEPLOYTOTEST
 
 # Override any variables above by placing them into a file named remotehosts.cfg.
 # This is especially useful for the BUILDHOST. Just copy the lines from above to the file
@@ -50,7 +49,7 @@ else
 fi
 
 function print_version {
-    echo "Berg CMS Deployment Script using SSH, v0.2, 2016-03-05"
+    echo "Berg CMS Deployment Script using SSH, v0.3, 2016-04-05"
 }
 
 function print_usage {
@@ -90,19 +89,11 @@ function print_usage {
 }
 
 
-while getopts ":c:hu:p:t:v" opt; do
+while getopts ":c:ht:v" opt; do
     case $opt in
-        u)
-            FTPUSER=$OPTARG
-            ;;
-        p)
-            FTPPASS=$OPTARG
-            ;;
-        l)  LOGINCFG==$OPTARG
-            ;;
         t)
             if [ "test" == $OPTARG -o "prod" == $OPTARG ]; then
-                DEPLOYTO=$OPTARG
+                if [ "test" == $OPTARG ]; then DEPLOYTO=$DEPLOYTOTEST; else DEPLOYTO=$DEPLOYTOPROD; fi
             else
                 echo "Invalid deployment type: $OPTARG" >&2
                 print_usage
@@ -138,36 +129,10 @@ if [ -z $COMPONENT ]; then
 fi
 
 if [ X"$DEPLOYTO" == X ]; then
-    DEPLOYTO=test
+    DEPLOYTO=$DEPLOYTOTEST
 fi
 
-if [ X"$LOGINCFG" == X ]; then
-    if [ "$DEPLOYTO" == prod ]; then
-        LOGINCFG=~/.ssh/ftplogin.cred
-    else
-        LOGINCFG=~/.ssh/ftplogintest.cred
-    fi
-fi
- 
 echo " *** Deploying component $COMPONENT to $DEPLOYTO..."
-
-
-# FTP parameters
-if [ -n "$FTPLOGFILE" ]; then FTPLOG="-d $FTPLOGFILE"; fi
-USETMPFILE="-S .tmp"
-if [ -n "$LOGINCFG" ]; then FTPLOGINPARAM="-f $LOGINCFG"; 
-else
-    if [ -n "$FTPUSER" ]; then 
-        if [ -n "$FTPPASS" ]; then 
-            FTPLOGINPARAM="-u $FTPUSER";
-        else
-            FTPLOGINPARAM="-u $FTPUSER -p $FTPPASS";
-        fi
-    fi
-fi
-
-# -m Attempt to make the remote destination directory before copying.
-FTPPUTPARAM="$FTPLOG $FTPLOGINPARAM $USETMPFILE -m"
 
 # setting the source dirs
 HTDOCSBRG=htdocs/brg
@@ -298,7 +263,6 @@ function deploy_testcases {
 
 # remove log file
 echo
-if test -w $FTPLOGFILE; then rm $FTPLOGFILE; fi
             
 case "$COMPONENT" in
     all)
