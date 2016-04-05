@@ -57,7 +57,7 @@ binmode(STDOUT, ":encoding(utf8)");
 
 if (!defined param('TC')) { print_error_page("Please provide the param 'TC' to select the Test Case for set-up."); }
 my $tc = param('TC');
-if ($tc !~ /\d/) { print_error_page("Only numbers are allowed for Testcases, but provided is $tc."); }
+if ($tc !~ /\d/) { print_error_page("Only numbers are allowed for Testcases, but provided is '$tc'."); }
 
 if (1 == $tc) { setup_tc1_empty_db; }
 elsif (2 == $tc) { setup_tc2; }
