@@ -176,7 +176,7 @@ sub print_error_page($)
         th($gfx), th(replace_umlauts(escapeHTML($msg))), td(replace_umlauts($back))
         ),
         h2({'-align'=>'center'}, "*\n");
-    print p({-id=>opresult}, 'Result: Error.');
+    print p({'-id'=>'opresult'}, 'Result: Error.');
     print_html_version();
     print end_html();
     exit 1;
