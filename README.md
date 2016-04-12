@@ -177,15 +177,6 @@ If this is not the case this is considered a bug.
 Copies of the Licenses are found in the LICENSES folder.
 
 
-Coding Guidelines
-=================
-
-- Indentation must use spaces only. Do not use tabs for this purpose.
-- Character encoding must be UTF-8 in every place.
-- Line ending should be Unix style (LF only).
-- Use tool based formatting where available.
-
-
 Support and Feedback
 ====================
 
