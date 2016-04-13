@@ -51,7 +51,6 @@ the id of the article that should be copied.
 
 + Request (application/json)
 
-        { }
     
 + Response 201 (application/json)
 
@@ -84,3 +83,16 @@ the id of the article that should be copied.
 Deletes the given article from the database. It is stored in the backup database for error recovery.
 
 + Response 200
+
+
+
+## Publishing the actual issue [/print]
+
+The actual issue is extracted from the database (.csv) and transpiled to LaTeX. 
+Then PdfLaTeX is used to typeset the final document and returned as PDF.
+
+### Process and return the actual issue [GET /print/:type]
+
+type is one of final, draft, final w/o images and ebook.
+
++ Response 200 (application/pdf)
