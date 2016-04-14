@@ -46,11 +46,11 @@ use Cwd qw(abs_path);
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.12/23.02.2014';
+$VERSION = 'v2.13/14.04.2016';
 # exports are used for testing purposes
 @EXPORT_OK = qw(add_author add_bold add_caption add_italic
                 get_tex_content
-                replace_characters);
+                replace_characters dbquote);
 @ISA = qw(Exporter);
 
 # Standardeingabe und Standardausgabe in UTF-8:
@@ -819,6 +819,8 @@ sub replace_characters #...Suchen/ersetzen
     $s =~ s/(\d+ *)\%/$1\\\%/gi; #n%  richtig setzen
     $s =~ s/<a href.+<\/a>//gi; #Links richtig setzen
     #...Sonderzeichen TeX-kompatibel ersetzen, egal ob UTF-8 kodiert oder in HTML...
+    $s =~ s/(\x{2026}|&#x2026;|\.\.\.) /\\ldots\\ /g; #0x85  0x2026  #HORIZONTAL ELLIPSIS - ...-Zeichen
+    $s =~ s/(\x{2026}|&#x2026;|\.\.\.)([\?!,\.])/\\ldots\2/g; #0x85  0x2026  #HORIZONTAL ELLIPSIS - ...-Zeichen
     $s =~ s/\x{2026}|&#x2026;|\.\.\./\\ldots\\ /g; #0x85  0x2026  #HORIZONTAL ELLIPSIS - ...-Zeichen
     $s =~ s/\x{2013}|&#x2013;/--/g;  # 0x96 0x2013 #8211 #EN DASH - falls mittellanges Minus (&#8211;)/langer Gedankenstrick
     $s =~ s/\x{2014}|&#x2014;/---/g; # 0x97 0x2014       #EM DASH - langer Gedankenstrick ---
@@ -861,18 +863,19 @@ sub replace_special_tex_characters
     return($s);
 }
 
-#-----------------------------------------------------
-sub dbquote #...Anfuehrungszeichen ersetzen(Latex), prüft auf " und „/“
-#----------------------------------------------------
-    {
+#** @function
+# Replaces the quotation marks (" and „/“) with german quotation marks \glqq and \grqq.
+# Additionally the enclosed text is set in italic.
+sub dbquote
+{
     my $s=shift;
     # "- sollte nicht ersetzt werden;
     # nur wenn auch das schließende Ende erfasst wird, wird die Ersetzung vorgenommen.
-    $s=~s/(^|[ \f\n\r\t\(]+)\"([a-zA-Z0-9ßöäüÖÄÜéè\( ][-a-zA-Z0-9ßöäüÖÄÜéè\(\),\.\?\+\:! ]*?)\"([,\.\)]?[,\.\:\)!]?(\s+|$))/$1\\textit{\\glqq $2\\grqq}$3/g;
+    $s=~s/([ \.,\f\n\r\t\(]*)[\"“]([a-zA-Z0-9ßöäüÖÄÜéè\( ][-a-zA-Z0-9ßöäüÖÄÜéè\(\),\.\?\+\:! ]*?)[\"”]([,\.\)\?!]?[,\.\:\)!]?(\s+|$|\\))/$1\\textit{\\glqq $2\\grqq}$3/g;
     # nun auch für die expliziten Anführungszeichen
     $s=~s/(\x{201E}|&#x201E;)(.*?)(\x{201C}|&#x201C;|\x{201D}|&#x201D;|\")/\\textit{\\glqq $2\\grqq}/g;
     return $s;
-    }
+}
 
 #** @function 
 # Removes any line feed and carriage return character.
