@@ -820,7 +820,7 @@ sub replace_characters #...Suchen/ersetzen
     $s =~ s/<a href.+<\/a>//gi; #Links richtig setzen
     #...Sonderzeichen TeX-kompatibel ersetzen, egal ob UTF-8 kodiert oder in HTML...
     $s =~ s/(\x{2026}|&#x2026;|\.\.\.) /\\ldots\\ /g; #0x85  0x2026  #HORIZONTAL ELLIPSIS - ...-Zeichen
-    $s =~ s/(\x{2026}|&#x2026;|\.\.\.)([\?!,\.])/\\ldots\2/g; #0x85  0x2026  #HORIZONTAL ELLIPSIS - ...-Zeichen
+    $s =~ s/(\x{2026}|&#x2026;|\.\.\.)([\?!,\.])/\\ldots$2/g; #0x85  0x2026  #HORIZONTAL ELLIPSIS - ...-Zeichen
     $s =~ s/\x{2026}|&#x2026;|\.\.\./\\ldots\\ /g; #0x85  0x2026  #HORIZONTAL ELLIPSIS - ...-Zeichen
     $s =~ s/\x{2013}|&#x2013;/--/g;  # 0x96 0x2013 #8211 #EN DASH - falls mittellanges Minus (&#8211;)/langer Gedankenstrick
     $s =~ s/\x{2014}|&#x2014;/---/g; # 0x97 0x2014       #EM DASH - langer Gedankenstrick ---
