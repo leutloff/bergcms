@@ -17,7 +17,7 @@
 %%% From: berg.dtx
 %% \StopEventually{\PrintIndex\PrintChanges}
 \NeedsTeXFormat{LaTeX2e}[2009/09/24]
-\ProvidesClass{berg}[2013/01/18 v3.0d Berg CMS document class]
+\ProvidesClass{berg}[2016/01/18 v3.1b Berg CMS document class]
 \RequirePackage{ifthen}
 \RequirePackage[utf8x]{inputenx}
 \DeclareOption{draft}{\PassOptionsToClass{draft}{article}}
@@ -34,6 +34,9 @@
     \PrerenderUnicode{ä}
     \PrerenderUnicode{ö}
     \PrerenderUnicode{ü}
+    \PrerenderUnicode{"'}
+    \PrerenderUnicode{"`}
+    \PrerenderUnicode{--}
 }
 \ExecuteOptions{final,a4paper,12pt,twoside,ngerman}
 \ProcessOptions \relax
@@ -47,7 +50,9 @@
 \RequirePackage{calc}
 \RequirePackage{makeidx}
 \RequirePackage{tabularx}
-\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \RequirePackage{array}
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
