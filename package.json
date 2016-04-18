@@ -32,6 +32,7 @@
     "webdriverio": "^4.0.5"
   },
   "scripts": {
+    "postinstall": "./node_modules/selenium-standalone/bin/selenium-standalone install",
     "test": "./node_modules/.bin/wdio wdio.conf.js",
     "testcomment": "mocha --reporter spec --timeout 120000 e2e-test/spec/gen1/hilfe.js"
   },
