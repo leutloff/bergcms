@@ -34,8 +34,37 @@ Building from Source
 The most up-to-date documentation will be the Continuous Integration build
 on Travis CI. The file .travis.yml performs the build of the C++ based
 modules, runs C++ and Perl based unit tests, installs everything on a
-local Apache web server and will perform some GUI tests. Nevertheless these
-are the steps to perform a build:
+local Apache web server and will perform some GUI tests. 
+
+Summary to prepare the development system - Example is executed with Ubuntu 16.04:
+```bash
+sudo apt-get install gcc g++ clang gdb python perl libtool autoconf automake make \
+    patch curl ca-certificates file less git bzip2 xz-utils libc6-dev \
+    zlib1g-dev libbz2-dev liblzma-dev libssl-dev libicu-dev wget
+sudo apt-get install firefox-locale-de firefox chromium-browser kate okular
+sudo apt-get install libboost1.58-all-dev cmake
+sudo npm install mocha-cli typescript typings -g
+    
+git clone git@github.com:leutloff/bergcms.git
+cd bergcms/
+npm install
+```
+    
+Summary to prepare the production system - Example is executed with Ubuntu 16.04:
+
+    sudo apt-get install apache2 apache2-suexec-custom texlive-base texlive-extra-utils texlive-fonts-recommended texlive-lang-german texlive-latex-recommended
+
+Configure the system to point with http://bergcms.local to a running webserver.
+Add bergcms.local to /etc/hosts, e.g. change the line from
+`127.0.0.1	localhost`
+to
+`127.0.0.1	localhost bergcms.local`. 
+An outline of the Apache configuration is shown in doc/etc_apache2.
+The configuration used for Travis is stored in the build directory.
+Enable the required apache modules: `sudo a2enmod suexec cgid`
+
+
+These are the steps to perform a build itself:
 
 - Clone or download the repository.
 - Execute the script update_and_build_submodules.sh to initialize, update and
@@ -55,8 +84,7 @@ are the steps to perform a build:
       popd
 - Run the script make_zip.sh. This will build all applications and put all
   the required files in a single ZIP file.
-- Install the content of the ZIP file on the Web Server. An outline of the
-  Apache configuration is shown in doc/etc_apache2. Use the script
+- Install the content of the ZIP file on the Web Server. Use the script
   install_locally.sh to perform this step together with some tweaks with
   regard the file permissions. The used install path can be adapted to
   local differences by overriding shell variables in a file named

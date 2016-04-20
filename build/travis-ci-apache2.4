@@ -1,8 +1,8 @@
 # build/travis-ci-apache2.4 - used for testing within Travis CI using Apache 2.4
-# For another example see doc/etc_apache2/sites-available/aachen.local.conf
+# For another examples see doc/etc_apache2.4/sites-available
 <VirtualHost *:80>
-    ServerName aachen.local
-    ServerAlias aachen www.aachen.local
+    ServerName bergcms.local
+    ServerAlias aachen www.aachen.local aachen.local
 
     DocumentRoot "%TRAVIS_BUILD_DIR%/www-root/htdocs"
     SuexecUserGroup "travis" "travis"
@@ -22,8 +22,14 @@
 #        FastCgiExternalServer /usr/lib/cgi-bin/php5-fcgi -host 127.0.0.1:9000 -pass-header Authorization
 #    </IfModule>
 
-    ErrorLog "%TRAVIS_BUILD_DIR%/logs/aachen-error.log" 
-    CustomLog "%TRAVIS_BUILD_DIR%/logs/aachen-access.log" combined
+    <Location /cgi-bin>
+        Options +ExecCGI -Includes
+        Require all granted
+        SetHandler cgi-script 
+    </Location>
+
+    ErrorLog "%TRAVIS_BUILD_DIR%/logs/bergcms-error.log" 
+    CustomLog "%TRAVIS_BUILD_DIR%/logs/bergcms-access.log" combined
 
     <IfModule mod_cgi.c>
         # Added for development purposes - Location of the CGI script error logfile showing input and output
@@ -32,9 +38,6 @@
         # ScriptLogBuffer 1024
     </IfModule>
 
-    <Location /cgi-bin>
-        Options +ExecCGI -Includes
-        Require all granted
-        SetHandler cgi-script 
-    </Location>
 </VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet

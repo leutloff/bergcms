@@ -185,7 +185,7 @@ script:
     - echo "Running Web Application tests using the Javascript based on Selenium/SauceLabs..."
     - ls -al $TRAVIS_BUILD_DIR/www-root/htdocs/brg $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg || true
     # works - get it to speed up the following test:
-    - wget http://aachen.local/brg/hilfe.html
+    - wget http://bergcms.local/brg/hilfe.html
     - cat hilfe.html
     - export TEST_RUN_LOCAL=false && npm test || true
 after_success:
@@ -199,16 +199,16 @@ after_success:
     - ls -la $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/lib/ $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/
 # works:
 #     #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/berg.pl
-#     - wget http://aachen.local/cgi-bin/brg/berg.pl
+#     - wget http://bergcms.local/cgi-bin/brg/berg.pl
 #     - cat berg.pl
 # works:
-#     - wget http://aachen.local/cgi-bin/brg/show_rpath
+#     - wget http://bergcms.local/cgi-bin/brg/show_rpath
 #     - cat show_rpath
 # works:
-#     - wget http://aachen.local/cgi-bin/brg/hello_world
+#     - wget http://bergcms.local/cgi-bin/brg/hello_world
 #     - cat hello_world
 # works:
-#     - wget http://aachen.local/cgi-bin/brg/berg
+#     - wget http://bergcms.local/cgi-bin/brg/berg
 #     - cat berg
     #- readelf -d $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker | grep RPATH
     - ls -al /usr/bin/pdflatex /usr/bin/makeindex || true
@@ -216,7 +216,7 @@ after_success:
     #- sudo cp $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/libctemplate.so.2.0.1 /usr/lib/libctemplate.so.2
     #- ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
     #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
-    - wget http://aachen.local/cgi-bin/brg/maker
+    - wget http://bergcms.local/cgi-bin/brg/maker
     - cat maker
     # Show Apache related paths and configuration:
     #- sudo ls -al /var/log/apache2 /var/www /var/www/html /etc/apache2 /etc/apache2/sites-enabled || true
@@ -229,8 +229,8 @@ after_success:
     - sudo cat /var/log/apache2/error.log
     - sudo cat /var/log/apache2/suexec.log
     - ls -l $TRAVIS_BUILD_DIR/logs
-    - cat $TRAVIS_BUILD_DIR/logs/aachen-error.log
-    - cat $TRAVIS_BUILD_DIR/logs/aachen-access.log
+    - cat $TRAVIS_BUILD_DIR/logs/bergcms-error.log
+    - cat $TRAVIS_BUILD_DIR/logs/bergcms-access.log
     - cat $TRAVIS_BUILD_DIR/logs/cgi.log
 deploy:
   provider: releases
