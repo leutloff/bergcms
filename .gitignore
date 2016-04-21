@@ -26,3 +26,4 @@ selenium-server-standalone-*.jar
 nbproject
 errorShots
 .idea
+.vscode

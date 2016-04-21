@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "eslint": "^2.8.0",
     "mocha": "^2.4.5",
     "saucelabs": "^1.2.0",
     "selenium-standalone": "^5.1.0",

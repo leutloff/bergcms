@@ -4,7 +4,7 @@
 # commands starting with >. Output is a LaTeX file for final processing.
 #
 # (c) 2007, 2009-2011 Heiko Decker
-# (c) 2011-2014 Christian Leutloff
+# (c) 2011-2014,2016 Christian Leutloff
 # 
 # This program is free software; you can redistribute it and/or modify it 
 # under the same terms as Perl itself, i.e., under the terms of the 
@@ -43,10 +43,11 @@ use Fcntl qw/:flock/;              # LOCK_EX etc. definieren
 use PerlIO::encoding;              # Zeichenkodierung ändern können, z.B. beim Wegschreiben 
 use utf8;                          # UTF-8 Kodierung auch in regulären Ausdrücken berücksichtigen
 use Cwd qw(abs_path);
+use Scalar::Util qw(looks_like_number);
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.13/14.04.2016';
+$VERSION = 'v2.13/20.04.2016';
 # exports are used for testing purposes
 @EXPORT_OK = qw(add_author add_bold add_caption add_italic
                 get_tex_content
@@ -228,6 +229,8 @@ sub create_tex_file
     if(!defined $OUT) { die "Fehler: Die Ausgabedatei '$OUPTEX' wurde nicht geöffnet (create_tex_file)."; }
 
     my ($k,$kap,$tnr,$titel,$typ,$text);
+    my $hasDocumentClass = 0;
+    my $hasBeginDocument = 0;
     my $LIM="\x09";
     my $KAPM = $LIM;# initialize with an invalid value # "Kapitel";#Kapitelspeicher->Hirachie->Thema(Kapitel)->Tag(falls Nr=1-7)->Titel
     $ActualColumsNo = 1;
@@ -239,6 +242,13 @@ sub create_tex_file
         ($kap,$tnr,$titel,$typ,$text)=split(/$LIM/,$idx{$k});
         @TXZ=split(/<br>/,$text);# Textblock in Zeilenspeicher!
         my ($nix0,$nix1,$nix2,$ai)=split(/$LIM/,$k);
+        
+        # Chapter name starting with 0: is the prolog and can be used to issue the preamble of the latex file.
+        # When missing preamble it is automatically added.
+        if (!defined($kap)) { $kap = '1:'; }
+        my ($chapterNo,$chapterName)=split(/:/,$kap);
+        if (!defined($chapterNo) || !looks_like_number($chapterNo)) { $chapterNo = '1'; }
+        
         $zz++;
         
         $lines = 1 + $#TXZ;
@@ -246,9 +256,23 @@ sub create_tex_file
         printf('%4d [AI:%4s] %-22s (%3s) %-40s %-2s %3s Z.'."\n", $zz, $ai, $kap, $tnr, $titel, $typ, $lines);        
         # print_article_content();
 
+        # add latex class and begin document after prolog
+        if ('0' < $chapterNo && !$hasDocumentClass)
+        {
+            print_docuementclass();
+            $hasDocumentClass = 1;
+        }
+        if ('0' < $chapterNo && !$hasBeginDocument)
+        {
+            print_begindocument();
+            $hasBeginDocument = 1;
+        }
+        
         # Add references to this article in the generated TeX file:
         print $OUT "% AI: $ai\n";
         print $OUT sprintf('\message{[AI:%4s] %s}'."\n", $ai, replace_special_tex_characters($titel));
+        
+        # change number of columnn when required.
         if ($typ =~ /[AF][123]?/)
         {
             if (length($typ) > 1)
@@ -262,8 +286,18 @@ sub create_tex_file
         while(0 <= $#TXZ)
         {
             $s=shift(@TXZ);
+            if ($s =~ /^\\documentclass/) { $hasDocumentClass = 1; }
+            if ($s =~ /^\\begin\{document}/) { $hasBeginDocument = 1; }
             testit($s);
         }
+    }
+    if (!$hasDocumentClass)
+    {
+        print_docuementclass();
+    }
+    if (!$hasBeginDocument)
+    {
+        print_begindocument();
     }
     print_columns('1');# ensure \end{multicols} if necessary.
     print_enddocument();
@@ -654,11 +688,35 @@ sub print_columns
 }
 
 #** @function
+# Load the class of the LaTeX document.
+#*
+sub print_docuementclass
+{
+    print $OUT '%%% begin - automatically inserted \documentclass'."\n";
+    print $OUT '\documentclass{berg}'."\n";
+    print $OUT '%%% end   - automatically inserted \documentclass'."\n";
+}
+
+#** @function
+# Beginning of the LaTeX document.
+#*
+sub print_begindocument
+{
+    print $OUT '%%% begin - automatically inserted \begin{document}'."\n";
+    print $OUT '\begin{document}%'."\n";
+    print $OUT '\shorthandoff{"}% Disable " from babel'."\n";
+    print $OUT '\normalsize'."\n";
+    print $OUT '%%% end   - automatically inserted \begin{document}'."\n";
+}
+
+#** @function
 # Closes the LaTeX document.
 #*
 sub print_enddocument
 {
+    print $OUT '%%% begin - automatically inserted \end{document}'."\n";
     print $OUT '\end{document}%'."\n";
+    print $OUT '%%% end   - automatically inserted \end{document}'."\n";
 }
 
 #-----------------------------------------------------
