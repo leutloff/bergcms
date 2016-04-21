@@ -63,11 +63,7 @@ BOOST_AUTO_TEST_CASE(test_calling_perl_version)
     const fs::path perlVersionfile = fs::path(fs::path(bt::GetOutputDir()) / "perlversion.log");
 
     // perl -v
-#if defined(WIN32)
     bio::file_descriptor_sink pe_log(perlVersionfile);
-#else
-    bio::file_descriptor_sink pe_log(perlVersionfile.c_str());
-#endif
     bp::monitor c11 = bp::make_child(
                 bp::paths(exePerl.c_str())
                 , bp::arg("-v")
@@ -89,11 +85,7 @@ BOOST_AUTO_TEST_CASE(test_calling_simple_perl_script)
     //bt::PrintFileToStream(simplePerlScript.c_str(), cout);
 
     // perl input/simpleperlscript.pl
-#if defined(WIN32)
     bio::file_descriptor_sink pe_log(simplePerlScriptOutput);
-#else
-    bio::file_descriptor_sink pe_log(simplePerlScriptOutput.c_str());
-#endif
     bp::monitor c11 = bp::make_child(
                 bp::paths(exePerl.c_str(), fs::path(bt::GetTestDir()))
                 , bp::arg(simplePerlScript.c_str())
@@ -118,11 +110,7 @@ BOOST_AUTO_TEST_CASE(test_calling_pex)
 
     // perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
     //cout << exePerl.c_str() << " " << pexScript.c_str() << " " << inputDatabaseFile.c_str() << " " << texFile.c_str() << endl;
-#if defined(WIN32)
     bio::file_descriptor_sink pe_log(perlScriptOutput);
-#else
-    bio::file_descriptor_sink pe_log(perlScriptOutput.c_str());
-#endif
     bp::monitor c11 = bp::make_child(
                 bp::paths(exePerl.c_str(), bt::GetOutputDir())
                 , bp::arg(pexScript.c_str())
@@ -155,11 +143,7 @@ BOOST_AUTO_TEST_CASE(test_calling_pex_some_articles)
     //cout << "pwd: " << fs::current_path() << endl;
     //cout << "bt::GetCgiBinDir(): " << bt::GetCgiBinDir() << endl;
     //cout << exePerl.c_str() << " " << pexScript.c_str() << " " << inputDatabaseFile.c_str() << " " << texFile.c_str() << endl;
-#if defined(WIN32)
     bio::file_descriptor_sink pe_log(perlScriptOutput);
-#else
-    bio::file_descriptor_sink pe_log(perlScriptOutput.c_str());
-#endif
     bp::monitor c11 = bp::make_child(
                 bp::paths(exePerl.c_str(), bt::GetCgiBinDir())
                 , bp::arg(pexScript.c_str())
