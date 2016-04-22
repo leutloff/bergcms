@@ -60,9 +60,6 @@ addons:
       # Disallowing packages (20160228): - wput
       # nodejs-legacy is required in later Ubuntu versions than precise:
       # Disallowing packages (20160228): - nodejs-legacy
-      #
-      # install automake for building ctemplate
-      - automake
 before_install:
     - cat /etc/hosts
     - id
@@ -148,12 +145,6 @@ install:
     # the boost libraries are used by the C++ part
     - ls -l /usr/lib/libboost* /usr/lib/i386-linux-gnu/libboost* /usr/lib/x86_64-linux-gnu/libboost* || true
 before_script:
-    # Build ctemplate
-    - pushd src/external/ctemplate
-    - ./configure --prefix $TRAVIS_BUILD_DIR/src/external/ctemplate 1>/dev/null
-    - make
-    - make install
-    - popd
     - find /usr/lib -name 'libicu*.so.*'
     # we are now using system libicu
     #- mkdir -p $TRAVIS_BUILD_DIR/src/external/libicu48/lib
@@ -196,7 +187,7 @@ after_success:
     - popd
     # Test Apache installation:
     #- touch $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/touch_out
-    - ls -la $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/lib/ $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/
+    - ls -la $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/ $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/lib/
 # works:
 #     #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/berg.pl
 #     - wget http://bergcms.local/cgi-bin/brg/berg.pl
@@ -213,9 +204,9 @@ after_success:
     #- readelf -d $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker | grep RPATH
     - ls -al /usr/bin/pdflatex /usr/bin/makeindex || true
     - pushd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg && ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker maker && ./maker && popd
-    #- sudo cp $TRAVIS_BUILD_DIR/src/external/ctemplate/lib/libctemplate.so.2.0.1 /usr/lib/libctemplate.so.2
     #- ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
     #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
+    - wget http://bergcms.local/cgi-bin/brg/testcase.pl?TC=2
     - wget http://bergcms.local/cgi-bin/brg/maker
     - cat maker
     # Show Apache related paths and configuration:

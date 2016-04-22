@@ -68,24 +68,6 @@ public:
 
     TArchiveFiles const& GetDatabaseList() const { return archiveFiles; }
 
-#if defined(USE_CTEMPLATE)
-    /**
-     * Adds the Head related content to the dictionary.
-     */
-    static void FillDictionaryHead(ctemplate::TemplateDictionary & dict);
-
-    /**
-     * Adds the Archive related content to the dictionary.
-     * The information (number of the issue) is extracted from the archiveName.
-     */
-    static void FillDictionarySingleArchive(ctemplate::TemplateDictionary & dict, std::string const& archiveName);
-
-    /**
-     * Adds the Body related content to the dictionary.
-     */
-    void FillDictionaryBody(ctemplate::TemplateDictionary & dict) const;
-
-#endif
     /**
       * Returns the archive name from the given filename, e.g.
       * for path/to/archive/gi003.cvs it returns gi003.

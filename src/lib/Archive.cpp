@@ -66,46 +66,38 @@ size_t Archive::Load(boost::filesystem::path const& archivePath, boost::regex co
     return archiveFiles.size();
 }
 
-#if defined(USE_CTEMPLATE)
-/**
- * Adds the Head related content to the dictionary.
- */
-void Archive::FillDictionaryHead(ctemplate::TemplateDictionary & dict)
-{
-    dict.SetValue("HEAD_TITLE", "Archiv");
-    dict.SetValue("ACTIVE_ARCHIVE", " active"); // this is the class attribute to indicate the we are in the archive section
-}
+// #if defined(USE_CTEMPLATE)
 
-void Archive::FillDictionarySingleArchive(ctemplate::TemplateDictionary & dict, std::string const& archiveName)
-{
-    string nr = 2 < archiveName.length() ? archiveName.substr(2) : archiveName;
-    string issue("");
-    Helper::GetIssueFromNumber(issue, nr);
-    dict.SetValue("ARCHIVE_NAME", archiveName);
-    dict.SetValue("ARCHIVE_NUMBER", nr);
-    dict.SetValue("ARCHIVE_ISSUE", issue);
-    dict.SetValue("ARCHIVE_REFERENCE", "?archive=" + archiveName);
-}
+// void Archive::FillDictionarySingleArchive(ctemplate::TemplateDictionary & dict, std::string const& archiveName)
+// {
+//     string nr = 2 < archiveName.length() ? archiveName.substr(2) : archiveName;
+//     string issue("");
+//     Helper::GetIssueFromNumber(issue, nr);
+//     dict.SetValue("ARCHIVE_NAME", archiveName);
+//     dict.SetValue("ARCHIVE_NUMBER", nr);
+//     dict.SetValue("ARCHIVE_ISSUE", issue);
+//     dict.SetValue("ARCHIVE_REFERENCE", "?archive=" + archiveName);
+// }
 
-/**
- * Adds the Body related content to the dictionary.
- */
-void Archive::FillDictionaryBody(ctemplate::TemplateDictionary & dict) const
-{   
-    string issue("");
-    BOOST_FOREACH(string str, archiveFiles)
-    {
-        string nr = 2 < str.length() ? str.substr(2) : str;
-        Helper::GetIssueFromNumber(issue, nr);
-        tpl::TemplateDictionary* list = dict.AddSectionDictionary("ARCHIVE_LIST");
-        list->SetValue("ARCHIVE_NAME", str);
-        list->SetValue("ARCHIVE_NUMBER", nr);
-        list->SetValue("ARCHIVE_ISSUE", issue);
-        list->SetValue("ARCHIVE_REFERENCE", "?archive=" + str);
-    }
-}
+// /**
+//  * Adds the Body related content to the dictionary.
+//  */
+// void Archive::FillDictionaryBody(ctemplate::TemplateDictionary & dict) const
+// {   
+//     string issue("");
+//     BOOST_FOREACH(string str, archiveFiles)
+//     {
+//         string nr = 2 < str.length() ? str.substr(2) : str;
+//         Helper::GetIssueFromNumber(issue, nr);
+//         tpl::TemplateDictionary* list = dict.AddSectionDictionary("ARCHIVE_LIST");
+//         list->SetValue("ARCHIVE_NAME", str);
+//         list->SetValue("ARCHIVE_NUMBER", nr);
+//         list->SetValue("ARCHIVE_ISSUE", issue);
+//         list->SetValue("ARCHIVE_REFERENCE", "?archive=" + str);
+//     }
+// }
 
-#endif
+// #endif
 
 std::string Archive::GetArchiveNameFromPath(std::string & filenameWithPath)
 {

@@ -1,6 +1,3 @@
-[submodule "src/external/ctemplate"]
-	path = src/external/ctemplate
-	url = git://github.com/leutloff/ctemplate.git
 [submodule "src/external/boost-process"]
 	path = src/external/boost-process
 	url = git://github.com/leutloff/boost-process.git

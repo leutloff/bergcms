@@ -93,13 +93,6 @@ public:
     void NewArticle(Article & article);
     void SetArticle(unsigned no, Article const& article);
 
-#if defined(USE_CTEMPLATE)
-    /**
-     * Adds the Body related content to the dictionary.
-     */
-    void FillDictionaryBody(ctemplate::TemplateDictionary & dict) const;
-#endif
-
 private:
     void ResetLastArticleId() { lastArticleId = 0; }
     void SetLastArticleId(unsigned id)

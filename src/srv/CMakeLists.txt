@@ -16,8 +16,4 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 add_subdirectory (bgrest)
-IF(USE_CTEMPLATE)
-    add_subdirectory (berg)
-    add_subdirectory (archive)
-ENDIF()
 add_subdirectory (maker)

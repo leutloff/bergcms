@@ -138,18 +138,18 @@ void FileStorage::SetArticle(unsigned no, Article const& article)
     // TODO
 }
 
-#if defined(USE_CTEMPLATE)
-void FileStorage::FillDictionaryBody(ctemplate::TemplateDictionary & dict) const
-{
-    string id;
-    for (TArticles::const_iterator it = articles.begin(); it < articles.end(); ++it)
-    {
-        id = boost::lexical_cast<string>((*it)->getId());
-        tpl::TemplateDictionary* list = dict.AddSectionDictionary("ARTICLE_LIST");
-//        list->SetValue("ARTICLE_TITLE",(*it)->getTitle());
-//        list->SetValue("ARTICLE_NUMBER", id);
-        list->SetValue("ARTICLE_REFERENCE", "?archive=" + archiveName + "&article=" + id);
-        (*it)->FillDictionaryBody(*list);
-    }
-}
-#endif
+// #if defined(USE_CTEMPLATE)
+// void FileStorage::FillDictionaryBody(ctemplate::TemplateDictionary & dict) const
+// {
+//     string id;
+//     for (TArticles::const_iterator it = articles.begin(); it < articles.end(); ++it)
+//     {
+//         id = boost::lexical_cast<string>((*it)->getId());
+//         tpl::TemplateDictionary* list = dict.AddSectionDictionary("ARTICLE_LIST");
+// //        list->SetValue("ARTICLE_TITLE",(*it)->getTitle());
+// //        list->SetValue("ARTICLE_NUMBER", id);
+//         list->SetValue("ARTICLE_REFERENCE", "?archive=" + archiveName + "&article=" + id);
+//         (*it)->FillDictionaryBody(*list);
+//     }
+// }
+// #endif

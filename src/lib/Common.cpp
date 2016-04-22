@@ -29,27 +29,27 @@ using namespace berg;
 namespace cgi = boost::cgi;
 namespace fs = boost::filesystem;
 
-#if defined(USE_CTEMPLATE)
-void Common::FillDictionaryCommon(ctemplate::TemplateDictionary & dict)
-{
-    dict.SetValue("SYSTEM_TITLE", "Redaktion FeG Aachen");
-    dict.SetValue("SYSTEM_TITLE_LONG", "Redaktionssystem FeG Aachen");
-    dict.SetValue("SYSTEM_TITLE_SHORT", "Redaktion AC");
-    dict.SetValue("SYSTEM_TITLE_SHORT_ASCII", "Redaktion AC"); // for use in <title>
-    dict.SetValue("BERG_LANG", "de");
-    dict.SetValue("BERG_VERSION", "Berg CMS " + GetBergVersion()); //Berg v3.0.0");
-    dict.SetValue("BERG_COPYRIGHT", "2012, 2013, 2014 Christian Leutloff");
-    dict.SetValue("BERG_AUTHOR", "Christian Leutloff");
+// #if defined(USE_CTEMPLATE)
+// void Common::FillDictionaryCommon(ctemplate::TemplateDictionary & dict)
+// {
+//     dict.SetValue("SYSTEM_TITLE", "Redaktion FeG Aachen");
+//     dict.SetValue("SYSTEM_TITLE_LONG", "Redaktionssystem FeG Aachen");
+//     dict.SetValue("SYSTEM_TITLE_SHORT", "Redaktion AC");
+//     dict.SetValue("SYSTEM_TITLE_SHORT_ASCII", "Redaktion AC"); // for use in <title>
+//     dict.SetValue("BERG_LANG", "de");
+//     dict.SetValue("BERG_VERSION", "Berg CMS " + GetBergVersion()); //Berg v3.0.0");
+//     dict.SetValue("BERG_COPYRIGHT", "2012, 2013, 2014 Christian Leutloff");
+//     dict.SetValue("BERG_AUTHOR", "Christian Leutloff");
 
-    dict.SetValue("BERG_CGI_ROOT", "/cgi-bin/brg");
-}
+//     dict.SetValue("BERG_CGI_ROOT", "/cgi-bin/brg");
+// }
 
-void Common::FillDictionaryHead(ctemplate::TemplateDictionary & dict)
-{
-    dict.SetValue("HEAD_TITLE", "Berg CMS");
-    //dict.SetValue("ACTIVE_ARCHIVE", " active"); // this is the class attribute to indicate the we are in the archive section
-}
-#endif 
+// void Common::FillDictionaryHead(ctemplate::TemplateDictionary & dict)
+// {
+//     dict.SetValue("HEAD_TITLE", "Berg CMS");
+//     //dict.SetValue("ACTIVE_ARCHIVE", " active"); // this is the class attribute to indicate the we are in the archive section
+// }
+// #endif 
 
 string Common::GetTemplate(string const& templateBase)
 {

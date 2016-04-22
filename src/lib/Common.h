@@ -41,21 +41,6 @@ namespace berg
 class Common
 {
 public:
-
-#if defined(USE_CTEMPLATE)
-    /**
-     * Adds the Common strings to the dictionary, like System title
-     * version and copyright information.
-     */
-    static void FillDictionaryCommon(ctemplate::TemplateDictionary & dict);
-
-    /**
-     * Adds the Head related content to the dictionary.
-     */
-    static void FillDictionaryHead(ctemplate::TemplateDictionary & dict);
-
-#endif
-
     /**
       * Returns the full path to the template.
       * Searches in some predefined locations.

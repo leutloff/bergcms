@@ -94,30 +94,30 @@ void Article::GetArticleForFileStorage(std::string & wholeArticle) const
     wholeArticle = oss.str();
 }
 
-#if defined(USE_CTEMPLATE)
-void Article::FillDictionaryBody(ctemplate::TemplateDictionary & dict) const
-{
-    dict.SetValue("ARTICLE_ID", boost::lexical_cast<string>(id));
-    dict.SetValue("ARTICLE_CHAPTER", chapter);
-    dict.SetValue("ARTICLE_PRIORITY", boost::lexical_cast<string>(priority));
-    dict.SetValue("ARTICLE_TITLE", title);
-    dict.SetValue("ARTICLE_TYPE", type);
+// #if defined(USE_CTEMPLATE)
+// void Article::FillDictionaryBody(ctemplate::TemplateDictionary & dict) const
+// {
+//     dict.SetValue("ARTICLE_ID", boost::lexical_cast<string>(id));
+//     dict.SetValue("ARTICLE_CHAPTER", chapter);
+//     dict.SetValue("ARTICLE_PRIORITY", boost::lexical_cast<string>(priority));
+//     dict.SetValue("ARTICLE_TITLE", title);
+//     dict.SetValue("ARTICLE_TYPE", type);
 
-    dict.SetValue("ARTICLE_HEADER", header);
-    unsigned lines = CountDisplayedLines(header) + INCREMENT_LINECOUNT_FOR_DISPLAY;
-    dict.SetValue("ARTICLE_HEADER_LINES", boost::lexical_cast<string>(lines));
+//     dict.SetValue("ARTICLE_HEADER", header);
+//     unsigned lines = CountDisplayedLines(header) + INCREMENT_LINECOUNT_FOR_DISPLAY;
+//     dict.SetValue("ARTICLE_HEADER_LINES", boost::lexical_cast<string>(lines));
 
-    dict.SetValue("ARTICLE_BODY", body);
-    lines = CountDisplayedLines(body) + INCREMENT_LINECOUNT_FOR_DISPLAY;
-    dict.SetValue("ARTICLE_BODY_LINES", boost::lexical_cast<string>(lines));
+//     dict.SetValue("ARTICLE_BODY", body);
+//     lines = CountDisplayedLines(body) + INCREMENT_LINECOUNT_FOR_DISPLAY;
+//     dict.SetValue("ARTICLE_BODY_LINES", boost::lexical_cast<string>(lines));
 
-    dict.SetValue("ARTICLE_FOOTER", footer);
-    lines = CountDisplayedLines(footer) + INCREMENT_LINECOUNT_FOR_DISPLAY;
-    dict.SetValue("ARTICLE_FOOTER_LINES", boost::lexical_cast<string>(lines));
+//     dict.SetValue("ARTICLE_FOOTER", footer);
+//     lines = CountDisplayedLines(footer) + INCREMENT_LINECOUNT_FOR_DISPLAY;
+//     dict.SetValue("ARTICLE_FOOTER_LINES", boost::lexical_cast<string>(lines));
 
-    dict.SetValue("ARTICLE_LASTCHANGED", lastChanged);
-}
-#endif
+//     dict.SetValue("ARTICLE_LASTCHANGED", lastChanged);
+// }
+// #endif
 
 size_t Article::CountDisplayedLines(std::string const& articlePart)
 {

@@ -25,7 +25,6 @@
     "mocha": "^2.4.5",
     "saucelabs": "^1.2.0",
     "selenium-standalone": "^5.1.0",
-    "selenium-webdriver": "^2.53.1",
     "wdio-dot-reporter": "0.0.5",
     "wdio-mocha-framework": "^0.2.12",
     "wdio-sauce-service": "^0.2.2",
@@ -34,8 +33,9 @@
   },
   "scripts": {
     "postinstall": "./node_modules/selenium-standalone/bin/selenium-standalone install",
-    "test": "./node_modules/.bin/wdio wdio.conf.js",
-    "testcomment": "mocha --reporter spec --timeout 120000 e2e-test/spec/gen1/hilfe.js"
+    "prestart-webdriver": "npm install",
+    "start-webdriver": "./node_modules/selenium-standalone/bin/selenium-standalone start",
+    "test": "./node_modules/.bin/wdio wdio.conf.js"
   },
   "repository": {
     "type": "git",

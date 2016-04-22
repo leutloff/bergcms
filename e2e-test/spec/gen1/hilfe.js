@@ -9,8 +9,8 @@ suite('Testing the static german help page.', function() {
     setup(function() {
         //console.log('--setup--');
         //this.timeout(60000); // some time is needed for the browser start up, on my system 3000 should work, too.
-        console.log('/hilfe.html');
-        browser.url('/hilfe.html')
+        console.log('/brg/hilfe.html');
+        browser.url('/brg/hilfe.html')
     });
     
     test('checks the title only', function() {

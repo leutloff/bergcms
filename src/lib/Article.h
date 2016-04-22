@@ -89,14 +89,6 @@ public:
         return ret;
     }
 
-#if defined(USE_CTEMPLATE)
-    /**
-     * Adds the Body related content to the dictionary.
-     * In this case this is the whole article.
-     */
-    void FillDictionaryBody(ctemplate::TemplateDictionary & dict) const;
-#endif
-
     /**
       * Returns the expected number of lines when displayed in the Browser.
       * @param articlePart one of header, body or footer of the article.

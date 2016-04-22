@@ -33,7 +33,6 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/lib
     ${Boost_INCLUDE_DIRS}
     ${BOOST_CGI_INCLUDEDIR}
-    ${CTEMPLATE_INCLUDEDIR}
     )
 
 if(EXISTS "${PROJECT_SOURCE_DIR}/external/lib-${BUILDHOST}")
@@ -45,9 +44,7 @@ else()
     link_directories(
         ${CX_LIB_DIR}
         "${PROJECT_SOURCE_DIR}/lib"
-        #"${BOOST_LIBRARYDIR}"
         "${Boost_LIBRARY_DIRS}"
-        "${CTEMPLATE_LIBRARYDIR}"
         "${ICU_LIBRARYDIR}"
         )
 endif()
@@ -76,12 +73,3 @@ if(${BERG_LINK_FLAGS})
 endif()
 target_compile_features(echo PRIVATE ${BERG_USED_CXX_FEATURES})
 install(TARGETS echo DESTINATION "${BERG_INSTALL_CGIBIN}")
-
-IF(USE_CTEMPLATE)
-    add_executable (exptemplate exptemplate.cpp)
-    target_link_libraries(exptemplate ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
-    if(${BERG_LINK_FLAGS})
-        set_target_properties(exptemplate PROPERTIES LINK_FLAGS ${BERG_LINK_FLAGS})
-    endif()
-    install(TARGETS exptemplate DESTINATION "${BERG_INSTALL_CGIBIN}")
-ENDIF()
