@@ -29,26 +29,24 @@ use utf8;                          # UTF-8 character encoding is recognize in re
 use File::Copy;                    # import file copy
 
 #---> Global Variables
-my $VERSION="v1.01, 23.04.2016";
+my $VERSION="v1.01, 24.04.2016";
 my $sep = '/';
 my $dbpath = 'br';
 my $dbname = 'feginfo.csv';
 my $dbbup = 'feginfo.bug';
-my $tcdir = 'testcases';
+my $tcdir = '../../../src/test/input';# shared with the C++ unit tests
 
 #----> function prototypes --------------------------------
 sub setup_tc1_empty_db();
-sub setup_tc2();
-sub setup_tc3();
-sub print_success_page($);
+sub setup_tc2_some_articles();
+sub setup_tc3_future();
+sub print_success_page($$);
 
 #----> function prototypes of the shared functions --------
 sub replace_umlauts($);
 sub replace_html_umlauts($);
 sub print_error_page($);
 sub print_html_version();
-
-
 
 
 # Standard Input and Standard Output is UTF-8:
@@ -60,7 +58,7 @@ my $tc = param('TC');
 if ($tc !~ /\d/) { print_error_page("Only numbers are allowed for Testcases, but provided is '$tc'."); }
 
 if (1 == $tc) { setup_tc1_empty_db; }
-elsif (2 == $tc) { setup_tc2; }
+elsif (2 == $tc) { setup_tc2_some_articles; }
 else { print_error_page("The Test Case with Number ($tc) is unknown."); }
 
 
@@ -72,35 +70,36 @@ sub setup_tc1_empty_db()
 	# delete the databases
     unlink($dbpath.$sep.$dbname);
     unlink($dbpath.$sep.$dbbup);
-    copy($tcdir.$sep.'1'.$sep.$dbname, $dbpath);
-    print_success_page(1);
+    #copy($tcdir.$sep.'1'.$sep.$dbname, $dbpath); empty is missing db
+    print_success_page(1, '&lt;none&gt;');
 }
 
-sub setup_tc2()
+sub setup_tc2_some_articles()
 {
     # delete the databases
     unlink($dbpath.$sep.$dbname);
     unlink($dbpath.$sep.$dbbup);
     #copy the databases from tc dir
-    copy($tcdir.$sep.'2'.$sep.$dbname, $dbpath);
-    print_success_page(2);
+    my $useddbname = 'some_articles.csv';
+    copy($tcdir.$sep.$useddbname, $dbpath.$sep.$dbname);
+    print_success_page(2, $useddbname);
 }
-sub setup_tc3()
+sub setup_tc3_future()
 {
     # delete the databases
     unlink($dbpath.$sep.$dbname);
     unlink($dbpath.$sep.$dbbup);
     #copy the databases from tc dir
-    copy($tcdir.$sep.'3'.$sep.$dbname, $dbpath);
-	print_success_page(3);
+    #copy($tcdir.$sep.'3'.$sep.$dbname, $dbpath.$sep.$dbname);
+	print_success_page(3, 'future');
 }
 
 #----------------------------------------------------------------------------
 # Prints success.
 #----------------------------------------------------------------------------
-sub print_success_page($)
+sub print_success_page($$)
 {
-  my ($testcasenumber) = shift;
+    my ($testcasenumber, $useddbname) = @_;
 	my $title = 'Setting up of the Test Case '.$testcasenumber.' succeeded';
 	print header('-charset' => 'utf-8');
 	print  start_html('-title'     => $title,
@@ -108,7 +107,7 @@ sub print_success_page($)
 	                  '-encoding'  => 'utf-8',
 	                  '-lang'      => 'en');
     print h2($title);
-    print p('Copied DB: '.$tcdir.$sep.$testcasenumber.$sep.$dbname.' => '.$dbpath);
+    print p('Copied DB: '.$tcdir.$sep.$useddbname.' => '.$dbpath.$sep.$dbname);
     print p({'-id' => 'opresult'}, 'Result: ok.');
     print_html_version();
     print end_html();

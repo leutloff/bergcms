@@ -66,9 +66,9 @@ install(DIRECTORY "${PROJECT_SOURCE_DIR}/../www/htdocs/brg/js" DESTINATION "${BE
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/../www/htdocs/brg/bgico" DESTINATION "${BERG_INSTALL_HTDOCS}"
         DIRECTORY_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
-# add the templates
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/template" DESTINATION "${BERG_INSTALL_CGIBIN}"
-        DIRECTORY_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+# add the templates - not needed anymore!?
+#install(DIRECTORY "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/template" DESTINATION "${BERG_INSTALL_CGIBIN}"
+#        DIRECTORY_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 # add empty archive directory (archive_content) and other required directories - the README.txt describes the purpose
 install(FILES "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/archive_content/README.txt" DESTINATION "${BERG_INSTALL_CGIBIN}/archive_content")

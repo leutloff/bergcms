@@ -90,6 +90,9 @@ if [ "X$DISPLAY" != "X" ]; then
     #firefox "http://bergcms.burg.local/cgi-bin/brg/archive"
     #$MYBROWSER "$LOCALWWWHOST$LOCALCGIDIR/archive"
 
+    # select DB of testcase2
+    $MYBROWSER "$LOCALWWWHOST$LOCALCGIDIR/testcase.pl?TC=2"
+
     # open new tab with the start page of berg
     #firefox "http://bergcms.burg.local/cgi-bin/brg/berg"
     $MYBROWSER "$LOCALWWWHOST$LOCALCGIDIR/berg.pl"

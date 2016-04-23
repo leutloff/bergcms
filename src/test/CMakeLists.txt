@@ -34,8 +34,6 @@ include_directories(
     ${Boost_INCLUDE_DIRS}
     ${BOOST_CGI_INCLUDEDIR}
     ${BOOST_PROCESS_INCLUDEDIR}
-    ${CTEMPLATE_INCLUDEDIR}
-    ${CTEMPLATETESTS_INCLUDEDIR}
     ${VISUAL_LEAK_DETECTOR_INCLUDEDIR}
     )
 
@@ -48,9 +46,7 @@ else()
     link_directories(
         ${CX_LIB_DIR}
         "${PROJECT_SOURCE_DIR}/lib"
-        #"${BOOST_LIBRARYDIR}"
         "${Boost_LIBRARY_DIRS}"
-        "${CTEMPLATE_LIBRARYDIR}"
         "${ICU_LIBRARYDIR}"
         ${VISUAL_LEAK_DETECTOR_LIBRARYDIR}
         )
@@ -71,9 +67,9 @@ find_package(Threads)
 
 add_executable(bergunittests ${UNITTEST_SRC} ${UNITTEST_H})
 IF (MSVC)
-    target_link_libraries(bergunittests berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
+    target_link_libraries(bergunittests berg_storage ${Boost_LIBRARIES} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
 ELSE()
-    target_link_libraries(bergunittests berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES} Threads::Threads)
+    target_link_libraries(bergunittests berg_storage ${Boost_LIBRARIES} ${BERG_SYSTEM_SPECIFIC_LIBRARIES} Threads::Threads)
 ENDIF()
 add_dependencies(bergunittests berg_storage)
 if(${BERG_LINK_FLAGS})
