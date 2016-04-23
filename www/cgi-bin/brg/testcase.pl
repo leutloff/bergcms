@@ -29,7 +29,7 @@ use utf8;                          # UTF-8 character encoding is recognize in re
 use File::Copy;                    # import file copy
 
 #---> Global Variables
-my $VERSION="v1.01, 03.04.2016";
+my $VERSION="v1.01, 23.04.2016";
 my $sep = '/';
 my $dbpath = 'br';
 my $dbname = 'feginfo.csv';
@@ -108,7 +108,7 @@ sub print_success_page($)
 	                  '-encoding'  => 'utf-8',
 	                  '-lang'      => 'en');
     print h2($title);
-    print p('Copied DB: '.$tcdir.$sep.$testcasenumber.$sep.$dbname' => '.$dbpath)
+    print p('Copied DB: '.$tcdir.$sep.$testcasenumber.$sep.$dbname.' => '.$dbpath);
     print p({'-id' => 'opresult'}, 'Result: ok.');
     print_html_version();
     print end_html();
