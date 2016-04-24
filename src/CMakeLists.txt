@@ -40,12 +40,6 @@ if(NOT DEFINED CMAKE_BUILD_TYPE)
 endif()
 message("CMAKE_BUILD_TYPE is ${CMAKE_BUILD_TYPE}.")
 
-if(NOT DEFINED USE_CTEMPLATE)
-    set(USE_CTEMPLATE TRUE)
-    set(USE_CTEMPLATE "${USE_CTEMPLATE}" CACHE BOOL "flag wheter the build should be with ctemplate or not.")
-ENDIF()
-message("USE_CTEMPLATE is ${USE_CTEMPLATE}.")
-
 if(COMMAND cmake_policy)
     # Included scripts do automatic cmake_policy PUSH and POP.
     cmake_policy(SET CMP0011 NEW)

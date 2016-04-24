@@ -1,7 +1,7 @@
 #!/bin/bash -e
 # Updates the submodules and builds them where needed.
 #
-# Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -17,24 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 SOURCEDIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CTEMPLATEDIR=$SOURCEDIR/src/external/ctemplate
-
 echo "Updating the submodules in $SOURCEDIR..."
 
 pushd $SOURCEDIR
 git submodule init
 git submodule update
-popd
-
-echo "Build the submodule in $CTEMPLATEDIR..."
-
-pushd $CTEMPLATEDIR
-
-./configure --prefix $CTEMPLATEDIR
-make clean
-make
-make install
-
 popd
 
 exit 0;

@@ -2,7 +2,7 @@
  * @file TestStorage.cpp
  * Testing the storage related classes.
  * 
- * Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2012, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,25 +21,10 @@
 #include <vld.h>
 #endif
 
-// vc is showing a memory leak when this file is included, see https://code.google.com/p/ctemplate/issues/detail?id=42 for the reasoning
-//#include <ctemplate/template_string.h> 
-
 #include "TestShared.h"
 
 #include <FileStorage.h>
 #include <Archive.h>
-
-#if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable: 4251) // 'ctemplate::Template::resolved_filename_' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'ctemplate::Template'          
-#endif // defined(_MSC_VER)
-
-#if defined(USE_CTEMPLATE)
-// the following file is provided with the ctemplate tests
-// if not found, adapt CTEMPLATETESTS_INCLUDEDIR in shared_config.make
-#undef CTEMPLATE_DLL_DECL
-#include <tests/template_test_util.h>
-#endif
 
 #if defined(_MSC_VER)
 #pragma warning(disable: 6011)
@@ -59,9 +44,6 @@ using namespace std;
 using namespace berg;
 namespace bt = berg::testonly;
 namespace fs = boost::filesystem;
-#if defined(USE_CTEMPLATE)
-namespace tpl = ctemplate;
-#endif
 
 static const string sample = "some_articles.csv";
 static const size_t ARCHIVE_FILES = 5;
@@ -531,8 +513,3 @@ BOOST_AUTO_TEST_CASE(test_single_article_fill_template_dictionary)
 #endif
 
 BOOST_AUTO_TEST_SUITE_END()
-
-#if defined(USE_CTEMPLATE)
-// "link" to implementation of the test utils, e.g. TemplateDictionaryPeer::GetSectionValue
-#include <tests/template_test_util.cc>
-#endif

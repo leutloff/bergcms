@@ -178,7 +178,7 @@ script:
     # works - get it to speed up the following test:
     - wget http://bergcms.local/brg/hilfe.html
     - cat hilfe.html
-    - export TEST_RUN_LOCAL=false && npm test || true
+    - export TEST_RUN_LOCAL=false && npm test
 after_success:
     - pushd travis-build
     - ls -l Berg*.zip

@@ -2,7 +2,7 @@
  * @file TestHelper.cpp
  * Testing the helper classes.
  * 
- * Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2012, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,9 +20,6 @@
 #if defined(HAS_VISUAL_LEAK_DETECTOR)
 #include <vld.h>
 #endif
-
-// vc is showing a memory leak when this file is included, see https://code.google.com/p/ctemplate/issues/detail?id=42 for the reasoning
-//#include <ctemplate/template_string.h>
 
 #include <Helper.h>
 

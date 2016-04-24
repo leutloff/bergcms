@@ -4,7 +4,7 @@
 # or to the production host. It is possible to deploy the whole application or
 # only specific parts. This script uses FTP to copy the files and change the permissions.
 #
-# Copyright 2013 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2013, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -65,7 +65,7 @@ function print_usage {
     echo "   js        Javascript files - libraries and specific"
     echo "  htdocs     static HTML, CSS and Javascript files (=html+css+js)"
     echo "   perllibs  Perl libraries (Diff.pm/Merge.pm) "
-    echo "   dynlibs   boost and ctemplate libraries"
+    echo "   dynlibs   boost libraries"
     echo "  libs       all the libraries (C/C++ and Perl) (=perllibs+dynlibs)"
     echo "   perl      Perl based parts of the web application"
     echo "   templates templates used by the web application"
@@ -234,8 +234,8 @@ function deploy_perl {
     $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/tidx $CGIBINBRG/tidx/README.txt
 }
 function deploy_dyn_libs {
-    echo " * Deploying dynamic libraries (Boost and ctemplate) ..."
-    for libwithpath in `ls cgi-bin/brg/lib/libboost_{chrono,date_time,filesystem,iostreams,program_options,regex,signals,system,thread,unit_test_framework}.so.* cgi-bin/brg/lib/libctemplate.so.*`; do
+    echo " * Deploying dynamic libraries (Boost) ..."
+    for libwithpath in `ls cgi-bin/brg/lib/libboost_{chrono,date_time,filesystem,iostreams,program_options,regex,signals,system,thread,unit_test_framework}.so.*`; do
         lib=${libwithpath##*/}
         $FTPPUT $FTPPUTPARAM -X "chmod 0755 $CGIBINDEPLOYDIR/lib/$lib" $CGIBINDEPLOYDIR/lib $libwithpath
     done

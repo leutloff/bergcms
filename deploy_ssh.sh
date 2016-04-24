@@ -66,7 +66,7 @@ function print_usage {
     echo "   js        Javascript files - libraries and specific"
     echo "  htdocs     static HTML, CSS and Javascript files (=html+css+js)"
     echo "   perllibs  Perl libraries (Diff.pm/Merge.pm) "
-    echo "   dynlibs   boost and ctemplate libraries"
+    echo "   dynlibs   boost libraries"
     echo "  libs       all the libraries (C/C++ and Perl) (=perllibs+dynlibs)"
     echo "   perl      Perl based parts of the web application"
     echo "   templates templates used by the web application"
@@ -203,9 +203,9 @@ function deploy_perl {
     $SCP $CGIBINBRG/tidx/README.txt $DEPLOYTO:$CGIBINDEPLOYDIR/tidx
 }
 function deploy_dyn_libs {
-    echo " * Deploying dynamic libraries (Boost and ctemplate) ..."
+    echo " * Deploying dynamic libraries (Boost) ..."
     $SSH $DEPLOYTO "mkdir -p $CGIBINDEPLOYDIR/lib"
-    for libwithpath in `ls cgi-bin/brg/lib/libboost_{chrono,date_time,filesystem,iostreams,program_options,regex,signals,system,thread,unit_test_framework}.so.* cgi-bin/brg/lib/libctemplate.so.*`; do
+    for libwithpath in `ls cgi-bin/brg/lib/libboost_{chrono,date_time,filesystem,iostreams,program_options,regex,signals,system,thread,unit_test_framework}.so.*`; do
         lib=${libwithpath##*/}
         #$SCP $DEPLOYTO:-X "chmod 0755 $CGIBINDEPLOYDIR/lib/$lib" $CGIBINDEPLOYDIR/lib $libwithpath
         $SCP $libwithpath $DEPLOYTO:$CGIBINDEPLOYDIR/lib

@@ -116,19 +116,18 @@ Install CMake
 -------------
 Install CMake 3.5.0 or newer and launch the CMake GUI. Enter the Berg
 CMS source directory `bergcms\src`. Add an entry `BOOST_ROOT`
-pointing to the above installed directory and an entry setting
-`USE_CTEMPLATE` to FALSE. Click on Configure and
+pointing to the above installed directory. Click on Configure and
 Generate.
 
 Build and execute the unit tests
 --------------------------------
 
-Open the generated Solution with Visual Studio and build it. It
-is expected that the unit tests (bergunittests) are running successfully
+Open the generated Solution with Visual Studio and build it. 
+The unit tests (bergunittests) are running successfully
 on Windows, too.
 
 Adaptation to a windows web server would be the next step to make it run on
-Windows.
+Windows. Feel free to send pull requests... 
 
 
 Installation/Deployment
