@@ -29,7 +29,7 @@ use utf8;                          # UTF-8 character encoding is recognize in re
 use File::Copy;                    # import file copy
 
 #---> Global Variables
-my $VERSION="v1.01, 24.04.2016";
+my $VERSION="v1.01, 25.04.2016";
 my $sep = '/';
 my $dbpath = 'br';
 my $dbname = 'feginfo.csv';
@@ -55,11 +55,11 @@ binmode(STDOUT, ":encoding(utf8)");
 
 if (!defined param('TC')) { print_error_page("Please provide the param 'TC' to select the Test Case for set-up."); }
 my $tc = param('TC');
-if ($tc !~ /\d/) { print_error_page("Only numbers are allowed for Testcases, but provided is '$tc'."); }
+if ($tc !~ /[0-9a-z]+/) { print_error_page("Only numbers and small letters are allowed for Testcases, but provided is '$tc'."); }
 
-if (1 == $tc) { setup_tc1_empty_db; }
-elsif (2 == $tc) { setup_tc2_some_articles; }
-else { print_error_page("The Test Case with Number ($tc) is unknown."); }
+if (('1' eq $tc) || ('emptydb' eq $tc)) { setup_tc1_empty_db; }
+elsif (('2' eq $tc) || ('somearticles' eq $tc)) { setup_tc2_some_articles; }
+else { print_error_page("The Test Case 'tc' is unknown."); }
 
 
 #----------------------------------------------------------------------------
