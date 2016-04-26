@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE(test_calling_pex)
                 , bp::std_err_to(pe_log)
                 );
     int ret = c11.join(); // wait for perl completion
-    //cout << "Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+    //cout << "test_calling_pex - Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
 //    cout << "***   Perl Log   ***" << endl;
 //    bt::PrintFileToStream(perlScriptOutput, cout);
@@ -154,10 +154,10 @@ BOOST_AUTO_TEST_CASE(test_calling_pex_some_articles)
                 , bp::std_err_to(pe_log)
                 );
     int ret = c11.join(); // wait for perl completion
-    //cout << "Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+    //cout << "test_calling_pex_some_articles - Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
-//    cout << "***   Perl Log   ***" << endl;
-//    bt::PrintFileToStream(perlScriptOutput, cout);
+    //cout << "***   Perl Log   ***" << endl;
+    //bt::PrintFileToStream(perlScriptOutput, cout);
 //    cout << "***   TeX File   ***" << endl;
 //    bt::PrintFileToStream(texFile, cout);
 

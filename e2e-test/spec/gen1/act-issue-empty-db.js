@@ -21,7 +21,8 @@ suite('Tests related the actual issue string with an empty database.', function 
         //clickAndWait 	link=To-Do
         // <tr><td><a href="?AW=berg&VFI=*gf dolist&VPI=!tToDo" title="01) Aufgabenliste des Redaktionsteams" >To-Do</a></td>
         browser.click('=To-Do');
-
+        browser.waitForExist('td*=Change TODO Test Case', 10000, true);
+        
         // clickAndWait 	css=img[alt="Bearbeiten"] 
         browser.click('img[alt="Bearbeiten"]');
         var kopftext = browser.element('textarea[name="Kopftext"]');
@@ -30,9 +31,10 @@ suite('Tests related the actual issue string with an empty database.', function 
         // clickAndWait 	name=Submit
         browser.submitForm('form[name="editArticle"]');
 
-        //verifyTextPresent 	Change TODO Test Case 	
-
-        assert.isNotNull(browser.element('td*=Change TODO Test Case'));
+        //verifyTextPresent 	Change TODO Test Case
+        var heading = browser.element('td*=Change TODO Test Case');
+        console.log('Changed heading: ', heading.getText());
+        assert.isNotNull(heading);
     });
 
 });
