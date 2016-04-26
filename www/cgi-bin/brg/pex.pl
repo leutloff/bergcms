@@ -37,7 +37,8 @@ package BERG::PEX;
 use strict;
 use warnings;
 
-use FindBin;                       # locate this script
+# use FindBin;                       # locate this script
+# FindBin::again();
 use IO::File;                      # FileHandel(OO-Generation!)
 use Fcntl qw/:flock/;              # LOCK_EX etc. definieren
 use PerlIO::encoding;              # Zeichenkodierung ändern können, z.B. beim Wegschreiben 

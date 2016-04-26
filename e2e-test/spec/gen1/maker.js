@@ -23,7 +23,6 @@ suite('Testing the maker program.', function () {
 
         var resultText = browser.getText('#processing-result');
         assert.equal(resultText, 'Keine Fehler.');
-        //assert.equal(resultText, '1 Fehler! Hinweise zu den Ursachen sollten sich weiter oben finden lassen.');
     });
 
 });

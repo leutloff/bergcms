@@ -24,17 +24,20 @@ use warnings;
 use CGI qw/:standard :html5/;      # Standard CGI Functions
 use CGI::Carp qw(fatalsToBrowser); # Show fatal errors in the browser and not only as Internal Server Error
 use Fcntl qw/:flock :seek/;        # define LOCK_EX, SEEK_SET etc.
+use FindBin;                       # locate this script
+FindBin::again();
 use PerlIO::encoding;              # Change character encoding when desired, e.g. when writing back to disk
 use utf8;                          # UTF-8 character encoding is recognize in regular expressions, too.
 use File::Copy;                    # import file copy
+use Cwd qw(abs_path);
 
 #---> Global Variables
-my $VERSION="v1.01, 25.04.2016";
+my $VERSION="v1.01, 26.04.2016";
 my $sep = '/';
-my $dbpath = 'br';
+my $dbpath = "$FindBin::Bin".'/br';
 my $dbname = 'feginfo.csv';
 my $dbbup = 'feginfo.bug';
-my $tcdir = '../../../src/test/input';# shared with the C++ unit tests
+my $tcdir = "$FindBin::Bin".'/testcases-db';# shared with the C++ unit tests - installed together with testcases.pl
 
 #----> function prototypes --------------------------------
 sub setup_tc1_empty_db();

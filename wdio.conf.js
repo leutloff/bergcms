@@ -22,6 +22,7 @@ exports.config = {
     //
     specs: [
         './e2e-test/spec/**/*.js'
+        //'./e2e-test/spec/**/maker.js'
     ],
     // Patterns to exclude.
     exclude: [
@@ -42,6 +43,7 @@ exports.config = {
     // files and you set maxInstances to 10, all spec files will get tested at the same time
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
+    maxInstances: 1, // tests using a single database that is replaced before each test run. For parallel running tests each test must use its own db.
 
     // tunnel-identifier and build are documented in http://webdriver.io/guide/usage/cloudservices.html
 

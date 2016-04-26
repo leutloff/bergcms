@@ -126,6 +126,10 @@ install(FILES    "${PROJECT_SOURCE_DIR}/../images/berg-v1/berg.jpg"
 # add files used for testing purposes.
 install(PROGRAMS "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/testcase.pl"
         DESTINATION "${BERG_INSTALL_CGIBIN}")
+install(FILES    "${PROJECT_SOURCE_DIR}/test/input/single_article.csv"
+                 "${PROJECT_SOURCE_DIR}/test/input/some_articles.csv"
+                 "${PROJECT_SOURCE_DIR}/test/input/two_articles.csv"
+        DESTINATION "${BERG_INSTALL_CGIBIN}/testcases-db")
 
 
 #install(CODE "MESSAGE(\"Sample install message.\")")
