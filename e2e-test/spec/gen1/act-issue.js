@@ -11,7 +11,7 @@ suite('Test the modules accessing the actual issue.', function () {
         console.log('Selecting the second test case: /cgi-bin/brg/testcase.pl?TC=2');
         browser.url('http://bergcms.local/cgi-bin/brg/testcase.pl?TC=2');
         var opresult = browser.getText('#opresult');
-        assert.equal(opresult, 'Result: ok.');
+        assert.equal(opresult, 'Result: OK.');
     });
 
 
@@ -67,15 +67,27 @@ suite('Test the modules accessing the actual issue.', function () {
 
         browser.click('=Einst.');// click on link named 'Einst.'
 
+        var resultTable = browser.getText('#ergebnis');
+        // verifyTextPresent: Ausgabe festlegen
+        assert.include(resultTable, 'Ausgabe festlegen');
+        // verifyTextPresent: Inhaltsverzeichnis
+        assert.include(resultTable, 'Inhaltsverzeichnis');
 
-        // TODO verifyTextPresent: Ausgabe festlegen
-        // TODO verifyTextPresent: Inhaltsverzeichnis
+        // clickAndWait 	css=img[alt="Bearbeiten"]
+        browser.click('img[alt="Bearbeiten"]');//click the first edit sign 	
+        // verifyTextPresent 	>DATEN# 	
+        var mainText = browser.getText('textarea[name="Haupttext"]');
+        assert.include(mainText, '>DATEN#');
 
-        // var resultText = browser.getText('table.suche tr th');
-        // assert.equal(resultText[0], 'Gemeindezeitungs-Generator');
-
-        // TODO check more of the content
-        //browser.getTextContent()
+        // clickAndWait 	css=img[alt="ABBRUCH - zurück zur Datenübersicht"]
+        browser.click('img[alt="ABBRUCH - zurück zur Datenübersicht"]');
+        // verifyTextPresent 	Ausgabe festlegen 	
+        resultTable = browser.getText('#ergebnis');
+        assert.include(resultTable, 'Ausgabe festlegen');
+        // verifyTextPresent 	Inhaltsverzeichnis 	
+        assert.include(resultTable, 'Ausgabe festlegen');
     });
+
+
 
 });

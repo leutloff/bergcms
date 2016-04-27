@@ -11,7 +11,7 @@ suite('Tests related the actual issue string with an empty database.', function 
         console.log('Selecting the second test case: /cgi-bin/brg/testcase.pl?TC=2');
         browser.url('http://bergcms.local/cgi-bin/brg/testcase.pl?TC=emptydb');
         var opresult = browser.getText('#opresult');
-        assert.equal(opresult, 'Result: ok.');
+        assert.equal(opresult, 'Result: OK.');
     });
 
 

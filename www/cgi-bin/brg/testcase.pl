@@ -110,8 +110,8 @@ sub print_success_page($$)
 	                  '-encoding'  => 'utf-8',
 	                  '-lang'      => 'en');
     print h2($title);
-    print p('Copied DB: '.$tcdir.$sep.$useddbname.' => '.$dbpath.$sep.$dbname);
-    print p({'-id' => 'opresult'}, 'Result: ok.');
+    print p('Copy DB: '.$tcdir.$sep.$useddbname.' => '.$dbpath.$sep.$dbname);
+    print p({'-id' => 'opresult'}, 'Result: OK.');
     print_html_version();
     print end_html();
 }
