@@ -33,6 +33,7 @@
 #include <boost/iostreams/tee.hpp>
 #include <boost/iostreams/stream.hpp>
 #include <boost/process/process.hpp>
+#include <boost/locale.hpp>
 #include <fstream>
 #include <iostream>
 #include <locale>
@@ -54,6 +55,7 @@ typedef bio::stream<TeeDevice> TeeStream;
 
 // prototypes
 void AddFileToLog(fs::path const& logFile, TeeStream &log, ostringstream & oss);
+void AddFileToLog(fs::path const& logFile, TeeStream &log, ostringstream &oss, std::string fileEncoding);
 void CopyToOutDir(fs::path const& bergOutDir, fs::path const& filename, TeeStream & log);
 void Add(TeeStream & log, ostringstream & oss, string const& html);
 void CheckErrorCode(cgi::response & resp, std::string const& functionName, bs::error_code const& ec, int & errors);
@@ -250,7 +252,7 @@ int HandleRequest(boost::cgi::request& req)
                             );
                 log << "Inhalt der Protokolldatei (" << texLogfile.c_str() << "):\n";
                 int ret = c12.join(); // wait for pdflatex completion
-                AddFileToLog(texLogfile, log, oss);
+                AddFileToLog(texLogfile, log, oss, "Latin1");
                 log << "pdfTeX return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
                 if (ret != 0) { ++errors; }
                 Add(log, oss, "</pre>");
@@ -406,6 +408,39 @@ void AddFileToLog(fs::path const& logFile, TeeStream &log, ostringstream &oss)
                 ++cnt;
                 //log << "Zeile " << cnt << ": ";
                 log << line << "\n";
+            }
+            //log << "Aus Protokolldatei " << cnt << " Zeile(n) gelesen.\n";
+            Add(log, oss, "</pre></p><p>");
+        }
+        else
+        {
+            log << "Bearbeitung vermutlich fehlgeschlagen, da Protokolldatei (" << logFile.c_str() << ") nicht geöffnet werden konnte!\n";
+        }
+    }
+    else
+    {
+        log << "Bearbeitung vermutlich fehlgeschlagen, da Protokolldatei (" << logFile.c_str() << ") nicht existiert!\n";
+    }
+}
+
+void AddFileToLog(fs::path const& logFile, TeeStream &log, ostringstream &oss, std::string fileEncoding)
+{
+    if (fs::exists(logFile))
+    {
+        fs::ifstream ifs(logFile);
+        if (ifs.is_open())
+        {
+            Add(log, oss, "</p><p><pre class=\"berg-log\">[" + fileEncoding + "]");
+            string otherenc_line;
+            string utf8_line;
+            int cnt = 0;
+            while (ifs.good())
+            {
+                getline(ifs, otherenc_line);
+                ++cnt;
+                utf8_line = boost::locale::conv::to_utf<char>(otherenc_line, fileEncoding);
+                //log << "Zeile " << cnt << ": ";
+                log << utf8_line << "\n";
             }
             //log << "Aus Protokolldatei " << cnt << " Zeile(n) gelesen.\n";
             Add(log, oss, "</pre></p><p>");

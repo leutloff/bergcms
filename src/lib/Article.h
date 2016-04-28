@@ -29,10 +29,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-#if defined(USE_CTEMPLATE)
-#include <ctemplate/template_dictionary.h>
-#endif
-
 #include <limits>
 #include <string>
 

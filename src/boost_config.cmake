@@ -103,7 +103,7 @@ if (WIN32)
     add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
 endif()
 
-find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS chrono date_time filesystem iostreams program_options regex signals thread unit_test_framework system REQUIRED)
+find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS chrono date_time filesystem iostreams locale program_options regex signals thread unit_test_framework system REQUIRED)
 #message("berg Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS} - deprecated: BOOST_LIBRARYDIR: ${BOOST_LIBRARYDIR}.")
 
 # Add the boost libs to the install package.
@@ -112,6 +112,7 @@ install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_chrono.so.${BERG_BOOST_VERSION} 
 install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_date_time.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
 install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_filesystem.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
 install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_iostreams.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
+install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_locale.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
 install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_program_options.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
 install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_regex.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
 install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_signals.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
