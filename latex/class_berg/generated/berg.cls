@@ -17,9 +17,10 @@
 %%% From: berg.dtx
 %% \StopEventually{\PrintIndex\PrintChanges}
 \NeedsTeXFormat{LaTeX2e}[2009/09/24]
-\ProvidesClass{berg}[2016/01/18 v3.1b Berg CMS document class]
+\ProvidesClass{berg}[2016/04/29 v3.1b Berg CMS document class]
 \RequirePackage{ifthen}
 \RequirePackage[utf8x]{inputenx}
+\RequirePackage{textcomp}
 \DeclareOption{draft}{\PassOptionsToClass{draft}{article}}
 \DeclareOption{final}{\PassOptionsToClass{final}{article}}
 \DeclareOption{a4paper}{\PassOptionsToClass{a4paper}{article}}
@@ -34,6 +35,9 @@
     \PrerenderUnicode{ä}
     \PrerenderUnicode{ö}
     \PrerenderUnicode{ü}
+    \PrerenderUnicode{Ä}
+    \PrerenderUnicode{Ö}
+    \PrerenderUnicode{Ü}
     \PrerenderUnicode{"'}
     \PrerenderUnicode{"`}
     \PrerenderUnicode{--}

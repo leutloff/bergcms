@@ -74,10 +74,11 @@
 % \changes{v3.0b}{2012/12/17}{First Version used for Production. Added package to support fixed indentation lists. Reduced spacing for quote environment.}
 % \changes{v3.0c}{2012/12/28}{Added remaining item from standard definition: set extrarowheight to 3pt.}
 % \changes{v3.0d}{2013/01/18}{Add option hyphens to url package to break the urls.}
+% \changes{v3.1b}{2016/04/29}{Show german umlauts in the log file, too.}
 %
-% \title{Berg CMS -- Reference of the document class}
-% \author{Christian Leutloff}
-% \date{2012/12/28}
+% % \title{Berg CMS -- Reference of the document class}
+% author{Christian Leutloff}
+% \date{2016/04/29}
 % \maketitle
 % \begin{abstract}
 % \noindent The \texttt{berg} class is used by the Berg CMS when generating the PDF files for printing.
@@ -105,7 +106,7 @@
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}[2009/09/24]
-\ProvidesClass{berg}[2016/01/18 v3.1b Berg CMS document class]
+\ProvidesClass{berg}[2016/04/29 v3.1b Berg CMS document class]
 %    \end{macrocode}
 %
 % \subsection{Load initial Packages}
@@ -114,6 +115,7 @@
 %    \begin{macrocode}
 \RequirePackage{ifthen}
 \RequirePackage[utf8x]{inputenx}
+\RequirePackage{textcomp}
 %    \end{macrocode}
 %
 % \subsection{Provide and process the Options}
@@ -138,6 +140,9 @@
     \PrerenderUnicode{ä}
     \PrerenderUnicode{ö}
     \PrerenderUnicode{ü}
+    \PrerenderUnicode{Ä}
+    \PrerenderUnicode{Ö}
+    \PrerenderUnicode{Ü}
     \PrerenderUnicode{"'}
     \PrerenderUnicode{"`}
     \PrerenderUnicode{--}
