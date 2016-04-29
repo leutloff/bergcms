@@ -208,6 +208,7 @@ after_success:
     #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
     - wget http://bergcms.local/cgi-bin/brg/testcase.pl?TC=2
     - wget http://bergcms.local/cgi-bin/brg/maker
+    - grep 'Überschrift' maker || true
     - cat maker
     # Show Apache related paths and configuration:
     #- sudo ls -al /var/log/apache2 /var/www /var/www/html /etc/apache2 /etc/apache2/sites-enabled || true
