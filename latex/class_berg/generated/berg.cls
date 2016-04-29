@@ -93,6 +93,7 @@
 \setcounter{secnumdepth}{-2}
 \setcounter{tocdepth}{2}
 \pagestyle{plain}
+\RequirePackage[T1]{fontenc}
 \renewcommand{\familydefault}{\sfdefault}
 \normalfont
 \sectionfont{\LARGE\bfseries}
