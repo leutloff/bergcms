@@ -8,7 +8,7 @@ env:
   matrix:
     - _BROWSER: firefox
       _PLATFORM: Linux
-      _VERSION: "46.0"
+      _VERSION: "45.0"
     #- _BROWSER: "firefox"
     #  _PLATFORM: "Windows_7"
     #  _VERSION: "45.0"
@@ -40,9 +40,11 @@ addons:
       #- apache2-suexec-custom apache2-utils
       #
       # Install the latex base with pdflatex and makeindex. Additionally: ngerman, eurosym.sty and mdwlist.sty
+      - texlive-base
       - texlive-latex-base
       - texlive-latex-recommended
       - texlive-latex-extra
+      - texlive-extra-utils
       - texlive-lang-german
       - texlive-fonts-recommended
       - texlive-fonts-extra

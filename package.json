@@ -17,7 +17,7 @@
     "Christian Leutloff <leutloff@sundancer.oche.de>"
   ],
   "dependencies": {
-    "jquery": "^2.2.2"
+    "jquery": "^2.2.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",
