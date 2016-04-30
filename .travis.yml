@@ -8,7 +8,7 @@ env:
   matrix:
     - _BROWSER: firefox
       _PLATFORM: Linux
-      _VERSION: "45.0"
+      _VERSION: "46.0"
     #- _BROWSER: "firefox"
     #  _PLATFORM: "Windows_7"
     #  _VERSION: "45.0"
@@ -22,7 +22,7 @@ dist: trusty
 language: cpp
 compiler:
     - clang
-    - gcc
+#    - gcc
 cache: apt
 addons:
   sauce_connect:
@@ -178,6 +178,10 @@ script:
     # works - get it to speed up the following test:
     - wget http://bergcms.local/brg/hilfe.html
     - cat hilfe.html
+    - wget http://bergcms.local/cgi-bin/brg/testcase.pl?TC=2
+    - wget http://bergcms.local/cgi-bin/brg/maker
+    - grep 'Überschrift' maker || true
+    - cat maker
     - export TEST_RUN_LOCAL=false && npm test
 after_success:
     - pushd travis-build
@@ -202,14 +206,10 @@ after_success:
 #     - wget http://bergcms.local/cgi-bin/brg/berg
 #     - cat berg
     #- readelf -d $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker | grep RPATH
-    - ls -al /usr/bin/pdflatex /usr/bin/makeindex || true
-    - pushd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg && ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker maker && ./maker && popd
+    #- ls -al /usr/bin/pdflatex /usr/bin/makeindex || true
+    #- pushd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg && ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker maker && ./maker && popd
     #- ldd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
     #- $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/maker
-    - wget http://bergcms.local/cgi-bin/brg/testcase.pl?TC=2
-    - wget http://bergcms.local/cgi-bin/brg/maker
-    - grep 'Überschrift' maker || true
-    - cat maker
     # Show Apache related paths and configuration:
     #- sudo ls -al /var/log/apache2 /var/www /var/www/html /etc/apache2 /etc/apache2/sites-enabled || true
     #- sudo cat /etc/apache2/envvars
