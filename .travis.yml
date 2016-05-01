@@ -67,6 +67,7 @@ before_install:
     - echo "Preprocess the required LaTeX fonts..."
     - ls -l /usr/share/texlive/texmf-dist/fonts/source/jknappen/ec/ecss1440.mf || true
     #- mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecss1440 || true
+    - ls -al  /usr/local/share/texmf/fonts || true
     - sudo mkdir -p /usr/local/share/texmf/fonts
     - ls -dl / /usr /usr/local /usr/local/share /usr/local/share/texmf /usr/local/share/texmf/fonts
     - sudo mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 --destdir /usr/local/share/texmf/fonts ecss1440 
