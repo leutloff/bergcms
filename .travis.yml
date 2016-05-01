@@ -41,6 +41,7 @@ addons:
       #
       # Install the latex base with pdflatex and makeindex. Additionally: ngerman, eurosym.sty and mdwlist.sty
       - texlive-base
+      - texlive-binaries
       - texlive-latex-base
       - texlive-latex-recommended
       - texlive-latex-extra
@@ -184,6 +185,7 @@ script:
     - wget http://bergcms.local/cgi-bin/brg/maker
     - grep 'Überschrift' maker || true
     - cat maker
+    - echo "Running the end to end tests using wdio..."
     - export TEST_RUN_LOCAL=false && npm test
 after_success:
     - pushd travis-build

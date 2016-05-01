@@ -52,7 +52,7 @@ npm install
     
 Summary to prepare the production system - command is executed on Ubuntu 16.04:
 
-    sudo apt-get install apache2 apache2-suexec-custom texlive-base texlive-extra-utils texlive-fonts-recommended texlive-lang-german texlive-latex-recommended texlive-latex-extra texlive-fonts-extra
+    sudo apt-get install apache2 apache2-suexec-custom texlive-base texlive-binaries texlive-extra-utils texlive-fonts-recommended texlive-lang-german texlive-latex-recommended texlive-latex-extra texlive-fonts-extra
 
 Configure the system to point with http://bergcms.local to a running webserver.
 Add bergcms.local to /etc/hosts, e.g. change the line from
