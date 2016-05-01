@@ -65,11 +65,13 @@ addons:
       # Disallowing packages (20160228): - nodejs-legacy
 before_install:
     - echo "Preprocess the required LaTeX fonts..."
-    - ls /usr/share/texlive/texmf-dist/fonts/source/jknappen/ec/ecss1440.mf || true
+    - ls -l /usr/share/texlive/texmf-dist/fonts/source/jknappen/ec/ecss1440.mf || true
     #- mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecss1440 || true
     - sudo mkdir -p /usr/local/share/texmf/fonts
-    - sudo mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 --destdir /usr/local/share/texmf/fonts ecss1440 &
+    - ls -dl / /usr /usr/local /usr/local/share /usr/local/share/texmf /usr/local/share/texmf/fonts
+    - sudo mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 --destdir /usr/local/share/texmf/fonts ecss1440 
     - ls -la /usr/local/share/texmf/fonts || true
+    - exit 0
     - cat /etc/hosts
     - id
     - gcc --version && perl -v && java -version
