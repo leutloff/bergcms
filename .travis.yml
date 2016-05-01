@@ -74,7 +74,6 @@ before_install:
     - sudo mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 --destdir /usr/local/share/texmf ecss1440 
     - ls -la /usr/local/share/texmf/fonts || true
     - tlmgr conf
-    - exit 0
     - cat /etc/hosts
     - id
     - gcc --version && perl -v && java -version
@@ -194,6 +193,11 @@ script:
     - wget http://bergcms.local/brg/hilfe.html
     - cat hilfe.html
     - wget http://bergcms.local/cgi-bin/brg/testcase.pl?TC=2
+    - echo "Calling maker directly and by CGI..."
+    - pushd $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg && ./maker > $TRAVIS_BUILD_DIR/maker && popd
+    - grep 'Überschrift' maker || true
+    - cat maker
+    - rm maker
     - wget http://bergcms.local/cgi-bin/brg/maker
     - grep 'Überschrift' maker || true
     - cat maker
