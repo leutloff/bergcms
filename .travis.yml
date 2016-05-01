@@ -64,7 +64,7 @@ addons:
       # nodejs-legacy is required in later Ubuntu versions than precise:
       # Disallowing packages (20160228): - nodejs-legacy
 before_install:
-    - echo check the installed LaTeX:
+    - echo "Check some aspects of the installed LaTeX..."
     - ls /usr/share/texlive/texmf-dist/fonts/source/jknappen/ec/ecss1440.mf || true
     - mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecss1440 || true
     - sudo mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecss1440
@@ -73,7 +73,7 @@ before_install:
     - gcc --version && perl -v && java -version
     - lsb_release -a
     - git submodule update --init --recursive
-    - echo Already installed node:
+    - echo "Already installed node..."
     - which node && node -v && npm version || true
     # Add PPA with latest nodejs
     #- sudo add-apt-repository ppa:chris-lea/node.js -y
