@@ -246,7 +246,7 @@ int HandleRequest(boost::cgi::request& req)
                             , bp::environment("TEXINPUTS",
                                               ".//:../br//:/usr/share/texmf-texlive/tex/latex//:/usr/share/texlive/texmf-dist/tex/latex//"
                                               ":/usr/share/texmf-texlive/tex/generic//:/usr/share/texlive/texmf-dist/tex/generic//"
-                                              ":/etc/texmf/tex//:/usr/share/texmf//")
+                                              ":/etc/texmf/tex//:/usr/share/texmf//:/usr/local/share/texmf//")
                             , bp::std_out_to(tex_log)
                             , bp::std_err_to(tex_log)
                             );
