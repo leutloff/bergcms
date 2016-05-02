@@ -198,6 +198,7 @@ script:
     - grep 'Überschrift' maker || true
     - cat maker
     - rm maker
+    - cat $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/missfont.log || true
     - wget http://bergcms.local/cgi-bin/brg/maker
     - grep 'Überschrift' maker || true
     - cat maker
