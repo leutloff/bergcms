@@ -198,10 +198,17 @@ script:
     - grep 'Überschrift' maker || true
     - cat maker
     - rm maker
-    - cat $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/missfont.log || true
+    - ls -l $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out || true
+    - cat $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/missfont.log || true
     - wget http://bergcms.local/cgi-bin/brg/maker
     - grep 'Überschrift' maker || true
     - cat maker
+    - wget http://bergcms.local/dlb/feginfo.log || true
+    - cat feginfo.log
+    - echo "Try old generation tool..." 
+    - wget http://bergcms.local/cgi-bin/brg/xsc.pl || true
+    - wget http://bergcms.local/dlb/feginfo.log || true
+    - cat feginfo.log
     - echo "Running the end to end tests using wdio..."
     - export TEST_RUN_LOCAL=false && npm test
 after_success:
