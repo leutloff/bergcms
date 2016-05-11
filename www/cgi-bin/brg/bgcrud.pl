@@ -380,7 +380,7 @@ sub get_data#Daten werden komplett in den Formular-Hash geladen!
     my @f=split(/,/,$felder);
     my (@fw,$fn,$fnx,$fv,$articleData,$lnx);
     my $lnr=1;
-    $articleData=get_data_articleid($dbfile, param('AI'));
+    $articleData=get_data_articleid($dbfile, scalar param('AI'));
     chomp($articleData);
     put_msatz($articleData);
     @fw=split(/$lim/,$articleData);

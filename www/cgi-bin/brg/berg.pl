@@ -51,7 +51,7 @@ my $rTab  = \$Tab;
 my ($treffer,$von);
 
 #----> Übergabe-Parameter (HauptDatenSatz)---------------------------
-get_db_info(defined(param('AW'))?param('AW'):'berg'); #Listeneintrag (Auswahlliste) merken
+get_db_info(defined(param('AW'))?scalar param('AW'):'berg'); #Listeneintrag (Auswahlliste) merken
 #----> SuchFilter-Auswertung!---------------------------
 my $FIM=defined(param('FI'))?param('FI'):'';# Feldwahl gegen ALLE Felder ersetzen (s.a. tabfilter2() u. 1-Spaltenstatistik->map_unique_rows()) 20.3.2009
 $FIM=~s/\*./\*\*/;# 1Feldwahl gegen ALLE Felder ersetzen (s.a. 1-Spaltenstatistik->map_unique_rows()) 20.3.2009
