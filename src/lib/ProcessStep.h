@@ -24,17 +24,21 @@
 #   pragma once
 #endif
 
+#include <boost/filesystem.hpp>
+
 #include <string>
 
-namespace berg
+
+namespace bergcms
 {
 
 class ProcessStep
 {
-    /// Shell script command similar to executed command.
+
+    /// Shell script command similar to executed command. Used for documentation purposes, only.
     std::string command;
     /// The absolute path to the executable.
-    std::string programPath;
+    boost::filesystem::path programPath;
 
     std::string result;
     std::string resultCode;

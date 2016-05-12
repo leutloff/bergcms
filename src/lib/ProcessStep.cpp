@@ -1,6 +1,6 @@
 #include "ProcessStep.h"
 
-using namespace berg;
+using namespace bergcms;
 
 ProcessStep::ProcessStep()
 {

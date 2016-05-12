@@ -1,9 +1,9 @@
 /**
  * @file maker.cpp
  * Extracts the actual articles and generates the PDF.
- * 
+ *
  * Copyright 2012, 2013, 2014, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Initial workflow based on xsc v1.04, 23.10.2011.
  * But improved since then, e.g. added makeindex calls.
  */
@@ -29,6 +29,8 @@
 #include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/fusion/container/vector/vector.hpp>
+#include <boost/fusion/container/generation/make_vector.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/iostreams/tee.hpp>
 #include <boost/iostreams/stream.hpp>
@@ -86,7 +88,11 @@ int HandleRequest(boost::cgi::request& req)
     // /home/aachen/cgi-bin/brg/log
     const fs::path BERGLOGDIR = fs::path(DirectoryLayout::Instance().GetCgiBinDir() / "log");
     const fs::path BERGOUTDIR = fs::path(DirectoryLayout::Instance().GetCgiBinDir() / "out"); // processing output
+    const fs::path BERGFONTDIR = fs::path(DirectoryLayout::Instance().GetCgiBinDir() / "out" / ".texmf-var");
     //const fs::path BERGDLBDIR("/home/aachen/htdocs/dlb");
+    const string texinputs =  string(".//:../br//:/usr/share/texmf-texlive/tex/latex//:/usr/share/texlive/texmf-dist/tex/latex//"
+                                     ":/usr/share/texmf-texlive/tex/generic//:/usr/share/texlive/texmf-dist/tex/generic//"
+                                     ":/etc/texmf/tex//:/usr/share/texmf//:/usr/local/share/texmf//:") + BERGFONTDIR.c_str();
 
     const fs::path makerLogfile      = fs::path(BERGLOGDIR / "log.txt");
 
@@ -100,8 +106,10 @@ int HandleRequest(boost::cgi::request& req)
     const fs::path pdfFile           = fs::path(BERGOUTDIR / "feginfo.pdf");
 
     const fs::path exePerl           = fs::path("/usr/bin/perl");
+    //const fs::path exePdfLatex       = fs::path("/usr/bin/lualatex");
     const fs::path exePdfLatex       = fs::path("/usr/bin/pdflatex");
     const fs::path exeMakeindex      = fs::path("/usr/bin/makeindex");
+    const fs::path exeMktexpk        = fs::path("/usr/bin/mktexpk");
     const fs::path scriptPex         = fs::path(DirectoryLayout::Instance().GetCgiBinDir() / "pex.pl");
 
     try
@@ -154,9 +162,9 @@ int HandleRequest(boost::cgi::request& req)
             pt::time_facet *facet = new pt::time_facet("%d.%m.%Y %H:%M:%S");
             log.imbue(locale(log.getloc(), facet));
             log << "Start des Zeitungsgenerators maker (" << pt::second_clock::local_time() << ") im Verzeichnis " << fs::current_path() << "...\n";
-//            log << "pwd: " << fs::current_path(ec);
-//            log << " (ec: " << ec.value() << "/" << ec.message() << ")";
-//            log << ".\n";
+            //            log << "pwd: " << fs::current_path(ec);
+            //            log << " (ec: " << ec.value() << "/" << ec.message() << ")";
+            //            log << ".\n";
             Add(log, oss, "</p>\n");
         }
 
@@ -204,13 +212,144 @@ int HandleRequest(boost::cgi::request& req)
             Add(log, oss, "</pre></p>\n");
         }
 
-// this is no longer needed - TEXINPUTS is set appropriate below
-//        {
-//            // cp $BERGDBDIR/*.sty  $BERGDBDIR/*.jpg $BERGOUTDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
-//            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "sectsty.sty", log);
-//            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "wrapfig.sty", log);
-//            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "feglogo.jpg", log);
-//        }
+        // this is no longer needed - TEXINPUTS is set appropriate below
+        //        {
+        //            // cp $BERGDBDIR/*.sty  $BERGDBDIR/*.jpg $BERGOUTDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
+        //            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "sectsty.sty", log);
+        //            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "wrapfig.sty", log);
+        //            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "feglogo.jpg", log);
+        //        }
+
+        {
+            // pwd
+            Add(log, oss, "<h2>");
+            log << "pwd\n";
+            Add(log, oss, "</h2>");
+            const fs::path pwd = fs::path("/bin/pwd");
+            if (fs::exists(pwd))
+            {
+                Add(log, oss, "<p><pre class=\"berg-dev\">");
+                // cd $BERGDBDIR && pdflatex -interaction=nonstopmode -file-line-error feginfo.tex  >/dev/null
+                log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
+
+                log << pwd.c_str();
+                log << "\n";
+
+                bio::file_descriptor_sink tex_log(texLogfile);
+                bp::monitor c12 = bp::make_child(
+                            bp::paths(pwd.c_str(), BERGOUTDIR.c_str())
+                            , bp::std_out_to(tex_log)
+                            , bp::std_err_to(tex_log)
+                            );
+                log << "Inhalt der Protokolldatei (" << texLogfile.c_str() << "):\n";
+                int ret = c12.join(); // wait for pwd completion
+                AddFileToLog(texLogfile, log, oss, "Latin1");
+                log << "pwd return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+                if (ret != 0) { ++errors; }
+                Add(log, oss, "</pre>");
+            }
+            else
+            {
+                Add(log, oss, "<p class=\"berg-failure\"");
+                log << "pwd (" << pwd.c_str() << ") existiert nicht.";
+                ++errors;
+            }
+            Add(log, oss, "</p>\n");
+        }
+        {
+            // id
+            Add(log, oss, "<h2>");
+            log << "id\n";
+            Add(log, oss, "</h2>");
+            const fs::path id = fs::path("/usr/bin/id");
+            if (fs::exists(id))
+            {
+                Add(log, oss, "<p><pre class=\"berg-dev\">");
+                // cd $BERGDBDIR && pdflatex -interaction=nonstopmode -file-line-error feginfo.tex  >/dev/null
+                log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
+
+                log << id.c_str();
+                log << "\n";
+
+                bio::file_descriptor_sink tex_log(texLogfile);
+                bp::monitor c12 = bp::make_child(
+                            bp::paths(id.c_str(), BERGOUTDIR.c_str())
+                            , bp::std_out_to(tex_log)
+                            , bp::std_err_to(tex_log)
+                            );
+                log << "Inhalt der Protokolldatei (" << texLogfile.c_str() << "):\n";
+                int ret = c12.join(); // wait for id completion
+                AddFileToLog(texLogfile, log, oss, "Latin1");
+                log << "id return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+                if (ret != 0) { ++errors; }
+                Add(log, oss, "</pre>");
+            }
+            else
+            {
+                Add(log, oss, "<p class=\"berg-failure\"");
+                log << "id (" << id.c_str() << ") existiert nicht.";
+                ++errors;
+            }
+            Add(log, oss, "</p>\n");
+        }
+
+        {
+            Add(log, oss, "<h2>");
+            log << "Fonts erzeugen\n";
+            Add(log, oss, "</h2>");
+            if (fs::exists(exeMktexpk))
+            {
+                const string pkdestdir = string("--destdir=") + BERGFONTDIR.c_str();
+                const string pkdestdirlong = pkdestdir + "/fonts/pk/ljfour/jknappen/ec";
+                const string fontNames[] = {"ecss1200", "ecsi1440", "ecsx2074", "ecss1440", "ecsx1440", "ecss1728", "ecsx1728", "ecsx2488"};
+                for (auto fontName : fontNames)
+                {
+                    // create required font: mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecsi1440
+                    // ./.texmf-var/fonts/pk/ljfour/jknappen/ec/ecsi1440.600pk
+                    // create required font: mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecsx2074
+                    // /.texmf-var/fonts/pk/ljfour/jknappen/ec/ecsx2074.600pk
+                    Add(log, oss, "<p><pre class=\"berg-dev\">");
+                    // cd $BERGDBDIR && pdflatex -interaction=nonstopmode -file-line-error feginfo.tex  >/dev/null
+                    log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
+
+                    //const string fontName = "ecsi1440";
+                    log << exeMktexpk.c_str() << " --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 " << fontName;
+                    log << "\n";
+
+                    bio::file_descriptor_sink tex_log(texLogfile);
+                    //                 using namespace boost::fusion;
+                    //                bp::args mkargs = bp::args("--dpi=600");
+                    //                mkargs(pkdestdir.c_str());
+                    //                mkargs(fontName.c_str());
+                    bp::monitor c12 = bp::make_child(
+                                bp::paths(exeMktexpk.c_str(), BERGOUTDIR.c_str())
+                                //, bp::arg("--mfmode /")
+                                //, bp::arg("--bdpi 600")
+                                //, bp::arg("--mag 1+0/600 --dpi 600")
+                                , bp::arg("--dpi=600")
+                                , bp::arg(pkdestdirlong.c_str())
+                                , bp::arg(fontName.c_str())
+                                , bp::environment("TEXINPUTS", texinputs)
+                                , bp::std_out_to(tex_log)
+                                , bp::std_err_to(tex_log)
+                                );
+                    log << "Inhalt der Protokolldatei (" << texLogfile.c_str() << "):\n";
+                    int ret = c12.join(); // wait for mktexpk completion
+                    AddFileToLog(texLogfile, log, oss, "Latin1");
+                    log << "mktexpk return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+                    if (ret != 0) { ++errors; }
+                    Add(log, oss, "</pre>");
+                }
+            }
+            else
+            {
+                Add(log, oss, "<p class=\"berg-failure\"");
+                log << "mktexpk (" << exeMktexpk.c_str() << ") existiert nicht. Font kann deswegen nicht erzeugt werden.";
+                ++errors;
+            }
+            Add(log, oss, "</p>\n");
+        }
+
 
         {
             // # LaTeX-Lauf der .pdf und auch .log erzeugt (pdflatex darf keine Ausgabe erzeugen!)
@@ -243,10 +382,7 @@ int HandleRequest(boost::cgi::request& req)
                             , bp::arg("-file-line-error")
                             , bp::arg(outputdir)
                             , bp::arg(texFilenameOnly)
-                            , bp::environment("TEXINPUTS",
-                                              ".//:../br//:/usr/share/texmf-texlive/tex/latex//:/usr/share/texlive/texmf-dist/tex/latex//"
-                                              ":/usr/share/texmf-texlive/tex/generic//:/usr/share/texlive/texmf-dist/tex/generic//"
-                                              ":/etc/texmf/tex//:/usr/share/texmf//:/usr/local/share/texmf//")
+                            , bp::environment("TEXINPUTS", texinputs)
                             , bp::std_out_to(tex_log)
                             , bp::std_err_to(tex_log)
                             );
@@ -383,9 +519,9 @@ int HandleRequest(boost::cgi::request& req)
         resp << "<p id=\"processing-result\" class=\"berg-failure\">" << errors << " Fehler! Hinweise zu den Ursachen sollten sich weiter oben finden lassen.</p>";
     }
     resp << "<p>Einige Download-Links:</p>"
-            << "<p><a href=\"/dlb/feginfo.pdf\">PDF des Gemeindebriefs</a>,<br />"
-            << "<a href=\"/dlb/feginfo.tex\">LaTeX-Datei</a>,<br />"
-            << "<a href=\"/dlb/feginfo.csv\">die CSV-Datenbank</a></p>";
+         << "<p><a href=\"/dlb/feginfo.pdf\">PDF des Gemeindebriefs</a>,<br />"
+         << "<a href=\"/dlb/feginfo.tex\">LaTeX-Datei</a>,<br />"
+         << "<a href=\"/dlb/feginfo.csv\">die CSV-Datenbank</a></p>";
     resp << "\n</body></html>\n";
 
     return cgi::commit(req, resp);
