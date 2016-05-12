@@ -67,7 +67,10 @@ before_install:
     - echo "Preprocess the required LaTeX fonts, show texlive configuration..."
     - ls -l /usr/share/texlive/texmf-dist/fonts/source/jknappen/ec/ecss1440.mf || true
     - mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecss1440 
-    - ls -l /home/travis/.texmf-var/fonts/pk/ljfour/jknappen/ec || true
+    - mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecsi1440
+    - ls -la /home/travis/.texmf-var/fonts/pk/ljfour/jknappen/ec || true
+    - chmod o+r /home/travis/.texmf-var/fonts/pk/ljfour/jknappen/ec/*
+    - ls -la /home/travis/.texmf-var /home/travis/.texmf-var/fonts /home/travis/.texmf-var/fonts/pk/ljfour/jknappen/ec || true   
     #- ls -al  /usr/local/share/texmf/fonts || true
     #- sudo mkdir -p /usr/local/share/texmf/fonts
     #- ls -dl / /usr /usr/local /usr/local/share /usr/local/share/texmf /usr/local/share/texmf/fonts
@@ -187,8 +190,8 @@ script:
     # Create path for font generation - TODO remove this and create the required paths etc. in the archive, unzip should be enough for proper operation.
     - mkdir -p $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/.texmf-var/fonts/pk/ljfour/jknappen/ec
     - chmod go-w $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg
-    - cp /home/travis/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecss1440.600pk $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/.texmf-var/fonts/pk/ljfour/jknappen/ec/
-    - ls -al $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/.texmf-var/fonts/pk/ljfour/jknappen/ec || true
+    - cp /home/travis/.texmf-var/fonts/pk/ljfour/jknappen/ec/* $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/.texmf-var/fonts/pk/ljfour/jknappen/ec/
+    - ls -al $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/.texmf-var/fonts $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/.texmf-var/fonts/pk/ljfour/jknappen/ec || true
     - mv $(basename $BERG_ARCHIVE .zip)/htdocs/brg $TRAVIS_BUILD_DIR/www-root/htdocs/
     - echo "Running the Perl unit tests..."
     - $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh
