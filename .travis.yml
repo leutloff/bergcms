@@ -66,13 +66,14 @@ addons:
 before_install:
     - echo "Preprocess the required LaTeX fonts, show texlive configuration..."
     - ls -l /usr/share/texlive/texmf-dist/fonts/source/jknappen/ec/ecss1440.mf || true
-    #- mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecss1440 || true
-    - ls -al  /usr/local/share/texmf/fonts || true
-    - sudo mkdir -p /usr/local/share/texmf/fonts
-    - ls -dl / /usr /usr/local /usr/local/share /usr/local/share/texmf /usr/local/share/texmf/fonts
-    - sudo mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 --destdir /usr/local/share/texmf/fonts ecss1440 
-    - sudo mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 --destdir /usr/local/share/texmf ecss1440 
-    - ls -la /usr/local/share/texmf/fonts || true
+    - mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecss1440 
+    - ls -l /home/travis/.texmf-var/fonts/source/jknappen/ec || true
+    #- ls -al  /usr/local/share/texmf/fonts || true
+    #- sudo mkdir -p /usr/local/share/texmf/fonts
+    #- ls -dl / /usr /usr/local /usr/local/share /usr/local/share/texmf /usr/local/share/texmf/fonts
+    #- sudo mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 --destdir /usr/local/share/texmf/fonts ecss1440 
+    #- sudo mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 --destdir /usr/local/share/texmf ecss1440 
+    #- ls -la /usr/local/share/texmf/fonts || true
     - tlmgr conf
     - cat /etc/hosts
     - id
@@ -156,7 +157,7 @@ install:
     - sudo service apache2 restart
     # wput is used to copy the package to an FTP site.
     - sudo apt-get install wput -y
-    # the boost libraries are used by the C++ part
+    # the boost libraries are used by the C++ part - show different locations
     - ls -l /usr/lib/libboost* /usr/lib/i386-linux-gnu/libboost* /usr/lib/x86_64-linux-gnu/libboost* || true
 before_script:
     - find /usr/lib -name 'libicu*.so.*'
@@ -177,13 +178,16 @@ script:
     - make package
     - export BERG_ARCHIVE=$(ls -t Berg*.zip | head -1)
     #- echo "BERG_ARCHIVE - $BERG_ARCHIVE, dir name - $(basename $BERG_ARCHIVE .zip)"
-    - echo "Running the C++ unit tests..."
+    - echo "Running the C++ unit tests within the build directory..."
     - pushd test && ./bergunittests && popd
     - popd
     - echo "Install the Berg CMS to test the web application..."
     - unzip -q travis-build/$BERG_ARCHIVE
     - mv $(basename $BERG_ARCHIVE .zip)/cgi-bin/brg $TRAVIS_BUILD_DIR/www-root/cgi-bin/
+    # Create path for font generation - TODO remove this and create the required paths etc. in the archive, unzip should be enough for proper operation.
+    - mkdir -p $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/.texmf-var/fonts/pk/ljfour/jknappen/ec
     - chmod go-w $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg
+    - ls -al $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out $TRAVIS_BUILD_DIR/www-root/cgi-bin/brg/out/.texmf-var/fonts/pk/ljfour/jknappen/ec || true
     - mv $(basename $BERG_ARCHIVE .zip)/htdocs/brg $TRAVIS_BUILD_DIR/www-root/htdocs/
     - echo "Running the Perl unit tests..."
     - $TRAVIS_BUILD_DIR/www/cgi-bin/brg/t/run_tests.sh
