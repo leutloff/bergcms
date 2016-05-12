@@ -66,8 +66,14 @@ addons:
 before_install:
     - echo "Preprocess the required LaTeX fonts, show texlive configuration..."
     - ls -l /usr/share/texlive/texmf-dist/fonts/source/jknappen/ec/ecss1440.mf || true
-    - mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecss1440 
+    - mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecss1200
+    - mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecss1440
+    - mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecsx1440
     - mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecsi1440
+    - mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecss1728
+    - mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecsx1728
+    - mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecsx2074
+    - mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecsx2488
     - ls -la /home/travis/.texmf-var/fonts/pk/ljfour/jknappen/ec || true
     - chmod o+r /home/travis/.texmf-var/fonts/pk/ljfour/jknappen/ec/*
     - ls -la /home/travis/.texmf-var /home/travis/.texmf-var/fonts /home/travis/.texmf-var/fonts/pk/ljfour/jknappen/ec || true   

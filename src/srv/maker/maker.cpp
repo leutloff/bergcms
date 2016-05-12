@@ -299,46 +299,49 @@ int HandleRequest(boost::cgi::request& req)
             Add(log, oss, "</h2>");
             if (fs::exists(exeMktexpk))
             {
-                const string pkdestdir = string("--destdir=") + BERGFONTDIR.c_str();
-                const string pkdestdirlong = pkdestdir + "/fonts/pk/ljfour/jknappen/ec";
-                const string fontNames[] = {"ecss1200", "ecsi1440", "ecsx2074", "ecss1440", "ecsx1440", "ecss1728", "ecsx1728", "ecsx2488"};
+                const fs::path ECFONTDIR = fs::path(BERGFONTDIR / "fonts" / "pk" / "ljfour" / "jknappen" / "ec");
+                const string pkdestdir = string("--destdir=") + ECFONTDIR.c_str();
+                const string fontNames[] = {"ecss1200", "ecss1440", "ecsx1440", "ecsi1440", "ecss1728", "ecsx1728", "ecsx2074", "ecsx2488"};
                 for (auto fontName : fontNames)
                 {
                     // create required font: mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecsi1440
                     // ./.texmf-var/fonts/pk/ljfour/jknappen/ec/ecsi1440.600pk
                     // create required font: mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecsx2074
                     // /.texmf-var/fonts/pk/ljfour/jknappen/ec/ecsx2074.600pk
-                    Add(log, oss, "<p><pre class=\"berg-dev\">");
-                    // cd $BERGDBDIR && pdflatex -interaction=nonstopmode -file-line-error feginfo.tex  >/dev/null
-                    log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
+                    if (!fs::exists(ECFONTDIR / fs::path(fontName + string(".600pk"))))
+                    {
+                        Add(log, oss, "<p><pre class=\"berg-dev\">");
+                        // cd $BERGDBDIR && pdflatex -interaction=nonstopmode -file-line-error feginfo.tex  >/dev/null
+                        log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
 
-                    //const string fontName = "ecsi1440";
-                    log << exeMktexpk.c_str() << " --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 " << fontName;
-                    log << "\n";
+                        //const string fontName = "ecsi1440";
+                        log << exeMktexpk.c_str() << " --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 " << fontName;
+                        log << "\n";
 
-                    bio::file_descriptor_sink tex_log(texLogfile);
-                    //                 using namespace boost::fusion;
-                    //                bp::args mkargs = bp::args("--dpi=600");
-                    //                mkargs(pkdestdir.c_str());
-                    //                mkargs(fontName.c_str());
-                    bp::monitor c12 = bp::make_child(
-                                bp::paths(exeMktexpk.c_str(), BERGOUTDIR.c_str())
-                                //, bp::arg("--mfmode /")
-                                //, bp::arg("--bdpi 600")
-                                //, bp::arg("--mag 1+0/600 --dpi 600")
-                                , bp::arg("--dpi=600")
-                                , bp::arg(pkdestdirlong.c_str())
-                                , bp::arg(fontName.c_str())
-                                , bp::environment("TEXINPUTS", texinputs)
-                                , bp::std_out_to(tex_log)
-                                , bp::std_err_to(tex_log)
-                                );
-                    log << "Inhalt der Protokolldatei (" << texLogfile.c_str() << "):\n";
-                    int ret = c12.join(); // wait for mktexpk completion
-                    AddFileToLog(texLogfile, log, oss, "Latin1");
-                    log << "mktexpk return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
-                    if (ret != 0) { ++errors; }
-                    Add(log, oss, "</pre>");
+                        bio::file_descriptor_sink tex_log(texLogfile);
+                        //                 using namespace boost::fusion;
+                        //                bp::args mkargs = bp::args("--dpi=600");
+                        //                mkargs(pkdestdir.c_str());
+                        //                mkargs(fontName.c_str());
+                        bp::monitor c12 = bp::make_child(
+                                    bp::paths(exeMktexpk.c_str(), BERGOUTDIR.c_str())
+                                    //, bp::arg("--mfmode /")
+                                    //, bp::arg("--bdpi 600")
+                                    //, bp::arg("--mag 1+0/600 --dpi 600")
+                                    , bp::arg("--dpi=600")
+                                    , bp::arg(pkdestdir.c_str())
+                                    , bp::arg(fontName.c_str())
+                                    , bp::environment("TEXINPUTS", texinputs)
+                                    , bp::std_out_to(tex_log)
+                                    , bp::std_err_to(tex_log)
+                                    );
+                        log << "Inhalt der Protokolldatei (" << texLogfile.c_str() << "):\n";
+                        int ret = c12.join(); // wait for mktexpk completion
+                        AddFileToLog(texLogfile, log, oss, "Latin1");
+                        log << "mktexpk return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+                        if (ret != 0) { ++errors; }
+                        Add(log, oss, "</pre>");
+                    }
                 }
             }
             else
