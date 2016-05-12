@@ -70,8 +70,8 @@ suite('Test the modules accessing the actual issue.', function () {
         var resultTable = browser.getText('#ergebnis');
         // verifyTextPresent: Ausgabe festlegen
         assert.include(resultTable, 'Ausgabe festlegen');
-        // verifyTextPresent: Inhaltsverzeichnis
-        assert.include(resultTable, 'Inhaltsverzeichnis');
+        // verifyTextPresent: Dokumentenvorlage
+        assert.include(resultTable, 'Dokumentenvorlage');
 
         // clickAndWait 	css=img[alt="Bearbeiten"]
         browser.click('img[alt="Bearbeiten"]');//click the first edit sign 	
@@ -84,8 +84,8 @@ suite('Test the modules accessing the actual issue.', function () {
         // verifyTextPresent 	Ausgabe festlegen 	
         resultTable = browser.getText('#ergebnis');
         assert.include(resultTable, 'Ausgabe festlegen');
-        // verifyTextPresent 	Inhaltsverzeichnis 	
-        assert.include(resultTable, 'Ausgabe festlegen');
+        // verifyTextPresent 	Dokumentenvorlage 	
+        assert.include(resultTable, 'Dokumentenvorlage');
     });
 
 
