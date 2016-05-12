@@ -77,12 +77,6 @@ before_install:
     - ls -la /home/travis/.texmf-var/fonts/pk/ljfour/jknappen/ec || true
     - chmod o+r /home/travis/.texmf-var/fonts/pk/ljfour/jknappen/ec/*
     - ls -la /home/travis/.texmf-var /home/travis/.texmf-var/fonts /home/travis/.texmf-var/fonts/pk/ljfour/jknappen/ec || true   
-    #- ls -al  /usr/local/share/texmf/fonts || true
-    #- sudo mkdir -p /usr/local/share/texmf/fonts
-    #- ls -dl / /usr /usr/local /usr/local/share /usr/local/share/texmf /usr/local/share/texmf/fonts
-    #- sudo mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 --destdir /usr/local/share/texmf/fonts ecss1440 
-    #- sudo mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 --destdir /usr/local/share/texmf ecss1440 
-    #- ls -la /usr/local/share/texmf/fonts || true
     - tlmgr conf
     - cat /etc/hosts
     - id
@@ -104,7 +98,7 @@ before_install:
     - which node && node -v && npm version || true
     # runs about 70s:
     #- sudo npm install -g mocha browserify uglifyjs dredd || true
-    - sudo npm install -g mocha || true
+    - sudo npm install -g mocha webdriverio || true
     - sudo npm update || true
     - which node && node -v && npm version || true
     # Download selenium server
@@ -218,11 +212,11 @@ script:
     - grep 'Überschrift' maker || true
     - cat maker
     - wget http://bergcms.local/dlb/feginfo.log || true
-    - cat feginfo.log
-    - echo "Try old generation tool..." 
-    - wget http://bergcms.local/cgi-bin/brg/xsc.pl || true
-    - wget http://bergcms.local/dlb/feginfo.log || true
-    - cat feginfo.log
+    - cat feginfo.log || true
+    #- echo "Try old generation tool..." 
+    #- wget http://bergcms.local/cgi-bin/brg/xsc.pl || true
+    #- wget http://bergcms.local/dlb/feginfo.log || true
+    #- cat feginfo.log || true
     - echo "Running the end to end tests using wdio..."
     - export TEST_RUN_LOCAL=false && npm test
 after_success:
