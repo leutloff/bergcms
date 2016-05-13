@@ -9,12 +9,12 @@ env:
     - _BROWSER: firefox
       _PLATFORM: Linux
       _VERSION: "45.0"
-    #- _BROWSER: "firefox"
-    #  _PLATFORM: "Windows_7"
-    #  _VERSION: "45.0"
-    #- _BROWSER: "chrome"
-    #  _PLATFORM: "Windows_7"
-    #  _VERSION: "49.0"
+    - _BROWSER: "firefox"
+      _PLATFORM: "Windows_7"
+      _VERSION: "45.0"
+    - _BROWSER: "chrome"
+      _PLATFORM: "Windows_7"
+      _VERSION: "49.0"
 # trusty (14.04) is now working instead of precise (12.04)
 sudo: required
 dist: trusty
@@ -22,7 +22,7 @@ dist: trusty
 language: cpp
 compiler:
     - clang
-#    - gcc
+    - gcc
 cache: apt
 addons:
   sauce_connect:
