@@ -196,48 +196,49 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two)
     int ret = c11.join(); // wait for completion
     //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
-    cout << "***   jsonFileExpected   ***" << endl;
-    bt::PrintFileToStream(jsonFileExpected, cout);
-    cout << endl;
+//    cout << "***   jsonFileExpected   ***" << endl;
+//    bt::PrintFileToStream(jsonFileExpected, cout);
+//    cout << endl;
     cout << "***   jsonFile (generated file)   ***" << endl;
     bt::PrintFileToStream(jsonFile, cout);
 
     VerifyGeneratedFileContent(jsonFileExpected, jsonFile);
 }
 
-///**
-// * This unit test processes a database with some articles.
-// * Set run environment:
-// * QUERY_STRING /articles
-// * BERGCMSDB    /home/leutloff/work/bergcms/src/test/input/some_articles.csv
-// */
-//BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_some)
-//{
-//    // ../srv/bgrest/bgrest
-//    const fs::path exeBgRest         = fs::path(bt::GetSrvBuildDir() / "bgrest" / "bgrest");
-//    const fs::path inputDatabaseFile = fs::path(bt::GetInputDir()    / "some_articles.csv");
-//    const fs::path jsonFile          = fs::path(bt::GetOutputDir()   / "some_articles.json");
-//    const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "some_articles.json");
+/**
+ * This unit test processes a database with some articles.
+ * Set run environment:
+ * QUERY_STRING /articles
+ * BERGCMSDB    /home/leutloff/work/bergcms/src/test/input/some_articles.csv
+ * To test that the expected JSON is valid, too:
+ * cat expected/some_articles.json | tail -n +3  | jsonlint-php
+ */
+BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_some)
+{
+    // ../srv/bgrest/bgrest
+    const fs::path inputDatabaseFile = fs::path(bt::GetInputDir()    / "some_articles.csv");
+    const fs::path jsonFile          = fs::path(bt::GetOutputDir()   / "some_articles.json");
+    const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "some_articles.json");
 
-//    cout << exeBgRest.c_str() << " " << inputDatabaseFile.c_str() << " " << jsonFile.c_str() << " " << jsonFileExpected.c_str() << endl;
-//    bio::file_descriptor_sink bgrestOut(jsonFile);
-//    bp::monitor c11 = bp::make_child(
-//                bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
-//                , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "GET")("QUERY_STRING", "/articles")
-//                , bp::std_out_to(bgrestOut)
-//                , bp::std_err_to(bgrestOut)
-//                );
-//    int ret = c11.join(); // wait for completion
-//    //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
-//    BOOST_CHECK_EQUAL(0, ret);
-//    cout << "***   jsonFileExpected   ***" << endl;
-//    bt::PrintFileToStream(jsonFileExpected, cout);
-//    cout << endl;
-//    cout << "***   jsonFile   ***" << endl;
-//    bt::PrintFileToStream(jsonFile, cout);
+    cout << exeBgRest.c_str() << " " << inputDatabaseFile.c_str() << " " << jsonFile.c_str() << " " << jsonFileExpected.c_str() << endl;
+    bio::file_descriptor_sink bgrestOut(jsonFile);
+    bp::monitor c11 = bp::make_child(
+                bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
+                , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "GET")("QUERY_STRING", "/articles")
+                , bp::std_out_to(bgrestOut)
+                , bp::std_err_to(bgrestOut)
+                );
+    int ret = c11.join(); // wait for completion
+    //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+    BOOST_CHECK_EQUAL(0, ret);
+    cout << "***   jsonFileExpected   ***" << endl;
+    bt::PrintFileToStream(jsonFileExpected, cout);
+    cout << endl;
+    cout << "***   jsonFile   ***" << endl;
+    bt::PrintFileToStream(jsonFile, cout);
 
-//    VerifyGeneratedFileContent(jsonFileExpected, jsonFile);
-//}
+    VerifyGeneratedFileContent(jsonFileExpected, jsonFile);
+}
 
 ///**
 // * This unit test processes a database with some articles.

@@ -1,16 +1,94 @@
 Content-type: application/json; charset=utf-8
 
-[
-    {
-        "id": 4294967295,
-        "priority": -1,
-        "type": "",
-        "lastChanged": ""
-    },
-    {
-        "id": 4294967295,
-        "priority": -1,
-        "type": "",
-        "lastChanged": ""
-    }
-]
+{
+    "articles": [
+        {
+            "id": "2",
+            "priority": "10",
+            "type": "F",
+            "chapter": "0:Prolog (Vorlauf)",
+            "title": "-Dokumentenvorlage",
+            "header": " ",
+            "body": "% Finale Version:\n\\documentclass{berg}\n%\n% Ohne Bilder, \n% aber mit schwarzen Balken, die zu breite Bereiche kennzeichnen, die dann in anderes hineinragen \n%\\documentclass[draft]{berg}\n\n%\n\\hypersetup{\n    %bookmarks=true,          % show bookmarks bar? - Warning: `bookmarks' has already been used,\n    unicode=false,            % non-Latin characters in Acrobat’s bookmarks\n    pdftoolbar=true,          % show Acrobat’s toolbar?\n    pdfmenubar=true,          % show Acrobat’s menu?\n    pdffitwindow=false,       % window fit to page when opened\n    pdfstartview={FitH},      % fits the width of the page to the window\n    pdftitle={Berg CMS}, % title\n    pdfauthor={See History of feginfo.csv},   % author\n    pdfsubject={Ausgabe \n>AUSGABEZEITRAUM#\n},   % subject of the document\n    %pdfcreator={Creator},    % creator of the document\n    %pdfproducer={}, % producer of the document\n    %pdfkeywords={keyword1} {key2} {key3}, % list of keywords\n    pdfnewwindow=true,        % links in new window\n    colorlinks=true,          % false: boxed links; true: colored links\n    linkcolor=black,          % color of internal links\n    citecolor=black,          % color of links to bibliography\n    filecolor=black,          % color of file links\n    urlcolor=black            % color of external links\n}",
+            "footer": "%\n%",
+            "lastChanged": "20130805-153002-Mo \/ 127.0.0.1:47571 \/ bergcms"
+        },
+        {
+            "id": "3",
+            "priority": "8",
+            "type": "K",
+            "chapter": "0:Prolog (Vorlauf)",
+            "title": "-Ausgabe festlegen",
+            "header": " ",
+            "body": ">DATEN#5#2013#500#10# Ausgabe festlegen: Monat#Jahr#Auflage#Redaktionsschluss(Tag)",
+            "footer": " ",
+            "lastChanged": "20130805-150216-Mo \/ 127.0.0.1:47548 \/ bergcms"
+        },
+        {
+            "id": "6",
+            "priority": "40",
+            "type": "F",
+            "chapter": "1:Einstieg",
+            "title": "-Inhaltsverzeichnis",
+            "header": "%***************************************\n%* Inhaltverzeichnis                   *\n%***************************************",
+            "body": ">sg#4#\n>SPALTEN#2#\n%>zd#1.5#\n>zd#1.1#\n>INHALT\n\n>zd#0# Standardzeilendichte zurücksetzen",
+            "footer": " ",
+            "lastChanged": "20130805-153105-Mo \/ 127.0.0.1:47573 \/ bergcms"
+        },
+        {
+            "id": "13",
+            "priority": "30",
+            "type": "F",
+            "chapter": "1:Einstieg",
+            "title": "-Titelseite",
+            "header": "%------- Titelseite --------------DIN A4---------------------------\n\\newlength{\\boxwidth} \\setlength{\\boxwidth}{\\textwidth}\n\\addtolength{\\boxwidth}{-2\\fboxsep}\n\\addtolength{\\boxwidth}{-2\\fboxrule}\n\\newlength{\\boxheight} \\setlength{\\boxheight}{0.94\\textheight}\n\\newlength{\\indentheader} \\setlength{\\indentheader}{2.8mm}%\n\\addtolength{\\boxwidth}{-\\indentheader}%\n\\thispagestyle{empty}\n%BigBox-------- Titelseite ohne overfull hbox-------DIN A4-------\n\\fbox{\\hspace{\\indentheader}\\parbox[t][\\boxheight]{\\boxwidth}{%\n{\\bfseries \n%\n\\begin{minipage}[b]{70mm}%\n\\Huge \nExample Organization\\\\[-8mm]\n\\end{minipage}%\n%\\hfill\\includegraphics[scale=0.21]{berg.jpg}%\n\\hspace{10mm}\\vspace*{2mm}\\\\\n\\Large\n\\resizebox{175mm}{4.9mm}{using Berg CMS}\n}%\n\\\\%\\vspace*{0.2ex}\\\\% Mindestabstand 0.5ex",
+            "body": "%------- Titelbild -----------------------\n\\vspace*{5mm}% zusätzlicher Abstand\n\n%>BILD#titel#c#datei#b:170mm#Fotograf\n% oder Höhe: h:195mm\n>bild##c#berg#b:100mm#Christian Leutloff\n\n%",
+            "footer": "%------- Abschluss der Titelseite -------\n\n\\vfill\n\\vspace*{0.8ex}% Mindestabstand 0.8ex\n}} %parbox fbox\n\n\\normalsize\n\n>AUSGABE#\n% Ende der Titelseite",
+            "lastChanged": "20130805-151651-Mo \/ 127.0.0.1:47553 \/ bergcms"
+        },
+        {
+            "id": "11",
+            "priority": "20",
+            "type": "F",
+            "chapter": "2:Gemeindeleben",
+            "title": "-Gottesdienste",
+            "header": ">1#Gottesdienste",
+            "body": "%Datum  # Predigt  # Liturgie  # Besonderheit       # Musik       # Kollekte\n%14mm  # 15mm       # 17mm          # 26mm              # 16mm         # 18mm\n%14mm  # 14mm       # 16mm          # 26mm              # 20mm         # 16mm\n%15mm  # 14mm       # 17mm          # 24mm              # 16mm         # 19mm\n% war 17\n>TABELLE#[b]#|#emph\n16mm  # 14mm       # 17mm          # 21mm              # 18mm         # 19mm\nDatum       # Predigt      # Liturgie     # Besonderheit           # Musik           # Kollekte\n06.01. 10:15#A. Name#A. Name# # #Purpose\n13.01. 10:15#A. Name #A. Name #Abendmahl#A. Name#Gemeinde\n>*",
+            "footer": ">+#New Page",
+            "lastChanged": "20130805-152032-Mo \/ 127.0.0.1:47557 \/ bergcms"
+        },
+        {
+            "id": "14",
+            "priority": "340",
+            "type": "A",
+            "chapter": "2:Gemeindeleben",
+            "title": "Arbeitssamstag",
+            "header": "",
+            "body": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+            "footer": " ",
+            "lastChanged": "20160805-152941-Mo \/ 127.0.0.1:47570 \/ hero"
+        },
+        {
+            "id": "15",
+            "priority": "320",
+            "type": "A",
+            "chapter": "2:Gemeindeleben",
+            "title": "Forumsabend: Zu einem bestimmten Thema",
+            "header": "",
+            "body": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+            "footer": " ",
+            "lastChanged": "20130805-152933-Mo \/ 127.0.0.1:47569 \/ superguru"
+        },
+        {
+            "id": "16",
+            "priority": "100",
+            "type": "F",
+            "chapter": "2:Gemeindeleben",
+            "title": "-GEMEINDELEBEN - Überschrift",
+            "header": ">1#Gemeindeleben",
+            "body": " ",
+            "footer": " ",
+            "lastChanged": "20130805-152429-Mo \/ 127.0.0.1:47566 \/ bergcms"
+        }
+    ]
+}
