@@ -231,11 +231,11 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_some)
     int ret = c11.join(); // wait for completion
     //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
-    cout << "***   jsonFileExpected   ***" << endl;
-    bt::PrintFileToStream(jsonFileExpected, cout);
-    cout << endl;
-    cout << "***   jsonFile   ***" << endl;
-    bt::PrintFileToStream(jsonFile, cout);
+//    cout << "***   jsonFileExpected   ***" << endl;
+//    bt::PrintFileToStream(jsonFileExpected, cout);
+//    cout << endl;
+//    cout << "***   jsonFile   ***" << endl;
+//    bt::PrintFileToStream(jsonFile, cout);
 
     VerifyGeneratedFileContent(jsonFileExpected, jsonFile);
 }
@@ -245,12 +245,15 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_some)
 // * Set run environment:
 // * REQUEST_METHOD POST
 // * QUERY_STRING /articles
-// * BERGCMSDB    /home/leutloff/work/bergcms/src/test/output/empty_db.csv
+// * BERGCMSDB    /home/leutloff/work/bergcms/src/test/input/empty_db.csv
+// * To test that the expected JSON is valid, too:
+// * cat input/empty_article.json | tail -n +3  | jsonlint-php
+// * cat expected/empty_db.json | tail -n +3  | jsonlint-php
 // */
 //BOOST_AUTO_TEST_CASE(test_bgrest_create_article_empty_db)
 //{
 //    // ../srv/bgrest/bgrest
-//    const fs::path inputDatabaseFile = fs::path(bt::GetOutputDir()   / "empty_db.csv");
+//    const fs::path inputDatabaseFile = fs::path(bt::GetInputDir()    / "empty_db.csv");
 //    const fs::path jsonFileInput     = fs::path(bt::GetInputDir()    / "empty_article.json");
 //    const fs::path jsonFile          = fs::path(bt::GetOutputDir()   / "empty_db.json");
 //    const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "empty_db.json");
