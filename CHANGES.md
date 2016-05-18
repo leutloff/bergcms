@@ -12,7 +12,8 @@ Unreleased
  - German Umlauts are now correctly shown in the output of pdfLaTeX, too.
    Several changes required to make this finally happen: 
    font encoding in LaTeX, encoding translation within maker and using a proper font.
- - Generation of fonts can now be added to maker.   
+ - Generation of fonts can now be added to maker.
+ - Removed LaTeX files that are already part of the texlive packages.
 
 
 Version 3.2.3

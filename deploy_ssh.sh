@@ -213,8 +213,7 @@ function deploy_dyn_libs {
 }
 function deploy_latex {
     echo " * Deploying the LaTeX related files ..."
-    $SSH $DEPLOYTO "mkdir -p $CGIBINDEPLOYDIR/br/bilder $CGIBINDEPLOYDIR/br/data"
-    $SCP $CGIBINBRG/br/sectsty.sty $CGIBINBRG/br/wrapfig.sty $CGIBINBRG/br/ucs.sty $CGIBINBRG/br/ucsencs.def $CGIBINBRG/br/utf8x.def $DEPLOYTO:$CGIBINDEPLOYDIR/br 
+    $SSH $DEPLOYTO "mkdir -p $CGIBINDEPLOYDIR/br/bilder"
     $SCP $CGIBINBRG/br/bilder/berg.jpg $DEPLOYTO:$CGIBINDEPLOYDIR/br/bilder
     $SCP $CGIBINBRG/br/data/*.def $CGIBINBRG/br/data/*.dat $DEPLOYTO:$CGIBINDEPLOYDIR/br/data
     if [ -f latex/class_berg/generated/berg.cls ]; then

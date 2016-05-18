@@ -242,9 +242,7 @@ function deploy_dyn_libs {
 }
 function deploy_latex {
     echo " * Deploying the LaTeX related files ..."
-    $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/br $CGIBINBRG/br/sectsty.sty $CGIBINBRG/br/wrapfig.sty $CGIBINBRG/br/ucs.sty $CGIBINBRG/br/ucsencs.def $CGIBINBRG/br/utf8x.def  
     $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/br/bilder $CGIBINBRG/br/bilder/berg.jpg
-    $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/br/data $CGIBINBRG/br/data/*.def $CGIBINBRG/br/data/*.dat
     if [ -f latex/class_berg/generated/berg.cls ]; then
         $FTPPUT $FTPPUTPARAM $CGIBINDEPLOYDIR/br latex/class_berg/generated/berg.cls
     else
