@@ -151,6 +151,7 @@ function deploy_html {
     echo " * Deploying the static HTML pages and icons ..."
     $SSH $DEPLOYTO "mkdir -p $HTDOCSDEPLOYDIR/bgico/16x16 $HTDOCSDEPLOYDIR/bgico/22x22 $HTDOCSDEPLOYDIR/bgico/32x32 $HTDOCSDEPLOYDIR/../dlb"
     $SCP $HTDOCSBRG/*.html $DEPLOYTO:$HTDOCSDEPLOYDIR
+    $SCP $HTDOCSBRG/*.pdf $DEPLOYTO:$HTDOCSDEPLOYDIR
     $SCP $HTDOCSBRG/bgico/*.png $DEPLOYTO:$HTDOCSDEPLOYDIR/bgico
     $SCP $HTDOCSBRG/bgico/16x16/*.png $DEPLOYTO:$HTDOCSDEPLOYDIR/bgico/16x16
     $SCP $HTDOCSBRG/bgico/22x22/*.png $DEPLOYTO:$HTDOCSDEPLOYDIR/bgico/22x22
@@ -159,17 +160,9 @@ function deploy_html {
     $SCP $HTDOCSBRG/../dlb/README.txt $DEPLOYTO:$HTDOCSDEPLOYDIR/../dlb
 }
 function deploy_css {
-    echo " * Deploying the CSS files incl. YAML ..."
-    $SSH $DEPLOYTO "mkdir -p $HTDOCSDEPLOYDIR/css $HTDOCSDEPLOYDIR/css/yaml/core/js $HTDOCSDEPLOYDIR/css/yaml/forms $HTDOCSDEPLOYDIR/css/yaml/navigation $HTDOCSDEPLOYDIR/css/yaml/print $HTDOCSDEPLOYDIR/css/yaml/screen"
+    echo " * Deploying the CSS files ..."
+    $SSH $DEPLOYTO "mkdir -p $HTDOCSDEPLOYDIR/css"
     $SCP $HTDOCSBRG/css/*.css $DEPLOYTO:$HTDOCSDEPLOYDIR/css
-
-    # Ommitted $HTDOCSBRG/css/yaml/*.css, because there are no files.
-    $SCP $HTDOCSBRG/css/yaml/core/*.css $DEPLOYTO:$HTDOCSDEPLOYDIR/css/yaml/core 
-    $SCP $HTDOCSBRG/css/yaml/core/js/*.js $DEPLOYTO:$HTDOCSDEPLOYDIR/css/yaml/core/js
-    $SCP $HTDOCSBRG/css/yaml/forms/*.css $DEPLOYTO:$HTDOCSDEPLOYDIR/css/yaml/forms
-    $SCP $HTDOCSBRG/css/yaml/navigation/*.css $DEPLOYTO:$HTDOCSDEPLOYDIR/css/yaml/navigation
-    $SCP $HTDOCSBRG/css/yaml/print/*.css $DEPLOYTO:$HTDOCSDEPLOYDIR/css/yaml/print
-    $SCP $HTDOCSBRG/css/yaml/screen/*.css $DEPLOYTO:$HTDOCSDEPLOYDIR/css/yaml/screen
 }
 function deploy_js {
     echo " * Deploying the Javascript files ..."
@@ -215,7 +208,6 @@ function deploy_latex {
     echo " * Deploying the LaTeX related files ..."
     $SSH $DEPLOYTO "mkdir -p $CGIBINDEPLOYDIR/br/bilder"
     $SCP $CGIBINBRG/br/bilder/berg.jpg $DEPLOYTO:$CGIBINDEPLOYDIR/br/bilder
-    $SCP $CGIBINBRG/br/data/*.def $CGIBINBRG/br/data/*.dat $DEPLOYTO:$CGIBINDEPLOYDIR/br/data
     if [ -f latex/class_berg/generated/berg.cls ]; then
         $SCP latex/class_berg/generated/berg.cls $DEPLOYTO:$CGIBINDEPLOYDIR/br
     else

@@ -21,6 +21,8 @@ if [ -r $SOURCEDIR/install_locally.cfg ]; then
     . $SOURCEDIR/install_locally.cfg
 fi
 
+npm install
+
 # Starting the selenium server
 set +e
 nc -z -w1 localhost $SELENIUM_PORT

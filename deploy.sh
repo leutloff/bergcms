@@ -188,6 +188,7 @@ fi
 function deploy_html {
     echo " * Deploying the static HTML pages and icons ..."
     $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR $HTDOCSBRG/*.html 
+    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR $HTDOCSBRG/*.pdf 
     $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/bgico $HTDOCSBRG/bgico/*.png
     $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/bgico/16x16 $HTDOCSBRG/bgico/16x16/*.png
     $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/bgico/22x22 $HTDOCSBRG/bgico/22x22/*.png
@@ -196,16 +197,8 @@ function deploy_html {
     $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/../dlb $HTDOCSBRG/../dlb/README.txt
 }
 function deploy_css {
-    echo " * Deploying the CSS files incl. YAML ..."
+    echo " * Deploying the CSS files ..."
     $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/css $HTDOCSBRG/css/*.css
-
-    # Ommitted $HTDOCSBRG/css/yaml/*.css, because there are no files.
-    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/css/yaml/core $HTDOCSBRG/css/yaml/core/*.css
-    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/css/yaml/core/js $HTDOCSBRG/css/yaml/core/js/*.js
-    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/css/yaml/forms $HTDOCSBRG/css/yaml/forms/*.css
-    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/css/yaml/navigation $HTDOCSBRG/css/yaml/navigation/*.css
-    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/css/yaml/print $HTDOCSBRG/css/yaml/print/*.css
-    $FTPPUT $FTPPUTPARAM $HTDOCSDEPLOYDIR/css/yaml/screen $HTDOCSBRG/css/yaml/screen/*.css
 }
 function deploy_js {
     echo " * Deploying the Javascript files ..."
