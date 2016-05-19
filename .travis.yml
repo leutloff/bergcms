@@ -168,6 +168,7 @@ before_script:
     #- mkdir -p $TRAVIS_BUILD_DIR/src/external/libicu48/lib
     #- cp /usr/lib/libicu*.so.48 $TRAVIS_BUILD_DIR/src/external/libicu48/lib || true
     #- ls -l $TRAVIS_BUILD_DIR/src/external/libicu48/lib
+    - ./build_documentation.sh
     - mkdir travis-build
     - pushd travis-build
     #- cmake --version

@@ -7,6 +7,8 @@ else
 fi
 echo "Build project, run head less unit tests and make package (in $BUILDDIR)..."
 
+if [ -x ./build_documentation.sh ]; then ./build_documentation.sh fi
+
 mkdir -p $BUILDDIR
 pushd $BUILDDIR
 
