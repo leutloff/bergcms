@@ -22,7 +22,8 @@
 #endif
 
 #include "TestShared.h"
-
+#include "RestArticle.h"
+#include <boost/algorithm/algorithm.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/iostreams/tee.hpp>
 #include <boost/iostreams/stream.hpp>
@@ -32,8 +33,10 @@
 #include <boost/test/unit_test.hpp>
 
 using namespace std;
+using namespace bergcms;
 
 namespace bio = boost::iostreams;
+namespace cgi = boost::cgi;
 namespace fs = boost::filesystem;
 namespace bp = boost::process;
 namespace bt = berg::testonly;
@@ -54,6 +57,26 @@ void VerifyGeneratedFileContent(boost::filesystem::path const& expectedFile, boo
     std::vector<std::string> actual;
     BOOST_CHECK_EQUAL(true, bt::LoadFile(actualFile, actual));
     bt::RemoveIgnoreLine(expected, actual);
+
+    BOOST_CHECK_EQUAL(expected.size(), actual.size());
+    BOOST_CHECK_EQUAL_COLLECTIONS(expected.begin(), expected.end(), actual.begin(), actual.end());
+}
+
+
+/**
+ * @brief VerifyGeneratedFileContent loads the two given files and compares them.
+ * @param expectedFile this is the file used as a reference
+ * @param actualString actual string returned.
+ */
+void VerifyGeneratedFileContent(boost::filesystem::path const& expectedFile, string const& actualString)
+{
+    std::vector<std::string> expected;
+    BOOST_CHECK_EQUAL(true, bt::LoadFile(expectedFile, expected));
+    expected.erase(expected.begin());
+    expected.erase(expected.begin());
+
+    std::vector<std::string> actual;
+    boost::split(actual, actualString, boost::is_any_of("\n"));
 
     BOOST_CHECK_EQUAL(expected.size(), actual.size());
     BOOST_CHECK_EQUAL_COLLECTIONS(expected.begin(), expected.end(), actual.begin(), actual.end());
@@ -280,6 +303,28 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_some)
 //    VerifyGeneratedFileContent(jsonFileExpected, jsonFile);
 //}
 
+
+/**
+ * This unit test processes a database with one single article with prio set to -1.
+ * This is the same as test_bgrest_get_articles_single, but this time it the library called directly.
+ * Set run environment:
+ * QUERY_STRING /articles/1
+ * BERGCMSDB    /home/leutloff/work/bergcms/src/test/input/single_article.csv
+ */
+BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_single_lib)
+{
+    const fs::path inputDatabaseFile = fs::path(bt::GetInputDir()    / "single_article.csv");
+    const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "single_article.json");
+
+    cgi::request req;
+    req.set_query_string("/articles/1");
+    req.set_method("GET");
+    cgi::response resp;
+    RestArticle restArticle(inputDatabaseFile.c_str());
+    restArticle.dispatchArticles(req, resp);
+
+    VerifyGeneratedFileContent(jsonFileExpected, resp.str());
+}
 
 
 BOOST_AUTO_TEST_SUITE_END()

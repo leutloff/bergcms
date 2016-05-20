@@ -34,8 +34,8 @@ include_directories(
     ${CTEMPLATE_INCLUDEDIR}
     )
 
-set(BERG_STORAGE_LIB_SRC Common.cpp Helper.cpp FileStorage.cpp Article.cpp Archive.cpp DirectoryLayout.cpp ProcessStep.cpp)
-set(BERG_STORAGE_LIB_H BoostFlags.h Common.h Helper.h FileStorage.h Article.h Archive.h DirectoryLayout.h ProcessStep.h)
+set(BERG_STORAGE_LIB_SRC Common.cpp Helper.cpp FileStorage.cpp Article.cpp Archive.cpp DirectoryLayout.cpp ProcessStep.cpp RestArticle.cpp)
+set(BERG_STORAGE_LIB_H BoostFlags.h Common.h Helper.h FileStorage.h Article.h Archive.h DirectoryLayout.h ProcessStep.h RestArticle.h)
 
 source_group("Headers" FILES ${BERG_STORAGE_LIB_H})
 if (MSVC)
