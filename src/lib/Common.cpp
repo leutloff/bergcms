@@ -153,7 +153,7 @@ int Common::SendResponse(boost::cgi::request& req, std::string const& output)
 
 string Common::GetBergVersion()
 {
-    return "v3.2.5";
+    return "v3.3.0";
 }
 
 std::string Common::GetBergLastChangedDate()
