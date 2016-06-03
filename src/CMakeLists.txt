@@ -15,9 +15,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Debian Lenny only provides 2.6, Jessie 3.0
+# Debian Lenny only providesCMake  2.6, Jessie 3.0
 # Ubuntu Trusty 2.8, Xenial 3.3
-# Install CMake 2.5 from https://cmake.org/files/v3.5/cmake-3.5.0-Linux-x86_64.sh or https://cmake.org/files/v3.5/cmake-3.5.0-Linux-i386.sh
+# Install CMake 3.5 from https://cmake.org/files/v3.5/cmake-3.5.0-Linux-x86_64.sh or https://cmake.org/files/v3.5/cmake-3.5.0-Linux-i386.sh
 cmake_minimum_required (VERSION 3.5)
 
 message("***   Entering the main CMakeLists.txt file  ***")
@@ -26,8 +26,8 @@ project (Berg CXX)
 
 # set these for release
 set(APPLICATION_VERSION_MAJOR "3")
-set(APPLICATION_VERSION_MINOR "2")
-set(APPLICATION_VERSION_PATCH "4")
+set(APPLICATION_VERSION_MINOR "3")
+set(APPLICATION_VERSION_PATCH "0")
 
 # use this command to enable verbose CMAKE processing
 # cmake -D CMAKE_VERBOSE_MAKEFILE=true -D CMAKE_BUILD_TYPE=Debug -D Boost_DEBUG=FALSE ../src
