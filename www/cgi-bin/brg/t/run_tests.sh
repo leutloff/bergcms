@@ -5,7 +5,7 @@ echo "Running some tests for the perl scripts (starting in $SOURCEDIR)..."
 
 pushd $SOURCEDIR
 
-echo && echo && echo "***   run funtion tests ...   ***"
+echo && echo && echo "***   run function tests ...   ***"
 mkdir -p BERG
 ln -fs $SOURCEDIR/../pex.pl BERG/PEX.pm
 perl test_pex.pl

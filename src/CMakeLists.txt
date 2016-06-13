@@ -68,7 +68,7 @@ add_subdirectory(test)# unit tests
 add_subdirectory(tools)# helper programs
 add_subdirectory(exp)# programs used to experiment with something, e.g. getting started with a new library
 
-#add information to create a ZIP package for transfering it to the web server.
+#add information to create a ZIP package for transferring it to the web server.
 include("${PROJECT_SOURCE_DIR}/install_package.cmake")
 
 message("Name of BUILDHOST is ${BUILDHOST}.")

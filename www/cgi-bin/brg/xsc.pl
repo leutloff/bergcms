@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 #############################################################################
-# Executes the commands in the xsc script. Superceeded by maker, but
+# Executes the commands in the xsc script. Superseded by maker, but
 # can still be used as a backup solution.
 #
 # (c) 2007 Heiko Decker

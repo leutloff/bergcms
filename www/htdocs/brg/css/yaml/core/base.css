@@ -86,7 +86,7 @@
 		display: none;
 	}
 
-	/* (en) force consistant appearance of input[type="search"] elements in all browser  */
+	/* (en) force consistent appearance of input[type="search"] elements in all browser  */
 	/* (de) Einheitliches Erscheinungsbild für input[type="search"] Elemente erzwingen  */
 	input[type="search"] {
 		-webkit-appearance: textfield;

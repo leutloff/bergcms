@@ -1057,7 +1057,7 @@ C<< $diff->Reset()->Next(-1) >> to get the number of hunks.
 
     $copy = $diff->Copy( $newPos, $newBase );
 
-C<Copy> returns a copy of the object.  The copy and the orignal object
+C<Copy> returns a copy of the object.  The copy and the original object
 share most of their data, so making copies takes very little memory.
 The copy maintains its own position (separate from the original), which
 is the main purpose of copies.  It also maintains its own base.

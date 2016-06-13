@@ -13,7 +13,7 @@
 # Aufruf  perl pex.pl <NAME> <Bericht> [Options]
 # Ergebnis : generiert aus Datenbank-Datei: NAME.csv
 #            eine LaTeX-Datei (Bericht.tex)
-# [Options] optional komma seperated list of arguments to customize the generation
+# [Options] optional komma separated list of arguments to customize the generation
 # List of supported Options:
 # - userelativepaths
 #

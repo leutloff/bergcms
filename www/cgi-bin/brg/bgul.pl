@@ -50,7 +50,7 @@ $filename =~ s/ö/oe/g;
 #$filename =~ s/Ä/ae/g;
 #$filename =~ s/Ö/oe/g;
 $filename =~ s/ß/ss/g;
-# remove everthing exept letters, digits, minus and a dot
+# remove everything exept letters, digits, minus and a dot
 $filename =~ s/[^a-z0-9\-]//g;
 
 my $uploadedfile="$uploadpath/$filename$ext";# hierhin wird das Bild zunächst auf den Server geladen
