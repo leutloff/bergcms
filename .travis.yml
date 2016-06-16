@@ -14,7 +14,7 @@ env:
       _VERSION: "46.0"
     - _BROWSER: "chrome"
       _PLATFORM: "Windows_7"
-      _VERSION: "50.0"
+      _VERSION: "51.0"
 # trusty (14.04) is now working instead of precise (12.04)
 sudo: required
 dist: trusty

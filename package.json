@@ -8,7 +8,7 @@
     "Edit",
     "Newsletter"
   ],
-  "version": "0.0.9",
+  "version": "0.0.10",
   "license": "(MIT, AGPL)",
   "private": true,
   "author": "Christian Leutloff <leutloff@sundancer.oche.de>",
@@ -21,10 +21,10 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^2.11.1",
+    "eslint": "^2.12.0",
     "mocha": "^2.5.3",
     "saucelabs": "^1.2.0",
-    "selenium-standalone": "^5.1.0",
+    "selenium-standalone": "^5.1.1",
     "wdio-dot-reporter": "^0.0.5",
     "wdio-mocha-framework": "^0.3.1",
     "wdio-sauce-service": "^0.2.2",
