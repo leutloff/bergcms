@@ -327,4 +327,31 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_single_lib)
 }
 
 
+/**
+ * This unit test uses an empty database and creates the first empty article.
+ * This test fills the CGI data structures and processes them.
+ * POST
+ * QUERY_STRING /articles
+ * BERGCMSDB    /home/leutloff/work/bergcms/src/test/output/empty_article.csv
+ */
+BOOST_AUTO_TEST_CASE(test_bgrest_put_articles_single_lib)
+{
+    const fs::path outputDatabaseFile = fs::path(bt::GetOutputDir()  / "empty_article.csv");
+    const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "post_empty_article.json"                  );
+
+     if (fs::exists(outputDatabaseFile)) { fs::remove(outputDatabaseFile); }
+
+    cgi::request req;
+    req.set_query_string("/articles");
+    req.set_method("POST");
+    req.post["POSTDATA"] = "{ }";
+
+    RestArticle restArticle(outputDatabaseFile.c_str());
+    cgi::response resp;
+    restArticle.dispatchArticles(req, resp);
+
+    // cout << "Response:" << endl << resp.str() << endl;
+    VerifyGeneratedFileContent(jsonFileExpected, resp.str());
+}
+
 BOOST_AUTO_TEST_SUITE_END()
