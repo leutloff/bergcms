@@ -107,11 +107,11 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_single)
     int ret = c11.join(); // wait for completion
     //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
-//    cout << "***   jsonFileExpected   ***" << endl;
-//    bt::PrintFileToStream(jsonFileExpected, cout);
-//    cout << endl;
-//    cout << "***   jsonFile   ***" << endl;
-//    bt::PrintFileToStream(jsonFile, cout);
+    //    cout << "***   jsonFileExpected   ***" << endl;
+    //    bt::PrintFileToStream(jsonFileExpected, cout);
+    //    cout << endl;
+    //    cout << "***   jsonFile   ***" << endl;
+    //    bt::PrintFileToStream(jsonFile, cout);
 
     VerifyGeneratedFileContent(jsonFileExpected, jsonFile);
 }
@@ -140,19 +140,19 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two_id1)
     int ret = c11.join(); // wait for completion
     //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
-//    cout << "***   jsonFileExpected   ***" << endl;
-//    bt::PrintFileToStream(jsonFileExpected, cout);
-//    cout << endl;
-//    cout << "***   jsonFile (generated file)   ***" << endl;
-//    bt::PrintFileToStream(jsonFile, cout);
+    //    cout << "***   jsonFileExpected   ***" << endl;
+    //    bt::PrintFileToStream(jsonFileExpected, cout);
+    //    cout << endl;
+    //    cout << "***   jsonFile (generated file)   ***" << endl;
+    //    bt::PrintFileToStream(jsonFile, cout);
 
-// a fix seems to be provided in https://stackoverflow.com/questions/10260688/boostproperty-treejson-parser-and-two-byte-wide-characters
-//#if (BOOST_VERSION < 105800)
-//    // see https://svn.boost.org/trac/boost/ticket/5033
-//#   warning "There are UTF-16 characters in the generated output. Fixme."
-//#else
+    // a fix seems to be provided in https://stackoverflow.com/questions/10260688/boostproperty-treejson-parser-and-two-byte-wide-characters
+    //#if (BOOST_VERSION < 105800)
+    //    // see https://svn.boost.org/trac/boost/ticket/5033
+    //#   warning "There are UTF-16 characters in the generated output. Fixme."
+    //#else
     VerifyGeneratedFileContent(jsonFileExpected, jsonFile);
-//#endif
+    //#endif
 }
 
 /**
@@ -181,18 +181,18 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two_id42)
     int ret = c11.join(); // wait for completion
     //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
-//    cout << "***   jsonFileExpected   ***" << endl;
-//    bt::PrintFileToStream(jsonFileExpected, cout);
-//    cout << endl;
+    //    cout << "***   jsonFileExpected   ***" << endl;
+    //    bt::PrintFileToStream(jsonFileExpected, cout);
+    //    cout << endl;
     cout << "***   jsonFile (generated file)   ***" << endl;
     bt::PrintFileToStream(jsonFile, cout);
 
-//#if (BOOST_VERSION < 105800)
-//    // see https://svn.boost.org/trac/boost/ticket/5033
-//#   warning "There are UTF-16 characters in the generated output. Fixme."
-//#else
+    //#if (BOOST_VERSION < 105800)
+    //    // see https://svn.boost.org/trac/boost/ticket/5033
+    //#   warning "There are UTF-16 characters in the generated output. Fixme."
+    //#else
     VerifyGeneratedFileContent(jsonFileExpected, jsonFile);
-//#endif
+    //#endif
 }
 
 /**
@@ -219,9 +219,9 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two)
     int ret = c11.join(); // wait for completion
     //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
-//    cout << "***   jsonFileExpected   ***" << endl;
-//    bt::PrintFileToStream(jsonFileExpected, cout);
-//    cout << endl;
+    //    cout << "***   jsonFileExpected   ***" << endl;
+    //    bt::PrintFileToStream(jsonFileExpected, cout);
+    //    cout << endl;
     cout << "***   jsonFile (generated file)   ***" << endl;
     bt::PrintFileToStream(jsonFile, cout);
 
@@ -254,11 +254,11 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_some)
     int ret = c11.join(); // wait for completion
     //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
-//    cout << "***   jsonFileExpected   ***" << endl;
-//    bt::PrintFileToStream(jsonFileExpected, cout);
-//    cout << endl;
-//    cout << "***   jsonFile   ***" << endl;
-//    bt::PrintFileToStream(jsonFile, cout);
+    //    cout << "***   jsonFileExpected   ***" << endl;
+    //    bt::PrintFileToStream(jsonFileExpected, cout);
+    //    cout << endl;
+    //    cout << "***   jsonFile   ***" << endl;
+    //    bt::PrintFileToStream(jsonFile, cout);
 
     VerifyGeneratedFileContent(jsonFileExpected, jsonFile);
 }
@@ -339,7 +339,7 @@ BOOST_AUTO_TEST_CASE(test_bgrest_put_articles_single_lib)
     const fs::path outputDatabaseFile = fs::path(bt::GetOutputDir()  / "empty_article.csv");
     const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "post_empty_article.json"                  );
 
-     if (fs::exists(outputDatabaseFile)) { fs::remove(outputDatabaseFile); }
+    if (fs::exists(outputDatabaseFile)) { fs::remove(outputDatabaseFile); }
 
     cgi::request req;
     req.set_query_string("/articles");
@@ -353,5 +353,44 @@ BOOST_AUTO_TEST_CASE(test_bgrest_put_articles_single_lib)
     // cout << "Response:" << endl << resp.str() << endl;
     VerifyGeneratedFileContent(jsonFileExpected, resp.str());
 }
+
+/**
+ * This unit test uses an empty database and creates two articles.
+ * This test fills the CGI data structures and processes them.
+ * POST
+ * QUERY_STRING /articles
+ * BERGCMSDB    /home/leutloff/work/bergcms/src/test/output/empty_article.csv
+ */
+BOOST_AUTO_TEST_CASE(test_bgrest_put_two_articles)
+{
+    const fs::path outputDatabaseFile = fs::path(bt::GetOutputDir()  / "empty_article.csv");
+    const fs::path jsonFileExpected1  = fs::path(bt::GetExpectedDir() / "post_article_with_title1.json");
+    const fs::path jsonFileExpected2  = fs::path(bt::GetExpectedDir() / "post_article_with_title2.json");
+
+    if (fs::exists(outputDatabaseFile)) { fs::remove(outputDatabaseFile); }
+
+    cgi::request req;
+    req.set_query_string("/articles");
+    req.set_method("POST");
+    req.post["POSTDATA"] = "{ \"priority\": \"500\", \"title\": \"Title of the article\", \"chapter\": \"Introduction\" }";
+
+    RestArticle restArticle(outputDatabaseFile.c_str());
+    {
+        cgi::response resp;
+        restArticle.dispatchArticles(req, resp);
+
+        // cout << "Response:" << endl << resp.str() << endl;
+        VerifyGeneratedFileContent(jsonFileExpected1, resp.str());
+    }
+    req.post["POSTDATA"] = "{ \"priority\": \"501\", \"title\": \"Title of the second article\", \"chapter\": \"Introduction\" }";
+    {
+        cgi::response resp;
+        restArticle.dispatchArticles(req, resp);
+
+        // cout << "Response:" << endl << resp.str() << endl;
+        VerifyGeneratedFileContent(jsonFileExpected2    , resp.str());
+    }
+}
+
 
 BOOST_AUTO_TEST_SUITE_END()

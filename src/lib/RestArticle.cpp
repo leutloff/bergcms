@@ -74,7 +74,9 @@ void RestArticle::getSingle(cgi::request & req, cgi::response &resp)
 void RestArticle::post(cgi::request & req, cgi::response &resp)
 {
     Article newArticle;
-    // TODO fill with provided information - the ID is ignored - better overwritten in the NewArticle method.
+    // fill with provided information
+    newArticle.SetFromJSON(req.post["POSTDATA"]);
+    // the ID is ignored (overwritten) in the NewArticle method.
     storage.NewArticle(newArticle);
     string jsonArticle;
     newArticle.GetAsJSON(jsonArticle);

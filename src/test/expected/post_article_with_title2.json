@@ -1,11 +1,11 @@
 Content-type: application/json; charset=utf-8
 
 {
-    "id": "1",
-    "priority": "100",
+    "id": "2",
+    "priority": "501",
     "type": "A",
-    "chapter": "",
-    "title": "",
+    "chapter": "Introduction",
+    "title": "Title of the second article",
     "header": "",
     "body": "",
     "footer": "",
