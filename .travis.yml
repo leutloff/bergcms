@@ -26,6 +26,7 @@ compiler:
 cache:
   apt: true
   directories:
+  # installing mocha and webdriverio takes about 13.89 s
   - /usr/lib/node_modules
 addons:
   sauce_connect:
