@@ -23,7 +23,10 @@ language: cpp
 compiler:
     - clang
     - gcc
-cache: apt
+cache:
+  apt: true
+  directories:
+  - /usr/lib/node_modules
 addons:
   sauce_connect:
     username: leutloff
