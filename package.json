@@ -24,7 +24,7 @@
     "eslint": "^2.13.1",
     "mocha": "^2.5.3",
     "saucelabs": "^1.2.0",
-    "selenium-standalone": "^5.3.1",
+    "selenium-standalone": "^5.4.0",
     "wdio-dot-reporter": "^0.0.5",
     "wdio-mocha-framework": "^0.3.4",
     "wdio-sauce-service": "^0.2.2",
