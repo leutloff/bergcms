@@ -135,7 +135,7 @@ sub scale_uploaded_file
     print '<p>Nach der Konvertierung:'."\n<pre>";
     system('ls -l '.$finalimagepath.'/'.$filename.$ext);
     #system('ls -l '.$uploadedfile.' '.$finalimagepath.'/'.$filename.$ext);
-    #system('ls -l /home/aachen/cgi-bin/brg/'.$uploadedfile.' /home/aachen/cgi-bin/brg/br/bilder/'.$filename.$ext);
+    #system('ls -l /home/bergcms/cgi-bin/brg/'.$uploadedfile.' /home/bergcms/cgi-bin/brg/br/bilder/'.$filename.$ext);
     print '</pre></p>';
     print p('Das Bild ('.$filename.$ext.') ', 
             '<img src="/cgi-bin/brg/bgul.pl?IMAGE='.$filename.$ext.'" width="300">'),

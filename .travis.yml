@@ -21,7 +21,7 @@ dist: trusty
 #dist: xenial
 language: cpp
 compiler:
-    - clang
+    #- clang
     - gcc
 cache:
   apt: true
@@ -34,8 +34,6 @@ addons:
     access_key:
        secure: WpOa9yQGxYGhSWP1qdzzh/A/NWCyoHMR0D5f5uQ4gCnsj9umdQk28pqobfldtGZ60/t+bfUKo8OtM3ZbgF199KJ8Q7zHxOX/MLMNf4B8E0BmravZkwK1Wj4SsopDpge1nJ6oDuA9Okr21LK+C8GhM77rhk63qzYKZLntUerxNWM=
   hosts:
-    - aachen.local
-    - www.aachen.local
     - bergcms.local
   apt:
     packages:

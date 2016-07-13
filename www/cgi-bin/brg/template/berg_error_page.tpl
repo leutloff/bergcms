@@ -46,7 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <header>
     <div class="ym-wrapper">
         <div class="ym-wbox">
-            <h1>FeG Aachen - Redaktionssystem Gemeindeinformation</h1>
+            <h1>Berg CMS</h1>
         </div>
     </div>
 </header>

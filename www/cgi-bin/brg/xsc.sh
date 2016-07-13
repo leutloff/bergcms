@@ -21,7 +21,7 @@ BERGDBDIR=br
 BERGOUTDIR=out
 BERGDLBDIR=../../htdocs/dlb
 #echo "BERGLOGDIR: $BERGLOGDIR"
-# BERGDLBDIR=/home/aachen/htdocs/dlb
+# BERGDLBDIR=/home/bergcms/htdocs/dlb
 # Nun folgt die eigentliche Verarbeitung
 mkdir -p $BERGLOGDIR; echo "xsc Script $XSCVERSION - " >$BERGLOGDIR/log.txt; echo "Start des Zeitungsgenerators pex (`date`) ..." >>$BERGLOGDIR/log.txt
 # Die CSV-Datenbank nach feginfo.tex transformieren

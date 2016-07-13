@@ -46,8 +46,8 @@ Add .htaccess:
 
 # .htaccess file to restrict access to the berg CGI scripts
 AuthType Basic
-AuthName "FeG Aachen - Redaktion"
-AuthUserFile /home/aachen/htaccess/brg_passwords
+AuthName "Berg CMS - Redaktion"
+AuthUserFile /home/bergcms/htaccess/brg_passwords
 Require valid-user 
 
 Create brg_passwords:

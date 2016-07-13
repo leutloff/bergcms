@@ -79,17 +79,17 @@ int HandleRequest(boost::cgi::request& req)
          << "<html><head>\n"
          << "<link rel=\"stylesheet\" type=\"text/css\" href=\"/brg/css/bgcrud.css\" />\n"
          << "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n"
-         << "<title>Gemeindeinformation - Generator - FeG Aachen</title>\n";
+         << "<title>Generator (maker) - Berg CMS</title>\n";
     resp << "</head><body>";
 
     // Path definitions
-    // /home/aachen/cgi-bin/brg/br
+    // /home/bergcms/cgi-bin/brg/br
     const fs::path BERGDBDIR = fs::path(DirectoryLayout::Instance().GetCgiBinDir() / "br");
-    // /home/aachen/cgi-bin/brg/log
+    // /home/bergcms/cgi-bin/brg/log
     const fs::path BERGLOGDIR = fs::path(DirectoryLayout::Instance().GetCgiBinDir() / "log");
     const fs::path BERGOUTDIR = fs::path(DirectoryLayout::Instance().GetCgiBinDir() / "out"); // processing output
     const fs::path BERGFONTDIR = fs::path(DirectoryLayout::Instance().GetCgiBinDir() / "out" / ".texmf-var");
-    //const fs::path BERGDLBDIR("/home/aachen/htdocs/dlb");
+    //const fs::path BERGDLBDIR("/home/bergcms/htdocs/dlb");
     const string texinputs =  string(".//:../br//:/usr/share/texmf-texlive/tex/latex//:/usr/share/texlive/texmf-dist/tex/latex//"
                                      ":/usr/share/texmf-texlive/tex/generic//:/usr/share/texlive/texmf-dist/tex/generic//"
                                      ":/etc/texmf/tex//:/usr/share/texmf//:/usr/local/share/texmf//:") + BERGFONTDIR.c_str();

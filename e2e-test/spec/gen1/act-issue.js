@@ -59,7 +59,7 @@ suite('Test the modules accessing the actual issue.', function () {
     });
 
     test('Actual issue - selecting the configaration', function () {
-        browser.url('http://aachen.local/cgi-bin/brg/berg.pl');
+        browser.url('http://bergcms.local/cgi-bin/brg/berg.pl');
 
         var title = browser.getTitle();
         assert.equal(title, 'Gemeindezeitungs-Generator');

@@ -22,8 +22,8 @@
 
 SOURCEDIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# HTDOCSDEPLOYDIR=/home/aachen/htdocs/brg
-# CGIBINDEPLOYDIR=/home/aachen/cgi-bin/brg
+# HTDOCSDEPLOYDIR=/home/bergcms/htdocs/brg
+# CGIBINDEPLOYDIR=/home/bergcms/cgi-bin/brg
 #HTDOCSDEPLOYDIR=/htdocs/brg
 HTDOCSDEPLOYDIR=/var/www/clients/client1/web1/web/brg
 #CGIBINDEPLOYDIR=/cgi-bin/brg

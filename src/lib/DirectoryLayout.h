@@ -38,9 +38,9 @@ namespace berg
 class DirectoryLayout
 {
 private:
-#define BERG_DEFAULT_CGIBIN "/home/aachen/cgi-bin/brg"
-#define BERG_DEFAULT_HTDOCS "/home/aachen/htdocs/brg"
-#define BERG_DEFAULT_DLB    "/home/aachen/htdocs/dlb"
+#define BERG_DEFAULT_CGIBIN "/home/bergcms/cgi-bin/brg"
+#define BERG_DEFAULT_HTDOCS "/home/bergcms/htdocs/brg"
+#define BERG_DEFAULT_DLB    "/home/bergcms/htdocs/dlb"
 
     boost::filesystem::path dirCgiBin, dirHtDocs, dirDlb;
     boost::filesystem::path pathProgramName;

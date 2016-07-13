@@ -32,10 +32,6 @@ namespace fs = boost::filesystem;
 // #if defined(USE_CTEMPLATE)
 // void Common::FillDictionaryCommon(ctemplate::TemplateDictionary & dict)
 // {
-//     dict.SetValue("SYSTEM_TITLE", "Redaktion FeG Aachen");
-//     dict.SetValue("SYSTEM_TITLE_LONG", "Redaktionssystem FeG Aachen");
-//     dict.SetValue("SYSTEM_TITLE_SHORT", "Redaktion AC");
-//     dict.SetValue("SYSTEM_TITLE_SHORT_ASCII", "Redaktion AC"); // for use in <title>
 //     dict.SetValue("BERG_LANG", "de");
 //     dict.SetValue("BERG_VERSION", "Berg CMS " + GetBergVersion()); //Berg v3.0.0");
 //     dict.SetValue("BERG_COPYRIGHT", "2012, 2013, 2014 Christian Leutloff");
@@ -158,6 +154,6 @@ string Common::GetBergVersion()
 
 std::string Common::GetBergLastChangedDate()
 {
-    return "20.05.2016";
+    return "13.07.2016";
 }
 

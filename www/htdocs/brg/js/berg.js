@@ -28,7 +28,7 @@ var brg = {
         shortref += "    \\textbf{<strong>fett<\/strong>}<br \/>";
         shortref += "    \\mbox{nicht umbrechen}<br \/>";
         shortref += "    &gt;BILD#Titel#c#Datei#b:160mm#Fotograf<br \/>";
-        shortref += "    \\url{http:\/\/feg.de}, \\href{mailto:redaktion@aachen.feg.de}{redaktion@aachen.feg.de}, oder \\href{mailto:termine@aachen.feg.de}{\\protect\\nolinkurl{termine@aachen.feg.de} }<br \/>";
+        shortref += "    \\url{http:\/\/feg.de}, \\href{mailto:redaktion@bergcms.local}{redaktion@bergcms.local}, oder \\href{mailto:termine@bergcms.local}{\\protect\\nolinkurl{termine@bergcms.local} }<br \/>";
         shortref += "    &gt;i#Autor<br \/>";
         shortref += "    <\/p>";
         shortref += "    <p id=\"contentpara\">";

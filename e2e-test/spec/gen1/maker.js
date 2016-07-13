@@ -19,7 +19,7 @@ suite('Testing the maker program.', function () {
         browser.url('http://bergcms.local/cgi-bin/brg/maker');
 
         var title = browser.getTitle();
-        assert.equal(title, 'Gemeindeinformation - Generator - FeG Aachen');
+        assert.equal(title, 'Generator (maker) - Berg CMS');
 
         var resultText = browser.getText('#processing-result');
         assert.equal(resultText, 'Keine Fehler.');

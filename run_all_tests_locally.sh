@@ -67,6 +67,11 @@ BERG_ARCHIVE=$(ls -t $BUILDDIR/Berg*-$HOSTNAME.zip | head -n 1)
 BERG_VERSION=$(echo $BERG_ARCHIVE | cut -d- -f2 -)
 BERG_DIR=$(basename $BERG_ARCHIVE .zip)
 unzip -o $BERG_ARCHIVE
+chmod go-w $BERG_DIR/cgi-bin/brg
+rm -f berg htdocs cgi-bin
+ln -s $BERG_DIR berg
+ln -s $BERG_DIR/htdocs htdocs
+ln -s $BERG_DIR/cgi-bin cgi-bin
 popd
 
 echo "Running the end to end tests using wdio..."

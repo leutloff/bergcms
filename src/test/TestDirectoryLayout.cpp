@@ -34,27 +34,6 @@ namespace fs = boost::filesystem;
 
 BOOST_AUTO_TEST_SUITE(DirectoryLayout)
 
-// This test is executed only when the dir /home/aachen/cgi-bin/brg exists.
-BOOST_AUTO_TEST_CASE(test_default_directory_layout)
-{
-    if (fs::exists("/home/aachen/cgi-bin/brg"))
-    {
-        cout << "Running directory layout tests for /home/aachen/cgi-bin/brg ..." << endl;
-        BOOST_CHECK_EQUAL("/home/aachen/cgi-bin/brg", berg::DirectoryLayout::Instance().GetCgiBinDir());
-    }
-    else { cout << "NOT running directory layout tests for /home/aachen/cgi-bin/brg ..." << endl;}
-    if (fs::exists("/home/aachen/htdocs/brg"))
-    {
-        BOOST_CHECK_EQUAL("/home/aachen/htdocs/brg", berg::DirectoryLayout::Instance().GetHtdocsDir());
-    }
-    if (fs::exists("/home/aachen/htdocs/dlb"))
-    {
-        fs::path dir;
-        berg::DirectoryLayout::Instance().GetHtdocsDownloadDir(dir);
-        BOOST_CHECK(boost::algorithm::ends_with(dir.string(), "/htdocs/dlb"));
-    }
-}
-
 // This test is executed only when the dir /home/travis/build/leutloff/berg/www-root/cgi-bin/brg exists (this is expected on CI).
 BOOST_AUTO_TEST_CASE(test_travis_directory_layout)
 {
@@ -132,12 +111,12 @@ BOOST_AUTO_TEST_CASE(test_tmp_directory_layout_ispconfig)
 BOOST_AUTO_TEST_CASE(test_gracefully_fail_of_directory_layout)
 {
     berg::DirectoryLayout::MutableInstance().SetProgramName("/not/existing/dir/exe");
-    BOOST_CHECK_EQUAL("/home/aachen/cgi-bin/brg", berg::DirectoryLayout::Instance().GetCgiBinDir());
-    BOOST_CHECK_EQUAL("/home/aachen/htdocs/brg", berg::DirectoryLayout::Instance().GetHtdocsDir());
+    BOOST_CHECK_EQUAL("/home/bergcms/cgi-bin/brg", berg::DirectoryLayout::Instance().GetCgiBinDir());
+    BOOST_CHECK_EQUAL("/home/bergcms/htdocs/brg", berg::DirectoryLayout::Instance().GetHtdocsDir());
     fs::path dir;
     berg::DirectoryLayout::Instance().GetHtdocsDownloadDir(dir);
-    BOOST_CHECK_EQUAL("/home/aachen/htdocs/dlb", dir);
-    BOOST_CHECK_EQUAL("/home/aachen/htdocs/dlb", berg::DirectoryLayout::Instance().GetHtdocsDownloadDir());
+    BOOST_CHECK_EQUAL("/home/bergcms/htdocs/dlb", dir);
+    BOOST_CHECK_EQUAL("/home/bergcms/htdocs/dlb", berg::DirectoryLayout::Instance().GetHtdocsDownloadDir());
 }
 
 
