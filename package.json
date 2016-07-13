@@ -17,19 +17,19 @@
     "Christian Leutloff <leutloff@sundancer.oche.de>"
   ],
   "dependencies": {
-    "jquery": "^3.0.0"
+    "jquery": "^3.1.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^3.0.0",
+    "eslint": "^3.0.1",
     "mocha": "^2.5.3",
     "saucelabs": "^1.2.0",
-    "selenium-standalone": "^5.4.0",
-    "wdio-dot-reporter": "^0.0.5",
-    "wdio-mocha-framework": "^0.3.4",
-    "wdio-sauce-service": "^0.2.2",
+    "selenium-standalone": "^5.5.0",
+    "wdio-dot-reporter": "^0.0.6",
+    "wdio-mocha-framework": "^0.3.5",
+    "wdio-sauce-service": "^0.2.4",
     "wdio-selenium-standalone-service": "^0.0.5",
-    "webdriverio": "^4.1.1"
+    "webdriverio": "^4.2.1"
   },
   "scripts": {
     "postinstall": "./node_modules/selenium-standalone/bin/selenium-standalone install",
