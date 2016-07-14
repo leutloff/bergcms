@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: http://bergcms.local/
 
 # Berg CMS
 
@@ -11,21 +11,23 @@ The Berg CMS uses a simple API allowing consumers to view the stored articles an
 
 Returns all the articles of the actual issue.
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
-        [
-            {
-                "id": 25,
-                "priority": 100,
-                "type": "A|F|K|A1|F1|A2|F2|A3|F3",
-                "chapter": "Introduction",
-                "title": "Title of the article",
-                "header": "Heading part of the article",
-                "body": "The main part of the article",
-                "footer": "Buttom part of the article",
-                "lastChanged": "yyyymmdd-hhmmss-dd;ip:port;user"
-            }
-        ]
+        {
+            "articles": [
+                {
+                    "id": 25,
+                    "priority": 100,
+                    "type": "A|F|K|A1|F1|A2|F2|A3|F3",
+                    "chapter": "Introduction",
+                    "title": "Title of the article",
+                    "header": "Heading part of the article",
+                    "body": "The main part of the article",
+                    "footer": "Buttom part of the article",
+                    "lastChanged": "yyyymmdd-hhmmss-dd;ip:port;user"
+                }
+            ]
+        }
 
 
 ### Get Article [GET /articles/:id]

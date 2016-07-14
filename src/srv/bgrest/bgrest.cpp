@@ -71,7 +71,7 @@ int HandleRequest(boost::cgi::request& req)
     // CGI
     string const& query = req.query_string();
     if (0 == query.length()) { throw "Empty query"; } // TODO return Default
-    if (alg::starts_with(query, "/articles"))
+    if (alg::starts_with(query, "/articles") || (alg::starts_with(query, "/brg/articles")))
     {
         RestArticle restArticle(database);
         restArticle.dispatchArticles(req, resp);

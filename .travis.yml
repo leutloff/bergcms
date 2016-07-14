@@ -26,8 +26,7 @@ compiler:
 cache:
   apt: true
   directories:
-  # installing mocha and webdriverio takes about 13.89 s
-  - /usr/lib/node_modules
+  - node_modules
 addons:
   sauce_connect:
     username: leutloff
@@ -99,8 +98,8 @@ before_install:
     - sudo apt-get install -y nodejs || true
     - which node && node -v && npm version || true
     # runs about 70s:
-    #- sudo npm install -g mocha browserify uglifyjs dredd@stable || true
-    - sudo npm install -g mocha webdriverio || true
+    #- sudo npm install -g mocha webdriverio browserify uglifyjs dredd@stable || true
+    - sudo npm install -g mocha-cli || true
     - sudo npm update || true
     - which node && node -v && npm version || true
     # Download selenium server
@@ -155,7 +154,7 @@ install:
     # configure apache suexec:
     - mkdir -p $TRAVIS_BUILD_DIR/logs $TRAVIS_BUILD_DIR/www-root/htdocs/dlb $TRAVIS_BUILD_DIR/www-root/cgi-bin/
     #- pushd $TRAVIS_BUILD_DIR/www-root/htdocs && ln -sf ../cgi-bin . && popd
-    - pushd /etc/apache2/mods-enabled && sudo ln -s ../mods-available/suexec.load . && sudo ln -fs ../mods-available/cgid.load . && sudo ln -fs ../mods-available/cgid.conf . && sudo ls -l . ../mods-available && popd
+    - pushd /etc/apache2/mods-enabled && sudo ln -s ../mods-available/suexec.load . && sudo ln -fs ../mods-available/cgid.load . && sudo ln -fs ../mods-available/cgid.conf . && sudo ln -fs ../mods-available/rewrite.load . && sudo ls -l . ../mods-available && popd
     - sudo cp -f build/suexec-www-data /etc/apache2/suexec/www-data
     # configure apache virtual hosts:
     #- sudo cp -f build/travis-ci-apache2.2 /etc/apache2/sites-available/default
@@ -226,6 +225,7 @@ script:
     #- cat feginfo.log || true
     - echo "Running the end to end tests using wdio..."
     - export TEST_RUN_LOCAL=false && npm test
+    - node_modules/dredd/bin/dredd --config api-test/dredd.yml --only "Articles of the Actual Issue > List All Articles"
 after_success:
     - pushd travis-build
     - ls -l Berg*.zip

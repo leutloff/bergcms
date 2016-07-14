@@ -77,5 +77,10 @@ popd
 echo "Running the end to end tests using wdio..."
 npm test
 
+echo "Running the RESTapi tests..."
+pushd $SOURCEDIR
+node_modules/dredd/bin/dredd --config api-test/dredd.yml --only "Articles of the Actual Issue > List All Articles"
+popd
+
 echo "done."
 exit 0;

@@ -61,7 +61,7 @@ to
 `127.0.0.1	localhost bergcms.local`. 
 An outline of the Apache configuration is shown in doc/etc_apache2.
 The configuration used for Travis is stored in the build directory.
-Enable the required apache modules: `sudo a2enmod suexec cgid`
+Enable the required apache modules: `sudo a2enmod suexec cgid rewrite`
 
 
 These are the steps to perform a build itself:

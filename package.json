@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "dredd": "^1.2.0",
     "eslint": "^3.0.1",
     "mocha": "^2.5.3",
     "saucelabs": "^1.2.0",
