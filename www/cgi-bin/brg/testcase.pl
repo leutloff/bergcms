@@ -32,7 +32,7 @@ use File::Copy;                    # import file copy
 use Cwd qw(abs_path);
 
 #---> Global Variables
-my $VERSION="v1.01, 26.04.2016";
+my $VERSION="v1.1.0, 14.07.2016";
 my $sep = '/';
 my $dbpath = "$FindBin::Bin".'/br';
 my $dbname = 'feginfo.csv';
@@ -42,7 +42,7 @@ my $tcdir = "$FindBin::Bin".'/testcases-db';# shared with the C++ unit tests - i
 #----> function prototypes --------------------------------
 sub setup_tc1_empty_db();
 sub setup_tc2_some_articles();
-sub setup_tc3_future();
+sub setup_tc3_api();
 sub print_success_page($$);
 
 #----> function prototypes of the shared functions --------
@@ -62,11 +62,12 @@ if ($tc !~ /[0-9a-z]+/) { print_error_page("Only numbers and small letters are a
 
 if (('1' eq $tc) || ('emptydb' eq $tc)) { setup_tc1_empty_db; }
 elsif (('2' eq $tc) || ('somearticles' eq $tc)) { setup_tc2_some_articles; }
+elsif (('3' eq $tc) || ('api' eq $tc)) { setup_tc3_api; }
 else { print_error_page("The Test Case 'tc' is unknown."); }
 
 
 #----------------------------------------------------------------------------
-# Deletes the databases.
+# Testcase with no databases at all.
 #----------------------------------------------------------------------------
 sub setup_tc1_empty_db()
 {
@@ -76,7 +77,9 @@ sub setup_tc1_empty_db()
     #copy($tcdir.$sep.'1'.$sep.$dbname, $dbpath); empty is missing db
     print_success_page(1, '&lt;none&gt;');
 }
-
+#----------------------------------------------------------------------------
+# Testcase with a databases containing some articles.
+#----------------------------------------------------------------------------
 sub setup_tc2_some_articles()
 {
     # delete the databases
@@ -87,14 +90,19 @@ sub setup_tc2_some_articles()
     copy($tcdir.$sep.$useddbname, $dbpath.$sep.$dbname);
     print_success_page(2, $useddbname);
 }
-sub setup_tc3_future()
+#----------------------------------------------------------------------------
+# Testcase with articles used for api test - the content must match the responses
+# used in the API description apiary.apib.
+#----------------------------------------------------------------------------
+sub setup_tc3_api()
 {
     # delete the databases
     unlink($dbpath.$sep.$dbname);
     unlink($dbpath.$sep.$dbbup);
     #copy the databases from tc dir
-    #copy($tcdir.$sep.'3'.$sep.$dbname, $dbpath.$sep.$dbname);
-	print_success_page(3, 'future');
+    my $useddbname = 'api_examples.csv';
+    copy($tcdir.$sep.$useddbname, $dbpath.$sep.$dbname);
+    print_success_page(3, $useddbname);
 }
 
 #----------------------------------------------------------------------------
