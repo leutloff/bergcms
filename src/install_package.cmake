@@ -88,7 +88,8 @@ install(FILES    "${PROJECT_SOURCE_DIR}/../www/htdocs/dlb/README.txt"
         DESTINATION "${BERG_INSTALL_HTDOCS}/../dlb")
 
 # add static HTML pages
-install(FILES "${PROJECT_SOURCE_DIR}/../www/htdocs/brg/hilfe.html"
+install(FILES    "${PROJECT_SOURCE_DIR}/../www/htdocs/brg/hilfe.html"
+                 "${PROJECT_SOURCE_DIR}/../www/htdocs/brg/.htaccess"
         DESTINATION "${BERG_INSTALL_HTDOCS}")
 
 # add required perl scripts

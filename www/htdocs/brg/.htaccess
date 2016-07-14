@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # To debug this file add rewrite:trace2 to the LogLevel directive.
+    RewriteBase /brg
+
+    # Redirecting the API calls to the CGI program bgrest.
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^api(/.*)$ /cgi-bin/brg/bgrest?$1
+</IfModule>
