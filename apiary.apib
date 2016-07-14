@@ -30,9 +30,13 @@ Returns all the articles of the actual issue.
         }
 
 
-### Get Article [GET /articles/:id]
+### Get Article [GET /articles/{id}]
 
 Returns a specific article that can be displayed and edited.
+
++ Paramters
+    + id: 25 (number) - the number of the desired article.
+
 
 + Response 200 (application/json)
 
@@ -81,9 +85,12 @@ the id of the article that should be copied.
         }
         
         
-### Delete Article [DELETE /articles/:id]
+### Delete Article [DELETE /articles/{id}]
 
 Deletes the given article from the database. It is stored in the backup database for error recovery.
+
++ Paramters
+    + id: 25 (number) - the number of the desired article.
 
 + Response 200
 
