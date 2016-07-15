@@ -225,6 +225,7 @@ script:
     #- cat feginfo.log || true
     - echo "Running the end to end tests using wdio..."
     - export TEST_RUN_LOCAL=false && npm test
+    - npm rebuild
     - node_modules/dredd/bin/dredd --config api-test/dredd.yml --only "Articles of the Actual Issue > List All Articles"
 after_success:
     - pushd travis-build
