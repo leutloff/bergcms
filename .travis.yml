@@ -11,7 +11,7 @@ env:
       _VERSION: "45.0"
     - _BROWSER: "firefox"
       _PLATFORM: "Windows_7"
-      _VERSION: "46.0"
+      _VERSION: "47.0"
     - _BROWSER: "chrome"
       _PLATFORM: "Windows_7"
       _VERSION: "51.0"
@@ -25,8 +25,8 @@ compiler:
     - gcc
 cache:
   apt: true
-  directories:
-  - node_modules
+#  directories:
+#  - node_modules
 addons:
   sauce_connect:
     username: leutloff
