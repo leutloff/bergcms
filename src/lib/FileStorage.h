@@ -59,7 +59,7 @@ private:
     boost::shared_ptr<IFilter> filter;
 
 public:
-    FileStorage() : lastArticleId(0), storageName(), filter( new FilterAcceptsAll())
+    FileStorage() : lastArticleId(0), storageName(), filter(new FilterAcceptsAll())
     {
     }
     ~FileStorage()
@@ -92,6 +92,12 @@ public:
      */
     void NewArticle(Article & article);
     void SetArticle(unsigned no, Article const& article);
+    /**
+     * @brief DeleteArticle removes the referenced article from the database.
+     * @param no number of the article to remove.
+     */
+    void DeleteArticle(unsigned no);
+
 
 private:
     void ResetLastArticleId() { lastArticleId = 0; }

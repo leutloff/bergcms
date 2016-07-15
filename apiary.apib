@@ -19,11 +19,11 @@ Returns all the articles of the actual issue.
                     "id": 25,
                     "priority": 100,
                     "type": "A|F|K|A1|F1|A2|F2|A3|F3",
-                    "chapter": "Introduction",
+                    "chapter": "1:Introduction",
                     "title": "Title of the article",
-                    "header": "Heading part of the article",
-                    "body": "The main part of the article",
-                    "footer": "Buttom part of the article",
+                    "header": "Heading part of the article.",
+                    "body": "The main part of the article.",
+                    "footer": "Buttom part of the article.",
                     "lastChanged": "yyyymmdd-hhmmss-dd;ip:port;user"
                 }
             ]
@@ -34,16 +34,21 @@ Returns all the articles of the actual issue.
 
 Returns a specific article that can be displayed and edited.
 
-+ Paramters
++ Parameters
     + id: 25 (number) - the number of the desired article.
 
-
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
         {
             "id": 25,
+            "priority": 100,
+            "type": "F",
+            "chapter": "1:Introduction",
             "title": "Title of the article",
-            "chapter": "Introduction"
+            "header": "Heading part of the article.",
+            "body": "The main part of the article.",
+            "footer": "Buttom part of the article.",
+            "lastChanged": "20160715-002748-Fr \/ 127.0.0.1:40142 \/ -"
         }
         
 ### Create New Article or Copy Article [POST /articles]
@@ -58,7 +63,7 @@ the id of the article that should be copied.
 + Request (application/json)
 
     
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
 
         {
             "id": 26,
@@ -76,7 +81,7 @@ the id of the article that should be copied.
             "chapter": "Introduction"
         }
     
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
 
         {
             "id": 26,
@@ -89,7 +94,7 @@ the id of the article that should be copied.
 
 Deletes the given article from the database. It is stored in the backup database for error recovery.
 
-+ Paramters
++ Parameters
     + id: 25 (number) - the number of the desired article.
 
 + Response 200
@@ -101,8 +106,9 @@ Deletes the given article from the database. It is stored in the backup database
 The actual issue is extracted from the database (.csv) and transpiled to LaTeX. 
 Then PdfLaTeX is used to typeset the final document and returned as PDF.
 
-### Process and return the actual issue [GET /print/:type]
+### Process and return the actual issue [GET /print/{type}]
 
-type is one of final, draft, final w/o images and ebook.
++ Parameters
+    + type: final (string) - the type is one of final, draft, final w/o images and ebook.
 
 + Response 200 (application/pdf)

@@ -126,6 +126,7 @@ install(PROGRAMS "${PROJECT_SOURCE_DIR}/../www/cgi-bin/brg/testcase.pl"
 install(FILES    "${PROJECT_SOURCE_DIR}/test/input/single_article.csv"
                  "${PROJECT_SOURCE_DIR}/test/input/some_articles.csv"
                  "${PROJECT_SOURCE_DIR}/test/input/two_articles.csv"
+                 "${PROJECT_SOURCE_DIR}/test/input/api_examples.csv"
         DESTINATION "${BERG_INSTALL_CGIBIN}/testcases-db")
 
 

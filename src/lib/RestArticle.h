@@ -40,10 +40,13 @@ public:
     void dispatchArticles(boost::cgi::request & req, boost::cgi::response & resp);
 
 private:
-     void getAll(boost::cgi::request & req, boost::cgi::response &resp);
-     void getSingle(boost::cgi::request & req, boost::cgi::response &resp);
+    int getArticleId(boost::cgi::request & req);
 
-     void post(boost::cgi::request & req, boost::cgi::response &resp);
+    void getAll(boost::cgi::request & req, boost::cgi::response &resp);
+    void getSingle(boost::cgi::request & req, boost::cgi::response &resp);
+
+    void post(boost::cgi::request & req, boost::cgi::response &resp);
+    void deleteSingle(boost::cgi::request & req, boost::cgi::response &resp);
 };
 
 }

@@ -53,7 +53,6 @@ int HandleRequest(boost::cgi::request& req)
 {
     req.load(cgi::parse_all); // Read and parse STDIN data - GET only plus ENV.
     cgi::response resp;
-    resp << cgi::content_type("application/json") << cgi::charset("utf-8");
 
     string database = "br/feginfo.csv";
     {

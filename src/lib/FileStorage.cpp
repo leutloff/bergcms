@@ -138,6 +138,19 @@ void FileStorage::SetArticle(unsigned no, Article const& article)
     // TODO
 }
 
+void FileStorage::DeleteArticle(unsigned no)
+{
+    for (TArticles::iterator it = articles.begin(); it < articles.end(); ++it)
+    {
+        if ((*it)->getId() == no)
+        {
+            articles.erase(it);
+            Save();
+            return;
+        }
+    }
+}
+
 // #if defined(USE_CTEMPLATE)
 // void FileStorage::FillDictionaryBody(ctemplate::TemplateDictionary & dict) const
 // {

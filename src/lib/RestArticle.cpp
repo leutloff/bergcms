@@ -60,10 +60,7 @@ void RestArticle::getAll(cgi::request & req, cgi::response &resp)
 void RestArticle::getSingle(cgi::request & req, cgi::response &resp)
 {
     // single article
-    constexpr string::size_type artLen = sizeof("/articles/")/sizeof(' ') - 1;
-    string const& query = req.query_string();
-    auto strid = query.substr(artLen);
-    int id = boost::lexical_cast<int>(strid);
+    auto id = getArticleId(req);
     Article const& article = storage.GetArticle(id);
     string jsonArticle;
     article.GetAsJSON(jsonArticle);
@@ -84,12 +81,27 @@ void RestArticle::post(cgi::request & req, cgi::response &resp)
     resp.status(http::created);
 }
 
+int RestArticle::getArticleId(cgi::request & req)
+{
+    constexpr string::size_type artLen = sizeof("/articles/")/sizeof(' ') - 1;
+    string const& query = req.query_string();
+    auto strid = query.substr(artLen);
+    return boost::lexical_cast<int>(strid);
+}
+
+void RestArticle::deleteSingle(cgi::request & req, cgi::response &resp)
+{
+    auto id = getArticleId(req);
+    storage.DeleteArticle(id);
+    resp.status(http::ok);
+}
 
 void RestArticle::dispatchArticles(cgi::request & req, cgi::response &resp)
 {
     string const& query = req.query_string();
     if ("GET" == req.method())
     {
+        resp << cgi::content_type("application/json") << cgi::charset("utf-8");
         if ("/articles" == query)
         {
             getAll(req, resp);
@@ -103,8 +115,14 @@ void RestArticle::dispatchArticles(cgi::request & req, cgi::response &resp)
     {
         if ("/articles" == query) // create new article
         {
+            resp << cgi::content_type("application/json") << cgi::charset("utf-8");
             post(req, resp);
         }
+    }
+    else if ("DELETE" == req.method())
+    {
+        // returns OK w/o body
+        deleteSingle(req, resp);
     }
     else { throw "Method not supported: " + req.method(); }
 }
