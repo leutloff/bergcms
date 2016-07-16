@@ -71,14 +71,15 @@ void RestArticle::getSingle(cgi::request & req, cgi::response &resp)
 void RestArticle::post(cgi::request & req, cgi::response &resp)
 {
     Article newArticle;
+    newArticle.setPriority(100);
     // fill with provided information
-    newArticle.SetFromJSON(req.post["POSTDATA"]);
+  //  newArticle.SetFromJSON(req.post["POSTDATA"]);
     // the ID is ignored (overwritten) in the NewArticle method.
     storage.NewArticle(newArticle);
     string jsonArticle;
     newArticle.GetAsJSON(jsonArticle);
     resp << jsonArticle;
-    resp.status(http::created);
+    resp.status(http::created); // 201
 }
 
 int RestArticle::getArticleId(cgi::request & req)

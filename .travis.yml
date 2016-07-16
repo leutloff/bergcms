@@ -215,7 +215,8 @@ script:
     #- cat feginfo.log || true
     - echo "Running the end to end tests using wdio..."
     - export TEST_RUN_LOCAL=false && $NPM test
-    - node_modules/dredd/bin/dredd --config api-test/dredd.yml --only "Articles of the Actual Issue > List All Articles"
+    - node_modules/dredd/bin/dredd --config api-test/dredd.yml --only "Articles of the Actual Issue > List All Articles" --only "Articles of the Actual Issue > Get Article" --only "Articles of the Actual Issue > Delete Article"
+popd
 after_success:
     - pushd travis-build
     - ls -l Berg*.zip

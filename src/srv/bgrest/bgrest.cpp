@@ -41,6 +41,7 @@ namespace alg = boost::algorithm;
 namespace bs = boost::system;
 namespace cgi = boost::cgi;
 namespace fs = boost::filesystem;
+namespace http = boost::cgi::http;
 
 
 /**
@@ -74,6 +75,10 @@ int HandleRequest(boost::cgi::request& req)
     {
         RestArticle restArticle(database);
         restArticle.dispatchArticles(req, resp);
+    }
+    else
+    {
+        resp.status(http::bad_request);
     }
     return cgi::commit(req, resp);
 }

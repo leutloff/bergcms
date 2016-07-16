@@ -82,7 +82,7 @@ pushd $SOURCEDIR
 node_modules/dredd/bin/dredd --config api-test/dredd.yml \
    --only "Articles of the Actual Issue > List All Articles" \
    --only "Articles of the Actual Issue > Get Article" \
-   --only "Articles of the Actual Issue > Create New Article or Copy Article" \
+   --only "Articles of the Actual Issue > Create New Article or Copy Article > Example 1" \
    --only "Articles of the Actual Issue > Delete Article"
 popd
 
