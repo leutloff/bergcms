@@ -9,12 +9,12 @@ env:
     - _BROWSER: firefox
       _PLATFORM: Linux
       _VERSION: "45.0"
-    - _BROWSER: "firefox"
-      _PLATFORM: "Windows_7"
-      _VERSION: "47.0"
-    - _BROWSER: "chrome"
-      _PLATFORM: "Windows_7"
-      _VERSION: "51.0"
+#    - _BROWSER: "firefox"
+#      _PLATFORM: "Windows_7"
+#      _VERSION: "47.0"
+#    - _BROWSER: "chrome"
+#      _PLATFORM: "Windows_7"
+#      _VERSION: "51.0"
 # trusty (14.04) is now working instead of precise (12.04)
 sudo: required
 dist: trusty
@@ -84,33 +84,18 @@ before_install:
     - gcc --version && perl -v && java -version
     - lsb_release -a
     - git submodule update --init --recursive
-    - echo "Already installed node..."
+    - echo "The preinstalled node..."
     - which node && node -v && npm version || true
-    # Add PPA with latest nodejs
-    #- sudo add-apt-repository ppa:chris-lea/node.js -y
-    #- sudo apt-get update -qq
-    # Install nodejs, npm and then the selenium webdriver for nodejs:
-    #- sudo apt-get install nodejs npm -y
-    # nodejs-legacy is required in later Ubuntu versions than precise:
-    #fails anyway: - sudo apt-get install nodejs-legacy -y || true
     # Install nodejs and npm from https://nodesource.com/ -- Alternative downloads are available from https://nodejs.org/en/download/
-    - curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -  || true
-    - sudo apt-get install -y nodejs || true
+    - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+    - sudo apt-get install -y nodejs
+    # ensure npm v3:
+    - if [[ `npm -v` != 3* ]]; then sudo npm i -g npm@3; fi
     - which node && node -v && npm version || true
     # runs about 70s:
     #- sudo npm install -g mocha webdriverio browserify uglifyjs dredd@stable || true
     - sudo npm install -g mocha-cli || true
-    - sudo npm update || true
-    - which node && node -v && npm version || true
-    # Download selenium server
-    # Latest version: http://www.seleniumhq.org/download/
-    #- curl -O https://selenium-release.storage.googleapis.com/2.50/selenium-server-standalone-2.50.1.jar
-    # Download and install the chromedriver to be able to execute the browser tests locally
-    # Latest version: https://sites.google.com/a/chromium.org/chromedriver/downloads
-    #- curl https://chromedriver.storage.googleapis.com/2.20/chromedriver_linux64.zip > chromedriver_linux64.zip && unzip chromedriver_linux64.zip && sudo cp chromedriver /usr/local/bin && sudo chmod +rx chromedriver /usr/local/bin/chromedriver
-    # start this before installation to let the server be up and ready without extra waiting time.
-    #- java -jar selenium-server-standalone-2.50.1.jar -Dwebdriver.chrome.driver=./chromedriver &
-    #- sleep 10
+    - sudo npm update
     # Install CMake
     - sudo apt-get --purge remove cmake -y
     - export OPTDIR=/home/travis
