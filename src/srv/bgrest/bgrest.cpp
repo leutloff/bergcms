@@ -75,6 +75,7 @@ int HandleRequest(boost::cgi::request& req)
     {
         RestArticle restArticle(database);
         restArticle.dispatchArticles(req, resp);
+        resp.status(http::method_not_allowed);
     }
     else
     {

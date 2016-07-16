@@ -72,14 +72,24 @@ void RestArticle::post(cgi::request & req, cgi::response &resp)
 {
     Article newArticle;
     newArticle.setPriority(100);
-    // fill with provided information
-  //  newArticle.SetFromJSON(req.post["POSTDATA"]);
+    auto range = req.post.equal_range("POSTDATA");
+    if (range.first != range.second) // key is found
+    {
+        const string postdata = req.post["POSTDATA"];
+        if (0 < postdata.length())
+        {
+            // fill article with the provided information
+            newArticle.SetFromJSON(postdata);
+        }
+    }
     // the ID is ignored (overwritten) in the NewArticle method.
     storage.NewArticle(newArticle);
     string jsonArticle;
     newArticle.GetAsJSON(jsonArticle);
     resp << jsonArticle;
     resp.status(http::created); // 201
+    resp << cgi::header("STATUS", "201");
+    resp << http::created;
 }
 
 int RestArticle::getArticleId(cgi::request & req)

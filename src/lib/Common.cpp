@@ -28,6 +28,7 @@ using namespace std;
 using namespace berg;
 namespace cgi = boost::cgi;
 namespace fs = boost::filesystem;
+namespace http = boost::cgi::http;
 
 // #if defined(USE_CTEMPLATE)
 // void Common::FillDictionaryCommon(ctemplate::TemplateDictionary & dict)
@@ -136,6 +137,7 @@ int Common::SendErrorPage(boost::cgi::request& req, std::string const& errorType
 
     resp << "<p>Berg Version: " << GetBergVersion() << "/" << GetBergLastChangedDate() << "\n";
     resp << "</body></html>";
+    resp.status(http::bad_request);
     return cgi::commit(req, resp);
 }
 
@@ -144,6 +146,7 @@ int Common::SendResponse(boost::cgi::request& req, std::string const& output)
     cgi::response resp;
     resp << cgi::content_type("text/html") << cgi::charset("utf-8");
     resp << output;
+    resp.status(http::ok);
     return cgi::commit(req, resp);
 }
 

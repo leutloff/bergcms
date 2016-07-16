@@ -46,7 +46,9 @@ cmake -DCMAKE_VERBOSE_MAKEFILE=FALSE -DCMAKE_BUILD_TYPE=Distribution -DBoost_DEB
 #cmake -DCMAKE_VERBOSE_MAKEFILE=TRUE -DCMAKE_BUILD_TYPE=Distribution -DBoost_DEBUG=FALSE $SOURCEDIR/src
 make
 echo "Running the C++ unit tests..."
-pushd test && ./bergunittests && popd
+pushd test 
+./bergunittests
+popd
 make package
 
 popd
@@ -83,6 +85,7 @@ node_modules/dredd/bin/dredd --config api-test/dredd.yml \
    --only "Articles of the Actual Issue > List All Articles" \
    --only "Articles of the Actual Issue > Get Article" \
    --only "Articles of the Actual Issue > Create New Article or Copy Article > Example 1" \
+   --only "Articles of the Actual Issue > Create New Article or Copy Article > Example 2" \
    --only "Articles of the Actual Issue > Delete Article"
 popd
 
