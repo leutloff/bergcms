@@ -86,10 +86,11 @@ before_install:
     - git submodule update --init --recursive
     - echo "The preinstalled node..."
     - which node && node -v && npm version && /usr/bin/node -v && /usr/bin/npm version || true
+    # Remove preinstalled node versions - easierer than to change the PATH
+    - sudo rm -rf /home/travis/.nvm
     # Install nodejs and npm from https://nodesource.com/ -- Alternative downloads are available from https://nodejs.org/en/download/
     - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
     - sudo apt-get install -y nodejs
-    - nvm use 6
     - which node && node -v && npm version && /usr/bin/node -v && /usr/bin/npm version || true
     # ensure npm v3:
     - if [[ `npm -v` != 3* ]]; then sudo npm i -g npm@3; fi
