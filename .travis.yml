@@ -85,21 +85,22 @@ before_install:
     - lsb_release -a
     - git submodule update --init --recursive
     - echo "The preinstalled node..."
-    - which node && node -v && npm version && /usr/bin/node -v && /usr/bin/npm version || true
+    - which node && node -v && npm version || true
     # Remove preinstalled node versions - easierer than to change the PATH
     - sudo rm -rf /home/travis/.nvm
     # Install nodejs and npm from https://nodesource.com/ -- Alternative downloads are available from https://nodejs.org/en/download/
     - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
     - sudo apt-get install -y nodejs
-    - which node && node -v && npm version && /usr/bin/node -v && /usr/bin/npm version || true
+    - export NPM=/usr/bin/npm
+    - which node && $NPM version && node -v || true
     # ensure npm v3:
-    - if [[ `npm -v` != 3* ]]; then sudo npm i -g npm@3; fi
+    #- if [[ `npm -v` != 3* ]]; then sudo npm i -g npm@3; fi
     - env | grep PATH
-    - which node && node -v && npm version && /usr/bin/node -v && /usr/bin/npm version || true
+    #- which node && node -v && $NPM version || true
     # runs about 70s:
-    #- sudo npm install -g mocha webdriverio browserify uglifyjs dredd@stable || true
-    - sudo npm install -g mocha-cli || true
-    - sudo npm update
+    #- sudo $NPM install -g mocha webdriverio browserify uglifyjs dredd@stable || true
+    - sudo $NPM install -g mocha-cli || true
+    - sudo $NPM update
     # Install CMake
     - sudo apt-get --purge remove cmake -y
     - export OPTDIR=/home/travis
@@ -213,8 +214,7 @@ script:
     #- wget http://bergcms.local/dlb/feginfo.log || true
     #- cat feginfo.log || true
     - echo "Running the end to end tests using wdio..."
-    - export TEST_RUN_LOCAL=false && npm test
-    - npm rebuild
+    - export TEST_RUN_LOCAL=false && $NPM test
     - node_modules/dredd/bin/dredd --config api-test/dredd.yml --only "Articles of the Actual Issue > List All Articles"
 after_success:
     - pushd travis-build
