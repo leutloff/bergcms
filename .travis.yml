@@ -85,13 +85,14 @@ before_install:
     - lsb_release -a
     - git submodule update --init --recursive
     - echo "The preinstalled node..."
-    - which node && node -v && npm version || true
+    - which node && node -v && npm version && /usr/bin/node -v && /usr/bin/npm version || true
     # Install nodejs and npm from https://nodesource.com/ -- Alternative downloads are available from https://nodejs.org/en/download/
     - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
     - sudo apt-get install -y nodejs
     # ensure npm v3:
     - if [[ `npm -v` != 3* ]]; then sudo npm i -g npm@3; fi
-    - which node && node -v && npm version || true
+    - env | grep PATH
+    - which node && node -v && npm version && /usr/bin/node -v && /usr/bin/npm version || true
     # runs about 70s:
     #- sudo npm install -g mocha webdriverio browserify uglifyjs dredd@stable || true
     - sudo npm install -g mocha-cli || true
