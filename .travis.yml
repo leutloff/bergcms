@@ -23,7 +23,6 @@ language: cpp
 compiler:
     #- clang
     - gcc
-node_js: 6
 cache:
   apt: true
 #  directories:
@@ -86,6 +85,8 @@ before_install:
     - lsb_release -a
     - git submodule update --init --recursive
     - echo "The preinstalled node..."
+    - which node && node -v && npm version && /usr/bin/node -v && /usr/bin/npm version || true
+    - nvm 6
     - which node && node -v && npm version && /usr/bin/node -v && /usr/bin/npm version || true
     # Install nodejs and npm from https://nodesource.com/ -- Alternative downloads are available from https://nodejs.org/en/download/
     - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
