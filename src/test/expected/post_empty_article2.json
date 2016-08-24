@@ -1,0 +1,14 @@
+Content-type: application/json; charset=utf-8
+Status: 201
+
+{
+    "id": "2",
+    "priority": "100",
+    "type": "A",
+    "chapter": "",
+    "title": "",
+    "header": "",
+    "body": "",
+    "footer": "",
+    "lastChanged": ""
+}
