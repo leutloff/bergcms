@@ -83,18 +83,46 @@ the id of the article that should be copied.
 + Request (application/json)
 
         { 
-            "title": "Title of the article",
-            "chapter": "Introduction"
+            "chapter": "Introduction",
+            "title": "Title of the article"
         }
     
 + Response 201 (application/json; charset=utf-8)
 
         {
             "id": 27,
+            "priority": 100,
+            "type": "A",
+            "chapter": "Introduction",
             "title": "Title of the article",
-            "chapter": "Introduction"
+            "header": "",
+            "body": "",
+            "footer": "",
+            "lastChanged": ""
         }
-        
+
+### Change Article [PUT /articles/{id}]
+
+Changes a previously created or retrieved article.
+
++ Parameters
+    + id: 25 (number) - the number of the edited article.
+
++ Request (application/json)
+
+        {
+            "id": 25,
+            "priority": 100,
+            "type": "A",
+            "chapter": "Introduction",
+            "title": "Changed Title",
+            "header": "",
+            "body": "Some text within the article.",
+            "footer": ""
+        }
+
++ Response 200
+
         
 ### Delete Article [DELETE /articles/{id}]
 
