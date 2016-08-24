@@ -151,6 +151,7 @@ void Article::SetFromJSON(const string &jsonArticle)
 //    body = tree.get("article.body", "");
 //    footer = tree.get("article.footer", "");
 //    lastChanged = tree.get("article.lastChanged", "");
+
     id = tree.get<unsigned>("id", numeric_limits<unsigned>::max());
     priority = tree.get<int>("priority", 100);
     type = tree.get("type", "A");

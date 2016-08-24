@@ -76,6 +76,7 @@ void RestArticle::post(cgi::request & req, cgi::response &resp)
     if (range.first != range.second) // key is found
     {
         const string postdata = req.post["POSTDATA"];
+        //boost::trim(postdata);
         if (0 < postdata.length())
         {
             // fill article with the provided information
@@ -88,8 +89,6 @@ void RestArticle::post(cgi::request & req, cgi::response &resp)
     newArticle.GetAsJSON(jsonArticle);
     resp << jsonArticle;
     resp.status(http::created); // 201
-    resp << cgi::header("STATUS", "201");
-    resp << http::created;
 }
 
 int RestArticle::getArticleId(cgi::request & req)

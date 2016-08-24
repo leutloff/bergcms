@@ -72,6 +72,8 @@ void VerifyGeneratedFileContent(boost::filesystem::path const& expectedFile, str
 {
     std::vector<std::string> expected;
     BOOST_CHECK_EQUAL(true, bt::LoadFile(expectedFile, expected));
+    // remove first three lines - the header lines
+    expected.erase(expected.begin());
     expected.erase(expected.begin());
     expected.erase(expected.begin());
 
@@ -334,10 +336,10 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_single_lib)
  * QUERY_STRING /articles
  * BERGCMSDB    /home/leutloff/work/bergcms/src/test/output/empty_article.csv
  */
-BOOST_AUTO_TEST_CASE(test_bgrest_put_articles_single_lib)
+BOOST_AUTO_TEST_CASE(test_bgrest_post_articles_single_lib)
 {
     const fs::path outputDatabaseFile = fs::path(bt::GetOutputDir()  / "empty_article.csv");
-    const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "post_empty_article.json"                  );
+    const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "post_empty_article1.json");
 
     if (fs::exists(outputDatabaseFile)) { fs::remove(outputDatabaseFile); }
 
@@ -350,7 +352,7 @@ BOOST_AUTO_TEST_CASE(test_bgrest_put_articles_single_lib)
     cgi::response resp;
     restArticle.dispatchArticles(req, resp);
 
-    // cout << "Response:" << endl << resp.str() << endl;
+    //cout << "Response (post_articles_single_lib):" << endl << resp.str() << endl;
     VerifyGeneratedFileContent(jsonFileExpected, resp.str());
 }
 
@@ -361,7 +363,7 @@ BOOST_AUTO_TEST_CASE(test_bgrest_put_articles_single_lib)
  * QUERY_STRING /articles
  * BERGCMSDB    /home/leutloff/work/bergcms/src/test/output/empty_article.csv
  */
-BOOST_AUTO_TEST_CASE(test_bgrest_put_two_articles)
+BOOST_AUTO_TEST_CASE(test_bgrest_post_two_articles)
 {
     const fs::path outputDatabaseFile = fs::path(bt::GetOutputDir()  / "empty_article.csv");
     const fs::path jsonFileExpected1  = fs::path(bt::GetExpectedDir() / "post_article_with_title1.json");
@@ -379,7 +381,7 @@ BOOST_AUTO_TEST_CASE(test_bgrest_put_two_articles)
         cgi::response resp;
         restArticle.dispatchArticles(req, resp);
 
-        // cout << "Response:" << endl << resp.str() << endl;
+        //cout << "Response (post_two_articles - 1):" << endl << resp.str() << endl;
         VerifyGeneratedFileContent(jsonFileExpected1, resp.str());
     }
     req.post["POSTDATA"] = "{ \"priority\": \"501\", \"title\": \"Title of the second article\", \"chapter\": \"Introduction\" }";
@@ -387,10 +389,47 @@ BOOST_AUTO_TEST_CASE(test_bgrest_put_two_articles)
         cgi::response resp;
         restArticle.dispatchArticles(req, resp);
 
-        // cout << "Response:" << endl << resp.str() << endl;
-        VerifyGeneratedFileContent(jsonFileExpected2    , resp.str());
+        //cout << "Response (post_two_articles - 2):" << endl << resp.str() << endl;
+        VerifyGeneratedFileContent(jsonFileExpected2, resp.str());
     }
 }
 
+/**
+ * This unit test uses an empty database and creates an empty article.
+ * This test fills the CGI data structures and processes them.
+ * POST
+ * QUERY_STRING /articles
+ * BERGCMSDB    /home/leutloff/work/bergcms/src/test/output/empty_article.csv
+ */
+BOOST_AUTO_TEST_CASE(test_bgrest_post_empty_article)
+{
+    const fs::path outputDatabaseFile = fs::path(bt::GetOutputDir()   / "empty_article.csv");
+    const fs::path jsonFileExpected1  = fs::path(bt::GetExpectedDir() / "post_empty_article1.json");
+    const fs::path jsonFileExpected2  = fs::path(bt::GetExpectedDir() / "post_empty_article2.json");
+
+    if (fs::exists(outputDatabaseFile)) { fs::remove(outputDatabaseFile); }
+
+    cgi::request req;
+    req.set_query_string("/articles");
+    req.set_method("POST");
+    req.post["POSTDATA"] = "{}";
+
+    RestArticle restArticle(outputDatabaseFile.c_str());
+    {
+        cgi::response resp;
+        restArticle.dispatchArticles(req, resp);
+
+        //cout << "Response:" << endl << resp.str() << endl;
+        VerifyGeneratedFileContent(jsonFileExpected1, resp.str());
+    }
+    req.post["POSTDATA"] = "";
+    {
+        cgi::response resp;
+        restArticle.dispatchArticles(req, resp);
+
+        //cout << "Response:" << endl << resp.str() << endl;
+        VerifyGeneratedFileContent(jsonFileExpected2, resp.str());
+    }
+}
 
 BOOST_AUTO_TEST_SUITE_END()

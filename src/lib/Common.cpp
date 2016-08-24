@@ -128,7 +128,7 @@ int Common::SendErrorPage(boost::cgi::request& req, std::string const& errorType
 
     resp << "<html>";
     resp << "<head><title>Fehler</title><head>";
-    resp << "<body>\n" ;
+    resp << "<body><h1>Fehler</h1>\n" ;
     if (0 < errorType.length())
     {
         resp << "<p>Fehlertyp: " << errorType << "</p>\n";
@@ -157,6 +157,6 @@ string Common::GetBergVersion()
 
 std::string Common::GetBergLastChangedDate()
 {
-    return "15.07.2016";
+    return "24.08.2016";
 }
 
