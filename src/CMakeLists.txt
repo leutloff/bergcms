@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Debian Lenny only providesCMake  2.6, Jessie 3.0
+# Debian Lenny only provides CMake  2.6, Jessie 3.0
 # Ubuntu Trusty 2.8, Xenial 3.3
 # Install CMake 3.5 from https://cmake.org/files/v3.5/cmake-3.5.0-Linux-x86_64.sh or https://cmake.org/files/v3.5/cmake-3.5.0-Linux-i386.sh
 cmake_minimum_required (VERSION 3.5)
