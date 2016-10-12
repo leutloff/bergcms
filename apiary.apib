@@ -48,7 +48,7 @@ Returns a specific article that can be displayed and edited.
             "header": "Heading part of the article.",
             "body": "The main part of the article.",
             "footer": "Buttom part of the article.",
-            "lastChanged": "20160715-002748-Fr \/ 127.0.0.1:40142 \/ -"
+            "lastChanged": "20160715-102748-Fr \/ 127.0.0.1:40142 \/ -"
         }
         
 ### Create New Article or Copy Article [POST /articles]
@@ -105,23 +105,118 @@ the id of the article that should be copied.
 
 Changes a previously created or retrieved article.
 
+The request has to provide two article structures. 
+The one that was retrieved from the server and the changed article.
+The server will just store the changed information if the article was not changed in the meantime.
+The comparison is performed attribute by attribute.
+The id must not be changed.
+The lastChanged attribute overwrites the existing one, when the information is stored into the database.
+
+Attribute defintion:
+- oldArticle: Article retrieved from the server.
+- newArticle: This is the changed version of the article that should be stored on the server.
+- actualArticle: This is article stored in the database after performing the PUT operation.
+- changedArticle: This is the version of the article at the beginning of the PUT operation.
+
+The first response is returned when oldArticle matches the changedArticle.
+
+The seconde response is returned when oldArticle and changedArticle are different.
+
 + Parameters
     + id: 25 (number) - the number of the edited article.
 
 + Request (application/json)
 
         {
-            "id": 25,
-            "priority": 100,
-            "type": "A",
-            "chapter": "Introduction",
-            "title": "Changed Title",
-            "header": "",
-            "body": "Some text within the article.",
-            "footer": ""
+            "oldArticle": {
+                "id": 25,
+                "priority": 100,
+                "type": "F",
+                "chapter": "1:Introduction",
+                "title": "Title of the article",
+                "header": "Heading part of the article.",
+                "body": "The main part of the article.",
+                "footer": "Buttom part of the article.",
+                "lastChanged": "20160715-102748-Fr \/ 127.0.0.1:40142 \/ -"
+            },
+            "newArticle": {
+                "id": 25,
+                "priority": 100,
+                "type": "A",
+                "chapter": "Introduction",
+                "title": "Changed Title",
+                "header": "",
+                "body": "Some text within the article.",
+                "footer": ""
+            }
+        }
+
+
++ Response 200
+
+        {
+            "actualArticle": {
+                "id": 25,
+                "priority": 100,
+                "type": "A",
+                "chapter": "Introduction",
+                "title": "Changed Title",
+                "header": "",
+                "body": "Some text within the article.",
+                "footer": "",
+                "lastChanged": "20160715-102748-Fr \/ 127.0.0.1:40142 \/ -"
+            }
         }
 
 + Response 200
+
+        {
+            "actualArticle": {
+                "id": 25,
+                "priority": 200,
+                "type": "A",
+                "chapter": "1:Introduction",
+                "title": "Changed Title",
+                "header": "",
+                "body": "Some text within the article.",
+                "footer": "",
+                "lastChanged": "20160715-102748-Fr \/ 127.0.0.1:40142 \/ -"
+            },
+            "oldArticle": {
+                "id": 25,
+                "priority": 100,
+                "type": "F",
+                "chapter": "1:Introduction",
+                "title": "Title of the article",
+                "header": "Heading part of the article.",
+                "body": "The main part of the article.",
+                "footer": "Buttom part of the article.",
+                "lastChanged": "20160715-082748-Fr \/ 127.0.0.1:40142 \/ -"
+            },
+            "newArticle": {
+                "id": 25,
+                "priority": 100,
+                "type": "A",
+                "chapter": "1:Introduction",
+                "title": "Changed Title",
+                "header": "",
+                "body": "Some text within the article.",
+                "footer": "",
+                "lastChanged": "20160715-102748-Fr \/ 127.0.0.1:40142 \/ -"
+            },
+            "changedArticle": {
+                "id": 25,
+                "priority": 200,
+                "type": "F",
+                "chapter": "1:Introduction",
+                "title": "Title of the article",
+                "header": "Heading part of the article.",
+                "body": "The main part of the article.",
+                "footer": "Buttom part of the article.",
+                "lastChanged": "20160715-092748-Fr \/ 127.0.0.1:32849 \/ -"
+            }
+        }
+
 
         
 ### Delete Article [DELETE /articles/{id}]
