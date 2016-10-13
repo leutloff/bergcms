@@ -269,48 +269,67 @@ namespace berg
         /**
          * @brief Read the file and add each line to the returned vector.
          * @param file to read
-         * @return vector with file content
+         * @param vector with file content
+         * @return true when successful.
          */
-       inline bool LoadFile(boost::filesystem::path const& file, std::vector<std::string> & fileContent)
-       {
-           fileContent.clear();
-           if (boost::filesystem::exists(file))
-           {
-               boost::filesystem::ifstream ifs(file);
-               if (ifs.is_open())
-               {
-                   std::string line;
-                   while (ifs.good())
-                   {
-                       std::getline(ifs, line);
-                       fileContent.push_back(line);
-                   }
-                   return true;
-               }
-           }
-           return false;
-       }
+        inline bool LoadFile(boost::filesystem::path const& file, std::vector<std::string> & fileContent)
+        {
+            fileContent.clear();
+            if (boost::filesystem::exists(file))
+            {
+                boost::filesystem::ifstream ifs(file);
+                if (ifs.is_open())
+                {
+                    std::string line;
+                    while (ifs.good())
+                    {
+                        std::getline(ifs, line);
+                        fileContent.push_back(line);
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
 
-       /**
-        * @brief RemoveIgnoreLine scans the first vector for elements containing <ignoreline> at the beginning.
-        *        Any found element is removed from both vectors.
-        * @param expected
-        * @param actual
-        */
-       inline void RemoveIgnoreLine(std::vector<std::string> & expected, std::vector<std::string> & actual)
-       {
-           size_t nMax = std::max(expected.size(), actual.size());
-           size_t i = 0;
-           while ((nMax > i) && (std::string::npos != expected[i].find("<ignoreline>")))
-           {
-               ++i;
-           }
-           if (0 < i)
-           {
-               expected.erase(expected.begin(), expected.begin()+i);
-               actual.erase(actual.begin(), actual.begin()+i);
-           }
-       }
+        /**
+         * @brief Read the file and add each line to the returned string.
+         * @param file to read
+         * @param vector with file content
+         * @return true when successful.
+         */
+        inline bool LoadFile(boost::filesystem::path const& file, std::string & fileContentString)
+        {
+            fileContentString.clear();
+            std::vector<std::string> fileContent;
+            if (LoadFile(file, fileContent))
+            {
+                fileContentString = boost::algorithm::join(fileContent, "");
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * @brief RemoveIgnoreLine scans the first vector for elements containing <ignoreline> at the beginning.
+         *        Any found element is removed from both vectors.
+         * @param expected
+         * @param actual
+         */
+        inline void RemoveIgnoreLine(std::vector<std::string> & expected, std::vector<std::string> & actual)
+        {
+            size_t nMax = std::max(expected.size(), actual.size());
+            size_t i = 0;
+            while ((nMax > i) && (std::string::npos != expected[i].find("<ignoreline>")))
+            {
+                ++i;
+            }
+            if (0 < i)
+            {
+                expected.erase(expected.begin(), expected.begin()+i);
+                actual.erase(actual.begin(), actual.begin()+i);
+            }
+        }
 
 //       /**
 //        * @brief Replaces the utf-16 character representation.

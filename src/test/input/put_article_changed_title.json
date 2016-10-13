@@ -1,0 +1,24 @@
+{
+    "oldArticle": {
+        "id": "1",
+        "priority": "100",
+        "type": "A",
+        "chapter": "",
+        "title": "",
+        "header": "",
+        "body": "",
+        "footer": "",
+        "lastChanged": ""
+    },
+    "newArticle": {
+        "id": "1",
+        "priority": "100",
+        "type": "A",
+        "chapter": "Introduction",
+        "title": "Changed Title",
+        "header": "",
+        "body": "Some text within the article.",
+        "footer": ""
+    }
+}
+
