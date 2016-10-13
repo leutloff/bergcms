@@ -472,26 +472,26 @@ BOOST_AUTO_TEST_CASE(test_bgrest_put_article_changed_title)
         // save changed article
         cgi::request req;
         req.set_query_string("/articles/" + id);
-        req.set_method("PUT"); // TODO add support for that method...
+        req.set_method("PUT");
         bt::LoadFile(jsonFileInput1, postdata);
         req.post["POSTDATA"] = postdata;
 
-//        cgi::response resp;
-//        restArticle.dispatchArticles(req, resp);
+        cgi::response resp;
+        restArticle.dispatchArticles(req, resp);
 
-//        //cout << "Response:" << endl << resp.str() << endl;
-//        VerifyGeneratedFileContent(jsonFileExpected2, resp.str());
-//    }
-//    {
-//        // read changed article
-//        cgi::request req;
-//        req.set_query_string("/articles/" + id);
-//        req.set_method("GET");
+        cout << "Response:" << endl << resp.str() << endl;
+        VerifyGeneratedFileContent(jsonFileExpected2, resp.str());
+    }
+    {
+        // read changed article
+        cgi::request req;
+        req.set_query_string("/articles/" + id);
+        req.set_method("GET");
 
-//        cgi::response resp;
-//        restArticle.dispatchArticles(req, resp);
+        cgi::response resp;
+        restArticle.dispatchArticles(req, resp);
 
-//        VerifyGeneratedFileContent(jsonFileExpected2, resp.str());
+     // TODO VerifyGeneratedFileContent(jsonFileExpected2, resp.str());
     }
 }
 

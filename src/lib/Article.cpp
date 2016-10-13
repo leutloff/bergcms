@@ -136,22 +136,89 @@ size_t Article::CountDisplayedLines(std::string const& articlePart)
     return cnt;
 }
 
+bool Article::Merge(Article const& newArticle, Article const& oldArticle)
+{
+    bool ret = true;
+    if ((id != newArticle.getId()) || (id != oldArticle.getId()))
+    {
+        throw "Merge: ID mismatch - cannot preceed!";
+    }
+    if (priority == oldArticle.getPriority())
+    {
+        priority = newArticle.getPriority();
+    }
+    else
+    {
+        ret = false;
+    }
+    if (type == oldArticle.getType())
+    {
+        type = newArticle.getType();
+    }
+    else
+    {
+        ret = false;
+    }
+    if (chapter == oldArticle.getChapter())
+    {
+        chapter = newArticle.getChapter();
+    }
+    else
+    {
+        ret = false;
+    }
+    if (title == oldArticle.getTitle())
+    {
+        title = newArticle.getTitle();
+    }
+    else
+    {
+        ret = false;
+    }
+    if (header == oldArticle.getHeader())
+    {
+        header = newArticle.getHeader();
+    }
+    else
+    {
+        // TODO try merge
+        ret = false;
+    }
+    if (body == oldArticle.getBody())
+    {
+        body = newArticle.getBody();
+    }
+    else
+    {
+        // TODO try merge
+        ret = false;
+    }
+    if (footer == oldArticle.getFooter())
+    {
+        footer = newArticle.getFooter();
+    }
+    else
+    {
+        // TODO try merge
+        ret = false;
+    }
+
+
+    // update lastChanged
+    return ret;
+}
+
+
 void Article::SetFromJSON(const string &jsonArticle)
 {
     pt::ptree tree;
     istringstream iss(jsonArticle);
     pt::read_json(iss, tree);
+    SetFromJSON(tree);
+}
 
-//    id = tree.get<unsigned>("article.id");
-//    priority = tree.get<int>("article.priority", 100);
-//    type = tree.get("article.type", "A");
-//    chapter = tree.get("article.chapter", "");
-//    title = tree.get("article.title", "");
-//    header = tree.get("article.header", "");
-//    body = tree.get("article.body", "");
-//    footer = tree.get("article.footer", "");
-//    lastChanged = tree.get("article.lastChanged", "");
-
+void Article::SetFromJSON(boost::property_tree::ptree const& tree)
+{
     id = tree.get<unsigned>("id", numeric_limits<unsigned>::max());
     priority = tree.get<int>("priority", 100);
     type = tree.get("type", "A");

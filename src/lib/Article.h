@@ -93,10 +93,26 @@ public:
     static size_t CountDisplayedLines(std::string const& articlePart);
 
     /**
+     * @brief Merges the newArticle into this article. The old article was the starting point when changing to new article.
+     * @param newArticle this the desired article
+     * @param oldArticle was the starting point
+     * @return true when merge was successful.
+     */
+    bool Merge(Article const& newArticle, Article const& oldArticle);
+
+    /**
+     * @brief SetFromJSON sets the whole article from the JSON object (as string).
+     * Calls SetFromJSON(ptree).
+     * @param jsonArticle the article in a string
+     */
+    void SetFromJSON(std::string const& jsonArticle);
+
+    /**
      * @brief SetFromJSON sets the whole article from the JSON object.
      * @param json the JSON object
      */
-    void SetFromJSON(std::string const& jsonArticle);
+    void SetFromJSON(boost::property_tree::ptree const& tree);
+
     /**
      * @brief GetAsJSON returns the article as JSON object.
      * @return The article formatted as JSON object.

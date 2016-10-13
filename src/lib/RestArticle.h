@@ -46,7 +46,10 @@ private:
     void getSingle(boost::cgi::request & req, boost::cgi::response &resp);
 
     void post(boost::cgi::request & req, boost::cgi::response &resp);
+    void put(boost::cgi::request & req, boost::cgi::response &resp);
     void deleteSingle(boost::cgi::request & req, boost::cgi::response &resp);
+
+    void extractArticles(boost::cgi::request & req, berg::Article & newArticle, berg::Article & oldArticle);
 };
 
 }

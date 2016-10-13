@@ -76,7 +76,6 @@ void RestArticle::post(cgi::request & req, cgi::response &resp)
     if (range.first != range.second) // key is found
     {
         const string postdata = req.post["POSTDATA"];
-        //boost::trim(postdata);
         if (0 < postdata.length())
         {
             // fill article with the provided information
@@ -89,6 +88,61 @@ void RestArticle::post(cgi::request & req, cgi::response &resp)
     newArticle.GetAsJSON(jsonArticle);
     resp << jsonArticle;
     resp.status(http::created); // 201
+}
+
+
+void RestArticle::extractArticles(cgi::request & req, Article & newArticle, Article & oldArticle)
+{
+    auto range = req.post.equal_range("POSTDATA");
+    if (range.first == range.second) // key is found
+    {
+        throw "Empty Article - POSTDATA missing.";
+    }
+    const string postdata = req.post["POSTDATA"];
+    if (0 == postdata.length())
+    {
+        throw "Empty Article - POSTDATA has no content.";
+    }
+    pt::ptree tree;
+    istringstream iss(postdata);
+    pt::read_json(iss, tree);
+
+    // fill articles with the provided information
+    oldArticle.SetFromJSON(tree.get_child("oldArticle"));
+    newArticle.SetFromJSON(tree.get_child("newArticle"));
+}
+
+void RestArticle::put(cgi::request & req, cgi::response &resp)
+{
+    // extract the ID from the query string.
+    auto id = getArticleId(req);
+
+    // extract the old and new articles from the message body.
+    Article newArticle, oldArticle;
+    extractArticles(req, newArticle, oldArticle);
+
+    // load existing article from the db
+    auto actualArticle = storage.GetArticle(id);
+    //auto changedArticle = actualArticle;
+
+    if (actualArticle.Merge(newArticle, oldArticle))
+    {
+        storage.SetArticle(id, actualArticle);
+        pt::ptree tree, answer;
+        tree = actualArticle.Get();
+        answer.put_child("actualArticle", tree);
+
+        ostringstream oss;
+        pt::write_json(oss, answer);
+        string jsonArticle = oss.str();
+
+        resp << jsonArticle;
+        resp.status(http::ok); // 200
+    }
+    else
+    {
+        throw "TODO - merge requried.";
+    }
 }
 
 int RestArticle::getArticleId(cgi::request & req)
@@ -128,6 +182,11 @@ void RestArticle::dispatchArticles(cgi::request & req, cgi::response &resp)
             resp << cgi::content_type("application/json") << cgi::charset("utf-8");
             post(req, resp);
         }
+    }
+    else if ("PUT" == req.method())
+    {
+        resp << cgi::content_type("application/json") << cgi::charset("utf-8");
+        put(req, resp);
     }
     else if ("DELETE" == req.method())
     {
