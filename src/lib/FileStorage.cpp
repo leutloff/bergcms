@@ -2,7 +2,7 @@
  * @file FileStorage.cpp
  * Storage related methods.
  * 
- * Copyright 2012 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2012, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -135,7 +135,16 @@ void FileStorage::NewArticle(Article & article)
 
 void FileStorage::SetArticle(unsigned no, Article const& article)
 {
-    // TODO
+    for (auto it = articles.begin(); it < articles.end(); ++it)
+    {
+        if (no == (*it)->getId())
+        {
+            *(*it) = article;
+            Save();
+            return;
+        }
+    }
+    throw "Article Number " + boost::lexical_cast<string>(no) + " does not exists. Article not saved.";
 }
 
 void FileStorage::DeleteArticle(unsigned no)

@@ -443,10 +443,11 @@ BOOST_AUTO_TEST_CASE(test_bgrest_post_empty_article)
  */
 BOOST_AUTO_TEST_CASE(test_bgrest_put_article_changed_title)
 {
-    const fs::path outputDatabaseFile = fs::path(bt::GetOutputDir()   / "empty_article.csv");
-    const fs::path jsonFileExpected1  = fs::path(bt::GetExpectedDir() / "post_empty_article1.json");
-    const fs::path jsonFileInput1     = fs::path(bt::GetInputDir()    / "put_article_changed_title.json");
-    const fs::path jsonFileExpected2  = fs::path(bt::GetExpectedDir() / "put_article_changed_title.json");
+    const fs::path outputDatabaseFile   = fs::path(bt::GetOutputDir()   / "empty_article.csv");
+    const fs::path jsonFileExpected1    = fs::path(bt::GetExpectedDir() / "post_empty_article1.json");
+    const fs::path jsonFileInput1       = fs::path(bt::GetInputDir()    / "put_article_changed_title.json");
+    const fs::path jsonFileExpected2    = fs::path(bt::GetExpectedDir() / "put_article_changed_title.json");
+    const fs::path jsonFileExpectedGet2 = fs::path(bt::GetExpectedDir() / "get_article_changed_title.json");
 
     if (fs::exists(outputDatabaseFile)) { fs::remove(outputDatabaseFile); }
 
@@ -491,7 +492,7 @@ BOOST_AUTO_TEST_CASE(test_bgrest_put_article_changed_title)
         cgi::response resp;
         restArticle.dispatchArticles(req, resp);
 
-     // TODO VerifyGeneratedFileContent(jsonFileExpected2, resp.str());
+        VerifyGeneratedFileContent(jsonFileExpectedGet2, resp.str());
     }
 }
 

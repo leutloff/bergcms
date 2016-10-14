@@ -87,6 +87,7 @@ node_modules/dredd/bin/dredd --config api-test/dredd.yml \
    --only "Articles of the Actual Issue > Create New Article or Copy Article > Example 1" \
    --only "Articles of the Actual Issue > Create New Article or Copy Article > Example 2" \
    --only "Articles of the Actual Issue > Delete Article"
+#node_modules/dredd/bin/dredd --config api-test/dredd.yml
 popd
 # node_modules/dredd/bin/dredd --config api-test/dredd.yml --only "Articles of the Actual Issue > Create New Article or Copy Article > Example 1"
 
