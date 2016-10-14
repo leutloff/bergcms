@@ -45,11 +45,14 @@
     # Ubuntu 15.05 vivid -> 1.55
     # Ubuntu 15.10 wily (my Development system) -> 1.58
     # Ubuntu 16.04 xenial LTS -> 1.58 (32 and 64 bit)
+    # Ubuntu 16.10 ->1.61
     # Debian wheezy -> 1.49.0.1
     # Debian jessie -> 1.55.0
     # Windows latest as of 20160317 -> 1.60.0
     # Boost filesystem < 1.57 can not be compiled with -std=c++11 (undefined reference to `boost::filesystem::detail::copy_file)
-    if(EXISTS "/usr/lib/libboost_filesystem.so.1.60.0")
+    if(EXISTS "/usr/lib/libboost_filesystem.so.1.61.0")
+        set(BERG_BOOST_VERSION 1.61.0)
+    elseif(EXISTS "/usr/lib/libboost_filesystem.so.1.60.0")
         set(BERG_BOOST_VERSION 1.60.0)
     elseif(EXISTS "/usr/lib/libboost_filesystem.so.1.59.0")
         set(BERG_BOOST_VERSION 1.59.0)
@@ -103,7 +106,7 @@ if (WIN32)
     add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
 endif()
 
-find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS chrono date_time filesystem iostreams locale program_options regex signals thread unit_test_framework system REQUIRED)
+find_package(Boost ${BERG_BOOST_VERSION} COMPONENTS chrono date_time filesystem iostreams locale program_options regex signals thread unit_test_framework serialization system REQUIRED)
 #message("berg Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS} - deprecated: BOOST_LIBRARYDIR: ${BOOST_LIBRARYDIR}.")
 
 # Add the boost libs to the install package.
@@ -119,3 +122,4 @@ install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_signals.so.${BERG_BOOST_VERSION}
 install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_system.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
 install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_thread.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
 install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_unit_test_framework.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
+install(PROGRAMS ${Boost_LIBRARY_DIRS}/libboost_serialization.so.${BERG_BOOST_VERSION} DESTINATION "${BERG_INSTALL_CGIBIN}/lib")
