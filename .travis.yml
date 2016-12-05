@@ -64,10 +64,12 @@ addons:
       # Disallowing packages (20160228): - wput
       # nodejs-legacy is required in later Ubuntu versions than precise:
       # Disallowing packages (20160228): - nodejs-legacy
+      # Ensure an installed java:
+      - oracle-java8-installer
+      - oracle-java8-set-default
 before_install:
-    - echo "Ensure an installed java... - fails in workers where source /opt/jdk_switcher/jdk_switcher.sh is used"
-    - source $HOME/.jdk_switcher_rc
-    - java -version
+    - echo "Ensure an installed java..."
+    - gcc --version && perl -v && java -version
     - echo "Preprocess the required LaTeX fonts, show texlive configuration..."
     - ls -l /usr/share/texlive/texmf-dist/fonts/source/jknappen/ec/ecss1440.mf || true
     - mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecss1200
@@ -84,7 +86,6 @@ before_install:
     - tlmgr conf
     - cat /etc/hosts
     - id
-    - gcc --version && perl -v && java -version
     - lsb_release -a
     - git submodule update --init --recursive
     - echo "The preinstalled node..."
