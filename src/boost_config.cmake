@@ -52,6 +52,8 @@
     # Boost filesystem < 1.57 can not be compiled with -std=c++11 (undefined reference to `boost::filesystem::detail::copy_file)
     if(EXISTS "/usr/lib/libboost_filesystem.so.1.61.0")
         set(BERG_BOOST_VERSION 1.61.0)
+    elseif(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.61.0")
+        set(BERG_BOOST_VERSION 1.61.0)
     elseif(EXISTS "/usr/lib/libboost_filesystem.so.1.60.0")
         set(BERG_BOOST_VERSION 1.60.0)
     elseif(EXISTS "/usr/lib/libboost_filesystem.so.1.59.0")
