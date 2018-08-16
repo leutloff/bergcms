@@ -33,24 +33,24 @@ on Travis CI. The file .travis.yml performs the build of the C++ based
 modules, runs C++ and Perl based unit tests, installs everything on a
 local Apache web server and will perform some GUI tests.
 
-Summary to prepare the development system - Example is executed with Ubuntu 16.04:
+Summary to prepare the development system - Example is executed with Ubuntu 18.04:
 
 ```bash
-sudo apt-get install gcc g++ clang gdb python perl libtool autoconf automake make \
+sudo apt install gcc g++ clang gdb python perl libtool autoconf automake make \
     patch curl ca-certificates file less git bzip2 xz-utils libc6-dev \
     zlib1g-dev libbz2-dev liblzma-dev libssl-dev libicu-dev wget
-sudo apt-get install firefox-locale-de firefox chromium-browser kate okular
-sudo apt-get install libboost1.58-all-dev cmake
-sudo npm install mocha-cli typescript typings -g
+sudo apt install firefox-locale-de firefox chromium-browser kate okular
+sudo apt install libboost1.65-all-dev cmake npm
+sudo npm install mocha-cli typescript -g
 
 git clone git@github.com:leutloff/bergcms.git
 cd bergcms/
 npm install
 ```
 
-Summary to prepare the production system - command is executed on Ubuntu 16.04:
+Summary to prepare the production system - command is executed on Ubuntu 18.04:
 
-    sudo apt-get install apache2 apache2-suexec-custom texlive-base texlive-binaries texlive-extra-utils texlive-fonts-recommended texlive-lang-german texlive-latex-recommended texlive-latex-extra texlive-fonts-extra
+    sudo apt install apache2 apache2-suexec-custom texlive-base texlive-binaries texlive-extra-utils texlive-fonts-recommended texlive-lang-german texlive-latex-recommended texlive-latex-extra texlive-fonts-extra
 
 Configure the system to point with [http://bergcms.local](http://bergcms.local) to a running webserver.
 Add bergcms.local to /etc/hosts, e.g. change the line from
@@ -68,7 +68,7 @@ These are the steps to perform a build itself:
   build the submodules.
 - Install the [Boost C++ library](http://boost.org). Download the Boost C++ Library from
   [http://www.boost.org/users/download/](http://www.boost.org/users/download/)
-  (start with version 1.58, when unsure). Then extract and build boost library.
+  (start with version 1.65, when unsure). Then extract and build boost library.
   Execute the following commands in the extracted source:
       ./bootstrap.sh --with-libraries=atomic,chrono,date_time,exception,filesystem,iostreams,log,program_options,regex,signals,system,test,thread
       sudo ./b2 -j 4 link=shared runtime-link=shared install -d0 --prefix=/usr/local

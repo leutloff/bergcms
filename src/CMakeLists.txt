@@ -1,6 +1,6 @@
 # Main CMake file
 #
-# Copyright 2012, 2013, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013, 2016, 2018 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -27,7 +27,7 @@ project (Berg CXX)
 # set these for release
 set(APPLICATION_VERSION_MAJOR "3")
 set(APPLICATION_VERSION_MINOR "3")
-set(APPLICATION_VERSION_PATCH "0")
+set(APPLICATION_VERSION_PATCH "1")
 
 # use this command to enable verbose CMAKE processing
 # cmake -D CMAKE_VERBOSE_MAKEFILE=true -D CMAKE_BUILD_TYPE=Debug -D Boost_DEBUG=FALSE ../src
