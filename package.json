@@ -8,7 +8,7 @@
     "Edit",
     "Newsletter"
   ],
-  "version": "0.0.10",
+  "version": "0.0.11",
   "license": "(MIT, AGPL)",
   "private": true,
   "author": "Christian Leutloff <leutloff@sundancer.oche.de>",
