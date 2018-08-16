@@ -173,7 +173,7 @@ sub print_version
 #*
 sub load_database
 {
-     my($inp) = @_;
+    my($inp) = @_;
     my (@f,$k,$s,$PIN);
     my %idx = ();
     my $LIM="\x09";
