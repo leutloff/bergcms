@@ -27,3 +27,6 @@ nbproject
 errorShots
 .idea
 .vscode
+build/config.gypi
+doc/redakteur/Auswahl_*.*g
+
