@@ -6,6 +6,8 @@ use warnings;
 
 use utf8;
 use Test::More tests => 17;
+
+use lib '.';
 use BERG::PEX qw(get_tex_content);
 
 my $result = '';

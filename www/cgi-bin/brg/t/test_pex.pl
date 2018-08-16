@@ -6,6 +6,8 @@ use warnings;
 
 use utf8;
 use Test::More tests => 43;
+
+use lib '.';
 use BERG::PEX qw(add_author add_bold add_caption add_italic 
                  replace_characters dbquote);
 
