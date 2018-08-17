@@ -26,7 +26,7 @@ deploy_ssh.sh using SSH based commands.
 
 ## Building from Source
 
-[![Build Status](https://travis-ci.org/leutloff/bergcms.png)](https://travis-ci.org/leutloff/bergcms)
+[![Build Status](https://travis-ci.org/leutloff/bergcms.png)](https://travis-ci.org/leutloff/bergcms) [![Greenkeeper badge](https://badges.greenkeeper.io/leutloff/bergcms.svg)](https://greenkeeper.io/)
 
 The most up-to-date documentation will be the Continuous Integration build
 on Travis CI. The file .travis.yml performs the build of the C++ based
