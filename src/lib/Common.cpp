@@ -138,6 +138,7 @@ int Common::SendErrorPage(boost::cgi::request& req, std::string const& errorType
     resp << "<p>Berg Version: " << GetBergVersion() << "/" << GetBergLastChangedDate() << "\n";
     resp << "</body></html>";
     resp.status(http::bad_request);
+    //resp.status(http::not_implemented);// ensure that mod cgi is logging the request
     return cgi::commit(req, resp);
 }
 
@@ -152,10 +153,10 @@ int Common::SendResponse(boost::cgi::request& req, std::string const& output)
 
 string Common::GetBergVersion()
 {
-    return "v3.3.0";
+    return "v3.3.1";
 }
 
 std::string Common::GetBergLastChangedDate()
 {
-    return "15.04.2017";
+    return "17.08.2018";
 }
