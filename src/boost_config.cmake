@@ -18,14 +18,16 @@
 
     # using distribution specific versions - feel free to add your distribution, too.
     # apt-get install libboost-all-dev
-    # Ubuntu 16.04 xenial LTS -> 1.58 (32 and 64 bit)
+    # Ubuntu 16.04 LTS xenial -> 1.58 (32 and 64 bit)
     # Ubuntu 16.10 -> 1.61
     # Ubuntu 17.04 -> 1.62
-    # Ubuntu 18.04 -> 1.65
+    # Ubuntu 18.04 LTS Bionic -> 1.65.1 (32 and 64 bit)
     # Debian jessie -> 1.55.0
     # Windows latest as of 20160317 -> 1.60.0
     # Boost filesystem < 1.57 can not be compiled with -std=c++11 (undefined reference to `boost::filesystem::detail::copy_file)
     if(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_thread.so.1.65.1")
+        set(BERG_BOOST_VERSION 1.65.1)
+    elseif(EXISTS "/usr/lib/i386-linux-gnu/libboost_filesystem.so.1.65.1")
         set(BERG_BOOST_VERSION 1.65.1)
     elseif(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_thread.so.1.62.0")
         set(BERG_BOOST_VERSION 1.62.0)
