@@ -30,3 +30,4 @@ errorShots
 build/config.gypi
 doc/redakteur/Auswahl_*.*g
 
+www/cgi-bin/brg/out
