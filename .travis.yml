@@ -93,7 +93,7 @@ before_install:
     # Remove preinstalled node versions - easierer than to change the PATH
     - sudo rm -rf /home/travis/.nvm
     # Install nodejs and npm from https://nodesource.com/ -- Alternative downloads are available from https://nodejs.org/en/download/
-    - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+    - curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
     - sudo apt-get install -y nodejs
     - export NPM=/usr/bin/npm
     - which node && $NPM version && node -v || true
@@ -108,17 +108,17 @@ before_install:
     # Install CMake
     - sudo apt-get --purge remove cmake -y
     - export OPTDIR=/home/travis
-    - export CMAKEDIR=/home/travis/cmake-3.5
+    - export CMAKEDIR=/home/travis/cmake-3.10
     - mkdir -p "$OPTDIR" "$CMAKEDIR"
-    - (cd "$OPTDIR" && curl -LO https://cmake.org/files/v3.5/cmake-3.5.0-Linux-x86_64.sh && /bin/sh ./cmake-*-Linux-x86_64.sh --prefix=$CMAKEDIR --skip-license && cd -)
+    - (cd "$OPTDIR" && curl -LO https://cmake.org/files/v3.10/cmake-3.10.3-Linux-x86_64.sh && /bin/sh ./cmake-*-Linux-x86_64.sh --prefix=$CMAKEDIR --skip-license && cd -)
     - sudo ln -sf $CMAKEDIR/bin/cmake  /usr/local/bin/cmake
     - sudo ln -sf $CMAKEDIR/bin/ccmake /usr/local/bin/ccmake
     - sudo ln -sf $CMAKEDIR/bin/cpack  /usr/local/bin/cpack
     - sudo ln -sf $CMAKEDIR/bin/ctest  /usr/local/bin/ctest
     - cmake --version
     # Install boost library
-    - export boost_version_no=1.58.0
-    - export boost_version_str=1_58_0
+    - export boost_version_no=1.65.1
+    - export boost_version_str=1_65_1
     - export boost_dir=boost_${boost_version_str}
     - echo "boost_dir ${boost_dir}; curl -LO https://sourceforge.net/projects/boost/files/boost/${boost_version_no}/boost_${boost_version_str}.tar.bz2"
     # Try download twice - it is failing sometimes... 
