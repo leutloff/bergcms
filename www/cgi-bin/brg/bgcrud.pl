@@ -5,7 +5,7 @@
 # Delete of the articles in the flat file database (.csv).
 #
 # (c) 2006-2011 Heiko Decker
-# (c) 2011-2016 Christian Leutloff
+# (c) 2011-2018 Christian Leutloff
 # 
 # This program is free software; you can redistribute it and/or modify it 
 # under the same terms as Perl itself, i.e., under the terms of the 
@@ -38,7 +38,7 @@ binmode(STDOUT, ":encoding(utf8)");
 
 
 #--- GlobalSet ---
-my $VERSION="v2.11, 18.03.2016";
+my $VERSION="v2.12, 18.08.2018";
 my $Neuflg;# falls  ? in Select-Listen wird Auswahlliste für Neueingabe unterdrückt!
 my $Sftz=',';# Select-Listen-Feldtrenner
 my $SPATH=defined ($ENV{'SCRIPT_FILENAME'}) ? $ENV{'SCRIPT_FILENAME'} : $ENV{'PATH_TRANSLATED'}.$ENV{'SCRIPT_NAME'};#ScriptPfad - SCRIPT_FILENAME Ersatz bei Mini Java CgiHandler 0.2
@@ -166,14 +166,21 @@ sub create_form          # Formular aus Basis- und Quell-Tabellendaten generiere
     my $mzchr;#MultilineFeldzuASCI-Code
     my $wrap="virtual";
     my $maxtxt=100;#max.Anzeige-TextFeldbreite
+    my $script='document.addEventListener("keydown", function keydown (event) {
+    if (navigator.platform === "MacIntel" ? event.metaKey : event.ctrlKey && event.key === "s") {
+        event.preventDefault();
+        document.getElementById("editArticle").submit();
+    }
+})';
     print header('-charset' => 'utf-8'), 
           start_html('-title'     => $headline, 
                      '-style'     => {'src'=>"/brg/css/bgcrud.css"},
                      '-encoding'  => 'utf-8',
-                     '-lang'      => 'de');
+                     '-lang'      => 'de',
+                     '-script'    => $script);
     #if ($msg=~/(fehler:|ok!)/i) {print h3($msg), '<a href="'.$home.'">weiter...</a><p></p>';return;}
     print  h4($msg);
-    print '<form name="editArticle" action="'.$aktion.'" method=post'.">\n";
+    print '<form id="editArticle" action="'.$aktion.'" method=post'.">\n";
     print '<h3>'.$headline.'</h3>'.'<table>'."\n";
     #print "<th><b>$title</b></th><td>$LCrud $Ok $pmemo</td></tr>\n";
     #print "<tr><th><b>$headline</b></th></tr>\n";
