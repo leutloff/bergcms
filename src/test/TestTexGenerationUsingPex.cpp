@@ -2,7 +2,7 @@
  * @file TestTexGenerationUsingPex.cpp
  * Testing the generation of the TeX files using the Perl based PeX script.
  *
- * Copyright 2013 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2013, 2018 Christian Leutloff <leutloff@sundancer.oche.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -26,7 +26,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/iostreams/tee.hpp>
 #include <boost/iostreams/stream.hpp>
-#include <boost/process/process.hpp>
+#include <boost/process.hpp>
 
 #include <boost/test/unit_test.hpp>
 
@@ -63,14 +63,14 @@ BOOST_AUTO_TEST_CASE(test_calling_perl_version)
     const fs::path perlVersionfile = fs::path(fs::path(bt::GetOutputDir()) / "perlversion.log");
 
     // perl -v
-    bio::file_descriptor_sink pe_log(perlVersionfile);
-    bp::monitor c11 = bp::make_child(
-                bp::paths(exePerl.c_str())
-                , bp::arg("-v")
-                , bp::std_out_to(pe_log)
-                , bp::std_err_to(pe_log)
+    bp::child c11(
+                exePerl
+                , "-v"
+                , bp::std_out > perlVersionfile
+                , bp::std_err > perlVersionfile
                 );
-    int ret = c11.join(); // wait for perl completion
+    c11.wait();
+    int ret = c11.exit_code(); // wait for perl completion
     //cout << "Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
     bt::PrintFileToStream(perlVersionfile, cout);
@@ -85,14 +85,15 @@ BOOST_AUTO_TEST_CASE(test_calling_simple_perl_script)
     //bt::PrintFileToStream(simplePerlScript.c_str(), cout);
 
     // perl input/simpleperlscript.pl
-    bio::file_descriptor_sink pe_log(simplePerlScriptOutput);
-    bp::monitor c11 = bp::make_child(
-                bp::paths(exePerl.c_str(), fs::path(bt::GetTestDir()))
-                , bp::arg(simplePerlScript.c_str())
-                , bp::std_out_to(pe_log)
-                , bp::std_err_to(pe_log)
+    bp::child c11(
+                exePerl
+                , simplePerlScript
+                , bp::std_out > simplePerlScriptOutput
+                , bp::std_err > simplePerlScriptOutput
+                , bp::start_dir = bt::GetTestDir()
                 );
-    int ret = c11.join(); // wait for perl completion
+    c11.wait();
+    int ret = c11.exit_code(); // wait for perl completion
     //cout << "Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
     //bt::PrintFileToStream(simplePerlScriptOutput, cout);
@@ -110,16 +111,17 @@ BOOST_AUTO_TEST_CASE(test_calling_pex)
 
     // perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
     //cout << exePerl.c_str() << " " << pexScript.c_str() << " " << inputDatabaseFile.c_str() << " " << texFile.c_str() << endl;
-    bio::file_descriptor_sink pe_log(perlScriptOutput);
-    bp::monitor c11 = bp::make_child(
-                bp::paths(exePerl.c_str(), bt::GetOutputDir())
-                , bp::arg(pexScript.c_str())
-                , bp::arg(inputDatabaseFile.c_str())
-                , bp::arg(texFile.c_str())
-                , bp::std_out_to(pe_log)
-                , bp::std_err_to(pe_log)
+    bp::child c11(
+                exePerl
+                , pexScript
+                , inputDatabaseFile
+                , texFile
+                , bp::std_out > perlScriptOutput
+                , bp::std_err > perlScriptOutput
+                , bp::start_dir = bt::GetOutputDir()
                 );
-    int ret = c11.join(); // wait for perl completion
+    c11.wait();
+    int ret = c11.exit_code(); // wait for perl completion
     //cout << "test_calling_pex - Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
 //    cout << "***   Perl Log   ***" << endl;
@@ -143,17 +145,18 @@ BOOST_AUTO_TEST_CASE(test_calling_pex_some_articles)
     //cout << "pwd: " << fs::current_path() << endl;
     //cout << "bt::GetCgiBinDir(): " << bt::GetCgiBinDir() << endl;
     //cout << exePerl.c_str() << " " << pexScript.c_str() << " " << inputDatabaseFile.c_str() << " " << texFile.c_str() << endl;
-    bio::file_descriptor_sink pe_log(perlScriptOutput);
-    bp::monitor c11 = bp::make_child(
-                bp::paths(exePerl.c_str(), bt::GetCgiBinDir())
-                , bp::arg(pexScript.c_str())
-                , bp::arg(inputDatabaseFile.c_str())
-                , bp::arg(texFile.c_str())
-                , bp::arg("userelativepaths")
-                , bp::std_out_to(pe_log)
-                , bp::std_err_to(pe_log)
+    bp::child c11(
+                exePerl
+                , pexScript
+                , inputDatabaseFile
+                , texFile
+                , "userelativepaths"
+                , bp::std_out > perlScriptOutput
+                , bp::std_err > perlScriptOutput
+                , bp::start_dir = bt::GetCgiBinDir()
                 );
-    int ret = c11.join(); // wait for perl completion
+    c11.wait();
+    int ret = c11.exit_code(); // wait for perl completion
     //cout << "test_calling_pex_some_articles - Perl return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
     //cout << "***   Perl Log   ***" << endl;

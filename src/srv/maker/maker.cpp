@@ -2,7 +2,7 @@
  * @file maker.cpp
  * Extracts the actual articles and generates the PDF.
  *
- * Copyright 2012, 2013, 2014, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2012, 2013, 2014, 2016, 2018 Christian Leutloff <leutloff@sundancer.oche.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21,7 +21,6 @@
  * But improved since then, e.g. added makeindex calls.
  */
 
-
 #include "Common.h"
 #include "DirectoryLayout.h"
 #include <boost/cgi/cgi.hpp>
@@ -34,7 +33,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/iostreams/tee.hpp>
 #include <boost/iostreams/stream.hpp>
-#include <boost/process/process.hpp>
+#include <boost/process.hpp>
 #include <boost/locale.hpp>
 #include <fstream>
 #include <iostream>
@@ -60,6 +59,7 @@ void AddFileToLog(fs::path const& logFile, TeeStream &log, ostringstream & oss);
 void AddFileToLog(fs::path const& logFile, TeeStream &log, ostringstream &oss, std::string fileEncoding);
 void CopyToOutDir(fs::path const& bergOutDir, fs::path const& filename, TeeStream & log);
 void Add(TeeStream & log, ostringstream & oss, string const& html);
+void AddHeading(TeeStream & log, ostringstream & oss, int level, string const& title);
 void CheckErrorCode(cgi::response & resp, std::string const& functionName, bs::error_code const& ec, int & errors);
 void CheckErrorCode(TeeStream & log, std::string const& functionName, bs::error_code const& ec, int & errors);
 void CheckErrorCode(std::string & errorString, std::string const& functionName, bs::error_code const& ec, int & errors);
@@ -130,7 +130,7 @@ int HandleRequest(boost::cgi::request& req)
         {
             resp << "Log Verzeichnis " << BERGLOGDIR << " anlegen...";
             fs::create_directory(BERGLOGDIR, ec);
-            CheckErrorCode(resp, "", ec, errors);
+            CheckErrorCode(resp, "create_directory", ec, errors);
         }
         else
         {
@@ -140,7 +140,7 @@ int HandleRequest(boost::cgi::request& req)
         {
             resp << "Ausgabeverzeichnis " << BERGOUTDIR << " anlegen...";
             fs::create_directory(BERGOUTDIR, ec);
-            CheckErrorCode(resp, "", ec, errors);
+            CheckErrorCode(resp, "create_directory", ec, errors);
         }
         else
         {
@@ -156,9 +156,10 @@ int HandleRequest(boost::cgi::request& req)
 
         {
             //echo "xsc Script $XSCVERSION - " >$BERGLOGDIR/log.txt; echo "Start des Zeitungsgenerators pex (`date`) ..." >>$BERGLOGDIR/log.txt
-            Add(log, oss, "<h1>");
-            log << "Generator (maker " << Common::GetBergVersion() << " " << Common::GetBergLastChangedDate() << ")\n";
-            Add(log, oss, "</h1>\n<p>");
+            ostringstream o;
+            o << "Generator (maker " << Common::GetBergVersion() << " " << Common::GetBergLastChangedDate() << ")";
+            AddHeading(log, oss, 1, o.str());
+            Add(log, oss, "<p>");
             pt::time_facet *facet = new pt::time_facet("%d.%m.%Y %H:%M:%S");
             log.imbue(locale(log.getloc(), facet));
             log << "Start des Zeitungsgenerators maker (" << pt::second_clock::local_time() << ") im Verzeichnis " << fs::current_path() << "...\n";
@@ -170,26 +171,24 @@ int HandleRequest(boost::cgi::request& req)
 
         {
             // # Die CSV-Datenbank nach feginfo.tex transformieren
-            Add(log, oss, "<h3>");
-            log << "Artikel aus der Datenbank holen\n";
-            Add(log, oss, "</h3><pre class=\"berg-dev\">");
+            AddHeading(log, oss, 2, "Artikel aus der Datenbank holen");
+            Add(log, oss, "<p><pre class=\"berg-dev\">");
             fs::remove(pexLogfile, ec);
             log << "Protokolldatei (" << pexLogfile.c_str() << ") " << (ec ? "gelöscht" : "nicht gelöscht") << ".\n";
             log << "Lese Artikel aus der Datenbank (" << inputDatabaseFile.c_str() << "),\n";
             log << "verwende dazu Perl-Script PeX (" << scriptPex.c_str() << ") ...\n";
 
             // perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
-            bio::file_descriptor_sink pe_log(pexLogfile);
-            bp::monitor c11 = bp::make_child(
-                        bp::paths(exePerl.c_str(), DirectoryLayout::Instance().GetCgiBinDir().c_str())
-                        , bp::arg(scriptPex.c_str())
-                        , bp::arg(inputDatabaseFile.c_str())
-                        , bp::arg(texFile.c_str())
-                        , bp::std_out_to(pe_log)
-                        , bp::std_err_to(pe_log)
+            bp::child c11(
+                        exePerl
+                        , scriptPex, inputDatabaseFile, texFile
+                        , bp::std_out > pexLogfile
+                        , bp::std_err > pexLogfile
+                        , bp::start_dir = DirectoryLayout::Instance().GetCgiBinDir()
                         );
             log << "Inhalt der Protokolldatei (" << pexLogfile.c_str() << "):\n";
-            int ret = c11.join(); // wait for PeX completion
+            c11.wait(); // wait for PeX completion
+            int ret = c11.exit_code();
             AddFileToLog(pexLogfile, log, oss);
             log << "PeX return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
             if (ret != 0) { ++errors; }
@@ -212,96 +211,35 @@ int HandleRequest(boost::cgi::request& req)
             Add(log, oss, "</pre></p>\n");
         }
 
-        // this is no longer needed - TEXINPUTS is set appropriate below
-        //        {
-        //            // cp $BERGDBDIR/*.sty  $BERGDBDIR/*.jpg $BERGOUTDIR 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
-        //            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "sectsty.sty", log);
-        //            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "wrapfig.sty", log);
-        //            CopyToOutDir(BERGOUTDIR, BERGDBDIR / "feglogo.jpg", log);
-        //        }
-
-        {
-            // pwd
-            Add(log, oss, "<h2>");
-            log << "pwd\n";
-            Add(log, oss, "</h2>");
-            const fs::path pwd = fs::path("/bin/pwd");
-            if (fs::exists(pwd))
-            {
-                Add(log, oss, "<p><pre class=\"berg-dev\">");
-                // cd $BERGDBDIR && pdflatex -interaction=nonstopmode -file-line-error feginfo.tex  >/dev/null
-                log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
-
-                log << pwd.c_str();
-                log << "\n";
-
-                bio::file_descriptor_sink tex_log(texLogfile);
-                bp::monitor c12 = bp::make_child(
-                            bp::paths(pwd.c_str(), BERGOUTDIR.c_str())
-                            , bp::std_out_to(tex_log)
-                            , bp::std_err_to(tex_log)
-                            );
-                log << "Inhalt der Protokolldatei (" << texLogfile.c_str() << "):\n";
-                int ret = c12.join(); // wait for pwd completion
-                AddFileToLog(texLogfile, log, oss, "Latin1");
-                log << "pwd return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
-                if (ret != 0) { ++errors; }
-                Add(log, oss, "</pre>");
-            }
-            else
-            {
-                Add(log, oss, "<p class=\"berg-failure\"");
-                log << "pwd (" << pwd.c_str() << ") existiert nicht.";
-                ++errors;
-            }
-            Add(log, oss, "</p>\n");
-        }
         {
             // id
-            Add(log, oss, "<h2>");
-            log << "id\n";
-            Add(log, oss, "</h2>");
-            const fs::path id = fs::path("/usr/bin/id");
-            if (fs::exists(id))
-            {
-                Add(log, oss, "<p><pre class=\"berg-dev\">");
-                // cd $BERGDBDIR && pdflatex -interaction=nonstopmode -file-line-error feginfo.tex  >/dev/null
-                log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
+            AddHeading(log, oss, 2, "id");
+            Add(log, oss, "<p><pre class=\"berg-dev\">");
+            const fs::path idLogfile = fs::path(BERGLOGDIR / "id.log");
+            bp::child c12(
+                        bp::search_path("id")
+                        , bp::std_out > idLogfile
+                        , bp::std_err > idLogfile
+                    );
+            log << "Inhalt der Protokolldatei (" << idLogfile.c_str() << "):\n";
+            //c12.wait(); // wait for id completion
+            int ret = c12.exit_code();
+            AddFileToLog(idLogfile, log, oss);
+            log << "id return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
+            if (ret != 0) { ++errors; }
+            Add(log, oss, "</pre>");
 
-                log << id.c_str();
-                log << "\n";
-
-                bio::file_descriptor_sink tex_log(texLogfile);
-                bp::monitor c12 = bp::make_child(
-                            bp::paths(id.c_str(), BERGOUTDIR.c_str())
-                            , bp::std_out_to(tex_log)
-                            , bp::std_err_to(tex_log)
-                            );
-                log << "Inhalt der Protokolldatei (" << texLogfile.c_str() << "):\n";
-                int ret = c12.join(); // wait for id completion
-                AddFileToLog(texLogfile, log, oss, "Latin1");
-                log << "id return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
-                if (ret != 0) { ++errors; }
-                Add(log, oss, "</pre>");
-            }
-            else
-            {
-                Add(log, oss, "<p class=\"berg-failure\"");
-                log << "id (" << id.c_str() << ") existiert nicht.";
-                ++errors;
-            }
             Add(log, oss, "</p>\n");
         }
 
         {
-            Add(log, oss, "<h2>");
-            log << "Fonts erzeugen\n";
-            Add(log, oss, "</h2>");
+            AddHeading(log, oss, 2, "Fonts erzeugen");
             if (fs::exists(exeMktexpk))
             {
                 const fs::path ECFONTDIR = fs::path(BERGFONTDIR / "fonts" / "pk" / "ljfour" / "jknappen" / "ec");
                 const string pkdestdir = string("--destdir=") + ECFONTDIR.c_str();
                 const string fontNames[] = {"ecss1200", "ecss1440", "ecsx1440", "ecsi1440", "ecss1728", "ecsx1728", "ecsx2074", "ecsx2488"};
+                const fs::path texpkLogfile = fs::path(BERGLOGDIR / "texpk.log");
                 for (auto fontName : fontNames)
                 {
                     // create required font: mktexpk --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 ecsi1440
@@ -311,36 +249,28 @@ int HandleRequest(boost::cgi::request& req)
                     if (!fs::exists(ECFONTDIR / fs::path(fontName + string(".600pk"))))
                     {
                         Add(log, oss, "<p><pre class=\"berg-dev\">");
-                        // cd $BERGDBDIR && pdflatex -interaction=nonstopmode -file-line-error feginfo.tex  >/dev/null
-                        log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
-
                         //const string fontName = "ecsi1440";
-                        log << exeMktexpk.c_str() << " --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 " << fontName;
-                        log << "\n";
-
-                        bio::file_descriptor_sink tex_log(texLogfile);
-                        //                 using namespace boost::fusion;
-                        //                bp::args mkargs = bp::args("--dpi=600");
-                        //                mkargs(pkdestdir.c_str());
-                        //                mkargs(fontName.c_str());
-                        bp::monitor c12 = bp::make_child(
-                                    bp::paths(exeMktexpk.c_str(), BERGOUTDIR.c_str())
-                                    //, bp::arg("--mfmode /")
-                                    //, bp::arg("--bdpi 600")
-                                    //, bp::arg("--mag 1+0/600 --dpi 600")
-                                    , bp::arg("--dpi=600")
-                                    , bp::arg(pkdestdir.c_str())
-                                    , bp::arg(fontName.c_str())
-                                    , bp::environment("TEXINPUTS", texinputs)
-                                    , bp::std_out_to(tex_log)
-                                    , bp::std_err_to(tex_log)
-                                    );
+                        log << exeMktexpk.c_str() << " --mfmode / --bdpi 600 --mag 1+0/600 --dpi 600 " << fontName << "\n";
+                        bp::child c12(
+                                    exeMktexpk
+                                    , "--mfmode /"
+                                    , "--bdpi 600"
+                                    , "--mag 1+0/600"
+                                    , "--dpi=600"
+                                    , pkdestdir
+                                    , fontName
+                                    , bp::env["TEXINPUTS"]= texinputs
+                                              , bp::std_out > texpkLogfile
+                                              , bp::std_err > texpkLogfile
+                                    , bp::start_dir=BERGOUTDIR
+                                );
                         log << "Inhalt der Protokolldatei (" << texLogfile.c_str() << "):\n";
-                        int ret = c12.join(); // wait for mktexpk completion
+                        c12.wait(); // wait for mktexpk completion
+                        int ret = c12.exit_code();
                         AddFileToLog(texLogfile, log, oss, "Latin1");
                         log << "mktexpk return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
                         if (ret != 0) { ++errors; }
-                        Add(log, oss, "</pre>");
+                        Add(log, oss, "</pre></p>");
                     }
                 }
             }
@@ -349,21 +279,18 @@ int HandleRequest(boost::cgi::request& req)
                 Add(log, oss, "<p class=\"berg-failure\"");
                 log << "mktexpk (" << exeMktexpk.c_str() << ") existiert nicht. Font kann deswegen nicht erzeugt werden.";
                 ++errors;
+                Add(log, oss, "</p>\n");
             }
-            Add(log, oss, "</p>\n");
         }
-
 
         {
             // # LaTeX-Lauf der .pdf und auch .log erzeugt (pdflatex darf keine Ausgabe erzeugen!)
-            Add(log, oss, "<h2>");
-            log << "PDF-Datei erzeugen\n";
-            Add(log, oss, "</h2>");
+            AddHeading(log, oss, 2, "PDF-Datei erzeugen");
             if (fs::exists(exePdfLatex))
             {
                 Add(log, oss, "<p><pre class=\"berg-dev\">");
                 // cd $BERGDBDIR && pdflatex -interaction=nonstopmode -file-line-error feginfo.tex  >/dev/null
-                log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
+                log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done through start_dir below
 
 #if defined(BOOST_WINDOWS_API)
                 const wstring wsTexFileString = texFile.parent_path().c_str(); // c_str in Win is wstring
@@ -378,19 +305,20 @@ int HandleRequest(boost::cgi::request& req)
                 log << exePdfLatex.c_str() << " -interaction=nonstopmode -file-line-error " << outputdir << " " << texFilenameOnly;
                 log << "\n";
 
-                bio::file_descriptor_sink tex_log(texLogfile);
-                bp::monitor c12 = bp::make_child(
-                            bp::paths(exePdfLatex.c_str(), BERGOUTDIR.c_str())
-                            , bp::arg("-interaction=nonstopmode")
-                            , bp::arg("-file-line-error")
-                            , bp::arg(outputdir)
-                            , bp::arg(texFilenameOnly)
-                            , bp::environment("TEXINPUTS", texinputs)
-                            , bp::std_out_to(tex_log)
-                            , bp::std_err_to(tex_log)
-                            );
+                bp::child c12(
+                            exePdfLatex
+                            , "-interaction=nonstopmode"
+                            , "-file-line-error"
+                            , outputdir
+                            , texFilenameOnly
+                            , bp::env["TEXINPUTS"] = texinputs
+                            , bp::std_out > texLogfile
+                            , bp::std_err > texLogfile
+                            , bp::start_dir=BERGOUTDIR
+                        );
                 log << "Inhalt der Protokolldatei (" << texLogfile.c_str() << "):\n";
-                int ret = c12.join(); // wait for pdflatex completion
+                c12.wait(); // wait for pdflatex completion
+                int ret = c12.exit_code();
                 AddFileToLog(texLogfile, log, oss, "Latin1");
                 log << "pdfTeX return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
                 if (ret != 0) { ++errors; }
@@ -407,9 +335,7 @@ int HandleRequest(boost::cgi::request& req)
 
         {
             // # Bildverzeichnis erzeugen
-            Add(log, oss, "<h2>");
-            log << "Bildverzeichnis für den nächsten Durchlauf erzeugen\n";
-            Add(log, oss, "</h2>");
+            AddHeading(log, oss, 2, "Bildverzeichnis für den nächsten Durchlauf erzeugen");
             //        #cd $BERGDBDIR && if [ -f feginfo.idx ]; xindy feginfo.idx; fi 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
             //        #echo "xindy calling .." >>$BERGLOGDIR/log.txt
             //        #cd $BERGDBDIR && xindy -L german-din feginfo.idx 1>>$BERGLOGDIR/log.txt 2>>$BERGLOGDIR/log.txt
@@ -420,19 +346,19 @@ int HandleRequest(boost::cgi::request& req)
             if (fs::exists(BERGOUTDIR / idxFile) && fs::exists(exeMakeindex))
             {
                 Add(log, oss, "<p><pre class=\"berg-dev\">");
-                log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done bp::paths(exe, working directory) below
-                log << exeMakeindex.c_str() << " " << idxFile.c_str();
-                log << "\n";
+                log << "cd " << BERGOUTDIR.c_str() << ".\n"; // this is done using start_dir below
+                log << exeMakeindex.c_str() << " " << idxFile.c_str() << "\n";
 
-                bio::file_descriptor_sink idx_log(idxLogfile);
-                bp::monitor c12 = bp::make_child(
-                            bp::paths(exeMakeindex.c_str(), BERGOUTDIR.c_str())
-                            , bp::arg(idxFile.c_str())
-                            , bp::std_out_to(idx_log)
-                            , bp::std_err_to(idx_log)
-                            );
+                bp::child c12(
+                            exeMakeindex
+                            , idxFile
+                            , bp::std_out > idxLogfile
+                            , bp::std_err > idxLogfile
+                            , bp::start_dir=BERGOUTDIR
+                        );
                 log << "Inhalt der Protokolldatei (" << idxLogfile.c_str() << "):\n";
-                int ret = c12.join(); // wait for makeindex completion
+                c12.wait(); // wait for makeindex completion
+                int ret = c12.exit_code();
                 AddFileToLog(idxLogfile, log, oss);
                 log << "Makeindex return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
                 if (ret != 0) { ++errors; }
@@ -489,7 +415,7 @@ int HandleRequest(boost::cgi::request& req)
             log.close();
             resp << oss.str();
             fs::rename(makerLogfile, DirectoryLayout::Instance().GetHtdocsDownloadDir() / makerLogfile.filename(), ec);
-            CheckErrorCode(resp, "", ec, errors);
+            CheckErrorCode(resp, "rename", ec, errors);
             resp << "</pre></p>\n";
             stop = bchrono::system_clock::now();
         }
@@ -547,6 +473,7 @@ void AddFileToLog(fs::path const& logFile, TeeStream &log, ostringstream &oss)
                 ++cnt;
                 //log << "Zeile " << cnt << ": ";
                 log << line << "\n";
+                oss << line << "\n";
             }
             //log << "Aus Protokolldatei " << cnt << " Zeile(n) gelesen.\n";
             Add(log, oss, "</pre></p><p>");
@@ -580,6 +507,7 @@ void AddFileToLog(fs::path const& logFile, TeeStream &log, ostringstream &oss, s
                 utf8_line = boost::locale::conv::to_utf<char>(otherenc_line, fileEncoding);
                 //log << "Zeile " << cnt << ": ";
                 log << utf8_line << "\n";
+                 oss << utf8_line << "\n";
             }
             //log << "Aus Protokolldatei " << cnt << " Zeile(n) gelesen.\n";
             Add(log, oss, "</pre></p><p>");
@@ -621,37 +549,58 @@ void Add(TeeStream & log, ostringstream & oss, string const& html)
 }
 
 /**
-  * Add Error Code to the resp and increment errors is ec is an error.
+  * Adds the title as heading with level to the HTML output stream. The Log is flushed before issued the given HTML code.
+  * The title is written to the log, too.
+  */
+void AddHeading(TeeStream & log, ostringstream & oss, int level, string const& title)
+{
+    log.flush();
+    log << "\n\n" << title << "\n";
+    oss << "\n<h" << level << ">" << title << "</h" << level << ">\n";
+}
+
+/**
+  * Add Error Code to the resp and increment errors if ec is an error.
   */
 void CheckErrorCode(cgi::response & resp, std::string const& functionName, bs::error_code const& ec, int & errors)
 {
     std::string errorString;
-    CheckErrorCode(errorString, "", ec, errors);
+    CheckErrorCode(errorString, functionName, ec, errors);
     resp << errorString;
 }
 
 /**
-  * Add Error Code to the log and increment errors is ec is an error.
+  * Add Error Code to the log and increment errors if ec is an error.
   */
 void CheckErrorCode(TeeStream & log, std::string const& functionName, bs::error_code const& ec, int & errors)
 {
     std::string errorString;
-    CheckErrorCode(errorString, "", ec, errors);
+    CheckErrorCode(errorString, functionName, ec, errors);
     log << errorString;
 }
 
+/**
+  * Add Error Code to the log and increment errors if ec is an error.
+  * This is the backing for other functions with the same name.
+  */
 void CheckErrorCode(std::string & errorString, std::string const& functionName, bs::error_code const& ec, int & errors)
 {
     ostringstream oss;
     if (0 < ec.value()) { ++errors; }
-    oss << " (ec: " << ec.value() << "/" << ec.message() << ")";
+    oss << " (" << functionName << ", ec: " << ec.value() << "/" << ec.message() << ")";
     errorString = oss.str();
 }
 
-
+/**
+ * @brief main Generates the PDF and returns a HTML-Page with the processing details.
+ * @param argc
+ * @param argv - can be used to provide the working directory during debugging.
+ * @return HTTP status code
+ */
 int main(int argc, char* argv[])
 {
-    if (0 < argc) { DirectoryLayout::MutableInstance().SetProgramName(argv[0]); }
+    // For Debugging provide the directory www/cgi-bin/brg/ as command line parameter.
+    if (1 < argc) { DirectoryLayout::MutableInstance().SetWorkingDirectory(argv[0], argv[1]); }
+    else if (0 < argc) { DirectoryLayout::MutableInstance().SetProgramName(argv[0]); }
     return Common::InvokeWithErrorHandling(&HandleRequest);
 }
-
