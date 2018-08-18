@@ -64,9 +64,9 @@ addons:
       # Disallowing packages (20160228): - wput
       # nodejs-legacy is required in later Ubuntu versions than precise:
       # Disallowing packages (20160228): - nodejs-legacy
-      # Ensure an installed java:
-      - oracle-java8-installer
-      - oracle-java8-set-default
+      # Ensure an installed java - muss wohl nicht mehr selenium installiert sein, wenn doch java9 nehmen:
+      #- oracle-java8-installer
+      #- oracle-java8-set-default
 before_install:
     - echo "Ensure an installed java..."
     - gcc --version && perl -v && java -version
@@ -135,7 +135,7 @@ before_install:
     - cd ..
     #- rm -rf ${boost_dir}
     - sudo ldconfig
-    - find /usr/lib -name 'libboost*' -print
+    - find /usr/lib /usr/local/lib -name 'libboost*' -print
     - ls -la /usr/local/share/texmf/fonts || true
 install:
     # Install Apache for the GUI tests (apache2 is installed above)
