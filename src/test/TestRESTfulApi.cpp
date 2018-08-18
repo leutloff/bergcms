@@ -2,7 +2,7 @@
  * @file TestRESTfulApi.cpp
  * Testing the RESTful API provided by bgrest.
  *
- * Copyright 2016 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2016, 2018 Christian Leutloff <leutloff@sundancer.oche.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -27,9 +27,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/iostreams/tee.hpp>
 #include <boost/iostreams/stream.hpp>
-#include <boost/process/process.hpp>
-//#include <boost/process/initializers/environment.hpp>
-
+#include <boost/process.hpp>
 #include <boost/test/unit_test.hpp>
 
 using namespace std;
@@ -99,14 +97,17 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_single)
     const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "single_article.json");
 
     //cout << exeBgRest.c_str() << " " << inputDatabaseFile.c_str() << " " << jsonFile.c_str() << " " << jsonFileExpected.c_str() << endl;
-    bio::file_descriptor_sink bgrestOut(jsonFile);
-    bp::monitor c11 = bp::make_child(
-                bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
-                , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "GET")("QUERY_STRING", "/articles/1")
-                , bp::std_out_to(bgrestOut)
-                , bp::std_err_to(bgrestOut)
+    bp::child c11(
+                exeBgRest
+                , bp::env["BERGCMSDB"] = inputDatabaseFile.c_str()
+                , bp::env["REQUEST_METHOD"]= "GET"
+                , bp::env["QUERY_STRING"] = "/articles/1"
+                , bp::std_out > jsonFile
+                , bp::std_err > jsonFile
+                , bp::start_dir =  bt::GetOutputDir()
                 );
-    int ret = c11.join(); // wait for completion
+    c11.wait();
+    int ret = c11.exit_code(); // wait for completion
     //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
     //    cout << "***   jsonFileExpected   ***" << endl;
@@ -132,14 +133,17 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two_id1)
     const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "two_articles_id1.json");
 
     //cout << exeBgRest.c_str() << " " << inputDatabaseFile.c_str() << " " << jsonFile.c_str() << " " << jsonFileExpected.c_str() << endl;
-    bio::file_descriptor_sink bgrestOut(jsonFile);
-    bp::monitor c11 = bp::make_child(
-                bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
-                , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "GET")("QUERY_STRING", "/articles/1")
-                , bp::std_out_to(bgrestOut)
-                , bp::std_err_to(bgrestOut)
+    bp::child c11(
+                exeBgRest
+                , bp::env["BERGCMSDB"] = inputDatabaseFile.c_str()
+                , bp::env["REQUEST_METHOD"]= "GET"
+                , bp::env["QUERY_STRING"] = "/articles/1"
+                , bp::std_out > jsonFile
+                , bp::std_err > jsonFile
+                , bp::start_dir =  bt::GetOutputDir()
                 );
-    int ret = c11.join(); // wait for completion
+    c11.wait();
+    int ret = c11.exit_code(); // wait for completion
     //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
     //    cout << "***   jsonFileExpected   ***" << endl;
@@ -173,14 +177,17 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two_id42)
     const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "two_articles_id42.json");
 
     // cout << exeBgRest.c_str() << " " << inputDatabaseFile.c_str() << " " << jsonFile.c_str() << " " << jsonFileExpected.c_str() << endl;
-    bio::file_descriptor_sink bgrestOut(jsonFile);
-    bp::monitor c11 = bp::make_child(
-                bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
-                , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "GET")("QUERY_STRING", "/articles/42")
-                , bp::std_out_to(bgrestOut)
-                , bp::std_err_to(bgrestOut)
+    bp::child c11(
+                exeBgRest
+                , bp::env["BERGCMSDB"] = inputDatabaseFile.c_str()
+                , bp::env["REQUEST_METHOD"]= "GET"
+                , bp::env["QUERY_STRING"] = "/articles/42"
+                , bp::std_out > jsonFile
+                , bp::std_err > jsonFile
+                , bp::start_dir =  bt::GetOutputDir()
                 );
-    int ret = c11.join(); // wait for completion
+    c11.wait();
+    int ret = c11.exit_code(); // wait for completion
     //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
     //    cout << "***   jsonFileExpected   ***" << endl;
@@ -211,14 +218,17 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_two)
     const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "two_articles.json");
 
     cout << exeBgRest.c_str() << " " << inputDatabaseFile.c_str() << " " << jsonFile.c_str() << " " << jsonFileExpected.c_str() << endl;
-    bio::file_descriptor_sink bgrestOut(jsonFile);
-    bp::monitor c11 = bp::make_child(
-                bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
-                , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "GET")("QUERY_STRING", "/articles")
-                , bp::std_out_to(bgrestOut)
-                , bp::std_err_to(bgrestOut)
+    bp::child c11(
+                exeBgRest
+                , bp::env["BERGCMSDB"] = inputDatabaseFile.c_str()
+                , bp::env["REQUEST_METHOD"]= "GET"
+                , bp::env["QUERY_STRING"] = "/articles"
+                , bp::std_out > jsonFile
+                , bp::std_err > jsonFile
+                , bp::start_dir =  bt::GetOutputDir()
                 );
-    int ret = c11.join(); // wait for completion
+    c11.wait();
+    int ret = c11.exit_code(); // wait for completion
     //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
     //    cout << "***   jsonFileExpected   ***" << endl;
@@ -246,14 +256,17 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_some)
     const fs::path jsonFileExpected  = fs::path(bt::GetExpectedDir() / "some_articles.json");
 
     cout << exeBgRest.c_str() << " " << inputDatabaseFile.c_str() << " " << jsonFile.c_str() << " " << jsonFileExpected.c_str() << endl;
-    bio::file_descriptor_sink bgrestOut(jsonFile);
-    bp::monitor c11 = bp::make_child(
-                bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
-                , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "GET")("QUERY_STRING", "/articles")
-                , bp::std_out_to(bgrestOut)
-                , bp::std_err_to(bgrestOut)
+    bp::child c11(
+                exeBgRest
+                , bp::env["BERGCMSDB"] = inputDatabaseFile.c_str()
+                , bp::env["REQUEST_METHOD"]= "GET"
+                , bp::env["QUERY_STRING"] = "/articles"
+                , bp::std_out > jsonFile
+                , bp::std_err > jsonFile
+                , bp::start_dir =  bt::GetOutputDir()
                 );
-    int ret = c11.join(); // wait for completion
+    c11.wait();
+    int ret = c11.exit_code(); // wait for completion
     //cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
     BOOST_CHECK_EQUAL(0, ret);
     //    cout << "***   jsonFileExpected   ***" << endl;
@@ -287,13 +300,15 @@ BOOST_AUTO_TEST_CASE(test_bgrest_get_articles_some)
 //    if (fs::exists(inputDatabaseFile)) { fs::remove(inputDatabaseFile); }
 //    bio::file_descriptor_sink bgrestOut(jsonFile);
 //    bp::monitor c11 = bp::make_child(
-//                bp::paths(exeBgRest.c_str(), bt::GetOutputDir())
+//                exeBgRest
 //                , bp::environment("BERGCMSDB", inputDatabaseFile.c_str())("REQUEST_METHOD", "POST")("QUERY_STRING", "/articles")("CONTENT_LENGTH", "4")
 //                , bp::std_in_from_path(jsonFileInput)
-//                , bp::std_out_to(bgrestOut)
-//                , bp::std_err_to(bgrestOut)
+//                                , bp::std_out > jsonFile
+//, bp::std_err > jsonFile
+//, bp::start_dir =  bt::GetOutputDir()
 //                );
-//    int ret = c11.join(); // wait for completion
+//    c11.wait();
+//    int ret = c11.exit_code(); // wait for completion
 //    cout << "bgrest return code: " <<  ret << " - " << (ret == 0 ? "ok." : "Fehler!") << "\n";
 //    BOOST_CHECK_EQUAL(0, ret);
 //    cout << "***   jsonFileExpected   ***" << endl;

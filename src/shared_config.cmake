@@ -2,7 +2,7 @@
 # This file holds all the shared configurations.
 # It will load all other configurations.
 #
-# Copyright 2012, 2013, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
+# Copyright 2012, 2013, 2016, 2018 Christian Leutloff <leutloff@sundancer.oche.de>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -38,9 +38,6 @@ endif()
 
 # add CGI library - header only
 set(BOOST_CGI_INCLUDEDIR "${PROJECT_SOURCE_DIR}/external/boost-cgi")
-
-# add Process library - header only
-set(BOOST_PROCESS_INCLUDEDIR "${PROJECT_SOURCE_DIR}/external/boost-process")
 
 # add icu libs:
 if(NOT MSVC)
