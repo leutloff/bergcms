@@ -31,7 +31,6 @@ include_directories(
     .
     ${Boost_INCLUDE_DIRS}
     ${BOOST_CGI_INCLUDEDIR}
-    ${CTEMPLATE_INCLUDEDIR}
     )
 
 set(BERG_STORAGE_LIB_SRC Common.cpp Helper.cpp FileStorage.cpp Article.cpp Archive.cpp DirectoryLayout.cpp ProcessStep.cpp RestArticle.cpp)

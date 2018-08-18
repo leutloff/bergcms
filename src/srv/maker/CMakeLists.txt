@@ -55,7 +55,7 @@ add_executable(maker ${MAKER_SRC})
 
 set_property(TARGET maker PROPERTY CXX_STANDARD 14)
 
-target_link_libraries(maker berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
+target_link_libraries(maker berg_storage ${Boost_LIBRARIES} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
 
 add_dependencies(maker berg_storage)
 

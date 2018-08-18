@@ -54,7 +54,7 @@ set(BGREST_SRC bgrest.cpp)
 
 add_executable(bgrest ${BGREST_SRC}) 
 
-target_link_libraries(bgrest berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
+target_link_libraries(bgrest berg_storage ${Boost_LIBRARIES} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
 
 add_dependencies(bgrest berg_storage)
 
