@@ -2,7 +2,7 @@
  * @file DirectoryLayout.cpp
  * A Singleton providing information about the directory layout.
  *
- * Copyright 2014, 2016 Christian Leutloff <leutloff@sundancer.oche.de>
+ * Copyright 2014, 2016, 2018 Christian Leutloff <leutloff@sundancer.oche.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -50,6 +50,19 @@ void DirectoryLayout::SetProgramName(std::string const& programName)
     }
 }
 
+void DirectoryLayout::SetWorkingDirectory(std::string const& programName, std::string const& workingDirectory)
+{
+    bs::error_code ec;
+    pathProgramName = programName;
+    if (fs::exists(workingDirectory))
+    {
+        dirCgiBin = CheckPath(workingDirectory, BERG_DEFAULT_CGIBIN);
+        dirHtDocs = CheckPath(dirCgiBin / ".." / ".." / "htdocs" / "brg", dirCgiBin / ".." / ".." / "web" / "brg", BERG_DEFAULT_HTDOCS);
+        dirDlb = CheckPath(dirHtDocs / ".." / "dlb", BERG_DEFAULT_DLB);
+    }
+    else
+        SetProgramName(programName);
+}
 
 boost::filesystem::path DirectoryLayout::CheckPath(boost::filesystem::path const& pathToCheck, std::string const& pathToUseInErrorCase)
 {

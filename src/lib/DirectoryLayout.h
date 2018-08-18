@@ -64,6 +64,15 @@ public:
     void SetProgramName(std::string const& programName);
     boost::filesystem::path const& GetProgramName() const { return pathProgramName; }
 
+    /**
+     * @brief SetWorkingDirectory call from main with argv[0] and argv[1].
+     * All executables are expected in cgi-bin/brg aka workingDirectory. Therefore all other
+     * directories are referenced relative to this directory.
+     * @param programName
+     * @param workingDirectory
+     */
+    void SetWorkingDirectory(std::string const& programName, std::string const& workingDirectory);
+
     boost::filesystem::path const& GetCgiBinDir() const { return dirCgiBin; }
     boost::filesystem::path const& GetHtdocsDir() const { return dirHtDocs; }
     boost::filesystem::path const& GetHtdocsDownloadDir() const { return dirDlb; }
