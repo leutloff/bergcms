@@ -104,7 +104,6 @@ before_install:
     # runs about 70s:
     #- sudo $NPM install -g mocha webdriverio browserify uglifyjs dredd@stable || true
     - sudo $NPM install -g mocha-cli || true
-    - sudo $NPM update
     # Install CMake
     - sudo apt-get --purge remove cmake -y
     - export OPTDIR=/home/travis
@@ -138,6 +137,7 @@ before_install:
     - find /usr/lib /usr/local/lib -name 'libboost*' -print
     - ls -la /usr/local/share/texmf/fonts || true
 install:
+    - $NPM install
     # Install Apache for the GUI tests (apache2 is installed above)
     - sudo apt-get install apache2-suexec-custom apache2-utils -y
     # Allow serving content from /home/travis/build. Problem reported by Apache: (13)Permission denied: AH00035: access to /index.html denied (filesystem path '/home/travis/build') because search permissions are missing on a component of the path
@@ -167,6 +167,7 @@ before_script:
     #- mkdir -p $TRAVIS_BUILD_DIR/src/external/libicu48/lib
     #- cp /usr/lib/libicu*.so.48 $TRAVIS_BUILD_DIR/src/external/libicu48/lib || true
     #- ls -l $TRAVIS_BUILD_DIR/src/external/libicu48/lib
+    # This is done by sauce connect!?- $NPM run start-webdriver &
     - ./build_documentation.sh
     - mkdir travis-build
     - pushd travis-build
@@ -176,7 +177,7 @@ before_script:
     #- cmake -D CMAKE_BUILD_TYPE=Distribution -D CMAKE_VERBOSE_MAKEFILE=TRUE ../src
     - popd
 script:
-    - pushd travis-build
+    - pushd travis-build    
     - make
     - make package
     - export BERG_ARCHIVE=$(ls -t Berg*.zip | head -1)

@@ -35,7 +35,6 @@
   },
   "scripts": {
     "postinstall": "./node_modules/selenium-standalone/bin/selenium-standalone install",
-    "prestart-webdriver": "npm install",
     "start-webdriver": "./node_modules/selenium-standalone/bin/selenium-standalone start",
     "start": "npm run start-webdriver",
     "test": "./node_modules/.bin/wdio wdio.conf.js"
