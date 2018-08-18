@@ -181,7 +181,9 @@ int HandleRequest(boost::cgi::request& req)
             // perl pex.pl $BERGDBDIR/feginfo.csv $BERGDBDIR/feginfo 1>>$BERGLOGDIR/pe.log 2>>$BERGLOGDIR/pe.log
             bp::child c11(
                         exePerl
-                        , scriptPex, inputDatabaseFile, texFile
+                        , scriptPex
+                        , inputDatabaseFile
+                        , texFile
                         , bp::std_out > pexLogfile
                         , bp::std_err > pexLogfile
                         , bp::start_dir = DirectoryLayout::Instance().GetCgiBinDir()
