@@ -4,7 +4,7 @@
 # commands starting with >. Output is a LaTeX file for final processing.
 #
 # (c) 2007, 2009-2011 Heiko Decker
-# (c) 2011-2014,2016 Christian Leutloff
+# (c) 2011-2014, 2016, 2018 Christian Leutloff
 # 
 # This program is free software; you can redistribute it and/or modify it 
 # under the same terms as Perl itself, i.e., under the terms of the 
@@ -48,7 +48,7 @@ use Scalar::Util qw(looks_like_number);
 
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION = 'v2.13/20.04.2016';
+$VERSION = 'v2.14/18.08.2018';
 # exports are used for testing purposes
 @EXPORT_OK = qw(add_author add_bold add_caption add_italic
                 get_tex_content
@@ -933,6 +933,11 @@ sub dbquote
     $s=~s/([ \.,\f\n\r\t\(]*)[\"“]([a-zA-Z0-9ßöäüÖÄÜéè\( ][-a-zA-Z0-9ßöäüÖÄÜéè\(\),\.\?\+\:! ]*?)[\"”]([,\.\)\?!]?[,\.\:\)!]?(\s+|$|\\))/$1\\textit{\\glqq $2\\grqq}$3/g;
     # nun auch für die expliziten Anführungszeichen
     $s=~s/(\x{201E}|&#x201E;)(.*?)(\x{201C}|&#x201C;|\x{201D}|&#x201D;|\")/\\textit{\\glqq $2\\grqq}/g;
+
+    $s=~s/\"`/\\glqq /g;
+    $s=~s/\"'\\/\\grqq\\/g;
+    $s=~s/\"' /\\grqq{} /g;
+    $s=~s/\"'/\\grqq /g;
     return $s;
 }
 

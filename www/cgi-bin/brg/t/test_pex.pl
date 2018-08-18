@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use utf8;
-use Test::More tests => 43;
+use Test::More tests => 44;
 
 use lib '.';
 use BERG::PEX qw(add_author add_bold add_caption add_italic 
@@ -26,8 +26,10 @@ $result = replace_characters('"Hallo"');
 ok('\\textit{\\glqq Hallo\\grqq}' eq $result, $result);
 $result = replace_characters('“Hallo”');
 ok('\\textit{\\glqq Hallo\\grqq}' eq $result, $result);
-$result = replace_characters('"`Hallo"\'');# Remains unchanged
-ok('"`Hallo"\'' eq $result, $result);
+$result = replace_characters('"`Hallo"\'');
+ok('\\glqq Hallo\\grqq ' eq $result, $result);
+$result = replace_characters('"`Hallo"\' ');
+ok('\\glqq Hallo\\grqq{} ' eq $result, $result);
 $result = replace_characters('a"Hallo"a');# Remains unchanged
 ok('a"Hallo"a' eq $result, $result);
 $result = replace_characters('"-Hallo"');# Remains unchanged
@@ -58,8 +60,8 @@ $result = replace_characters(' "Hallo20." und so "weiter"... ');
 my $expected = ' \\textit{\\glqq Hallo20.\\grqq} und so \\textit{\\glqq weiter\\grqq}\\ldots\\ ';
 ok($expected eq $result);#, $expected. '--' . $result);
 $result = replace_characters(' "Hallo21." und so "`weiter"\'... ');
-$expected = ' \\textit{\\glqq Hallo21.\\grqq} und so "`weiter"\'\\ldots\\ ';
-ok($expected eq $result);#, $expected. '--' . $result);
+$expected = ' \\textit{\\glqq Hallo21.\\grqq} und so \\glqq weiter\\grqq\\ldots\\ ';
+ok($expected eq $result, $expected. '--' . $result);
 $result = replace_characters('...');
 ok('\\ldots\\ ' eq $result, $result);
 $result = replace_characters('...?');
@@ -76,7 +78,7 @@ ok($expected eq $result);#, $expected. '--' . $result);
 $result = replace_characters('Wir planen Aktionen wie "lebendes Denkmal", "MarioKart", "Erfrischungsstand", "Kicker",
 "Fahrrad putzen", "`Grillen"\' und natürlich ganz viele persönliche Gespräche sowie konkrete Einladungsaktionen. Wir haben Gottes Wirken schon im Vorbereitungsprozess erfahren und freuen uns auf die Woche Anfang Juni.');
 $expected = 'Wir planen Aktionen wie \textit{\glqq lebendes Denkmal\grqq}, \textit{\glqq MarioKart\grqq}, \textit{\glqq Erfrischungsstand\grqq}, \textit{\glqq Kicker\grqq},
-\textit{\glqq Fahrrad putzen\grqq}, "`Grillen"\' und natürlich ganz viele persönliche Gespräche sowie konkrete Einladungsaktionen. Wir haben Gottes Wirken schon im Vorbereitungsprozess erfahren und freuen uns auf die Woche Anfang Juni.';
+\textit{\glqq Fahrrad putzen\grqq}, \glqq Grillen\grqq{} und natürlich ganz viele persönliche Gespräche sowie konkrete Einladungsaktionen. Wir haben Gottes Wirken schon im Vorbereitungsprozess erfahren und freuen uns auf die Woche Anfang Juni.';
 ok($expected eq $result);#, $expected. '--' . $result);
 
 $result = replace_characters('“Weil wir heute immer noch sind, wie wir gestern waren.”');
