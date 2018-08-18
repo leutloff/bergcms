@@ -33,7 +33,6 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/lib
     ${Boost_INCLUDE_DIRS}
     ${BOOST_CGI_INCLUDEDIR}
-    ${BOOST_PROCESS_INCLUDEDIR}
     ${VISUAL_LEAK_DETECTOR_INCLUDEDIR}
     )
 

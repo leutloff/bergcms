@@ -33,8 +33,6 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/lib
     ${Boost_INCLUDE_DIRS}
     ${BOOST_CGI_INCLUDEDIR}
-    ${BOOST_PROCESS_INCLUDEDIR}
-    ${CTEMPLATE_INCLUDEDIR}
     )
 
 if(EXISTS "${PROJECT_SOURCE_DIR}/external/lib-${BUILDHOST}")
@@ -47,14 +45,15 @@ else()
         ${CX_LIB_DIR}
         "${PROJECT_SOURCE_DIR}/lib"
         "${Boost_LIBRARY_DIRS}"
-        "${CTEMPLATE_LIBRARYDIR}"
         "${ICU_LIBRARYDIR}"
         )
 endif()
 
 set(MAKER_SRC maker.cpp)
 
-add_executable(maker ${MAKER_SRC}) 
+add_executable(maker ${MAKER_SRC})
+
+set_property(TARGET maker PROPERTY CXX_STANDARD 14)
 
 target_link_libraries(maker berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
 

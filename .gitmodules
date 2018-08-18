@@ -1,6 +1,3 @@
-[submodule "src/external/boost-process"]
-	path = src/external/boost-process
-	url = git://github.com/leutloff/boost-process.git
 [submodule "src/external/boost-cgi"]
 	path = src/external/boost-cgi
 	url = git://github.com/leutloff/cgi.git

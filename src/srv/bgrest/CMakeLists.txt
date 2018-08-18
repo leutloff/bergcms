@@ -33,8 +33,6 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/lib
     ${Boost_INCLUDE_DIRS}
     ${BOOST_CGI_INCLUDEDIR}
-    ${BOOST_PROCESS_INCLUDEDIR}
-    ${CTEMPLATE_INCLUDEDIR}
     )
 
 if(EXISTS "${PROJECT_SOURCE_DIR}/external/lib-${BUILDHOST}")
@@ -48,7 +46,6 @@ else()
         "${PROJECT_SOURCE_DIR}/lib"
         #"${BOOST_LIBRARYDIR}"
         "${Boost_LIBRARY_DIRS}"
-        "${CTEMPLATE_LIBRARYDIR}"
         "${ICU_LIBRARYDIR}"
         )
 endif()
