@@ -904,7 +904,7 @@ sub replace_characters #...Suchen/ersetzen
     $s =~ s/ca. /ca.\\ /g;
     $s =~ s/z.B. |z. B. /z.\\ B.\\ /g;
 
-    # Anführungzeichen behandeln    
+    # Handle (german) quotes    
     $s=dbquote($s); # falls " oder „/“ im Text -> Latex"Ersatz"
     
     # Doppelte Anführungszeichen
