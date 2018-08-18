@@ -33,7 +33,6 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/lib
     ${Boost_INCLUDE_DIRS}
     ${BOOST_CGI_INCLUDEDIR}
-    ${CTEMPLATE_INCLUDEDIR}
     )
 
 if(EXISTS "${PROJECT_SOURCE_DIR}/external/lib-${BUILDHOST}")
@@ -47,7 +46,6 @@ else()
         "${PROJECT_SOURCE_DIR}/lib"
         #"${BOOST_LIBRARYDIR}"
         "${Boost_LIBRARY_DIRS}"
-        "${CTEMPLATE_LIBRARYDIR}"
         "${ICU_LIBRARYDIR}"
         )
 endif()
@@ -56,7 +54,7 @@ set(EXTRACT_SRC extract.cpp)
 
 add_executable (berg_extract ${EXTRACT_SRC}) 
 
-target_link_libraries(berg_extract berg_storage ${Boost_LIBRARIES} ${CTEMPLATE_LIBRARY} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
+target_link_libraries(berg_extract berg_storage ${Boost_LIBRARIES} ${BERG_SYSTEM_SPECIFIC_LIBRARIES})
 
 add_dependencies(berg_extract berg_storage)
 
