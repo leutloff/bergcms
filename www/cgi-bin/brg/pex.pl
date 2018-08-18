@@ -899,6 +899,12 @@ sub replace_characters #...Suchen/ersetzen
     $s =~ s/^Tel.?:/\\ding\{37\}/ig; # replace Tel. with telephone symbole
     $s =~ s/(\s)Tel.?:/$1\\ding\{37\}/ig; # replace Tel. with telephone symbole
     $s =~ s/e-mail:|email:|mail:/\\ding\{41\}/ig; #falls email.?-> Briefsymbolersatz
+
+    # ca. -> ca.\ and z.B.
+    $s =~ s/ca. /ca.\\ /g;
+    $s =~ s/z.B. |z. B. /z.\\ B.\\ /g;
+
+    # Anführungzeichen behandeln    
     $s=dbquote($s); # falls " oder „/“ im Text -> Latex"Ersatz"
     
     # Doppelte Anführungszeichen

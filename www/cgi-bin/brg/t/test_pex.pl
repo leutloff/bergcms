@@ -5,16 +5,11 @@ use strict;
 use warnings;
 
 use utf8;
-use Test::More tests => 44;
+use Test::More tests => 49;
 
 use lib '.';
 use BERG::PEX qw(add_author add_bold add_caption add_italic 
                  replace_characters dbquote);
-
-#TODO: {
-#    local $TODO = '... not yet implemented';
-#    ok( 2 + 2 == 5 );
-#}
 
 ok('& ' eq replace_characters('& '));
 my $result = replace_characters('§ ');
@@ -125,3 +120,14 @@ $result = add_caption('add_caption');
 #print '+'.$result.'+'."\n";
 ok('\textbf{~\\\\'."\n".'add_caption'."\n".'}'."\n".'\vspace{.5\baselineskip plus 1ex minus 0.5ex}' eq $result);
 
+# Add fixed spaces to ca. and z.B.
+$result = replace_characters('ca. 5 m');
+ok('ca.\ 5 m' eq $result, $result);
+$result = replace_characters('ca.b');
+ok('ca.b' eq $result, $result);
+$result = replace_characters('ca.b ');
+ok('ca.b ' eq $result, $result);
+$result = replace_characters('z. B. asdf');
+ok('z.\ B.\ asdf' eq $result, $result);
+$result = replace_characters('blu z.B. bla');
+ok('blu z.\ B.\ bla' eq $result, $result);
