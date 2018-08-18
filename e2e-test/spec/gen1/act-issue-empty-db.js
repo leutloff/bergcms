@@ -29,7 +29,7 @@ suite('Tests related the actual issue string with an empty database.', function 
         // type 	name=Kopftext 	Change TODO Test Case
         kopftext.setValue('Change TODO Test Case');
         // clickAndWait 	name=Submit
-        browser.submitForm('form[name="editArticle"]');
+        browser.submitForm('form[id="editArticle"]');
 
         //verifyTextPresent 	Change TODO Test Case
         var heading = browser.element('td*=Change TODO Test Case');
