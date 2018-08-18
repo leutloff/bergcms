@@ -29,6 +29,8 @@
         set(BERG_BOOST_VERSION 1.65.1)
     elseif(EXISTS "/usr/lib/i386-linux-gnu/libboost_filesystem.so.1.65.1")
         set(BERG_BOOST_VERSION 1.65.1)
+    elseif(EXISTS "/usr/local/lib/libboost_filesystem.so.1.65.1")
+        set(BERG_BOOST_VERSION 1.65.1)
     elseif(EXISTS "/usr/lib/x86_64-linux-gnu/libboost_thread.so.1.62.0")
         set(BERG_BOOST_VERSION 1.62.0)
     elseif(EXISTS "/usr/lib/libboost_filesystem.so.1.61.0")
